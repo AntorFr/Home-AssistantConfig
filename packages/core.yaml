@@ -28,9 +28,9 @@ logger:
   default: error
   logs:
     homeassistant.components.mqtt: critical
-    homeassistant.components.netatmo: critical
-    custom_components.husqvarna_automower: critical
-    custom_components.flipr: debug
+    homeassistant.components.netatmo: error
+    custom_components.husqvarna_automower: error
+    custom_components.flipr: error
 
 sensor:
   - platform: time_date
