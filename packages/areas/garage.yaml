@@ -1,0 +1,29 @@
+
+
+
+automation:
+################################################################################
+- id: 'garage_switch_garage2'
+  alias: Area - Garage - Bouton Garage 2
+  description: ''
+  mode: parallel
+  trigger:
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_id: 950e5646555ea54652e2273c4c3034dd
+  condition:
+  - condition: state
+    entity_id: binary_sensor.anyone_home
+    state: 'on'
+  action:
+  - variables:
+      command: '{{ trigger.event.data.command }}'
+  - choose:
+    - conditions:
+      - '{{ command == "toggle" }}'
+      sequence:
+        - service: cover.toggle
+          target:
+            entity_id: cover.garage_2 
+################################################################################

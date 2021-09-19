@@ -1,0 +1,40 @@
+group:
+  parent_home:
+    name: Parent à la maison
+    icon: mdi:account-supervisor
+    entities:
+      - person.sebastien
+      - person.laurine
+
+binary_sensor:
+  - platform: template
+    sensors:
+      anyone_home:
+        device_class: occupancy
+        friendly_name: 'A la maison'
+        value_template: "{{ states.person | selectattr('state','eq','home') | list | count > 0 }}"
+
+
+
+### Todo set children there by default if parent are there when HA start
+automation:
+################################################################################
+- id: 'function_presence_papamobile_left_home'
+  alias: Papa Mobile - Out
+  description: Papa mobile n'est plus a la maison
+  trigger:
+  - platform: state
+    entity_id: device_tracker.papamobile
+    to: not_home
+  condition: []
+  action:
+  - service: device_tracker.see
+    data:
+      location_name: not_home
+      dev_id: netatmo_emilie
+  - service: device_tracker.see
+    data:
+      location_name: not_home
+      dev_id: netatmo_timothee
+  mode: single
+################################################################################

@@ -1,0 +1,75 @@
+automation:
+
+################################################################################
+- id: function_bedheater_evening_turnon
+  alias: Function - Couverture chauffante - Turn on Soirée
+  description: ''
+  trigger:
+  - platform: time
+    at: '21:00:00'
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.anyone_home
+      state: 'on'
+    - condition: numeric_state
+      entity_id: sensor.temperature_exterieur
+      below: '15'
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: person.sebastien
+        state: home
+      sequence:
+      - service: homeassistant.turn_on
+        target:
+          entity_id: switch.couverture_seb
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: person.laurine
+        state: home
+      sequence:
+      - service: homeassistant.turn_on
+        target:
+          entity_id: switch.couverture_laurine
+  mode: single
+################################################################################
+
+################################################################################
+- id: function_bedheater_turnoff_seb
+  alias: Function - Couverture chauffante - Auto off Seb
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: switch.couverture_seb
+    to: 'on'
+    for: 
+      hours: 2
+  condition: []
+  action:
+  - service: homeassistant.turn_off
+    target:
+      entity_id: switch.couverture_seb
+  mode: single
+  ################################################################################
+
+  ################################################################################
+- id: function_bedheater_turnoff_laurine
+  alias: Function - Couverture chauffante - Auto off Laurine
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: switch.couverture_laurine
+    to: 'on'
+    for: 
+      hours: 2
+  condition: []
+  action:
+  - service: homeassistant.turn_off
+    target:
+      entity_id: switch.couverture_laurine
+  mode: single
+  ################################################################################

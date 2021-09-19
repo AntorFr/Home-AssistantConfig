@@ -1,0 +1,36 @@
+alarm_control_panel:
+  - platform: manual
+    name: Alarme maison
+    code: ""
+    code_arm_required: false
+    arming_time: 120
+    delay_time: 120
+    trigger_time: 240
+    disarm_after_trigger: false
+    disarmed:
+      trigger_time: 0
+    armed_home:
+      arming_time: 0
+      delay_time: 0
+    armed_night:
+      arming_time: 0
+      delay_time: 0
+
+
+automation:
+###############################################
+- id: 'function_security_desarm_when_home'
+  alias: 'Function - Security -  Désarme au retours des parents'
+  trigger:
+    - platform: state
+      entity_id: group.parent_home
+      to: 'on'
+  condition:
+  - condition: state
+    entity_id: alarm_control_panel.alarme_maison
+    state: 'armed_away'
+  action:
+    - service: alarm_control_panel.alarm_disarm
+      target:
+        entity_id: alarm_control_panel.alarme_maison
+###############################################

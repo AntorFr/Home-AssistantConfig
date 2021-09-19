@@ -1,0 +1,22 @@
+template:
+  - binary_sensor:
+    - unique_id: automower_error
+      name: Etat Robot tondeuse
+      device_class: problem
+      state: >
+          {{ is_state('vacuum.automower_r_450x_gardenbot','error')}}
+          
+alert:
+  automower:
+    name: "Robot tondeuse en erreur"
+    message: >
+      "Robot tondeuse bloqué"
+    done_message: >
+      "Robot tondeuse de nouveau ok"
+    entity_id: binary_sensor.automower_error
+    state: "on"   # Optional, 'on' is the default value
+    repeat: 720
+    can_acknowledge: true  # Optional, default is true
+    skip_first: false  # Optional, false is the default
+    notifiers:
+      - notify

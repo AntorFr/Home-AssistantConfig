@@ -1,0 +1,84 @@
+---
+################################################################################
+# Alarm Clock
+################################################################################
+
+# A lot of this package has come from the following thread:
+# https://community.home-assistant.io/t/creating-a-alarm-clock/410/315
+
+### Inputs ###
+input_datetime:
+  wakeup_time:
+    name: Heure reveil
+    icon: mdi:alarm
+    has_date: false
+    has_time: true
+    # initial: 05:00
+
+input_number:
+  wakeup_duration:
+    name: Durée reveil
+    icon: mdi:clock-in
+    # initial: 30
+    min: 0
+    max: 60
+    step: 5
+    unit_of_measurement: Minutes
+
+
+### Sensors ###
+sensor:
+  - platform: template
+    sensors:
+      wakeup_time:
+        friendly_name: Heure reveil
+        # entity_id: input_datetime.wakeup_time
+        value_template: >
+          {{ (states.input_datetime.wakeup_time.attributes.timestamp | 
+              int | timestamp_custom("%H:%M",False)) }}
+      wakeup_alarm_start_time:
+        # entity_id: input_datetime.wakeup_time, input_number.wakeup_duration
+        friendly_name: Début réveil
+        value_template: >
+          {{ (((states.input_datetime.wakeup_time.attributes.timestamp | 
+              int) - (states.input_number.wakeup_duration.state | int * 60)) | 
+              timestamp_custom("%H:%M",False)) }}
+      wakeup_alarm_midpoint:
+        # entity_id: input_datetime.wakeup_time, input_number.wakeup_duration
+        friendly_name: Mileu réveil
+        value_template: >
+          {{ (((states.input_datetime.wakeup_time.attributes.timestamp | 
+              int) - ((states.input_number.wakeup_duration.state | 
+              int * 60)/2 )) | timestamp_custom("%H:%M",False)) }}
+automation:
+
+################################################################################
+- id: 'function_alarm_clock_seb'
+  alias: Function - Réveil - Seb Semaine
+  description: ''
+  trigger:
+  - platform: time
+    at: input_datetime.heure_reveil_seb
+  condition:
+  - condition: state
+    entity_id: binary_sensor.workday_sensor
+    state: 'on'
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: person.sebastien
+      state: home
+  action:
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.couverture_seb
+  - delay:
+      hours: 0
+      minutes: 45
+      seconds: 0
+      milliseconds: 0
+  - service: switch.turn_off
+    data: {}
+    entity_id: switch.couverture_seb
+  mode: single
+################################################################################

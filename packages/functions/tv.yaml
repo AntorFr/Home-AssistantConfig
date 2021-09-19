@@ -1,0 +1,17 @@
+automation:
+###############################################
+- id: function_tv_turn_on
+  alias: Function - TV - Turn on
+  description: ''
+  trigger:
+  - platform: device
+    device_id: dbcce08a96672b067e52881e90409470
+    domain: philips_js
+    type: turn_on
+  condition: []
+  action:
+  - service: wake_on_lan.send_magic_packet
+    data:
+      mac: 70:af:24:0d:b4:b7
+  mode: single
+  ###############################################

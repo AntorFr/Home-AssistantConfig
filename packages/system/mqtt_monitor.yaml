@@ -1,0 +1,25 @@
+---
+### MQTT Monitor ###
+
+automation:
+################################################################################
+- id: 'system_gate_notification'
+  alias: System - Notification - Portail deconnecté
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: cover.portail
+    to: unavailable
+    for: 00:00:30
+  condition: []
+  action:
+  - service: notify.notify
+    data:
+      message: Portail déconnecté
+      title: Alerte Portail
+  - service: notify.mobile_seb
+    data:
+      message: Portail déconnecté
+      title: Alerte Portail
+  mode: single
+################################################################################

@@ -1,0 +1,97 @@
+light:
+  - platform: group
+    name: Entrée Spots
+    entities:
+      - light.hue_color_spot_12
+      - light.hue_color_spot_13
+      - light.hue_color_spot_14
+      - light.hue_color_spot_15
+
+automation:
+################################################################################
+- id: 'entree_button'
+  alias: Area - Entrée - Bouton portail
+  description: ''
+  use_blueprint:
+    path: garykrige/zha-sonoff-zigbee-switch.yaml
+    input:
+      sonoff_button: 1c6a3fbccfe5ce1274901751216f226b
+      toggle_action:
+      - service: cover.toggle
+        data: {}
+        entity_id: cover.portail
+################################################################################
+
+################################################################################
+- id: 'entree_light_auto'
+  alias: Area - Entrée - Lumière auto
+  description: ''
+
+  mode: restart
+  max_exceeded: silent
+
+  trigger:
+    platform: state
+    entity_id: binary_sensor.entree_capteur_mouvement_ias_zone
+    from: "off"
+    to: "on"
+
+  condition:
+    - condition: and
+      conditions:
+        - condition: numeric_state
+          entity_id: sensor.lumi_lumi_sen_ill_mgl01_92f57c3c_illuminance
+          below: 60
+        - condition: state
+          entity_id: light.entree_spots
+          state: "off"
+
+  action:
+  - choose:
+      - conditions:
+        - condition: state
+          entity_id: switch.adaptive_lighting_default
+          state: 'on'
+        sequence:
+        - service: adaptive_lighting.apply
+          entity_id: switch.adaptive_lighting_default
+          data:
+            lights:
+              - light.entree_spots
+            turn_on_lights: true
+    default:
+        - service: light.turn_on
+          target: 
+            entity_id: light.entree_spots
+  - service: light.turn_on
+    target: 
+      entity_id: light.entree_spots
+  - wait_for_trigger:
+      platform: state
+      entity_id: binary_sensor.entree_capteur_mouvement_ias_zone
+      from: "on"
+      to: "off"
+  - delay:
+      minutes: 2
+  - service: light.turn_off
+    target: 
+      entity_id: light.entree_spots
+################################################################################
+
+################################################################################
+- id: 'entree_light_button'
+  alias: Area - Entrée - Lumière bouton
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: light.lumi_lumi_relay_c2acn01_3ae1cf05_on_off_2
+  condition: []
+  action:
+  - service: light.toggle
+    data: {}
+    target:
+      entity_id: light.entree_spots
+  - delay:
+      seconds: 1
+  mode: single
+  ################################################################################

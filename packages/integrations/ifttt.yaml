@@ -1,0 +1,52 @@
+input_boolean:
+  withing_bed_presence_1:
+    name: Presence lit  
+    icon: mdi:bed-king-outline
+
+automation:
+################################################################################
+- id: IFTT_Invoxia_notification
+  alias: Integration - IFTT - Invoxia notification
+  trigger:
+  - event_data:
+      action: call_service
+    event_type: ifttt_webhook_received
+    platform: event
+  condition:
+    condition: template
+    value_template: "{{ trigger.event.data.service == 'device_tracker.see' }}"
+  action:
+  - service: '{{ trigger.event.data.service }}'
+    data:
+      dev_id: '{{ trigger.event.data.dev_id }}'
+      location_name: >
+        {% if trigger.event.data.event == 'leaving' %}
+          not_home
+        {% elif trigger.event.data.event == 'Maison' %}
+        home
+        {% else %}
+          {{ trigger.event.data.location_name }}
+        {% endif %}
+      gps:
+      - '{{ trigger.event.data.latitude }}'
+      - '{{ trigger.event.data.longitude }}'
+################################################################################
+- id: IFTT_Binary_switch
+  alias: Integration - IFTT - Binary switch
+  trigger:
+  - event_data:
+      action: call_service
+    event_type: ifttt_webhook_received
+    platform: event
+  condition: 
+    - condition: or
+      conditions:
+        - condition: template
+          value_template: "{{ trigger.event.data.service == 'homeassistant.turn_on' }}"
+        - condition: template
+          value_template: "{{ trigger.event.data.service == 'homeassistant.turn_off' }}"
+  action:
+  - service: '{{ trigger.event.data.service }}'
+    target:
+      entity_id: '{{ trigger.event.data.entity_id }}'
+################################################################################

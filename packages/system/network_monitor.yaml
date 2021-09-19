@@ -1,0 +1,102 @@
+---
+### Monitor system ###
+
+group:
+  required_hub_devices:
+    name: Hub devices
+    all: true
+    icon: mdi:router-network
+    entities:
+      - device_tracker.zha01
+      - device_tracker.legrand_gateway
+      - device_tracker.dream_machine
+      - device_tracker.netatmo_relay
+
+  required_security_devices:
+    name: Security devices
+    all: true
+    icon: mdi:cctv
+    entities:
+      - device_tracker.doorbellpro
+      - device_tracker.netatmo_presence
+      - device_tracker.netatmo_welcome_583ce7   
+
+  required_door_devices:
+    name: Door devices
+    all: true
+    icon: mdi:garage-variant
+    entities:
+      - device_tracker.garagedoor_1
+      - device_tracker.garagedoor_2
+      - device_tracker.garagedoor_3
+      - device_tracker.test_01 #Portail
+
+
+  required_other_devices:
+    name: Other devices
+    all: true
+    icon: mdi:power-plug
+    entities:
+      - device_tracker.bed_heater
+      - device_tracker.teddy_light
+      - device_tracker.flipr_hub
+      - device_tracker.flipr_wifi_relay
+###      - device_tracker.filpr_wifi_connect
+
+  required_devices:
+    name: monitored devices
+    all: true
+    icon: mdi:router-network
+    entities:
+      - group.required_hub_devices
+      - group.required_security_devices
+      - group.required_door_devices
+      - group.required_other_devices
+
+automation:
+################################################################################
+- id: required_devices_alert
+  alias: System - Notification - Network device alerte
+  description: Notification appareil deconnecté
+  trigger:
+  - platform: state
+    entity_id: group.required_devices
+    to: 'not_home'
+  - platform: homeassistant
+    event: start
+  condition:
+  - condition: state
+    entity_id: group.required_devices
+    state: 'not_home'
+  action:
+  - service: persistent_notification.create
+    data: 
+      notification_id: required_devices_alert
+      title: >
+        {{ expand('group.required_devices') | selectattr('state', 'eq', 'not_home') | list | count }} appareil(s) déconnecté(s)
+      message: >
+        Appareil(s) déconnecté(s) : {{ expand('group.required_devices') | selectattr('state', 'eq', 'not_home') | map(attribute='name') | join(', ') }}
+  - service: notify.mobile_seb
+    data:
+      title: >
+        {{ expand('group.required_devices') | selectattr('state', 'eq', 'not_home') | list | count }} appareil(s) déconnecté(s)
+      message: >
+        Appareil(s) déconnecté(s) : {{ expand('group.required_devices') | selectattr('state', 'eq', 'not_home') | map(attribute='name') | join(', ') }}
+  mode: single
+################################################################################
+
+################################################################################
+- id: required_devices_alert_end
+  alias: System - Notification - Network device alerte (end)
+  description: Notification appareil deconnecté - Fin
+  trigger:
+  - platform: state
+    entity_id: group.required_devices
+    to: 'home'
+  condition: []
+  action:
+  - service: persistent_notification.dismiss
+    data: 
+      notification_id: required_devices_alert
+  mode: single
+################################################################################

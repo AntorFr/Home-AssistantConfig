@@ -1,0 +1,24 @@
+adaptive_lighting:
+  - name: Salon
+    lights:
+      - light.salon
+    take_over_control: true
+
+  - name: Salle a manger
+    lights:
+      - light.salle_a_manger
+    take_over_control: true
+
+  - name: default
+    lights:
+      - light.entree_spots
+      - light.couloir_etage
+      - light.escaliers
+      - light.toilettes_rdc
+      - light.toilette_etage
+    take_over_control: true
+
+  - name: Cuisine
+    lights:
+      - light.cusine_plafonier
+    take_over_control: true

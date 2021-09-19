@@ -1,0 +1,157 @@
+light:
+  - platform: switch
+    name: piscine lumière
+    entity_id: switch.piscine_lumiere
+  - platform: group
+    name: piscine
+    entities:
+      - light.piscine_spot_immergee
+      #- switch.piscine_lumiere
+
+      
+
+binary_sensor:
+  - platform: template
+    sensors:
+      swiming_pool_door_problem:
+        device_class: safety
+        friendly_name: Piscine Sécurisée
+        value_template: >
+          {{not is_state('binary_sensor.piscine_porte_bulle_ias_zone','off')}}
+
+alert:
+  swiming_pool:
+    name: "Porte Piscine non sécurisée"
+    message: >
+      {% if is_state('binary_sensor.piscine_porte_bulle_ias_zone', 'on') %}
+      Attention, la porte de la piscine est restée ouverte
+      {% elif is_state('binary_sensor.piscine_porte_bulle_ias_zone', 'unavailable') %}
+      Attention, la porte de la piscine est déconnectée.
+      {% else %}
+      Tout va bien
+      {% endif %}
+    done_message: "Porte Piscine sécurisée"
+    entity_id: binary_sensor.swiming_pool_door_problem
+    state: "on"   # Optional, 'on' is the default value
+    repeat:
+      - 30
+      - 60
+    can_acknowledge: false  # Optional, default is true
+    skip_first: true  # Optional, false is the default
+    notifiers:
+      - notify
+
+automation:
+################################################################################
+- id: 'Swimingpool_door_notification'
+  alias: Area - Piscine - Notification - Porte Piscine ouverte
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.piscine_porte_bulle_ias_zone
+    to: 'on'
+    for: 00:30:00
+  condition: []
+  action:
+  - service: notify.notify
+    data:
+      message: Porte Piscine ouverte depuis plus de 30 minutes
+      title: Alerte Piscine
+  - service: notify.mobile_seb
+    data:
+      message: Porte Piscine ouverte depuis plus de 30 minutes
+      title: Alerte Piscine
+  mode: single
+################################################################################
+- id: 'Swimingpool_light_auto'
+  alias: Area - Piscine - Lumière auto
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.piscine_porte_bulle_ias_zone
+    to:
+    - 'on'
+    - 'off'
+  condition:
+  - condition: state
+    entity_id: binary_sensor.nuit
+    state: 'on'
+  action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: "{{ trigger.to_state.state == 'on' }}"
+      sequence:
+      - service: homeassistant.turn_on
+        target:
+          entity_id: 
+            - light.piscine_spot_immergee
+            - switch.piscine_lumiere
+    default:
+    - service: homeassistant.turn_off
+      target:
+        entity_id:
+          - light.piscine_spot_immergee
+          - switch.piscine_lumiere
+  mode: single
+################################################################################
+- id: 'Swimingpool_auto_filtering'
+  alias: Area - Piscine - Filtration automatique
+  description: Filtration de la piscine en fonction du prix de l'electricité
+  trigger:
+  - platform: time_pattern
+    minutes: '0'
+    seconds: '0'
+  condition: []
+  variables:
+    duree: 12    
+  action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: >
+          {{state_attr('sensor.barry_kwh_total_price','current_frame') < duree}}
+      sequence:
+      - type: turn_on
+        device_id: a2fceb42992a0147a40d883d02e130f8
+        entity_id: switch.hub_cf4cac
+        domain: switch
+    default:
+    - type: turn_off
+      device_id: a2fceb42992a0147a40d883d02e130f8
+      entity_id: switch.hub_cf4cac
+      domain: switch
+  mode: single
+################################################################################
+- id: 'Swimingpool_auto_boiler'
+  alias: Area - Piscine - Chauffe eau automatique
+  description: Chauffe eau en fonction du prix de l'electricité
+  trigger:
+  - platform: time_pattern
+    minutes: '0'
+    seconds: '0'
+  condition: []
+  variables:
+    duree: 2   
+  action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: >
+          {{state_attr('sensor.barry_kwh_total_price','current_frame') < duree}}
+      sequence:
+      - type: turn_on
+        device_id: 4d5af4c5d0a5bd84eafb9ef394b320b5
+        entity_id: switch.piscine_chauffe_eau
+        domain: switch
+    default:
+    - type: turn_off
+      device_id: 4d5af4c5d0a5bd84eafb9ef394b320b5
+      entity_id: switch.piscine_chauffe_eau
+      domain: switch
+  mode: single
+################################################################################
+homeassistant:
+  customize:
+    automation.function_piscine_filtration_automatique:
+      icon: mdi:pool

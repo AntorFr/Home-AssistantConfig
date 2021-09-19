@@ -1,0 +1,15 @@
+notify:
+  - name: mobile_seb
+    platform: group
+    services:
+      - service: mobile_app_intra_mob08
+  - name: mobile_laurine
+    platform: group
+    services:
+      - service: mobile_app_oneplus_a6013
+  - name: all_mobile
+    platform: group
+    services:
+      - service: mobile_app_oneplus_a6013
+      - service: mobile_app_intra_mob08
+      - service: mobile_app_macbook_pro_de_sebastien_243617

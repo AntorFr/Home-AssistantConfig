@@ -1,0 +1,227 @@
+binary_sensor:
+  - platform: workday
+    country: FR
+    workdays: [mon, tue, wed, thu, fri]
+    excludes: [sat, sun, holiday]
+
+switch:
+  - platform: template
+    switches:
+      night_mode:
+        turn_on:
+          service: script.routine_sleep_mode
+          data: {}
+        turn_off:
+          service: script.routine_matin
+          data: {}
+        icon_template: >-
+          {% if is_state('switch.night_mode', 'on') %}
+            mdi:weather-night
+          {% else %}
+            mdi:weather-sunny
+          {% endif %}
+          
+
+automation:
+################################################################################
+- id: 'evening'
+  alias: Routine - Day - Soirée
+  description: ''
+  trigger:
+  - platform: time
+    at: '20:00:00'
+  condition:
+  - condition: state
+    entity_id: binary_sensor.anyone_home
+    state: 'on'
+  action:
+  - scene: scene.soiree
+  mode: single
+################################################################################
+
+################################################################################
+- id: 'morning'
+  alias: Routine - Day - Matin
+  description: ''
+  trigger:
+  - platform: time
+    at: "07:30:00"
+  condition:
+  - condition: state
+    entity_id: binary_sensor.anyone_home
+    state: 'on'
+  action:
+  - scene: scene.matin_2
+  mode: single
+################################################################################
+
+################################################################################
+- id: 'night'
+  alias: Routine - Day - Nuit
+  description: ''
+  trigger:
+  - platform: time
+    at: '03:00:00'
+  condition:
+  - condition: state
+    entity_id: binary_sensor.anyone_home
+    state: 'on'
+  action:
+  - scene: scene.couchee_2
+  mode: single
+################################################################################
+
+
+scene:
+################################################################################
+  - id: 'sleep_mode'
+    name: Couchée
+    entities:
+
+      ## Adaptative sleep mode ##
+      switch.adaptive_lighting_sleep_mode_cuisine:
+        state: 'on'
+      switch.adaptive_lighting_sleep_mode_salon:
+        state: 'on'
+      switch.adaptive_lighting_sleep_mode_salle_a_manger:
+        state: 'on'
+      switch.adaptive_lighting_sleep_mode_default:
+        state: 'on'
+
+      ## devices ##
+      switch.smart_power_outlet_3: ### Mezzanine Prise
+        state: 'off'
+      switch.couverture_laurine:
+        state: 'off'
+      switch.couverture_seb:
+        state: 'off'
+
+      ## TV ##
+      media_player.salon:
+        state: 'off'
+      media_player.tv01:
+        state: 'off'
+      
+      ## Sonos ##
+      media_player.salle_a_manger:
+        state: paused
+      media_player.emilie:
+        state: paused
+      media_player.salon_2:
+        state: paused
+      media_player.move:
+        state: paused
+      media_player.salle_de_douche:
+        state: paused
+      media_player.bureau_2:
+        state: paused
+      media_player.cuisine:
+        state: paused
+      media_player.salle_de_bains:
+        state: paused
+      media_player.salle_de_bain:
+        state: paused
+      
+      ## Google Assistant
+      media_player.assistant_bureau:
+        state: 'off'
+      media_player.assistant_salle_de_bain:
+        state: 'off'
+
+      ## Cover ##
+      cover.garage_1:
+        state: closed
+      cover.garage_2:
+        state: closed
+      cover.garage_3:
+        state: closed
+
+      ## Shutter ##
+        # Salon
+      cover.rolling_shutter_switch_3:
+        state: closed
+      cover.rolling_shutter_switch_5:
+        state: closed
+        # Salle a manger
+      cover.rolling_shutter_switch_4:
+        state: closed
+      cover.rolling_shutter_switch_2:
+        state: closed
+      cover.rolling_shutter_switch_11:
+        state: closed
+        # Cuisine
+      cover.rolling_shutter_switch_6:
+        state: closed
+      cover.rolling_shutter_switch_10:
+        state: closed
+
+      ## lights ##
+      light.bureau:
+        state: 'off'
+      light.chambre_emilie:
+        state: 'off'
+      light.cuisine:
+        state: 'off'
+      light.couloir_etage:
+        state: 'off'
+      light.entree:
+        state: 'off'
+      light.escaliers:
+        state: 'off'
+      light.garage:
+        state: 'off'
+      light.toilette_etage:
+        state: 'off'
+      light.toilettes_rdc:
+        state: 'off'
+      light.salle_de_bain:
+        state: 'off'
+      light.salle_a_manger:
+        state: 'off'
+      light.salon_lumieres:
+        state: 'off'
+      light.chambre_parents_lumieres:
+        state: 'off'
+      light.jardin:
+        state: 'off'
+      light.sapin:
+        state: 'off'
+      light.veilleuse_timothee:
+        state: 'off'
+
+      
+    icon: mdi:weather-night
+
+################################################################################
+  - id: 'morning'
+    name: Matin
+    entities:
+      switch.couverture_laurine:
+        friendly_name: Couverture Laurine
+        state: 'off'
+      switch.couverture_seb:
+        friendly_name: Couverture Seb
+        state: 'off'
+      light.veilleuse_timothee:
+        state: 'off'
+      switch.smart_power_outlet_4:
+        outlet_in_use: true
+        friendly_name: Prise TV
+        state: 'on'
+      switch.smart_power_outlet_3:
+        state: 'on'
+      light.sapin:
+        state: 'on'
+
+      ## Adaptative sleep mode off ##
+      switch.adaptive_lighting_sleep_mode_cuisine:
+        state: 'off'
+      switch.adaptive_lighting_sleep_mode_salon:
+        state: 'off'
+      switch.adaptive_lighting_sleep_mode_salle_a_manger:
+        state: 'off'
+      switch.adaptive_lighting_sleep_mode_default:
+        state: 'off'
+
+    icon: mdi:clock-time-nine
+################################################################################

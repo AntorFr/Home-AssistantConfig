@@ -1,0 +1,153 @@
+netatmo:
+  client_id: !secret netatmo_client_id
+  client_secret: !secret netatmo_client_secret
+
+counter:
+  netatmo_event_counter:
+    icon: mdi:sync
+ 
+#Person id
+#Sebastien / 426f58a6-fd7a-4c11-8673-32c64fae246a / person.sebastien
+#Laurine / 5be630f5-6a13-435d-baaf-e20876f35e65 / person.laurine
+#Emilie / 6628af07-4e7f-4447-87ec-63793911782a / person.emilie
+#Timothée / c5ebc2a4-fc6f-4cba-a933-d4b16f69a61e / person.timothee
+
+automation:
+################################################################################
+- id: Netatmo_set_home-away
+  alias: 'Integration - Netatmo - set home/away'
+  description: ''
+  trigger:
+    - platform: state
+      entity_id: person.laurine
+      from:
+        - 'home'
+        - 'not_home'
+      to: 
+        - 'home'
+        - 'not_home'
+    - platform: state
+      entity_id: person.sebastien
+      from:
+        - 'home'
+        - 'not_home'
+      to: 
+        - 'home'
+        - 'not_home'
+  condition: []
+  action:
+    - choose:
+        - conditions:
+            - condition: template
+              value_template: "{{trigger.to_state.state == 'home'}}"
+          sequence:
+            - service: netatmo.set_persons_home
+              data:
+                persons: "{{state_attr(trigger.entity_id, 'friendly_name')}}"
+              target:
+                entity_id: camera.netatmo_camera_entree
+        - conditions:
+            - condition: template
+              value_template: "{{trigger.to_state.state == not_home}}"
+          sequence:
+            - service: netatmo.set_person_away
+              data:
+                persons: "{{state_attr(trigger.entity_id, 'friendly_name')}}"
+              target:
+                entity_id: camera.netatmo_camera_entree
+      default: []
+  mode: parallel
+################################################################################
+- id: Netatmo_event_person
+  alias: 'Integration - Netatmo - Person update'
+  description: "Set person home when seen by the camera"
+  trigger:
+    - platform: event
+      event_type: netatmo_event
+      event_data:
+        type: person
+  variables:
+    persons:
+      426f58a6-fd7a-4c11-8673-32c64fae246a: person.sebastien
+      5be630f5-6a13-435d-baaf-e20876f35e65: person.laurine
+      6628af07-4e7f-4447-87ec-63793911782a: person.emilie
+      c5ebc2a4-fc6f-4cba-a933-d4b16f69a61e: person.timothee
+  
+  condition: []
+  action:
+    - choose:
+      - conditions:
+          - condition: template
+            value_template: >
+              {{(trigger.event.data['data']['persons']|selectattr('id','==','426f58a6-fd7a-4c11-8673-32c64fae246a')| list|count) > 0}}
+        sequence:
+          - service: device_tracker.see
+            data:
+              dev_id: 'netatmo_sebastien'
+              location_name: 'home'
+          - service: notify.mobile_seb
+            data:
+              title: 'Netatmo Detection'
+              message: 'Sébastien detecté'
+      default: []
+    - choose:
+      - conditions:
+          - condition: template
+            value_template: >
+              {{(trigger.event.data['data']['persons']|selectattr('id','==','5be630f5-6a13-435d-baaf-e20876f35e65')| list|count) > 0}}
+        sequence:
+          - service: device_tracker.see
+            data:
+              dev_id: 'netatmo_laurine'
+              location_name: 'home'
+          - service: notify.mobile_seb
+            data:
+              title: 'Netatmo Detection'
+              message: 'Laurine detectée'
+      default: []
+    - choose:
+      - conditions:
+          - condition: template
+            value_template: >
+              {{(trigger.event.data['data']['persons']|selectattr('id','==','6628af07-4e7f-4447-87ec-63793911782a')| list|count) > 0}}
+        sequence:
+          - service: device_tracker.see
+            data:
+              dev_id: 'netatmo_emilie'
+              location_name: 'home'
+          - service: notify.mobile_seb
+            data:
+              title: 'Netatmo Detection'
+              message: 'Émilie detectée'
+      default: []
+    - choose:
+      - conditions:
+          - condition: template
+            value_template: >
+              {{(trigger.event.data['data']['persons']|selectattr('id','==','c5ebc2a4-fc6f-4cba-a933-d4b16f69a61e')| list|count) > 0}}
+        sequence:
+          - service: device_tracker.see
+            data:
+              dev_id: 'netatmo_timothee'
+              location_name: 'home'
+          - service: notify.mobile_seb
+            data:
+              title: 'Netatmo Detection'
+              message: 'Timothée detectée'
+      default: []
+  mode: parallel
+################################################################################
+- id: Netatmo_event_count
+  alias: 'Integration - Netatmo - Count API push'
+  description: "Count all events pushed by the Netatmo API"
+  trigger:
+    - platform: event 
+      event_data: {}
+      event_type: netatmo_event
+      
+  action:
+    - service: counter.increment
+      entity_id: counter.netatmo_event_counter
+      data: {}
+################################################################################
+

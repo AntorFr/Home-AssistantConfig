@@ -1,0 +1,23 @@
+octoprint:
+  host: rsp3dprint.intra.sberard.fr
+  api_key: !secret octoprint_api_key
+  name: Prusa MK3S
+  bed: true
+  sensors:
+    monitored_conditions:
+      - 'Current State'
+      - 'Job Percentage'
+      - 'Time Remaining'
+
+binary_sensor:
+- platform: octoprint
+  name: Imprimante 3D
+  monitored_conditions:
+  - Printing
+  - Printing Error
+
+camera:
+- platform: mjpeg
+  name: Prusa MK3S video
+  still_image_url: http://rsp3dprint.intra.sberard.fr/webcam/?action=snapshot
+  mjpeg_url: http://rsp3dprint.intra.sberard.fr/webcam/?action=stream

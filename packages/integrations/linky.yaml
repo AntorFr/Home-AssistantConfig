@@ -1,0 +1,57 @@
+sensor:
+- platform: template
+  sensors:
+    #
+    # Power
+    teleinfo_puissance:
+      value_template: '{{ state_attr("sensor.linky","ENERGY").Power }}'
+      unit_of_measurement: "W"
+    #
+    # EnergyHC
+    teleinfo_energyhc:
+      value_template: '{{ state_attr("sensor.linky","TIC").HCHC }}'
+      unit_of_measurement: "Wh"
+    #
+    # EnergyHP
+    teleinfo_energyhp:
+      value_template: '{{ state_attr("sensor.linky","TIC").HCHP }}'
+      unit_of_measurement: "Wh"
+    #
+    # Energy Total + attr HP/HC
+    teleinfo_energy:
+      value_template: '{{ state_attr("sensor.linky","TIC").HCHC + state_attr("sensor.linky","TIC").HCHP }}'
+      unit_of_measurement: "Wh"
+      attribute_templates:
+        Index HP: >-
+          {{ state_attr("sensor.linky","TIC").HCHP }}
+        Index HC: >-
+          {{ state_attr("sensor.linky","TIC").HCHC }}
+    #
+    # Energy yesterday
+    teleinfo_energy_yesterday:
+      value_template: '{{ ( state_attr("sensor.linky","ENERGY").Yesterday *1000 ) |int }}'
+      unit_of_measurement: "Wh"
+    #
+    # Energy total (year)
+    teleinfo_energy_total:
+      value_template: '{{ ( state_attr("sensor.linky","ENERGY").Total *1000 ) |int }}'
+      unit_of_measurement: "Wh"
+    #
+    # Periode Tarifaire
+    teleinfo_periode_tarifaire:
+      value_template: '{{ (state_attr("sensor.linky","TIC").PTEC) |replace("..","") }}'
+
+
+utility_meter:
+  daily_energy:
+    source: sensor.teleinfo_energy_total
+    cycle: daily
+  hourly_energy:
+    source: sensor.teleinfo_energy_total
+    cycle: hourly
+  quarter_hourly_energy:
+    source: sensor.teleinfo_energy_total
+    cycle: quarter-hourly
+  yearly_energy:
+    source: sensor.teleinfo_energy_total
+    cycle: yearly
