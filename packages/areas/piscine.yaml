@@ -8,7 +8,14 @@ light:
       - light.piscine_spot_immergee
       #- switch.piscine_lumiere
 
-      
+sensor:
+  - name: mouvement_piscine_10min
+    platform: history_stats
+    entity_id: binary_sensor.motion_piscine
+    state: "on"
+    type: time
+    duration: 00:10:00
+    end: "{{ now() }}"
 
 binary_sensor:
   - platform: template

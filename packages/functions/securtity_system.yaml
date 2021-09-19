@@ -17,6 +17,7 @@ alarm_control_panel:
       delay_time: 0
 
 
+
 automation:
 ###############################################
 - id: 'function_security_desarm_when_home'

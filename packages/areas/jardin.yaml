@@ -1,10 +1,54 @@
+template:
+  - sensor:
+    - name: "Temperature Exterieur"
+      state: "{{ state_attr('weather.petit_mars', 'temperature') }}"
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state_class: measurement
+
 sensor:
-  - platform: template
-    sensors:
-      temperature_exterieur:
-        friendly_name: Temperature Exterieur
-        entity_id: weather.petit_mars
-        device_class: temperature
-        unit_of_measurement: "°C"
-        value_template: "{{ state_attr('weather.petit_mars', 'temperature') }}"
+  - name: mouvement_patio_10min
+    platform: history_stats
+    entity_id: binary_sensor.hue_outdoor_motion_sensor_1_motion
+    state: "on"
+    type: time
+    duration: 00:10:00
+    end: "{{now()}}"
+  - name: mouvement_air_de_jeux_10min
+    platform: history_stats
+    entity_id: binary_sensor.motion_air_de_jeux
+    state: "on"
+    type: time
+    duration: 00:10:00
+    end: "{{now()}}"
+
+
+binary_sensor:
+  - name: "outside_presence"
+    platform: "bayesian"
+    prior: 0.25
+    probability_threshold: 0.95
+    observations:
+    - entity_id: "sensor.mouvement_air_de_jeux_10min"
+      platform: "numeric_state"
+      prob_given_true: 0.95
+      above: 0
+    - entity_id: "sensor.mouvement_garage_3_10min"
+      platform: "numeric_state"
+      prob_given_true: 0.95
+      above: 0
+    - entity_id: "sensor.mouvement_patio_10min"
+      platform: "numeric_state"
+      prob_given_true: 0.95
+      above: 0
+    - entity_id: "sensor.mouvement_piscine_10min"
+      platform: "numeric_state"
+      prob_given_true: 0.95
+      above: 0
+    - entity_id: "vacuum.automower_r_450x_gardenbot"
+      platform: "state"
+      prob_given_true: 0.25
+      prob_given_false: 0.05
+      to_state: docked
+
 
