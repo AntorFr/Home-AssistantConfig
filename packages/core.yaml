@@ -1,0 +1,44 @@
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+#web
+http:
+  ssl_certificate: /letsencrypt/live/intra.sberard.fr/fullchain.pem
+  ssl_key: /letsencrypt/live/intra.sberard.fr/privkey.pem
+  use_x_forwarded_for: true
+  trusted_proxies: 192.168.10.2
+
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  include_used_components: true
+
+recorder:
+  exclude:
+    domains:
+      - device_tracker
+
+wake_on_lan:
+
+#logs
+logger:
+  default: error
+  logs:
+    homeassistant.components.mqtt: critical
+    homeassistant.components.netatmo: critical
+    custom_components.husqvarna_automower: critical
+    custom_components.flipr: error
+
+sensor:
+  - platform: time_date
+    display_options:
+      - 'date_time_iso'
+
+binary_sensor:
+  - platform: tod
+    name: Nuit
+    after: sunset
+    before: sunrise
