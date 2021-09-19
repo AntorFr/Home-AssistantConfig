@@ -1,0 +1,54 @@
+blueprint:
+  name: Sonoff Zigbee Switch
+  description: Automate the Sonoff Zigbee WB01
+  domain: automation
+  input:
+    sonoff_button:
+      name: Sonoff Switch
+      selector:
+        device:
+          integration: zha
+          manufacturer: eWeLink
+          model: WB01
+    toggle_action:
+      name: Single Press
+      description: Action to run on single press
+      default: []
+      selector:
+        action: {}
+    on_action:
+      name: Double Press
+      description: Action to run on double press
+      default: []
+      selector:
+        action: {}
+    off_action:
+      name: Long Press
+      description: Action to run on long press
+      default: []
+      selector:
+        action: {}
+  source_url: https://community.home-assistant.io/t/zha-sonoff-zigbee-switch/268628
+mode: parallel
+trigger:
+- platform: event
+  event_type: zha_event
+  event_data:
+    device_id: !input 'sonoff_button'
+variables:
+  toggle_action: !input 'toggle_action'
+  on_action: !input 'on_action'
+  off_action: !input 'off_action'
+action:
+- variables:
+    command: '{{ trigger.event.data.command }}'
+- choose:
+  - conditions:
+    - '{{ command == "toggle" }}'
+    sequence: !input 'toggle_action'
+  - conditions:
+    - '{{ command == "on" }}'
+    sequence: !input 'on_action'
+  - conditions:
+    - '{{ command == "off" }}'
+    sequence: !input 'off_action'

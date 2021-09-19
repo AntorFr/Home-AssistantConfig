@@ -1,0 +1,67 @@
+blueprint:
+  name: Smart Light
+  description: Turn on a light when motion is detected if needed.
+  domain: automation
+  input:
+    motion_sensor_entity:
+      name: Motion Sensor
+      selector:
+        entity: {}
+    light_sensor_entity:
+      name: Light Sensor
+      selector:
+        entity:
+          domain: sensor
+          device_class: illuminance
+    light_target:
+      name: Light
+      selector:
+        target:
+          entity:
+            domain: light
+    no_motion_wait:
+      name: Wait time
+      description: Time to leave the light on after last motion is detected.
+      default: 120
+      selector:
+        number:
+          min: 0
+          max: 3600
+          unit_of_measurement: seconds
+    lux_trigger:
+      name: Minimum brightness
+      description: minimum brightness that is triggering.
+      default: 20
+      selector:
+        number:
+          min: 0
+          max: 1000
+          unit_of_measurement: lux
+
+# If motion is detected within the delay,
+# we restart the script.
+mode: restart
+max_exceeded: silent
+
+trigger:
+  platform: state
+  entity_id: !input motion_sensor_entity
+  from: "off"
+  to: "on"
+
+#condition:
+# condition: numeric_state
+#  entity_id: !input light_sensor_entity
+#  below: !input lux_trigger
+
+action:
+  - service: light.turn_on
+    target: !input light_target
+  - wait_for_trigger:
+      platform: state
+      entity_id: !input motion_sensor_entity
+      from: "on"
+      to: "off"
+  - delay: !input no_motion_wait
+  - service: light.turn_off
+    target: !input light_target
