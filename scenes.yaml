@@ -1,0 +1,462 @@
+- id: '1611438470640'
+  name: Soirée
+  entities:
+    light.veilleuse_timothee:
+      brightness: 255
+      state: 'on'
+  icon: mdi:clock-time-eight-outline
+- id: '1611438581223'
+  name: Matin (old)
+  entities:
+    switch.couverture_laurine:
+      friendly_name: Couverture Laurine
+      icon: mdi:bed-king
+      state: 'off'
+    switch.couverture_seb:
+      friendly_name: Couverture Seb
+      icon: mdi:bed-king
+      state: 'off'
+    light.veilleuse_timothee:
+      effect_list:
+      - autoPlay
+      - blink
+      - color
+      - rainbow
+      - breathe
+      - confetti
+      - star
+      - pride
+      - sinelon
+      - cloudTwinkles
+      - rainbowTwinkles
+      - snowTwinkles
+      - incandescentTwinkles
+      - redGreenWhiteTwinkles
+      - hollyTwinkles
+      - redWhiteTwinkles
+      - blueWhiteTwinkles
+      - fairyLightTwinkles
+      - snow2Twinkles
+      - iceTwinkles
+      - retroC9Twinkles
+      - partyTwinkles
+      - forestTwinkles
+      - lavaTwinkles
+      - fireTwinkles
+      - cloud2Twinkles
+      - oceanTwinkles
+      supported_color_modes:
+      - hs
+      friendly_name: Veilleuse Timothée
+      icon: mdi:globe-model
+      supported_features: 61
+      state: 'off'
+    switch.smart_power_outlet_4:
+      outlet_in_use: true
+      friendly_name: Prise TV
+      icon: mdi:power-socket-fr
+      state: 'on'
+    switch.smart_power_outlet_3:
+      outlet_in_use: true
+      friendly_name: Mezzanine Prise
+      icon: mdi:power-socket-fr
+      state: 'on'
+    light.sapin:
+      effect_list:
+      - autoPlay
+      - blink
+      - color
+      - rainbow
+      - breathe
+      - confetti
+      - star
+      - pride
+      - sinelon
+      - cloudTwinkles
+      - rainbowTwinkles
+      - snowTwinkles
+      - incandescentTwinkles
+      - redGreenWhiteTwinkles
+      - hollyTwinkles
+      - redWhiteTwinkles
+      - blueWhiteTwinkles
+      - fairyLightTwinkles
+      - snow2Twinkles
+      - iceTwinkles
+      - retroC9Twinkles
+      - partyTwinkles
+      - forestTwinkles
+      - lavaTwinkles
+      - fireTwinkles
+      - cloud2Twinkles
+      - oceanTwinkles
+      supported_color_modes:
+      - hs
+      friendly_name: Sapin
+      icon: mdi:pine-tree
+      supported_features: 61
+      state: unavailable
+  icon: mdi:clock-time-nine
+- id: '1611439252264'
+  name: Couchée (old)
+  entities:
+    light.chambre_emilie:
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - colorloop
+      - random
+      supported_color_modes:
+      - color_temp
+      - hs
+      is_hue_group: true
+      friendly_name: Chambre Émilie
+      supported_features: 63
+      state: 'off'
+    light.cuisine:
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - colorloop
+      - random
+      supported_color_modes:
+      - color_temp
+      - hs
+      is_hue_group: true
+      friendly_name: Cuisine
+      supported_features: 63
+      state: 'off'
+    light.couloir_etage:
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+      - color_temp
+      is_hue_group: true
+      friendly_name: Couloir étage
+      supported_features: 43
+      state: 'off'
+    light.entree:
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - colorloop
+      - random
+      supported_color_modes:
+      - color_temp
+      - hs
+      is_hue_group: true
+      friendly_name: Entrée
+      supported_features: 63
+      state: 'off'
+    light.escaliers:
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - colorloop
+      - random
+      supported_color_modes:
+      - color_temp
+      - hs
+      is_hue_group: true
+      friendly_name: Escaliers
+      supported_features: 63
+      state: 'off'
+    light.garage:
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - colorloop
+      - random
+      supported_color_modes:
+      - color_temp
+      - hs
+      is_hue_group: true
+      friendly_name: Garage
+      supported_features: 63
+      state: 'off'
+    switch.smart_power_outlet_3:
+      outlet_in_use: true
+      friendly_name: Mezzanine Prise
+      icon: mdi:power-socket-fr
+      state: 'off'
+    media_player.emilie:
+      source_list:
+      - BFM Radio
+      - Café / Croissant
+      - La vie est belle
+      - Peaceful Meditation
+      volume_level: 0.22
+      is_volume_muted: false
+      media_content_id: x-sonos-vli:RINCON_000E58CAA2EA01400:2,spotify:62e6ee6bc42bdab95dffe877bd5f4e95
+      media_content_type: music
+      media_duration: 539
+      media_position: 78
+      media_position_updated_at: '2021-05-25T19:54:24.517252+00:00'
+      media_title: Un grincheux dans la famille Joyeux
+      shuffle: false
+      repeat: 'off'
+      sonos_group:
+      - media_player.emilie
+      friendly_name: Emilie
+      entity_picture: /api/media_player_proxy/media_player.emilie?token=f98383517f95075a9a86165c636a27b7a8424745c92101d089185c98851157e7&cache=7270e6738fc6ce14
+      supported_features: 457279
+      state: paused
+    media_player.assistant_bureau:
+      friendly_name: Assistant Timothée
+      supported_features: 152461
+      state: 'off'
+    cover.garage_1:
+      friendly_name: Garage 1
+      supported_features: 11
+      device_class: garage
+      state: closed
+    cover.garage_2:
+      friendly_name: Garage 2
+      supported_features: 11
+      device_class: garage
+      state: closed
+    cover.garage_3:
+      friendly_name: Garage 3
+      supported_features: 11
+      device_class: garage
+      state: closed
+    light.toilette_etage:
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - colorloop
+      - random
+      supported_color_modes:
+      - color_temp
+      - hs
+      is_hue_group: true
+      friendly_name: Toilette étage
+      supported_features: 63
+      state: 'off'
+    light.toilettes_rdc:
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - colorloop
+      - random
+      supported_color_modes:
+      - color_temp
+      - hs
+      is_hue_group: true
+      friendly_name: Toilettes RdC
+      supported_features: 63
+      state: 'off'
+    light.salle_de_bain:
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - colorloop
+      - random
+      supported_color_modes:
+      - color_temp
+      - hs
+      is_hue_group: true
+      friendly_name: Salle de bain
+      supported_features: 63
+      state: 'off'
+    light.salle_a_manger:
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+      - color_temp
+      is_hue_group: true
+      friendly_name: Salle à manger
+      supported_features: 43
+      state: 'off'
+    light.salon:
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - colorloop
+      - random
+      supported_color_modes:
+      - color_temp
+      - hs
+      is_hue_group: true
+      friendly_name: Salon
+      supported_features: 63
+      state: 'off'
+    light.chambre:
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+      - color_temp
+      is_hue_group: true
+      friendly_name: Chambre
+      supported_features: 43
+      state: 'off'
+    light.jardin:
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+      - color_temp
+      is_hue_group: true
+      friendly_name: Jardin
+      supported_features: 43
+      state: 'off'
+    light.veilleuse_timothee:
+      effect_list:
+      - autoPlay
+      - blink
+      - color
+      - rainbow
+      - breathe
+      - confetti
+      - star
+      - pride
+      - sinelon
+      - cloudTwinkles
+      - rainbowTwinkles
+      - snowTwinkles
+      - incandescentTwinkles
+      - redGreenWhiteTwinkles
+      - hollyTwinkles
+      - redWhiteTwinkles
+      - blueWhiteTwinkles
+      - fairyLightTwinkles
+      - snow2Twinkles
+      - iceTwinkles
+      - retroC9Twinkles
+      - partyTwinkles
+      - forestTwinkles
+      - lavaTwinkles
+      - fireTwinkles
+      - cloud2Twinkles
+      - oceanTwinkles
+      supported_color_modes:
+      - hs
+      color_mode: unknown
+      brightness: 127
+      effect: color
+      friendly_name: Veilleuse Timothée
+      icon: mdi:globe-model
+      supported_features: 61
+      state: 'on'
+    light.sapin:
+      effect_list:
+      - autoPlay
+      - blink
+      - color
+      - rainbow
+      - breathe
+      - confetti
+      - star
+      - pride
+      - sinelon
+      - cloudTwinkles
+      - rainbowTwinkles
+      - snowTwinkles
+      - incandescentTwinkles
+      - redGreenWhiteTwinkles
+      - hollyTwinkles
+      - redWhiteTwinkles
+      - blueWhiteTwinkles
+      - fairyLightTwinkles
+      - snow2Twinkles
+      - iceTwinkles
+      - retroC9Twinkles
+      - partyTwinkles
+      - forestTwinkles
+      - lavaTwinkles
+      - fireTwinkles
+      - cloud2Twinkles
+      - oceanTwinkles
+      supported_color_modes:
+      - hs
+      friendly_name: Sapin
+      icon: mdi:pine-tree
+      supported_features: 61
+      state: unavailable
+    media_player.salon_2:
+      source_list:
+      - BFM Radio
+      - Café / Croissant
+      - La vie est belle
+      - Peaceful Meditation
+      - Line-in
+      - TV
+      volume_level: 0.1
+      is_volume_muted: false
+      media_content_id: x-sonos-spotify:spotify%3atrack%3a3U5RTSxDKkhA6rtHEXpI6H?sid=9&flags=8224&sn=7
+      media_content_type: music
+      media_duration: 0
+      media_position: 0
+      media_position_updated_at: '2021-05-25T20:50:54.795482+00:00'
+      shuffle: false
+      repeat: 'off'
+      sonos_group:
+      - media_player.salon_2
+      night_sound: false
+      speech_enhance: false
+      queue_position: 0
+      friendly_name: Salon
+      supported_features: 457279
+      state: idle
+    media_player.move:
+      source_list:
+      - BFM Radio
+      - Café / Croissant
+      - La vie est belle
+      - Peaceful Meditation
+      volume_level: 0.12
+      is_volume_muted: false
+      media_content_id: x-sonos-spotify:spotify%3atrack%3a3U5RTSxDKkhA6rtHEXpI6H?sid=9&flags=8224&sn=7
+      media_content_type: music
+      media_duration: 0
+      media_position: 0
+      media_position_updated_at: '2021-05-25T20:50:58.215035+00:00'
+      shuffle: false
+      repeat: 'off'
+      sonos_group:
+      - media_player.salle_a_manger
+      - media_player.cuisine
+      - media_player.move
+      queue_position: 0
+      friendly_name: Cuisine Move
+      supported_features: 457279
+      state: idle
+    media_player.salle_de_bain:
+      source_list:
+      - BFM Radio
+      - Café / Croissant
+      - La vie est belle
+      - Peaceful Meditation
+      volume_level: 0.43
+      is_volume_muted: false
+      media_content_type: music
+      shuffle: false
+      repeat: 'off'
+      sonos_group:
+      - media_player.salle_de_bain
+      friendly_name: Sonos Salle de bain
+      supported_features: 457279
+      state: idle
+    media_player.cuisine:
+      source_list:
+      - BFM Radio
+      - Café / Croissant
+      - La vie est belle
+      - Peaceful Meditation
+      volume_level: 0.1
+      is_volume_muted: false
+      media_content_id: x-sonos-spotify:spotify%3atrack%3a3U5RTSxDKkhA6rtHEXpI6H?sid=9&flags=8224&sn=7
+      media_content_type: music
+      media_duration: 0
+      media_position: 0
+      media_position_updated_at: '2021-05-25T20:50:58.215035+00:00'
+      shuffle: false
+      repeat: 'off'
+      sonos_group:
+      - media_player.salle_a_manger
+      - media_player.cuisine
+      - media_player.move
+      queue_position: 0
+      friendly_name: Sonos Cuisine
+      supported_features: 457279
+      state: idle
+  icon: mdi:weather-night
