@@ -25,6 +25,7 @@ sensor:
 
 binary_sensor:
   - name: "outside_presence"
+    device_class: occupancy
     platform: "bayesian"
     prior: 0.25
     probability_threshold: 0.95
