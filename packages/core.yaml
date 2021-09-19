@@ -30,7 +30,7 @@ logger:
     homeassistant.components.mqtt: critical
     homeassistant.components.netatmo: critical
     custom_components.husqvarna_automower: critical
-    custom_components.flipr: error
+    custom_components.flipr: debug
 
 sensor:
   - platform: time_date
