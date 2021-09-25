@@ -27,6 +27,7 @@ wake_on_lan:
 logger:
   default: error
   logs:
+    homeassistant.components.template: debug
     homeassistant.components.mqtt: critical
     homeassistant.components.netatmo: error
     custom_components.husqvarna_automower: error

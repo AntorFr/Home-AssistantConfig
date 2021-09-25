@@ -21,6 +21,20 @@ sensor:
     type: time
     duration: 00:10:00
     end: "{{now()}}"
+  - name: mouvement_camera_entree_10min
+    platform: history_stats
+    entity_id: binary_sensor.camera_entree
+    state: "on"
+    type: time
+    duration: 00:10:00
+    end: "{{now()}}"
+  - name: mouvement_camera_parking_10min
+    platform: history_stats
+    entity_id: binary_sensor.camera_parking
+    state: "on"
+    type: time
+    duration: 00:10:00
+    end: "{{now()}}"
 
 
 binary_sensor:
@@ -43,6 +57,14 @@ binary_sensor:
       prob_given_true: 0.95
       above: 0
     - entity_id: "sensor.mouvement_piscine_10min"
+      platform: "numeric_state"
+      prob_given_true: 0.95
+      above: 0
+    - entity_id: "sensor.mouvement_camera_entree_10min"
+      platform: "numeric_state"
+      prob_given_true: 0.95
+      above: 0
+    - entity_id: "sensor.mouvement_camera_parking_10min"
       platform: "numeric_state"
       prob_given_true: 0.95
       above: 0

@@ -5,7 +5,107 @@ netatmo:
 counter:
   netatmo_event_counter:
     icon: mdi:sync
+
  
+template: 
+  - trigger: #Camera entrée
+    - platform: event
+      event_type: netatmo_event
+      event_data:
+        type: human
+        data:
+          device_id: 70:ee:50:63:b8:30
+    - platform: event
+      event_type: netatmo_event
+      event_data:
+        type: vehicle
+        data:
+          device_id: 70:ee:50:63:b8:30
+    - platform: event
+      event_type: netatmo_event
+      event_data:
+        type: movement
+        data:
+          device_id: 70:ee:50:63:b8:30
+    binary_sensor:
+      - name: Camera entrée
+        auto_off: "00:05:00"
+        state: "true"
+        device_class: motion
+        attributes: 
+          event_type: >
+            {{ trigger.event.data["type"]}}
+  - trigger: #Camera parking
+    - platform: event
+      event_type: netatmo_event
+      event_data:
+        type: human
+        data:
+          device_id: 70:ee:50:6d:3a:ee
+    - platform: event
+      event_type: netatmo_event
+      event_data:
+        type: vehicle
+        data:
+          device_id: 70:ee:50:6d:3a:ee
+    - platform: event
+      event_type: netatmo_event
+      event_data:
+        type: movement
+        data:
+          device_id: 70:ee:50:6d:3a:ee
+    binary_sensor:
+      - name: Camera parking
+        auto_off: "00:05:00"
+        state: "true"
+        device_class: motion
+        attributes: 
+          event_type: >
+            {{ trigger.event.data["type"]}}
+  - trigger: #Camera Salon
+    - platform: event
+      event_type: netatmo_event
+      event_data:
+        type: movement
+        data:
+          device_id: 70:ee:50:58:3c:e7
+    - platform: event
+      event_type: netatmo_event
+      event_data:
+        type: person
+        data:
+          device_id: 70:ee:50:58:3c:e7
+    unique_id: "netatmo_"
+    binary_sensor:
+      - name: Camera Salon
+        auto_off: "00:05:00"
+        state: "true"
+        device_class: motion
+        attributes: 
+          event_type: >
+            {{ trigger.event.data["type"]}}
+  - trigger: #Camera Couloir
+    - platform: event
+      event_type: netatmo_event
+      event_data:
+        type: person
+        data:
+          device_id: 70:ee:50:58:5c:a6
+    - platform: event
+      event_type: netatmo_event
+      event_data:
+        type: movement
+        data:
+          device_id: 70:ee:50:58:5c:a6
+    binary_sensor:
+      - name: Camera Couloir
+        auto_off: "00:05:00"
+        state: "true"
+        device_class: motion
+        attributes: 
+          event_type: >
+            {{ trigger.event.data["type"]}}
+
 #Person id
 #Sebastien / 426f58a6-fd7a-4c11-8673-32c64fae246a / person.sebastien
 #Laurine / 5be630f5-6a13-435d-baaf-e20876f35e65 / person.laurine
@@ -48,7 +148,7 @@ automation:
                 entity_id: camera.netatmo_camera_entree
         - conditions:
             - condition: template
-              value_template: "{{trigger.to_state.state == not_home}}"
+              value_template: "{{trigger.to_state.state == 'not_home' }}"
           sequence:
             - service: netatmo.set_person_away
               data:

@@ -27,10 +27,8 @@
       - service: script.sonos_rdc_ambiance_meditation
       button_top_left_double_press:
       - service: script.sonos_rdc_ambiance_piano
-      button_middle_left_single_press:
-      - service: script.sonos_rdc_ambiance_pop
-      button_middle_left_double_press:
-      - service: script.sonos_rdc_ambiance_matin
+      button_middle_left_single_press: []
+      button_middle_left_double_press: []
       button_bottom_left_single_press:
       - service: light.turn_on
         target:
@@ -39,3 +37,7 @@
       - service: light.turn_off
         target:
           entity_id: light.salon_lumieres
+      button_top_right_single_press:
+      - service: script.sonos_rdc_ambiance_pop
+      button_top_right_double_press:
+      - service: script.sonos_rdc_ambiance_matin
