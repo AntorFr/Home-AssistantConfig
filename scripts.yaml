@@ -75,6 +75,9 @@ roborock_salle_a_manger:
 routine_sleep_mode:
   alias: Routine - Sleep mode
   sequence:
+  - service: notify.mobile_app_intra_mob08
+    data:
+      message: Bonne nuit
   - service: light.turn_off
     target:
       area_id:
@@ -122,10 +125,12 @@ routine_sleep_mode:
       entity_id:
       - switch.couverture_laurine
       - switch.couverture_seb
-      - switch.smart_power_outlet_3
   - service: cover.close_cover
     target:
       area_id: garage
+  - service: alarm_control_panel.alarm_arm_night
+    target:
+      entity_id: alarm_control_panel.alarme_maison
   - delay:
       hours: 0
       minutes: 1
@@ -138,11 +143,14 @@ routine_sleep_mode:
       - switch.adaptive_lighting_salle_a_manger
       - switch.adaptive_lighting_salon
       - switch.adaptive_lighting_sleep_mode_default
-  mode: single
+  mode: restart
   icon: mdi:weather-night
 routine_matin:
   alias: Routine - Matin
   sequence:
+  - service: notify.mobile_app_intra_mob08
+    data:
+      message: Bonjour
   - service: cover.open_cover
     target:
       area_id:
@@ -156,5 +164,8 @@ routine_matin:
       - switch.adaptive_lighting_sleep_mode_default
       - switch.adaptive_lighting_sleep_mode_salle_a_manger
       - switch.adaptive_lighting_sleep_mode_salon
+  - service: alarm_control_panel.alarm_disarm
+    target:
+      entity_id: alarm_control_panel.alarme_maison
   mode: single
   icon: mdi:clock-time-nine

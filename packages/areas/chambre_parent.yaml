@@ -21,10 +21,9 @@ automation:
         entity_id: light.plafonnier_chambre_parents
         domain: light
       off_action:
-      - scene: scene.couchee_2
-      - service: notify.mobile_app_intra_mob08
-        data:
-          message: Bonne nuit
+      - service: switch.turn_on
+        target:
+          entity_id: switch.night_mode
       on_action:
       - service: switch.toggle
         data: {}
