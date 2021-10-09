@@ -41,6 +41,16 @@ sensor:
     teleinfo_periode_tarifaire:
       value_template: '{{ (state_attr("sensor.linky","TIC").PTEC) |replace("..","") }}'
 
+    # Periode Tarifaire
+    teleinfo_prix_kwh:
+      value_template: >
+              {% if is_state('sensor.teleinfo_periode_tarifaire', 'HC') %}
+              0.1312
+              {% else %}
+              0.1749
+              {% endif %}
+      device_class: monetary
+      unit_of_measurement: €/kWh
 
 utility_meter:
   daily_energy:

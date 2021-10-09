@@ -102,8 +102,8 @@ automation:
           - switch.piscine_lumiere
   mode: single
 ################################################################################
-- id: 'Swimingpool_auto_filtering'
-  alias: Area - Piscine - Filtration automatique
+- id: 'Swimingpool_auto_filtering_barry'
+  alias: Area - Piscine - Filtration automatique (barry)
   description: Filtration de la piscine en fonction du prix de l'electricité
   trigger:
   - platform: time_pattern
@@ -130,8 +130,33 @@ automation:
       domain: switch
   mode: single
 ################################################################################
-- id: 'Swimingpool_auto_boiler'
-  alias: Area - Piscine - Chauffe eau automatique
+- id: 'Swimingpool_auto_filtering_hchp'
+  alias: Area - Piscine - Filtration automatique (HP-HC)
+  description: Filtration de la piscine en fonction du prix de l'electricité
+  trigger:
+    - platform: state
+      entity_id: sensor.teleinfo_periode_tarifaire
+  condition: []  
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: sensor.teleinfo_periode_tarifaire
+        state: HC
+      sequence:
+      - type: turn_on
+        device_id: a2fceb42992a0147a40d883d02e130f8
+        entity_id: switch.hub_cf4cac
+        domain: switch
+    default:
+    - type: turn_off
+      device_id: a2fceb42992a0147a40d883d02e130f8
+      entity_id: switch.hub_cf4cac
+      domain: switch
+  mode: single
+################################################################################
+- id: 'Swimingpool_auto_boiler_barry'
+  alias: Area - Piscine - Chauffe eau automatique (barry)
   description: Chauffe eau en fonction du prix de l'electricité
   trigger:
   - platform: time_pattern
@@ -146,6 +171,33 @@ automation:
       - condition: template
         value_template: >
           {{state_attr('sensor.barry_kwh_total_price','current_frame') < duree}}
+      sequence:
+      - type: turn_on
+        device_id: 4d5af4c5d0a5bd84eafb9ef394b320b5
+        entity_id: switch.piscine_chauffe_eau
+        domain: switch
+    default:
+    - type: turn_off
+      device_id: 4d5af4c5d0a5bd84eafb9ef394b320b5
+      entity_id: switch.piscine_chauffe_eau
+      domain: switch
+  mode: single
+################################################################################
+- id: 'Swimingpool_auto_boiler_hphc'
+  alias: Area - Piscine - Chauffe eau automatique (HP-HC)
+  description: Chauffe eau en fonction du prix de l'electricité
+  trigger:
+    - platform: state
+      entity_id: sensor.teleinfo_periode_tarifaire
+  condition: []
+  variables:
+    duree: 2   
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: sensor.teleinfo_periode_tarifaire
+        state: HC
       sequence:
       - type: turn_on
         device_id: 4d5af4c5d0a5bd84eafb9ef394b320b5
