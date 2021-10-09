@@ -1,0 +1,8 @@
+sensor:
+  - name: mouvement_wc_rdc_5min
+    platform: history_stats
+    entity_id: binary_sensor.capteur_toilettes_rdc_motion
+    state: "on"
+    type: time
+    duration: 00:05:00
+    end: "{{now()}}"

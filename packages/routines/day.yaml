@@ -41,11 +41,13 @@ automation:
 
 ################################################################################
 - id: 'morning'
-  alias: Routine - Day - Matin
-  description: 'Routine matin'
+  alias: Routine - Day - Aurore
+  description: 'De bonne heure'
   trigger:
-  - platform: time
-    at: "08:30:00"
+  - platform: state
+    entity_id: binary_sensor.maison_rdc_presence
+    from: 'off'
+    to: 'on'
   condition:
       - condition: and
         conditions:
@@ -56,7 +58,34 @@ automation:
             entity_id: switch.night_mode
             state: 'on'
           - condition: time
-            after: '06:00:00'
+            after: '05:00:00'
+            before: '06:29:59'
+  action:
+  - service: script.routine_aurore
+  mode: single
+
+################################################################################
+- id: 'morning'
+  alias: Routine - Day - Matin
+  description: 'Routine matin'
+  trigger:
+  - platform: time
+    at: "08:00:00"
+  - platform: state
+    entity_id: binary_sensor.maison_rdc_presence
+    from: 'off'
+    to: 'on'
+  condition:
+      - condition: and
+        conditions:
+          - condition: state
+            entity_id: binary_sensor.anyone_home
+            state: 'on'
+          - condition: state
+            entity_id: switch.night_mode
+            state: 'on'
+          - condition: time
+            after: '06:30:00'
             before: '18:00:00'
   action:
   - service: switch.turn_off
@@ -72,6 +101,11 @@ automation:
   trigger:
   - platform: time
     at: '03:00:00'
+  - platform: state
+    entity_id: binary_sensor.maison_rdc_presence
+    from: 'on'
+    to: 'off'
+    for: 02:00:00
   condition:
       - condition: and
         conditions:
@@ -82,7 +116,7 @@ automation:
             entity_id: switch.night_mode
             state: 'off'
           - condition: time
-            after: '18:00:00'
+            after: '22:00:00'
             before: '06:00:00'
   action:
   - service: switch.turn_on

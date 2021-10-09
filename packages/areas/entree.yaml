@@ -7,6 +7,15 @@ light:
       - light.hue_color_spot_14
       - light.hue_color_spot_15
 
+sensor:
+  - name: mouvement_entree_5min
+    platform: history_stats
+    entity_id: binary_sensor.entree_capteur_mouvement_ias_zone
+    state: "on"
+    type: time
+    duration: 00:05:00
+    end: "{{now()}}"
+
 automation:
 ################################################################################
 - id: 'entree_button'
@@ -31,48 +40,66 @@ automation:
   max_exceeded: silent
 
   trigger:
-    platform: state
-    entity_id: binary_sensor.entree_capteur_mouvement_ias_zone
-    from: "off"
-    to: "on"
+    - platform: state
+      entity_id: binary_sensor.entree_capteur_mouvement_ias_zone
+      to: "on"
+      id: "on"
+    - platform: state
+      entity_id: binary_sensor.entree_capteur_mouvement_ias_zone
+      to: "off"
+      for:
+        minutes: 3
+      id: "off"
 
   condition:
-    - condition: and
+    - condition: or
       conditions:
-        - condition: numeric_state
-          entity_id: sensor.lumi_lumi_sen_ill_mgl01_92f57c3c_illuminance
-          below: 60
-        - condition: state
-          entity_id: light.entree_spots
-          state: "off"
+      - condition: and
+        conditions:
+          - condition: trigger
+            id: 'on' 
+          - condition: numeric_state
+            entity_id: sensor.lumi_lumi_sen_ill_mgl01_92f57c3c_illuminance
+            below: 60
+          - condition: state
+            entity_id: light.entree_spots
+            state: 'off'
+      - condition: and
+        conditions:
+          - condition: trigger
+            id: 'off' 
+          - condition: state
+            entity_id: light.entree_spots
+            state: 'on'        
 
   action:
   - choose:
-      - conditions:
-        - condition: state
-          entity_id: switch.adaptive_lighting_default
-          state: 'on'
-        sequence:
-        - service: adaptive_lighting.apply
-          entity_id: switch.adaptive_lighting_default
-          data:
-            lights:
-              - light.entree_spots
-            turn_on_lights: true
-    default:
-        - service: light.turn_on
-          target: 
-            entity_id: light.entree_spots
-  - service: light.turn_on
-    target: 
-      entity_id: light.entree_spots
-  - wait_for_trigger:
-      platform: state
-      entity_id: binary_sensor.entree_capteur_mouvement_ias_zone
-      from: "on"
-      to: "off"
-  - delay:
-      minutes: 2
+    - conditions:
+      - condition: trigger
+        id: 'on'
+      sequence:
+      - choose:
+          - conditions:
+            - condition: state
+              entity_id: switch.adaptive_lighting_default
+              state: 'on'
+            sequence:
+            - service: adaptive_lighting.apply
+              entity_id: switch.adaptive_lighting_default
+              data:
+                lights:
+                  - light.entree_spots
+                turn_on_lights: true
+        default:
+            - service: light.turn_on
+              target: 
+                entity_id: light.entree_spots
+      - wait_for_trigger:
+          platform: state
+          entity_id: binary_sensor.entree_capteur_mouvement_ias_zone
+          to: "off"
+          for:
+            minutes: 2
   - service: light.turn_off
     target: 
       entity_id: light.entree_spots

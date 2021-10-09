@@ -14,6 +14,80 @@ binary_sensor:
         friendly_name: 'A la maison'
         value_template: "{{ states.person | selectattr('state','eq','home') | list | count > 0 }}"
 
+  - name: "maison_rdc_presence"
+    device_class: occupancy
+    platform: "bayesian"
+    prior: 0.25
+    probability_threshold: 0.80
+    observations:
+    - entity_id: sensor.mouvement_salon_5min
+      platform: "numeric_state"
+      prob_given_true: 0.80
+      above: 0
+    - entity_id: sensor.mouvement_entree_5min
+      platform: "numeric_state"
+      prob_given_true: 0.70
+      above: 0
+    - entity_id: sensor.mouvement_salle_a_manger_5min
+      platform: "numeric_state"
+      prob_given_true: 0.90
+      above: 0
+    - entity_id: sensor.mouvement_cuisine_5min
+      platform: "numeric_state"
+      prob_given_true: 0.80
+      prob_given_false: 0.30
+      above: 0
+    - entity_id: media_player.tv01
+      platform: "state"
+      prob_given_true: 0.90
+      to_state: "on"     
+    - entity_id: sensor.mouvement_wc_rdc_5min
+      platform: "numeric_state"
+      prob_given_true: 0.60
+      prob_given_false: 0.20
+      above: 0
+
+  - name: "outside_presence"
+    device_class: occupancy
+    platform: "bayesian"
+    prior: 0.25
+    probability_threshold: 0.95
+    observations:
+    - entity_id: "sensor.mouvement_air_de_jeux_10min"
+      platform: "numeric_state"
+      prob_given_true: 0.95
+      above: 0
+    - entity_id: "sensor.mouvement_garage_3_10min"
+      platform: "numeric_state"
+      prob_given_true: 0.95
+      above: 0
+    - entity_id: "sensor.mouvement_patio_10min"
+      platform: "numeric_state"
+      prob_given_true: 0.95
+      above: 0
+    - entity_id: "sensor.mouvement_piscine_10min"
+      platform: "numeric_state"
+      prob_given_true: 0.95
+      above: 0
+    - entity_id: "sensor.mouvement_camera_entree_10min"
+      platform: "numeric_state"
+      prob_given_true: 0.95
+      above: 0
+    - entity_id: "sensor.mouvement_camera_parking_10min"
+      platform: "numeric_state"
+      prob_given_true: 0.95
+      above: 0
+    - entity_id: "sensor.mouvement_terasse_10min"
+      platform: "numeric_state"
+      prob_given_true: 0.95
+      above: 0
+    - entity_id: "vacuum.automower_r_450x_gardenbot"
+      platform: "state"
+      prob_given_true: 0.25
+      prob_given_false: 0.05
+      to_state: docked
+
+
 
 
 ### Todo set children there by default if parent are there when HA start

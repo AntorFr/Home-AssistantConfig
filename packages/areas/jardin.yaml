@@ -35,43 +35,11 @@ sensor:
     type: time
     duration: 00:10:00
     end: "{{now()}}"
-
-
-binary_sensor:
-  - name: "outside_presence"
-    device_class: occupancy
-    platform: "bayesian"
-    prior: 0.25
-    probability_threshold: 0.95
-    observations:
-    - entity_id: "sensor.mouvement_air_de_jeux_10min"
-      platform: "numeric_state"
-      prob_given_true: 0.95
-      above: 0
-    - entity_id: "sensor.mouvement_garage_3_10min"
-      platform: "numeric_state"
-      prob_given_true: 0.95
-      above: 0
-    - entity_id: "sensor.mouvement_patio_10min"
-      platform: "numeric_state"
-      prob_given_true: 0.95
-      above: 0
-    - entity_id: "sensor.mouvement_piscine_10min"
-      platform: "numeric_state"
-      prob_given_true: 0.95
-      above: 0
-    - entity_id: "sensor.mouvement_camera_entree_10min"
-      platform: "numeric_state"
-      prob_given_true: 0.95
-      above: 0
-    - entity_id: "sensor.mouvement_camera_parking_10min"
-      platform: "numeric_state"
-      prob_given_true: 0.95
-      above: 0
-    - entity_id: "vacuum.automower_r_450x_gardenbot"
-      platform: "state"
-      prob_given_true: 0.25
-      prob_given_false: 0.05
-      to_state: docked
-
+  - name: mouvement_terasse_10min
+    platform: history_stats
+    entity_id: binary_sensor.motion_terrasse
+    state: "on"
+    type: time
+    duration: 00:10:00
+    end: "{{now()}}"
 

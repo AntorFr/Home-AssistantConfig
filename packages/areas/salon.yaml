@@ -21,6 +21,13 @@ sensor:
     start: "{{ now().replace(hour=6, minute=0, second=0) }}"
     end: "{{ now().replace(hour=21, minute=0, second=0) }}"
 
+  - name: mouvement_salon_5min
+    platform: history_stats
+    entity_id: binary_sensor.camera_salon
+    state: "on"
+    type: time
+    duration: 00:05:00
+    end: "{{now()}}"
 
 
     

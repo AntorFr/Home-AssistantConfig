@@ -16,8 +16,16 @@ light:
       - light.hue_ambiance_spot_5
       - light.hue_ambiance_spot_6
 
-automation:
+sensor:
+  - name: mouvement_cuisine_5min
+    platform: history_stats
+    entity_id: binary_sensor.cuisine_capteur_mouvement_ias_zone
+    state: "on"
+    type: time
+    duration: 00:5:00
+    end: "{{now()}}"
 
+automation:
 ################################################################################
 - id: 'cuisine_light_auto'
   alias: Area - Cuisine - Lumière auto
@@ -27,48 +35,78 @@ automation:
   max_exceeded: silent
 
   trigger:
-    platform: state
-    entity_id: binary_sensor.cuisine_capteur_mouvement_ias_zone
-    from: "off"
-    to: "on"
+    - platform: state
+      entity_id: binary_sensor.cuisine_capteur_mouvement_ias_zone
+      to: 'on'
+      id: 'on'
+    - platform: state
+      entity_id: binary_sensor.cuisine_capteur_mouvement_ias_zone
+      to: 'off'
+      for:
+        minutes: 10
+      id: 'off'
 
   condition:
-    - condition: and
+    - condition: or
       conditions:
-        - condition: state
-          entity_id: sun.sun
-          state: "below_horizon"
-        - condition: state
-          entity_id: light.cusine_plafonier
-          state: "off"
+      - condition: and
+        conditions:
+          - condition: trigger
+            id: 'on' 
+          - condition: state
+            entity_id: sun.sun
+            state: "below_horizon"
+          - condition: state
+            entity_id: light.cusine_plafonier
+            state: 'off'
+      - condition: and
+        conditions:
+          - condition: trigger
+            id: 'off'
+          - condition: or
+            conditions:
+              - condition: state
+                entity_id: light.cusine_plafonier
+                state: 'on'
+              - condition: state
+                entity_id: light.cusine_spot
+                state: 'on'  
 
   action:
   - choose:
-      - conditions:
-        - condition: state
-          entity_id: switch.adaptive_lighting_cuisine
-          state: 'on'
-        sequence:
-        - service: adaptive_lighting.apply
-          entity_id: switch.adaptive_lighting_cuisine
-          data:
-            lights:
-              - light.cusine_plafonier
-            turn_on_lights: true
-    default:
-        - service: light.turn_on
-          target: 
-            entity_id: light.cusine_plafonier
-  - wait_for_trigger:
-      platform: state
-      entity_id: binary_sensor.cuisine_capteur_mouvement_ias_zone
-      from: "on"
-      to: "off"
-  - delay:
-      minutes: 2
+    - conditions:
+      - condition: trigger
+        id: 'on'
+      sequence:
+      - choose:
+          - conditions:
+            - condition: state
+              entity_id: switch.adaptive_lighting_cuisine
+              state: 'on'
+            sequence:
+            - service: adaptive_lighting.apply
+              entity_id: switch.adaptive_lighting_cuisine
+              data:
+                lights:
+                  - light.cusine_plafonier
+                  - light.cusine_spot
+                turn_on_lights: true
+        default:
+            - service: light.turn_on
+              target: 
+                entity_id: 
+                  - light.cusine_plafonier
+                  - light.cusine_spot
+      - wait_for_trigger:
+          platform: state
+          entity_id: binary_sensor.cuisine_capteur_mouvement_ias_zone
+          from: "on"
+          to: "off"
+          for:
+            minutes: 5
   - service: light.turn_off
     target: 
       entity_id: 
-      - light.cusine_plafonier
-      - light.cusine_spot
+        - light.cusine_plafonier
+        - light.cusine_spot
 ################################################################################
