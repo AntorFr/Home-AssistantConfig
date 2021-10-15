@@ -24,7 +24,7 @@ switch:
 
 automation:
 ################################################################################
-- id: 'evening'
+- id: 'routine_evening'
   alias: Routine - Day - Soirée
   description: ''
   trigger:
@@ -40,7 +40,7 @@ automation:
 ################################################################################
 
 ################################################################################
-- id: 'morning'
+- id: 'routine_aurore'
   alias: Routine - Day - Aurore
   description: 'De bonne heure'
   trigger:
@@ -65,15 +65,17 @@ automation:
   mode: single
 
 ################################################################################
-- id: 'morning'
+- id: 'routine_morning'
   alias: Routine - Day - Matin
   description: 'Routine matin'
   trigger:
   - platform: time
     at: "08:00:00"
+  - platform: time
+    at: "06:30:00"
+    id: 'start_time'
   - platform: state
     entity_id: binary_sensor.maison_rdc_presence
-    from: 'off'
     to: 'on'
   condition:
       - condition: and
@@ -87,6 +89,15 @@ automation:
           - condition: time
             after: '06:30:00'
             before: '18:00:00'
+          - condition: or
+            conditions:
+            - condition: not
+              conditions:
+              - condition: trigger
+                id: 'start_time'
+            - condition: state
+              entity_id: binary_sensor.maison_rdc_presence
+              state: 'on'  
   action:
   - service: switch.turn_off
     target:
@@ -95,7 +106,7 @@ automation:
 ################################################################################
 
 ################################################################################
-- id: 'night'
+- id: 'routine_night'
   alias: Routine - Day - Nuit
   description: ''
   trigger:
