@@ -41,3 +41,12 @@
       - service: script.sonos_rdc_ambiance_pop
       button_top_right_double_press:
       - service: script.sonos_rdc_ambiance_matin
+- id: '1636653311804'
+  alias: Area - Salon - Bouton volume
+  description: ''
+  use_blueprint:
+    path: seamus65/zha-ikea-symfonisk-sound-controller-for-media-the-spinny-one.yaml
+    input:
+      remote: 8520a3d7a4d1efa899ed5a4f009284fb
+      media_player:
+        entity_id: media_player.salon_2

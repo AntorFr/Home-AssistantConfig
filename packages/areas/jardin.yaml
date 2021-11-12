@@ -43,3 +43,71 @@ sensor:
     duration: 00:10:00
     end: "{{now()}}"
 
+automation:
+################################################################################
+- id: 'jardin_xmas-light_auto'
+  alias: Area - Jardin - Guirlande auto
+  description: ''
+
+  mode: restart
+  max_exceeded: silent
+
+  trigger:
+    - platform: sun
+      event: sunset
+      id: 'sunset'
+    - platform: sun
+      event: sunset
+      id: 'sunrise'
+    - platform: state
+      entity_id: switch.night_mode
+      to: 'on'
+      id: 'sleep'
+    - platform: state
+      entity_id: switch.night_mode
+      to: 'off'
+      id: 'wake-up'
+    - platform: state
+      entity_id: binary_sensor.anyone_home
+      to: 'on'
+      id: 'come-back'
+    - platform: state
+      entity_id: binary_sensor.anyone_home
+      to: 'off'
+      id: 'leaving'
+
+  action:
+  - choose:
+    - alias: "sunrise and wake up and at home > turn on"
+      conditions:
+      - condition: and
+        conditions:
+          - condition: trigger
+            id: 
+              - 'sunset'
+              - 'wake-up'
+              - 'come-back'
+          - condition: sun
+            after: sunset
+            before: sunrise
+          - condition: state
+            entity_id: binary_sensor.anyone_home
+            state: 'on'
+      sequence:
+        - service: switch.turn_on
+          entity_id: switch.guirlandes_noel_switch
+        - service: light.turn_on
+          entity_id: light.guirlandes_noel
+    - alias: "sunrise or at sleep or away  > turn off"
+      conditions:
+        - condition: trigger
+          id: 
+            - 'sunrise'
+            - 'sleep'
+            - 'leaving'
+      sequence:
+        - service: switch.turn_off
+          entity_id: switch.guirlandes_noel_switch
+        - service: light.turn_off
+          entity_id: light.guirlandes_noel
+################################################################################

@@ -16,16 +16,124 @@ automation:
     input:
       sonoff_button: 00885357a5b4e685c3ea692c95e4db63
       toggle_action:
-      - type: toggle
-        device_id: e9d42fb1963c8eb9bdee7c45834230b8
-        entity_id: light.plafonnier_chambre_parents
-        domain: light
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: switch.night_mode
+            state: 'on'
+          sequence:
+          - service: light.toggle
+            target:
+              entity_id: light.veilleuse_lit_parent
+            data:
+              color_name: red
+              effect: color
+              brightness_pct: 50
+        default:
+        - type: toggle
+          device_id: e9d42fb1963c8eb9bdee7c45834230b8
+          entity_id: light.plafonnier_chambre_parents
+          domain: light
+
       off_action:
-      - service: switch.turn_on
-        target:
-          entity_id: switch.night_mode
+      - choose:
+        - conditions:
+          - condition: time
+            after: '05:00:00'
+            before: '20:00:00'
+          sequence:
+          - service: switch.turn_off
+            target:
+              entity_id: switch.night_mode
+        default:
+        - service: switch.turn_on
+          target:
+            entity_id: switch.night_mode
+
       on_action:
-      - service: switch.toggle
-        data: {}
-        entity_id: switch.couverture_seb
+      - choose:
+        - conditions:
+          - condition: time
+            after: '05:00:00'
+            before: '20:00:00'
+          sequence:
+          - service: cover.toggle
+            target:
+              area_id: chambre_parent
+        default:
+        - service: switch.toggle
+          data: {}
+          entity_id: switch.couverture_seb
+################################################################################
+
+################################################################################
+- id: 'chambre_parent_button_seb'
+  alias: Area - Chambre - Bouton lit Sébastien
+  description: ''
+  mode: parallel
+  max_exceeded: silent
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.entree_capteur_mouvement_ias_zone
+      to: "on"
+      id: "on"
+    - platform: state
+      entity_id: binary_sensor.entree_capteur_mouvement_ias_zone
+      to: "off"
+      for:
+        minutes: 3
+      id: "off"
+
+  condition:
+    - condition: or
+      conditions:
+      - condition: and
+        conditions:
+          - condition: trigger
+            id: 'on' 
+          - condition: numeric_state
+            entity_id: sensor.lumi_lumi_sen_ill_mgl01_92f57c3c_illuminance
+            below: 60
+          - condition: state
+            entity_id: light.entree_spots
+            state: 'off'
+      - condition: and
+        conditions:
+          - condition: trigger
+            id: 'off' 
+          - condition: state
+            entity_id: light.entree_spots
+            state: 'on'        
+
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: 'on'
+      sequence:
+      - choose:
+          - conditions:
+            - condition: state
+              entity_id: switch.adaptive_lighting_default
+              state: 'on'
+            sequence:
+            - service: adaptive_lighting.apply
+              entity_id: switch.adaptive_lighting_default
+              data:
+                lights:
+                  - light.entree_spots
+                turn_on_lights: true
+        default:
+            - service: light.turn_on
+              target: 
+                entity_id: light.entree_spots
+      - wait_for_trigger:
+          platform: state
+          entity_id: binary_sensor.entree_capteur_mouvement_ias_zone
+          to: "off"
+          for:
+            minutes: 2
+  - service: light.turn_off
+    target: 
+      entity_id: light.entree_spots
 ################################################################################

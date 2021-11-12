@@ -4,6 +4,14 @@ light:
     entities:
       - light.salon
       - light.salon_led_buffet
+
+group:
+  salon_sensors:
+    name: Capteurs mouvement salon
+    all: false
+    entities:
+      - binary_sensor.camera_salon
+      - binary_sensor.lumi_lumi_sensor_motion_aq2_36018b06_ias_zone
   
 sensor:
   - platform: history_stats
@@ -23,11 +31,85 @@ sensor:
 
   - name: mouvement_salon_5min
     platform: history_stats
-    entity_id: binary_sensor.camera_salon
+    entity_id: group.salon_sensors
     state: "on"
     type: time
     duration: 00:05:00
     end: "{{now()}}"
 
+automation:
+################################################################################
+- id: 'salon_light_auto'
+  alias: Area - Salon - Lumière auto
+  description: ''
+
+  mode: restart
+  max_exceeded: silent
+
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.lumi_lumi_sensor_motion_aq2_36018b06_ias_zone
+      to: "on"
+      id: "on"
+    - platform: state
+      entity_id: binary_sensor.lumi_lumi_sensor_motion_aq2_36018b06_ias_zone
+      to: "off"
+      for:
+        minutes: 60
+      id: "off"
+
+  condition:
+    - condition: or
+      conditions:
+      - condition: and
+        conditions:
+          - condition: trigger
+            id: 'on' 
+          - condition: numeric_state
+            entity_id: sensor.lumi_lumi_sen_ill_mgl01_21fb7c3c_illuminance
+            below: 60
+          - condition: state
+            entity_id: light.salon_lumieres
+            state: 'off'
+      - condition: and
+        conditions:
+          - condition: trigger
+            id: 'off' 
+          - condition: state
+            entity_id: light.salon_lumieres
+            state: 'on'        
+
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: 'on'
+      sequence:
+      - choose:
+          - conditions:
+            - condition: state
+              entity_id: switch.adaptive_lighting_salon
+              state: 'on'
+            sequence:
+            - service: adaptive_lighting.apply
+              entity_id: switch.adaptive_lighting_salon
+              data:
+                lights:
+                  - light.salon_lumieres
+                turn_on_lights: true
+        default:
+            - service: light.turn_on
+              target: 
+                entity_id: light.salon_lumieres
+      - wait_for_trigger:
+          platform: state
+          entity_id: binary_sensor.lumi_lumi_sensor_motion_aq2_36018b06_ias_zone
+          to: "off"
+          for:
+            minutes: 30
+  - service: light.turn_off
+    target: 
+      entity_id: light.salon_lumieres
+################################################################################
 
     
