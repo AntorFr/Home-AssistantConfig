@@ -40,7 +40,7 @@ automation:
         - conditions:
           - condition: time
             after: '05:00:00'
-            before: '20:00:00'
+            before: '19:00:00'
           sequence:
           - service: switch.turn_off
             target:
@@ -55,7 +55,7 @@ automation:
         - conditions:
           - condition: time
             after: '05:00:00'
-            before: '20:00:00'
+            before: '19:00:00'
           sequence:
           - service: cover.toggle
             target:

@@ -57,7 +57,7 @@ automation:
       event: sunset
       id: 'sunset'
     - platform: sun
-      event: sunset
+      event: sunrise
       id: 'sunrise'
     - platform: state
       entity_id: switch.night_mode
@@ -90,6 +90,7 @@ automation:
           - condition: sun
             after: sunset
             before: sunrise
+            after_offset: '-00:00:10' #fix when sun == sunset
           - condition: state
             entity_id: binary_sensor.anyone_home
             state: 'on'
