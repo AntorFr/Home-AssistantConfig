@@ -105,6 +105,35 @@ template:
         attributes: 
           event_type: >
             {{ trigger.event.data["type"]}}
+  - trigger: #Capteur Fumée Couloir
+    - platform: event
+      event_type: netatmo_event
+      event_data:
+        type: smoke
+        data:
+          device_id: 70:ee:50:5a:ea:9a
+    - platform: event
+      event_type: netatmo_event
+      event_data:
+        type: hush
+        data:
+          device_id: 70:ee:50:5a:ea:9a
+    binary_sensor:
+      - name: Capteur Fumée Couloir
+        unique_id: netatmo_smoke_sensor_upstairs_coridor
+        state: >
+          {% if trigger.event.data["type"] == 'smoke'  %}
+          on
+          {% elif trigger.event.data["type"] == 'hush' %}
+          off
+          {% else %}
+          off
+          {% endif %}
+        device_class: smoke
+        attributes: 
+          event_type: >
+            {{ trigger.event.data["type"]}}
+
 
 #Person id
 #Sebastien / 426f58a6-fd7a-4c11-8673-32c64fae246a / person.sebastien

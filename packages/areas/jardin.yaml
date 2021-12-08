@@ -87,10 +87,13 @@ automation:
               - 'sunset'
               - 'wake-up'
               - 'come-back'
-          - condition: sun
-            after: sunset
-            before: sunrise
-            after_offset: '-00:00:10' #fix when sun == sunset
+          - condition: or
+            conditions:
+              - condition: state
+                entity_id: sun.sun
+                state: 'below_horizon'
+              - condition: trigger
+                id: sunset
           - condition: state
             entity_id: binary_sensor.anyone_home
             state: 'on'

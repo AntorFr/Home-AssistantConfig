@@ -68,7 +68,7 @@ roborock_salle_a_manger:
     data:
       segments: 16
     target:
-      entity_id: vacuum.roborock_s6
+      entity_id: vacuum.roborock_s7
   mode: single
   alias: Aspiration Salle à manger
   icon: bha:roborock
@@ -125,11 +125,23 @@ routine_sleep_mode:
       - salle_a_manger
       - chambre_parent
       - chambre_timothee
-      - chambre_d_amis
       - chambre_emilie
   - service: cover.close_cover
     target:
       area_id: garage
+  - choose:
+      - conditions:
+          - condition: state
+            entity_id: input_boolean.gest_mode
+            state: "off"
+        sequence:
+        - service: light.turn_off
+          target:
+            area_id: chambre_d_amis
+        - service: cover.close_cover
+          target:
+            area_id: chambre_d_amis
+
   - delay:
       hours: 0
       minutes: 1
@@ -156,6 +168,15 @@ routine_matin:
       - cuisine
       - salle_a_manger
       - salon
+  - choose:
+      - conditions:
+          - condition: state
+            entity_id: input_boolean.gest_mode
+            state: "off"
+        sequence:
+        - service: cover.open_cover
+          target:
+            area_id: chambre_d_amis
   - service: switch.turn_off
     target:
       entity_id:

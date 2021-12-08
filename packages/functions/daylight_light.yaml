@@ -1,0 +1,159 @@
+automation:
+###############################################
+- id: function_daylight_light
+  alias: Function - Cadre Timothee - Auto
+  description: ''
+
+  mode: restart
+  max_exceeded: silent
+
+  trigger:
+    - platform: event
+      event_type: routine_event
+      event_data:
+        type: evening
+      id: evening
+    - platform: event
+      event_type: routine_event
+      event_data:
+        type: children evening ritual
+      id: children evening ritual
+    - platform: event
+      event_type: routine_event
+      event_data:
+        type: children night
+      id: children night
+    - platform: event
+      event_type: routine_event
+      event_data:
+        type: children morning
+      id: children morning
+    - platform: event
+      event_type: routine_event
+      event_data:
+        type: night
+      id: night
+    - platform: event
+      event_type: routine_event
+      event_data:
+        type: morning
+      id: morning
+    - platform: state
+      entity_id: binary_sensor.anyone_home
+      to: 'on'
+      id: 'come-back'
+    - platform: state
+      entity_id: binary_sensor.anyone_home
+      to: 'off'
+      id: 'leaving'
+
+  action:
+  - choose:
+    - alias: "Evening - Start sleep ritual"
+      conditions:
+        - condition: trigger
+          id: evening
+      sequence:
+        - service: light.turn_on
+          target:
+            entity_id: light.cadre_lumineux_timothee
+          data:
+            brightness: 100
+        - service: light.turn_off
+          target:
+            entity_id: 
+              - light.cadre_lumineux_lune
+              - light.cadre_lumineux_etoiles
+        - service: light.turn_on
+          target:
+            entity_id: light.cadre_lumineux_soleil
+          data:
+            effect: color
+            rgb_color: [255,127,0]
+    - alias: "Evening - Almost sleep time"
+      conditions:
+        - condition: trigger
+          id: children evening ritual
+      sequence:
+        - service: light.turn_on
+          target:
+            entity_id: light.cadre_lumineux_soleil
+          data:
+            effect: color
+            rgb_color: [255,0,0]
+        - service: light.turn_on
+          target:
+            entity_id: light.cadre_lumineux_lune
+          data:
+            effect: snowTwinkles
+        - service: light.turn_on
+          target:
+            entity_id: light.cadre_lumineux_etoiles
+          data:
+            effect: star
+            rgb_color: [255,255,255]
+    - alias: "Evening - Children Sleep time"
+      conditions:
+        - condition: trigger
+          id: children night
+      sequence:
+        - service: light.turn_on
+          target:
+            entity_id: light.cadre_lumineux_timothee
+          data:
+            brightness: 50
+        - service: light.turn_off
+          target:
+            entity_id: light.cadre_lumineux_soleil
+        - service: light.turn_on
+          target:
+            entity_id: light.cadre_lumineux_lune
+          data:
+            effect: color
+            rgb_color: [255,255,255]
+        - service: light.turn_on
+          target:
+            entity_id: light.cadre_lumineux_etoiles
+          data:
+            effect: star
+            rgb_color: [255,255,255]
+    - alias: "Evening - Night (parent sleep)"
+      conditions:
+        - condition: trigger
+          id: night
+      sequence:
+        - service: light.turn_on
+          target:
+            entity_id: light.cadre_lumineux_timothee
+          data:
+            brightness: 20
+        - service: light.turn_off
+          target:
+            entity_id: light.cadre_lumineux_soleil
+        - service: light.turn_on
+          target:
+            entity_id: 
+              - light.cadre_lumineux_lune
+              - light.cadre_lumineux_etoiles
+    - alias: "Morning - Children morning"
+      conditions:
+        - condition: trigger
+          id: children morning
+      sequence:
+        - service: light.turn_on
+          target:
+            entity_id: light.cadre_lumineux_timothee
+          data:
+            brightness: 20
+        - service: light.turn_on
+          target:
+            entity_id: light.cadre_lumineux_soleil
+          data:
+            effect: color
+            rgb_color: [255,255,255]
+        - service: light.turn_off
+          target:
+            entity_id: 
+              - light.cadre_lumineux_lune
+              - light.cadre_lumineux_etoiles
+  ###############################################

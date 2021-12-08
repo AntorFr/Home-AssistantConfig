@@ -11,7 +11,7 @@
   action:
   - service: xiaomi_miio.vacuum_remote_control_start
     data:
-      entity_id: vacuum.xiaomi_vacuum_cleaner
+      entity_id: vacuum.roborock_s7
   - service: notify.mobile_seb
     data:
       title: Roomba - Lancement auto

@@ -16,7 +16,20 @@ alarm_control_panel:
       arming_time: 0
       delay_time: 0
 
-
+alert:
+  fire_alert:
+    name: "Alarm Incendie"
+    message: >
+      "Alarm Incendie"
+    done_message: >
+      "Fin d'alarme incendie"
+    entity_id: binary_sensor.capteur_fumee_couloir
+    state: "on"   # Optional, 'on' is the default value
+    repeat: 5
+    can_acknowledge: false  # Optional, default is true
+    skip_first: false  # Optional, false is the default
+    notifiers:
+      - notify
 
 automation:
 ###############################################
@@ -34,4 +47,22 @@ automation:
     - service: alarm_control_panel.alarm_disarm
       target:
         entity_id: alarm_control_panel.alarme_maison
+###############################################
+
+###############################################
+- id: 'function_security_fire_alarm'
+  alias: 'Function - Security -  Alarm Incendie'
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.capteur_fumee_couloir
+      to: 'on'
+  action:
+    - service: notify.mobile_app_intra_mob08
+      data:
+        message: >
+          {%if 'to_state' in trigger %}
+          {% set friendly_name = trigger.to_state.attributes.friendly_name %}
+          {% endif %}
+          Alarm incendie: {{friendly_name|d}}
+
 ###############################################
