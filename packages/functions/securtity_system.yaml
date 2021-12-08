@@ -48,6 +48,54 @@ automation:
       target:
         entity_id: alarm_control_panel.alarme_maison
 ###############################################
+- id: 'function_security_triger_while_armed_away'
+  alias: 'Function - Security - Alarme (absent)'
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.maison_rdc_presence
+      to: "on"
+    - platform: state
+      entity_id: binary_sensor.outside_presence
+      to: "on"
+    - platform: state
+      entity_id: binary_sensor.maison_floor1_presence
+      to: "on"
+  condition:
+    - condition: state
+      entity_id: alarm_control_panel.alarme_maison
+      state: armed_away
+  action:
+    service: alarm_control_panel.alarm_trigger
+    target:
+      entity_id: alarm_control_panel.alarme_maison
+
+###############################################
+- id: 'function_security_triger_while_armed_night'
+  alias: 'Function - Security - Alarme (nuit)'
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.outside_presence
+      to: "on"
+  condition:
+    - condition: state
+      entity_id: alarm_control_panel.alarme_maison
+      state: armed_night
+  action:
+    service: alarm_control_panel.alarm_trigger
+    target:
+      entity_id: alarm_control_panel.alarme_maison
+
+###############################################
+- id: 'function_security_triger_acton'
+  alias: 'Function - Security - Traitement alarme'
+  trigger:
+    - platform: state
+      entity_id: alarm_control_panel.alarme_maison
+      to: "triggered"
+  action:
+    - service: notify.mobile_app_intra_mob08
+      data:
+        message: "ALARME! Mouvement detecté: {{ expand('group.home_occupancy') | selectattr('state', 'eq', 'off') | list | map(attribute='name') | join(', ') }}"
 
 ###############################################
 - id: 'function_security_fire_alarm'
@@ -57,7 +105,7 @@ automation:
       entity_id: binary_sensor.capteur_fumee_couloir
       to: 'on'
   action:
-    - service: notify.mobile_app_intra_mob08
+    - service: notify.notify
       data:
         message: >
           {%if 'to_state' in trigger %}

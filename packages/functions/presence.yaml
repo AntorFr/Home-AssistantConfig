@@ -5,6 +5,15 @@ group:
     entities:
       - person.sebastien
       - person.laurine
+  home_occupancy:
+    name: detection presence maison
+    entities:
+      - binary_sensor.maison_rdc_presence
+      - binary_sensor.outside_presence
+      - binary_sensor.maison_floor1_presence
+
+    
+  
 
 input_boolean:
   gest_mode:
@@ -49,6 +58,33 @@ binary_sensor:
     - entity_id: sensor.mouvement_wc_rdc_5min
       platform: "numeric_state"
       prob_given_true: 0.60
+      prob_given_false: 0.20
+      above: 0
+
+  - name: "maison_floor1_presence"
+    device_class: occupancy
+    platform: "bayesian"
+    prior: 0.25
+    probability_threshold: 0.80
+    observations:    
+    - entity_id: sensor.mouvement_couloir_5min
+      platform: "numeric_state"
+      prob_given_true: 0.80
+      prob_given_false: 0.20
+      above: 0
+    - entity_id: sensor.mouvement_escalier_5min
+      platform: "numeric_state"
+      prob_given_true: 0.80
+      prob_given_false: 0.20
+      above: 0
+    - entity_id: sensor.mouvement_wc_floor_5min
+      platform: "numeric_state"
+      prob_given_true: 0.90
+      prob_given_false: 0.20
+      above: 0
+    - entity_id: sensor.mouvement_bureau_5min
+      platform: "numeric_state"
+      prob_given_true: 0.90
       prob_given_false: 0.20
       above: 0
 

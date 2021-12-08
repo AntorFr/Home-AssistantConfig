@@ -17,3 +17,12 @@ template:
       name: Temperature Bureau
       device_class: temperature
       state: "{{ state_attr('climate.netatmo_bureau', 'current_temperature') }}"
+
+sensor:
+  - name: mouvement_bureau_5min
+    platform: history_stats
+    entity_id: binary_sensor.ewelink_ms01_12236a22_ias_zone
+    state: "on"
+    type: time
+    duration: 00:05:00
+    end: "{{now()}}"

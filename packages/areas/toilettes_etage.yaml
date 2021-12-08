@@ -1,0 +1,8 @@
+sensor:
+  - name: mouvement_wc_floor_5min
+    platform: history_stats
+    entity_id: binary_sensor.capteur_toilettes_etage_motion
+    state: "on"
+    type: time
+    duration: 00:05:00
+    end: "{{now()}}"

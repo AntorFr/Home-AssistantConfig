@@ -6,6 +6,16 @@ group:
       - binary_sensor.escalier_capteur_mouvement_ias_zone
       - binary_sensor.lumi_lumi_sensor_motion_aq2_ias_zone
 
+
+sensor:
+  - name: mouvement_escalier_5min
+    platform: history_stats
+    entity_id: group.escalier_sensors
+    state: "on"
+    type: time
+    duration: 00:05:00
+    end: "{{now()}}"
+
 automation:
 ################################################################################
 - id: escalier_light_auto
@@ -77,7 +87,7 @@ automation:
   - choose:
     - conditions:
       - condition: or
-      conditions:
+        conditions:
         - condition: state
           entity_id: light.couloir_etage
           state: 'on'
