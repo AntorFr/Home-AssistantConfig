@@ -190,14 +190,17 @@ automation:
     - platform: state
       entity_id: sensor.teleinfo_periode_tarifaire
   condition: []
-  variables:
-    duree: 2   
   action:
   - choose:
     - conditions:
-      - condition: state
-        entity_id: sensor.teleinfo_periode_tarifaire
-        state: HC
+      - condition: and
+        conditions:
+        - condition: state
+          entity_id: binary_sensor.anyone_home
+          state: 'on'
+        - condition: state
+          entity_id: sensor.teleinfo_periode_tarifaire
+          state: HC
       sequence:
       - type: turn_on
         device_id: 4d5af4c5d0a5bd84eafb9ef394b320b5

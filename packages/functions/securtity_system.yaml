@@ -33,6 +33,23 @@ alert:
 
 automation:
 ###############################################
+- id: 'function_security_arm_when_away'
+  alias: 'Function - Security -  Arme quand absent'
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.anyone_home
+      to: 'off'
+      for:
+        minutes: 10
+  condition:
+  - condition: state
+    entity_id: alarm_control_panel.alarme_maison
+    state: disarmed
+  action:
+    - service: alarm_control_panel.alarm_arm_away
+      target:
+        entity_id: alarm_control_panel.alarme_maison
+###############################################
 - id: 'function_security_desarm_when_home'
   alias: 'Function - Security -  Désarme au retours des parents'
   trigger:
