@@ -66,7 +66,7 @@ roborock_salle_a_manger:
   sequence:
   - service: xiaomi_miio.vacuum_clean_segment
     data:
-      segments: 16
+      segments: 17
     target:
       entity_id: vacuum.roborock_s7
   mode: single

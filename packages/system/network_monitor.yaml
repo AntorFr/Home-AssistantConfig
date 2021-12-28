@@ -29,7 +29,7 @@ group:
       - device_tracker.garagedoor_1
       - device_tracker.garagedoor_2
       - device_tracker.garagedoor_3
-      - device_tracker.entrance_gate_debug #Portail
+      - device_tracker.entrance_gate #Portail
 
 
   required_other_devices:

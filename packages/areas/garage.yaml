@@ -21,8 +21,8 @@ automation:
       device_id: 950e5646555ea54652e2273c4c3034dd
   condition:
   - condition: state
-    entity_id: binary_sensor.anyone_home
-    state: 'on'
+    entity_id: alarm_control_panel.alarme_maison
+    state: disarmed
   action:
   - variables:
       command: '{{ trigger.event.data.command }}'
