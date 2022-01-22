@@ -11,46 +11,74 @@ automation:
 - id: 'chambre_parent_button_seb'
   alias: Area - Chambre - Bouton lit Sébastien
   description: ''
-  use_blueprint:
-    path: garykrige/zha-sonoff-zigbee-switch.yaml
-    input:
-      sonoff_button: 00885357a5b4e685c3ea692c95e4db63
-      toggle_action:
-      - choose:
-        - conditions:
-          - condition: state
-            entity_id: switch.night_mode
-            state: 'on'
-          sequence:
-          - service: light.toggle
-            target:
-              entity_id: light.veilleuse_lit_parent
-            data:
-              color_name: red
-              effect: color
-              brightness_pct: 50
-        default:
-        - type: toggle
-          device_id: e9d42fb1963c8eb9bdee7c45834230b8
-          entity_id: light.plafonnier_chambre_parents
-          domain: light
-
-      off_action:
-      - choose:
-        - conditions:
-          - condition: time
-            after: '05:00:00'
-            before: '19:00:00'
-          sequence:
-          - service: switch.turn_off
+  trigger:
+    - platform: device
+      domain: mqtt
+      device_id: ca89b98653f56284ee8d128ac1d6c5cf
+      type: action
+      subtype: long
+      discovery_id: 0x00124b0022424be8 action_long
+      id: long
+    - platform: device
+      domain: mqtt
+      device_id: ca89b98653f56284ee8d128ac1d6c5cf
+      type: action
+      subtype: single
+      id: single
+      discovery_id: 0x00124b0022424be8 action_single
+    - platform: device
+      domain: mqtt
+      device_id: ca89b98653f56284ee8d128ac1d6c5cf
+      type: action
+      subtype: double
+      id: double
+      discovery_id: 0x00124b0022424be8 action_double
+  condition: []
+  action:
+  - choose:
+    - conditions: 
+      - condition: trigger
+        id: single
+      sequence:
+        - choose:
+          - conditions:
+            - condition: state
+              entity_id: switch.night_mode
+              state: 'on'
+            sequence:
+            - service: light.toggle
+              target:
+                entity_id: light.veilleuse_lit_parent
+              data:
+                color_name: red
+                effect: color
+                brightness_pct: 50
+          default:
+          - type: toggle
+            device_id: e9d42fb1963c8eb9bdee7c45834230b8
+            entity_id: light.plafonnier_chambre_parents
+            domain: light
+    - conditions: 
+      - condition: trigger
+        id: long
+      sequence:
+        - choose:
+          - conditions:
+            - condition: time
+              after: '05:00:00'
+              before: '19:00:00'
+            sequence:
+            - service: switch.turn_off
+              target:
+                entity_id: switch.night_mode
+          default:
+          - service: switch.turn_on
             target:
               entity_id: switch.night_mode
-        default:
-        - service: switch.turn_on
-          target:
-            entity_id: switch.night_mode
-
-      on_action:
+    - conditions: 
+      - condition: trigger
+        id: double
+      sequence:
       - choose:
         - conditions:
           - condition: time

@@ -10,7 +10,7 @@ light:
 sensor:
   - name: mouvement_entree_5min
     platform: history_stats
-    entity_id: binary_sensor.entree_capteur_mouvement_ias_zone
+    entity_id: binary_sensor.entree_capteur_mouvement_occupancy
     state: "on"
     type: time
     duration: 00:05:00
@@ -21,14 +21,18 @@ automation:
 - id: 'entree_button'
   alias: Area - Entrée - Bouton portail
   description: ''
-  use_blueprint:
-    path: garykrige/zha-sonoff-zigbee-switch.yaml
-    input:
-      sonoff_button: 1c6a3fbccfe5ce1274901751216f226b
-      toggle_action:
-      - service: cover.toggle
-        data: {}
-        entity_id: cover.portail
+  trigger:
+    - platform: device
+      domain: mqtt
+      device_id: 6d056f737f6d1c5c6e93a60b58875307
+      type: action
+      subtype: single
+      discovery_id: 0x00124b001f6618d8 action_single
+  condition: []
+  action:
+    - service: cover.toggle
+      data: {}
+      entity_id: cover.portail
 ################################################################################
 
 ################################################################################
@@ -41,11 +45,11 @@ automation:
 
   trigger:
     - platform: state
-      entity_id: binary_sensor.entree_capteur_mouvement_ias_zone
+      entity_id: binary_sensor.entree_capteur_mouvement_occupancy
       to: "on"
       id: "on"
     - platform: state
-      entity_id: binary_sensor.entree_capteur_mouvement_ias_zone
+      entity_id: binary_sensor.entree_capteur_mouvement_occupancy
       to: "off"
       for:
         minutes: 3
@@ -59,7 +63,7 @@ automation:
           - condition: trigger
             id: 'on' 
           - condition: numeric_state
-            entity_id: sensor.lumi_lumi_sen_ill_mgl01_92f57c3c_illuminance
+            entity_id: sensor.entree_capteur_luminosite_illuminance_lux
             below: 60
           - condition: state
             entity_id: light.entree_spots
@@ -96,7 +100,7 @@ automation:
                 entity_id: light.entree_spots
       - wait_for_trigger:
           platform: state
-          entity_id: binary_sensor.entree_capteur_mouvement_ias_zone
+          entity_id: binary_sensor.entree_capteur_mouvement_occupancy
           to: "off"
           for:
             minutes: 2
@@ -111,7 +115,7 @@ automation:
   description: ''
   trigger:
   - platform: state
-    entity_id: light.lumi_lumi_relay_c2acn01_3ae1cf05_on_off_2
+    entity_id: switch.telerupteur_lumiere_l2
   condition: []
   action:
   - service: light.toggle

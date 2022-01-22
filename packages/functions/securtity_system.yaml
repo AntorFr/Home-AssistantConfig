@@ -55,7 +55,7 @@ automation:
   trigger:
     - platform: state
       entity_id: group.parent_home
-      to: 'on'
+      to: home
   condition:
   - condition: state
     entity_id: alarm_control_panel.alarme_maison

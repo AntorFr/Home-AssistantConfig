@@ -24,15 +24,15 @@ binary_sensor:
         device_class: safety
         friendly_name: Piscine Sécurisée
         value_template: >
-          {{not is_state('binary_sensor.piscine_porte_bulle_ias_zone','off')}}
+          {{not is_state('binary_sensor.piscine_porte_bulle_contact','off')}}
 
 alert:
   swiming_pool:
     name: "Porte Piscine non sécurisée"
     message: >
-      {% if is_state('binary_sensor.piscine_porte_bulle_ias_zone', 'on') %}
+      {% if is_state('binary_sensor.piscine_porte_bulle_contact', 'on') %}
       Attention, la porte de la piscine est restée ouverte
-      {% elif is_state('binary_sensor.piscine_porte_bulle_ias_zone', 'unavailable') %}
+      {% elif is_state('binary_sensor.piscine_porte_bulle_contact', 'unavailable') %}
       Attention, la porte de la piscine est déconnectée.
       {% else %}
       Tout va bien
@@ -55,7 +55,7 @@ automation:
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.piscine_porte_bulle_ias_zone
+    entity_id: binary_sensor.piscine_porte_bulle_contact
     to: 'on'
     for: 00:30:00
   condition: []
@@ -75,7 +75,7 @@ automation:
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.piscine_porte_bulle_ias_zone
+    entity_id: binary_sensor.piscine_porte_bulle_contact
     to:
     - 'on'
     - 'off'

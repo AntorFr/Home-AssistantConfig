@@ -19,7 +19,7 @@ light:
 sensor:
   - name: mouvement_cuisine_5min
     platform: history_stats
-    entity_id: binary_sensor.cuisine_capteur_mouvement_ias_zone
+    entity_id: binary_sensor.cuisine_capteur_mouvement_occupancy
     state: "on"
     type: time
     duration: 00:5:00
@@ -36,11 +36,11 @@ automation:
 
   trigger:
     - platform: state
-      entity_id: binary_sensor.cuisine_capteur_mouvement_ias_zone
+      entity_id: binary_sensor.cuisine_capteur_mouvement_occupancy
       to: 'on'
       id: 'on'
     - platform: state
-      entity_id: binary_sensor.cuisine_capteur_mouvement_ias_zone
+      entity_id: binary_sensor.cuisine_capteur_mouvement_occupancy
       to: 'off'
       for:
         minutes: 10
@@ -99,7 +99,7 @@ automation:
                   - light.cusine_spot
       - wait_for_trigger:
           platform: state
-          entity_id: binary_sensor.cuisine_capteur_mouvement_ias_zone
+          entity_id: binary_sensor.cuisine_capteur_mouvement_occupancy
           from: "on"
           to: "off"
           for:

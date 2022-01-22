@@ -95,6 +95,7 @@ routine_sleep_mode:
       - salle_a_manger
       - toilettes_rdc
       - toilettes_etage
+      - mezzanine
       entity_id:
       - light.salon
       - light.salon_led_buffet

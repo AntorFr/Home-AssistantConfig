@@ -21,7 +21,7 @@ template:
 sensor:
   - name: mouvement_bureau_5min
     platform: history_stats
-    entity_id: binary_sensor.ewelink_ms01_12236a22_ias_zone
+    entity_id: binary_sensor.bureau_capteur_mouvement_occupancy
     state: "on"
     type: time
     duration: 00:05:00

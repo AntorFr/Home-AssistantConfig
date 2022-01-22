@@ -2,7 +2,7 @@
 sensor:
   - name: mouvement_salle_a_manger_5min
     platform: history_stats
-    entity_id: binary_sensor.mouvement_salle_a_manger
+    entity_id: binary_sensor.salle_a_manger_capteur_mouvement_occupancy
     state: "on"
     type: time
     duration: 00:05:00
@@ -20,11 +20,11 @@ automation:
 
   trigger:
     - platform: state
-      entity_id: binary_sensor.mouvement_salle_a_manger
+      entity_id: binary_sensor.salle_a_manger_capteur_mouvement_occupancy
       to: 'on'
       id: 'on'
     - platform: state
-      entity_id: binary_sensor.mouvement_salle_a_manger
+      entity_id: binary_sensor.salle_a_manger_capteur_mouvement_occupancy
       to: 'off'
       for:
         minutes: 40
@@ -81,7 +81,7 @@ automation:
 
       - wait_for_trigger:
           platform: state
-          entity_id: binary_sensor.mouvement_salle_a_manger
+          entity_id: binary_sensor.salle_a_manger_capteur_mouvement_occupancy
           to: "off"
           for: "00:30:00"
   - service: light.turn_off

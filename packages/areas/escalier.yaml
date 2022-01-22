@@ -3,8 +3,8 @@ group:
     name: Capteurs mouvement escalier
     all: false
     entities:
-      - binary_sensor.escalier_capteur_mouvement_ias_zone
-      - binary_sensor.lumi_lumi_sensor_motion_aq2_ias_zone
+      - binary_sensor.escalier_capteur_mouvement_occupancy
+      - binary_sensor.couloir_etage_capteur_mouvement_occupancy
 
 
 sensor:
@@ -81,7 +81,7 @@ automation:
   description: ''
   trigger:
   - platform: state
-    entity_id: light.lumi_lumi_relay_c2acn01_3ae1cf05_on_off
+    entity_id: switch.telerupteur_lumiere_l1
   condition: []
   action:
   - choose:

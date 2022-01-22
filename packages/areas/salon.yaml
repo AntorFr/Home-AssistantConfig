@@ -11,7 +11,7 @@ group:
     all: false
     entities:
       - binary_sensor.camera_salon
-      - binary_sensor.lumi_lumi_sensor_motion_aq2_36018b06_ias_zone
+      - binary_sensor.salon_capteur_mouvement_occupancy_aq2_36018b06_ias_zone
   
 sensor:
   - platform: history_stats
@@ -48,11 +48,11 @@ automation:
 
   trigger:
     - platform: state
-      entity_id: binary_sensor.lumi_lumi_sensor_motion_aq2_36018b06_ias_zone
+      entity_id: binary_sensor.salon_capteur_mouvement_occupancy_aq2_36018b06_ias_zone
       to: "on"
       id: "on"
     - platform: state
-      entity_id: binary_sensor.lumi_lumi_sensor_motion_aq2_36018b06_ias_zone
+      entity_id: binary_sensor.salon_capteur_mouvement_occupancy_aq2_36018b06_ias_zone
       to: "off"
       for:
         minutes: 60
@@ -66,7 +66,7 @@ automation:
           - condition: trigger
             id: 'on' 
           - condition: numeric_state
-            entity_id: sensor.lumi_lumi_sen_ill_mgl01_21fb7c3c_illuminance
+            entity_id: sensor.salon_capteur_luminosite_illuminance_lux
             below: 60
           - condition: state
             entity_id: light.salon_lumieres
@@ -103,7 +103,7 @@ automation:
                 entity_id: light.salon_lumieres
       - wait_for_trigger:
           platform: state
-          entity_id: binary_sensor.lumi_lumi_sensor_motion_aq2_36018b06_ias_zone
+          entity_id: binary_sensor.salon_capteur_mouvement_occupancy_aq2_36018b06_ias_zone
           to: "off"
           for:
             minutes: 30

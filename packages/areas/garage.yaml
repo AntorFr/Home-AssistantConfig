@@ -15,22 +15,18 @@ automation:
   description: ''
   mode: parallel
   trigger:
-  - platform: event
-    event_type: zha_event
-    event_data:
-      device_id: 950e5646555ea54652e2273c4c3034dd
+  - platform: device
+    domain: mqtt
+    device_id: 88e0c253966ea547d2e98bc8bbdb64db
+    type: action
+    subtype: single
+    discovery_id: 0x00124b0022419681 action_single
   condition:
   - condition: state
     entity_id: alarm_control_panel.alarme_maison
     state: disarmed
   action:
-  - variables:
-      command: '{{ trigger.event.data.command }}'
-  - choose:
-    - conditions:
-      - '{{ command == "toggle" }}'
-      sequence:
-        - service: cover.toggle
-          target:
-            entity_id: cover.garage_2 
+  - service: cover.toggle
+    target:
+      entity_id: cover.garage_2 
 ################################################################################
