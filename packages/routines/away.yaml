@@ -124,7 +124,6 @@ script:
         entity_id:
         - switch.couverture_laurine
         - switch.couverture_seb
-        - switch.mezzanine_prise
         - switch.prise_emilie
         - switch.piscine_chauffe_eau
 

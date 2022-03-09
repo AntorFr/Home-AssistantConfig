@@ -10,11 +10,21 @@ switch:
       night_mode:
         unique_id: night_mode
         turn_on:
-          service: script.routine_sleep_mode
-          data: {}
+          - service: script.routine_sleep_mode
+            data: {}
+          - service: input_select.select_option  
+            target:
+              entity_id: input_select.day_phase
+            data:
+              option: Nuit
         turn_off:
-          service: script.routine_matin
-          data: {}
+          - service: script.routine_matin
+            data: {}
+          - service: input_select.select_option  
+            target:
+              entity_id: input_select.day_phase
+            data:
+              option: Matin
         icon_template: >-
           {% if is_state('switch.night_mode', 'on') %}
             mdi:weather-night
@@ -237,11 +247,6 @@ automation:
     event: routine_event
     event_data:
       type: morning
-  - service: input_select.select_option  
-    target:
-      entity_id: input_select.day_phase
-    data:
-      option: Matin
   - service: switch.turn_off
     target:
       entity_id: switch.night_mode
@@ -277,11 +282,6 @@ automation:
     event: routine_event
     event_data:
       type: night
-  - service: input_select.select_option  
-    target:
-      entity_id: input_select.day_phase
-    data:
-      option: Nuit
   - service: switch.turn_on
     target:
       entity_id: switch.night_mode

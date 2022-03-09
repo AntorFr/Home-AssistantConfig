@@ -144,8 +144,8 @@ routine_sleep_mode:
           area_id: chambre_d_amis
   - delay:
       hours: 0
-      minutes: 1
-      seconds: 0
+      minutes: 0
+      seconds: 30
       milliseconds: 0
   - service: switch.turn_on
     target:
