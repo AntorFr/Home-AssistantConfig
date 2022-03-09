@@ -133,7 +133,7 @@ routine_sleep_mode:
   - choose:
     - conditions:
       - condition: state
-        entity_id: input_boolean.gest_mode
+        entity_id: input_boolean.guest_mode
         state: 'off'
       sequence:
       - service: light.turn_off
@@ -171,7 +171,7 @@ routine_matin:
   - choose:
     - conditions:
       - condition: state
-        entity_id: input_boolean.gest_mode
+        entity_id: input_boolean.guest_mode
         state: 'off'
       sequence:
       - service: cover.open_cover

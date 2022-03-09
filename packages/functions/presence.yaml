@@ -16,7 +16,7 @@ group:
   
 
 input_boolean:
-  gest_mode:
+  guest_mode:
     name: Mode invitée
     icon: mdi:account-plus
 
