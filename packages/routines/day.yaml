@@ -21,8 +21,47 @@ switch:
           {% else %}
             mdi:weather-sunny
           {% endif %}
+    
+input_select:
+  day_phase:
+    name: "Phase de la journée"
+    options:
+      - Aurore
+      - "Matin - reveil enfants"
+      - Matin
+      - Soirée
+      - "Soirée - retour au calme"
+      - "Soirée - enfants couché"
+      - Nuit
+    icon: mdi:routes-clock
 
 automation:
+################################################################################
+- id: 'routine_manual'
+  alias: Routine - Day - Manuel
+  description: ''
+  variables:
+    day_phase:
+      Aurore: aurore
+      "Matin - reveil enfants": children morning
+      Matin: morning
+      Soirée: evening
+      "Soirée - retour au calme": children evening ritual
+      "Soirée - enfants couché": children night
+      Nuit: night
+    test: toto
+
+  trigger:
+  - platform: state
+    entity_id: input_select.day_phase
+  condition: []
+  action:
+  - alias: "Fire routine_event"
+    event: routine_event
+    event_data:
+      type: "{{ day_phase[trigger.to_state.state]}}"
+
+  mode: single
 ################################################################################
 - id: 'routine_evening'
   alias: Routine - Day - Soirée
@@ -39,6 +78,11 @@ automation:
     event: routine_event
     event_data:
       type: evening
+  - service: input_select.select_option  
+    target:
+      entity_id: input_select.day_phase
+    data:
+      option: Soirée
   - scene: scene.soiree
   mode: single
 
@@ -59,6 +103,11 @@ automation:
     event: routine_event
     event_data:
       type: children evening ritual
+  - service: input_select.select_option  
+    target:
+      entity_id: input_select.day_phase
+    data:
+      option: "Soirée - retour au calme"
 
 ################################################################################
 
@@ -77,6 +126,11 @@ automation:
     event: routine_event
     event_data:
       type: children night
+  - service: input_select.select_option  
+    target:
+      entity_id: input_select.day_phase
+    data:
+      option:  "Soirée - enfants couché"
 
 ################################################################################
 
@@ -95,6 +149,11 @@ automation:
     event: routine_event
     event_data:
       type: children morning
+  - service: input_select.select_option  
+    target:
+      entity_id: input_select.day_phase
+    data:
+      option: "Matin - reveil enfants"
 
 ################################################################################
 
@@ -123,6 +182,11 @@ automation:
     event: routine_event
     event_data:
       type: aurore
+  - service: input_select.select_option  
+    target:
+      entity_id: input_select.day_phase
+    data:
+      option: Aurore
   - service: script.routine_aurore
   mode: single
 
@@ -165,6 +229,11 @@ automation:
     event: routine_event
     event_data:
       type: morning
+  - service: input_select.select_option  
+    target:
+      entity_id: input_select.day_phase
+    data:
+      option: Matin
   - service: switch.turn_off
     target:
       entity_id: switch.night_mode
@@ -200,6 +269,11 @@ automation:
     event: routine_event
     event_data:
       type: night
+  - service: input_select.select_option  
+    target:
+      entity_id: input_select.day_phase
+    data:
+      option: Nuit
   - service: switch.turn_on
     target:
       entity_id: switch.night_mode

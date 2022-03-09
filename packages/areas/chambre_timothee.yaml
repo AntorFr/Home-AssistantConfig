@@ -1,0 +1,70 @@
+automation:
+################################################################################
+- id: 'chambre_timothee_button_lumiere'
+  alias: Area - Chambre Timothée - Bouton lumière
+  description: ''
+  mode: restart
+  trigger:
+    - platform: device
+      domain: mqtt
+      device_id: a4b9a8eb714cd58a2183a5af310d162d
+      type: action
+      subtype: 'off'
+      discovery_id: 0x0004740000890060 action_off
+    - platform: device
+      domain: mqtt
+      device_id: a4b9a8eb714cd58a2183a5af310d162d
+      type: action
+      subtype: 'on'
+      discovery_id: 0x0004740000890060 action_on
+  condition: []
+  action:
+  - choose:
+      - conditions:
+          - condition: device
+            type: is_off
+            device_id: 6bb7ab79426cb51ac7610517636240b4
+            entity_id: light.plafonnier_timothee
+            domain: light
+          - condition: time
+            after: '20:00'
+            before: '07:00'
+          - condition: state
+            entity_id: cover.volet_roulant_chambre_timothee
+            state: open
+            for:
+              hours: 0
+              minutes: 30
+              seconds: 0
+        sequence:
+          - service: cover.close_cover
+            data: {}
+            target:
+              area_id: chambre_timothee
+      - conditions:
+          - condition: state
+            entity_id: cover.volet_roulant_chambre_timothee
+            state: close
+            for:
+              hours: 0
+              minutes: 30
+              seconds: 0
+          - condition: device
+            type: is_off
+            device_id: 6bb7ab79426cb51ac7610517636240b4
+            entity_id: light.plafonnier_timothee
+            domain: light
+          - condition: time
+            after: '08:00'
+            before: '12:00'
+        sequence:
+          - service: cover.open_cover
+            data: {}
+            target:
+              area_id: chambre_timothee
+    default: []
+  - service: light.toggle
+    data: {}
+    target:
+      entity_id: light.plafonnier_timothee
+################################################################################

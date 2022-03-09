@@ -131,18 +131,17 @@ routine_sleep_mode:
     target:
       area_id: garage
   - choose:
-      - conditions:
-          - condition: state
-            entity_id: input_boolean.gest_mode
-            state: "off"
-        sequence:
-        - service: light.turn_off
-          target:
-            area_id: chambre_d_amis
-        - service: cover.close_cover
-          target:
-            area_id: chambre_d_amis
-
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.gest_mode
+        state: 'off'
+      sequence:
+      - service: light.turn_off
+        target:
+          area_id: chambre_d_amis
+      - service: cover.close_cover
+        target:
+          area_id: chambre_d_amis
   - delay:
       hours: 0
       minutes: 1
@@ -170,14 +169,14 @@ routine_matin:
       - salle_a_manger
       - salon
   - choose:
-      - conditions:
-          - condition: state
-            entity_id: input_boolean.gest_mode
-            state: "off"
-        sequence:
-        - service: cover.open_cover
-          target:
-            area_id: chambre_d_amis
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.gest_mode
+        state: 'off'
+      sequence:
+      - service: cover.open_cover
+        target:
+          area_id: chambre_d_amis
   - service: switch.turn_off
     target:
       entity_id:
@@ -190,7 +189,6 @@ routine_matin:
       entity_id: alarm_control_panel.alarme_maison
   mode: single
   icon: mdi:clock-time-nine
-
 routine_aurore:
   alias: Routine - Aurore
   sequence:
@@ -209,3 +207,33 @@ routine_aurore:
       entity_id: alarm_control_panel.alarme_maison
   mode: single
   icon: mdi:clock-time-nine
+aspiration_salon:
+  alias: Aspiration Salon
+  sequence:
+  - service: xiaomi_miio.vacuum_clean_segment
+    data:
+      segments: 16
+    target:
+      entity_id: vacuum.roborock_s7
+  mode: single
+  icon: bha:roborock
+aspiration_entree:
+  alias: Aspiration Entrée
+  sequence:
+  - service: xiaomi_miio.vacuum_clean_segment
+    data:
+      segments: 19
+    target:
+      entity_id: vacuum.roborock_s7
+  mode: single
+  icon: bha:roborock
+aspiration_cuisine:
+  alias: Aspiration Cuisine
+  sequence:
+  - service: xiaomi_miio.vacuum_clean_segment
+    data:
+      segments: 22
+    target:
+      entity_id: vacuum.roborock_s7
+  mode: single
+  icon: bha:roborock

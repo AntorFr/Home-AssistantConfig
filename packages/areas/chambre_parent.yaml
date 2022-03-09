@@ -11,56 +11,85 @@ automation:
 - id: 'chambre_parent_button_seb'
   alias: Area - Chambre - Bouton lit Sébastien
   description: ''
+  mode: restart
   trigger:
     - platform: device
       domain: mqtt
-      device_id: ca89b98653f56284ee8d128ac1d6c5cf
+      device_id: b65a33ba24ff394bf8586fa47f15177c
       type: action
-      subtype: long
-      discovery_id: 0x00124b0022424be8 action_long
-      id: long
+      subtype: 1_single
+      discovery_id: 0x84fd27fffe849e6c action_1_single
+      id: action_1_single
     - platform: device
       domain: mqtt
-      device_id: ca89b98653f56284ee8d128ac1d6c5cf
+      device_id: b65a33ba24ff394bf8586fa47f15177c
       type: action
-      subtype: single
-      id: single
-      discovery_id: 0x00124b0022424be8 action_single
+      subtype: 1_hold
+      discovery_id: 0x84fd27fffe849e6c action_1_hold
+      id: action_1_hold
     - platform: device
       domain: mqtt
-      device_id: ca89b98653f56284ee8d128ac1d6c5cf
+      device_id: b65a33ba24ff394bf8586fa47f15177c
       type: action
-      subtype: double
-      id: double
-      discovery_id: 0x00124b0022424be8 action_double
+      subtype: 2_single
+      discovery_id: 0x84fd27fffe849e6c action_2_single
+      id: action_2_single
+    - platform: device
+      domain: mqtt
+      device_id: b65a33ba24ff394bf8586fa47f15177c
+      type: action
+      subtype: 2_double
+      discovery_id: 0x84fd27fffe849e6c action_2_double
+      id: action_2_double
+    - platform: device
+      domain: mqtt
+      device_id: b65a33ba24ff394bf8586fa47f15177c
+      type: action
+      subtype: 2_hold
+      discovery_id: 0x84fd27fffe849e6c action_2_hold
+      id: action_2_hold
+    - platform: device
+      domain: mqtt
+      device_id: b65a33ba24ff394bf8586fa47f15177c
+      type: action
+      subtype: 3_single
+      discovery_id: 0x84fd27fffe849e6c action_3_single
+      id: action_3_single
+    - platform: device
+      domain: mqtt
+      device_id: b65a33ba24ff394bf8586fa47f15177c
+      type: action
+      subtype: 4_single
+      discovery_id: 0x84fd27fffe849e6c action_4_single
+      id: action_4_single
+    - platform: device
+      domain: mqtt
+      device_id: b65a33ba24ff394bf8586fa47f15177c
+      type: action
+      subtype: 4_double
+      discovery_id: 0x84fd27fffe849e6c action_4_double
+      id: action_4_double
+    - platform: device
+      domain: mqtt
+      device_id: b65a33ba24ff394bf8586fa47f15177c
+      type: action
+      subtype: 4_hold
+      discovery_id: 0x84fd27fffe849e6c action_4_hold
+      id: action_4_hold
   condition: []
   action:
   - choose:
     - conditions: 
       - condition: trigger
-        id: single
+        id: action_1_single
       sequence:
-        - choose:
-          - conditions:
-            - condition: state
-              entity_id: switch.night_mode
-              state: 'on'
-            sequence:
-            - service: light.toggle
-              target:
-                entity_id: light.veilleuse_lit_parent
-              data:
-                color_name: red
-                effect: color
-                brightness_pct: 50
-          default:
-          - type: toggle
-            device_id: e9d42fb1963c8eb9bdee7c45834230b8
-            entity_id: light.plafonnier_chambre_parents
-            domain: light
+        - type: toggle
+          device_id: e9d42fb1963c8eb9bdee7c45834230b8
+          entity_id: light.plafonnier_chambre_parents
+          domain: light
     - conditions: 
       - condition: trigger
-        id: long
+        id: action_1_hold
       sequence:
         - choose:
           - conditions:
@@ -77,19 +106,257 @@ automation:
               entity_id: switch.night_mode
     - conditions: 
       - condition: trigger
-        id: double
+        id: action_2_single
       sequence:
-      - choose:
-        - conditions:
-          - condition: time
-            after: '05:00:00'
-            before: '19:00:00'
-          sequence:
-          - service: cover.toggle
-            target:
-              area_id: chambre_parent
-        default:
+        - service: light.toggle
+          target:
+            entity_id: light.veilleuse_lit_parent
+          data:
+            brightness_pct: 100
+            effect: autoPlay
+            color_name: white
+    - conditions: 
+      - condition: trigger
+        id: action_2_double
+      sequence:
+        - service: light.turn_on
+          target:
+            entity_id: light.veilleuse_lit_parent
+          data:
+            color_name: red
+            effect: color
+            brightness_pct: 50
+    - conditions: 
+      - condition: trigger
+        id: action_2_hold
+      sequence:
+        - service: light.turn_on
+          target:
+            entity_id: light.veilleuse_lit_parent
+          data:
+            color_name: red
+            effect: color
+            brightness_pct: 8
+    - conditions: 
+      - condition: trigger
+        id: action_3_single
+      sequence:
+        - service: cover.toggle
+          target:
+            area_id: chambre_parent
+    - conditions: 
+      - condition: trigger
+        id: action_4_single
+      sequence:
+        - service: script.turn_off
+          target:
+            entity_id: script.on_off_tempo
+        - service: script.turn_on
+          target:
+            entity_id: script.on_off_tempo
+          data:
+            variables:
+              minutes: 15
+              entity: switch.couverture_seb
+    - conditions: 
+      - condition: trigger
+        id: action_4_double
+      sequence:
+        - service: script.turn_off
+          target:
+            entity_id: script.on_off_tempo
+        - service: script.turn_on
+          target:
+            entity_id: script.on_off_tempo
+          data:
+            variables:
+              minutes: 30
+              entity: switch.couverture_seb
+    - conditions: 
+      - condition: trigger
+        id: action_4_hold
+      sequence:
+        - service: script.turn_off
+          target:
+            entity_id: script.on_off_tempo
         - service: switch.toggle
           data: {}
           entity_id: switch.couverture_seb
+
+################################################################################
+- id: 'chambre_parent_button_low'
+  alias: Area - Chambre - Bouton lit Laurine
+  description: ''
+  mode: restart
+  trigger:
+    - platform: device
+      domain: mqtt
+      device_id: 704f5c1ef5a473ba50b11b5730e36ba3
+      type: action
+      subtype: 1_single
+      discovery_id: 0x60a423fffefbc33d action_1_single
+      id: action_1_single
+    - platform: device
+      domain: mqtt
+      device_id: 704f5c1ef5a473ba50b11b5730e36ba3
+      type: action
+      subtype: 1_double
+      discovery_id: 0x60a423fffefbc33d action_1_double
+      id: action_1_double
+    - platform: device
+      domain: mqtt
+      device_id: 704f5c1ef5a473ba50b11b5730e36ba3
+      type: action
+      subtype: 1_hold
+      discovery_id: 0x60a423fffefbc33d action_1_hold
+      id: action_1_hold
+    - platform: device
+      domain: mqtt
+      device_id: 704f5c1ef5a473ba50b11b5730e36ba3
+      type: action
+      subtype: 2_single
+      discovery_id: 0x60a423fffefbc33d action_2_single
+      id: action_2_single
+    - platform: device
+      domain: mqtt
+      device_id: 704f5c1ef5a473ba50b11b5730e36ba3
+      type: action
+      subtype: 2_hold
+      discovery_id: 0x60a423fffefbc33d action_2_hold
+      id: action_2_hold
+    - platform: device
+      domain: mqtt
+      device_id: 704f5c1ef5a473ba50b11b5730e36ba3
+      type: action
+      subtype: 3_single
+      discovery_id: 0x60a423fffefbc33d action_3_single
+      id: action_3_single
+    - platform: device
+      domain: mqtt
+      device_id: 704f5c1ef5a473ba50b11b5730e36ba3
+      type: action
+      subtype: 3_double
+      discovery_id: 0x60a423fffefbc33d action_3_double
+      id: action_3_double
+    - platform: device
+      domain: mqtt
+      device_id: 704f5c1ef5a473ba50b11b5730e36ba3
+      type: action
+      subtype: 3_hold
+      discovery_id: 0x60a423fffefbc33d action_3_hold
+      id: action_3_hold
+    - platform: device
+      domain: mqtt
+      device_id: 704f5c1ef5a473ba50b11b5730e36ba3
+      type: action
+      subtype: 4_single
+      discovery_id: 0x60a423fffefbc33d action_4_single
+      id: action_4_single
+  condition: []
+  action:
+  - choose:
+    - conditions: 
+      - condition: trigger
+        id: action_2_single
+      sequence:
+        - type: toggle
+          device_id: e9d42fb1963c8eb9bdee7c45834230b8
+          entity_id: light.plafonnier_chambre_parents
+          domain: light
+    - conditions: 
+      - condition: trigger
+        id: action_2_hold
+      sequence:
+        - choose:
+          - conditions:
+            - condition: time
+              after: '05:00:00'
+              before: '19:00:00'
+            sequence:
+            - service: switch.turn_off
+              target:
+                entity_id: switch.night_mode
+          default:
+          - service: switch.turn_on
+            target:
+              entity_id: switch.night_mode
+    - conditions: 
+      - condition: trigger
+        id: action_1_single
+      sequence:
+        - service: light.toggle
+          target:
+            entity_id: light.veilleuse_lit_parent
+          data:
+            brightness_pct: 100
+            effect: autoPlay
+            color_name: white
+    - conditions: 
+      - condition: trigger
+        id: action_1_double
+      sequence:
+        - service: light.turn_on
+          target:
+            entity_id: light.veilleuse_lit_parent
+          data:
+            color_name: red
+            effect: color
+            brightness_pct: 50
+    - conditions: 
+      - condition: trigger
+        id: action_1_hold
+      sequence:
+        - service: light.turn_on
+          target:
+            entity_id: light.veilleuse_lit_parent
+          data:
+            color_name: red
+            effect: color
+            brightness_pct: 8
+    - conditions: 
+      - condition: trigger
+        id: action_4_single
+      sequence:
+        - service: cover.toggle
+          target:
+            area_id: chambre_parent
+    - conditions: 
+      - condition: trigger
+        id: action_3_single
+      sequence:
+        - service: script.turn_off
+          target:
+            entity_id: script.on_off_tempo
+        - service: script.turn_on
+          target:
+            entity_id: script.on_off_tempo
+          data:
+            variables:
+              minutes: 15
+              entity: switch.couverture_laurine
+    - conditions: 
+      - condition: trigger
+        id: action_3_double
+      sequence:
+        - service: script.turn_off
+          target:
+            entity_id: script.on_off_tempo
+        - service: script.turn_on
+          target:
+            entity_id: script.on_off_tempo
+          data:
+            variables:
+              minutes: 30
+              entity: switch.couverture_laurine
+    - conditions: 
+      - condition: trigger
+        id: action_3_hold
+      sequence:
+        - service: script.turn_off
+          target:
+            entity_id: script.on_off_tempo
+        - service: switch.toggle
+          data: {}
+          entity_id: switch.couverture_laurine
+
 ################################################################################
