@@ -3,13 +3,6 @@ blueprint:
   description: Turn on a light when motion is detected if needed.
   domain: automation
   input:
-    motion_sensor:
-      name: Motion Sensor
-      description: This sensor will trigger the turning on of the target entity.
-      selector:
-        entity:
-          domain: binary_sensor
-          device_class: motion      
     light_target:
       name: Target light
       description: The lightto turn on when the automation is triggered.
@@ -17,6 +10,13 @@ blueprint:
         target:
           entity:
             domain: light
+    motion_sensor:
+      name: Motion Sensor
+      description: This sensor will trigger the turning on of the target entity.
+      selector:
+        entity:
+          domain: binary_sensor
+          device_class: motion      
     no_motion_wait:
       name: Wait time (sec)
       description: Time to leave the light on after last motion is detected.
@@ -76,7 +76,7 @@ variables:
   lux_cutoff: !input 'lux_cutoff'
   adaptive_lighting: !input 'adaptive_lighting'
 
-  warning_disable: '{{ (no_motion_warning=0) or (no_motion_warning>=no_motion_wait)}}'
+  warning_disable: '{{ (no_motion_warning==0) or (no_motion_warning>=no_motion_wait)}}'
   duration_before_warning: '{{ no_motion_wait - no_motion_warning }}'
   illinance_disable: '{{(light_sensor==none) or (lux_cutoff==none)}}'
 
@@ -96,13 +96,15 @@ condition:
   - alias: "check if light already on, if yes don't read light sensor"
     condition: or
     conditions:
-      - condition: trigger
+      - alias: "no more movement since configured period"
+        condition: trigger
         id: 'off'
-      - condition: state
-        entity_id: !input 'light_target'
-        state: "on"
-      - condition: template
-        value_template: '{{ (illinance_disable) or (states(light_sensor) <= states(lux_cutoff)) }}'
+      - alias: "any entity id is on" 
+        condition: template
+        value_template: '{{ expand(light_target.entity_id) | selectattr("state", "==", "on") | list | count > 0 }}'
+      - alias: "illinance disable or illinance lower than thershold"
+        condition: template
+        value_template: '{{ (illinance_disable) or (states(light_sensor) <= lux_cutoff) }}'
 
 action:
 - choose:
@@ -111,39 +113,37 @@ action:
       id: 'on'
     sequence:
     - choose:
-        - conditions: '{{is_state(adaptive_lighting,"on")}}'
-          sequence:
-          - service: adaptive_lighting.apply
-            entity_id: !input 'adaptive_lighting'
-            data:
-              lights: !input 'light_target'
-              turn_on_lights: true
+      - conditions: '{{is_state(adaptive_lighting,"on")}}'
+        sequence:
+        - service: adaptive_lighting.apply
+          entity_id: !input 'adaptive_lighting'
+          data:
+            lights: '{{light_target.entity_id}}'
+            turn_on_lights: true
       default:
           - service: light.turn_on
-            target: 
-              entity_id: !input 'light_target'
+            target: !input 'light_target'
     - wait_for_trigger:
         platform: state
         entity_id: !input motion_sensor
         from: "on"
         to: "off"
     - choose:
-      - conditions: '{{not warning_disable)}}'
+      - conditions: '{{not warning_disable}}'
         sequence:
-          - delay:
-              seconds: '{{duration_before_warning}}'
-          - condition: state
-            entity_id: !input 'light_target'
-            state: "on"
-          - service: light.turn_on
-            target: 
-              entity_id: !input 'light_target'
-            data:
-              brightness_step_pct: -50
+        - delay:
+            seconds: '{{duration_before_warning}}'
+        - alias: "any light still on" 
+          condition: template
+          value_template: '{{ expand(light_target.entity_id) | selectattr("state", "eq", "on") | list | count > 0 }}'
+        - service: light.turn_on
+          target:
+            entity_id: '{{expand(light_target.entity_id) | selectattr("state", "eq", "on") | map(attribute="entity_id")| list}}'
+          data:
+            brightness_step_pct: -50
   - conditions:
     - condition: trigger
       id: 'on'
     sequence:
       - service: light.turn_off
-        target: 
-          entity_id: !input 'light_target'
+        target: !input 'light_target'
