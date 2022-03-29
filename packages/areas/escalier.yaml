@@ -5,6 +5,7 @@ group:
     entities:
       - binary_sensor.escalier_capteur_mouvement_occupancy
       - binary_sensor.couloir_etage_capteur_mouvement_occupancy
+      - binary_sensor.escalier_capteur_mouvement_haut_occupancy
 
 
 sensor:
@@ -25,7 +26,6 @@ automation:
   # we restart the script.
   mode: restart
   max_exceeded: silent
-
   trigger:
     - platform: state
       entity_id: group.escalier_sensors
@@ -37,8 +37,6 @@ automation:
       for:
         minutes: 3
       id: 'off'
-
-
   action:
   - choose:
     - conditions:
@@ -46,11 +44,11 @@ automation:
         id: 'on'
       sequence:
       - choose:
-          - conditions:
+        - conditions:
             - condition: state
               entity_id: switch.adaptive_lighting_default
               state: 'on'
-            sequence:
+          sequence:
             - service: adaptive_lighting.apply
               entity_id: switch.adaptive_lighting_default
               data:

@@ -1,7 +1,16 @@
+
+input_boolean:
+  away_mode:
+    name: Mode absence
+    icon: mdi:home-export-outline
+
+
+
+
 automation:
 ################################################################################
-- id: 'routine_away'
-  alias: Routine - Away - Absence
+- id: 'routine_detect_away'
+  alias: Routine - Away - Detect Absence
   description: ''
   trigger:
     - platform: state
@@ -9,28 +18,69 @@ automation:
       to: 'off'
       for:
         minutes: 10
+  condition:
+    - condition: state
+      entity_id: input_boolean.away_mode
+      state: 'off'
+    - condition: state
+      entity_id: input_boolean.guest_mode
+      state: 'off'
+  action:
+    - service: input_boolean.turn_on
+      data: {}
+      target:
+        entity_id: input_boolean.away_mode
+
+################################################################################
+- id: 'routine_detect_home'
+  alias: Routine - Away - Detect Retour
+  description: ''
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.anyone_home
+      to: 'on'
+  condition: 
+    - condition: state
+      entity_id: input_boolean.away_mode
+      state: 'on'
+  action:
+    - service: input_boolean.turn_off
+      data: {}
+      target:
+        entity_id: input_boolean.away_mode
+
+################################################################################
+- id: 'routine_away'
+  alias: Routine - Away - Absence
+  description: ''
+  trigger:
+    - platform: state
+      entity_id: input_boolean.night_mode
+      to: 'on'
   condition: []
   action:
-  - alias: "Fire Away routine"
-    event: routine_event
-    event_data:
-      type: away
-  - service: script.routine_away
+    - service: script.routine_away
+      data: {}
+    - alias: "Fire Away routine"
+      event: routine_event
+      event_data:
+        type: away
 ################################################################################
 - id: 'routine_home'
   alias: Routine - Away - Retour
   description: ''
   trigger:
     - platform: state
-      entity_id: binary_sensor.anyone_home
-      to: 'on'
+      entity_id: input_boolean.night_mode
+      to: 'off'
   condition: []
   action:
-  - alias: "Fire back home routine"
-    event: routine_event
-    event_data:
-      type: home
-  - service: script.routine_back_home
+    - service: script.routine_back_home
+      data: {}
+    - alias: "Fire back home routine"
+      event: routine_event
+      event_data:
+        type: home
 ################################################################################
 
 

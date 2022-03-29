@@ -196,8 +196,8 @@ automation:
       - condition: and
         conditions:
         - condition: state
-          entity_id: binary_sensor.anyone_home
-          state: 'on'
+          entity_id: input_boolean.away_mode
+          state: 'off'
         - condition: state
           entity_id: sensor.teleinfo_periode_tarifaire
           state: HC

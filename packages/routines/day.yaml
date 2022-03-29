@@ -3,6 +3,12 @@ binary_sensor:
     country: FR
     workdays: [mon, tue, wed, thu, fri]
     excludes: [sat, sun, holiday]
+  - platform: workday
+    name: workday_tomorrow
+    days_offset: 1
+    country: FR
+    workdays: [mon, tue, wed, thu, fri]
+    excludes: [sat, sun, holiday]
 
 switch:
   - platform: template
@@ -49,18 +55,34 @@ input_datetime:
   morning_time:
     name: Matin
     has_time: true
+  morning_time_we:
+    name: Matin - weekend
+    has_time: true
   evening_time:
     name: Soirée
     has_time: true
+  evening_time_we:
+    name: Soirée - weekend
+    has_time: true
   children_morning_time:
-    name: Matin - reveil enfants
+    name: Reveil enfants
+    has_time: true
+    icon: mdi:clock-digital
+  children_morning_time_we:
+    name: Reveil enfants - weekend
     has_time: true
     icon: mdi:clock-digital
   children_evening_ritual_time:
     name: Soirée - retour au calme
     has_time: true
+  children_evening_ritual_time_we:
+    name: Soirée (we) - retour au calme
+    has_time: true
   children_night_time:
     name: Soirée - enfants couché
+    has_time: true
+  children_night_time_we:
+    name: Soirée (we) - enfants couché
     has_time: true
 
 
@@ -98,10 +120,30 @@ automation:
   trigger:
   - platform: time
     at: input_datetime.evening_time
+    id: week
+  - platform: time
+    at: input_datetime.evening_time_we
+    id: weekend   
   condition:
   - condition: state
-    entity_id: binary_sensor.anyone_home
-    state: 'on'
+    entity_id: input_boolean.away_mode
+    state: 'off'
+  - condition: or
+    conditions:
+    - condition: and
+      conditions:
+      - condition: trigger
+        id: week
+      - condition: state
+        entity_id: binary_sensor.workday_tomorrow
+        state: 'on'
+    - condition: and
+      conditions:
+      - condition: trigger
+        id: weekend
+      - condition: state
+        entity_id: binary_sensor.workday_tomorrow
+        state: 'off'     
   action:
   - alias: "Fire evening routine event"
     event: routine_event
@@ -123,10 +165,30 @@ automation:
   trigger:
   - platform: time
     at: input_datetime.children_evening_ritual_time
+    id: week
+  - platform: time
+    at: input_datetime.children_evening_ritual_time_we
+    id: weekend
   condition:
   - condition: state
-    entity_id: binary_sensor.anyone_home
-    state: 'on'
+    entity_id: input_boolean.away_mode
+    state: 'off'
+  - condition: or
+    conditions:
+    - condition: and
+      conditions:
+      - condition: trigger
+        id: week
+      - condition: state
+        entity_id: binary_sensor.workday_tomorrow
+        state: 'on'
+    - condition: and
+      conditions:
+      - condition: trigger
+        id: weekend
+      - condition: state
+        entity_id: binary_sensor.workday_tomorrow
+        state: 'off' 
   action:
   - alias: "Fire evening routine event"
     event: routine_event
@@ -146,10 +208,30 @@ automation:
   trigger:
   - platform: time
     at: input_datetime.children_night_time
+    id: week
+  - platform: time
+    at: input_datetime.children_night_time_we
+    id: weekend
   condition:
   - condition: state
-    entity_id: binary_sensor.anyone_home
-    state: 'on'
+    entity_id: input_boolean.away_mode
+    state: 'off'
+  - condition: or
+    conditions:
+    - condition: and
+      conditions:
+      - condition: trigger
+        id: week
+      - condition: state
+        entity_id: binary_sensor.workday_tomorrow
+        state: 'on'
+    - condition: and
+      conditions:
+      - condition: trigger
+        id: weekend
+      - condition: state
+        entity_id: binary_sensor.workday_tomorrow
+        state: 'off' 
   action:
   - alias: "Fire evening routine event"
     event: routine_event
@@ -169,10 +251,30 @@ automation:
   trigger:
   - platform: time
     at: input_datetime.children_morning_time
+    id: week
+  - platform: time
+    at: input_datetime.children_morning_time
+    id: weekend
   condition:
   - condition: state
-    entity_id: binary_sensor.anyone_home
-    state: 'on'
+    entity_id: input_boolean.away_mode
+    state: 'off'
+  - condition: or
+    conditions:
+    - condition: and
+      conditions:
+      - condition: trigger
+        id: week
+      - condition: state
+        entity_id: binary_sensor.workday_sensor
+        state: 'on'
+    - condition: and
+      conditions:
+      - condition: trigger
+        id: weekend
+      - condition: state
+        entity_id: binary_sensor.workday_sensor
+        state: 'off' 
   action:
   - alias: "Fire evening routine event"
     event: routine_event
@@ -198,8 +300,8 @@ automation:
       - condition: and
         conditions:
           - condition: state
-            entity_id: binary_sensor.anyone_home
-            state: 'on'
+            entity_id: input_boolean.away_mode
+            state: 'off'
           - condition: state
             entity_id: switch.night_mode
             state: 'on'
@@ -226,22 +328,44 @@ automation:
   trigger:
   - platform: time
     at: input_datetime.morning_time
+    id: week
+  - platform: time
+    at: input_datetime.morning_time_we
+    id: weekend
   - platform: state
     entity_id: binary_sensor.maison_rdc_presence
     to: 'on'
+    id: motion
   condition:
       - condition: and
         conditions:
           - condition: state
-            entity_id: binary_sensor.anyone_home
-            state: 'on'
+            entity_id: input_boolean.away_mode
+            state: 'off'
           - condition: state
             entity_id: switch.night_mode
             state: 'on'
           - condition: time
             after: '06:30:00'
             before: '18:00:00'
-
+          - condition: or
+            conditions:
+              - condition: trigger
+                id: motion
+              - condition: and
+                conditions:
+                - condition: trigger
+                  id: week
+                - condition: state
+                  entity_id: binary_sensor.workday_sensor
+                  state: 'on'
+              - condition: and
+                conditions:
+                - condition: trigger
+                  id: weekend
+                - condition: state
+                  entity_id: binary_sensor.workday_sensor
+                  state: 'off' 
   action:
   - alias: "Fire aurore routine event"
     event: routine_event
@@ -269,8 +393,8 @@ automation:
       - condition: and
         conditions:
           - condition: state
-            entity_id: binary_sensor.anyone_home
-            state: 'on'
+            entity_id: input_boolean.away_mode
+            state: 'off'
           - condition: state
             entity_id: switch.night_mode
             state: 'off'

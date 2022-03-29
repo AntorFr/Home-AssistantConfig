@@ -3,24 +3,22 @@ blueprint:
   description: Turn on a light when motion is detected if needed.
   domain: automation
   input:
-    motion_sensor_entity:
+    motion_sensor:
       name: Motion Sensor
-      selector:
-        entity: {}
-    light_sensor_entity:
-      name: Light Sensor
+      description: This sensor will trigger the turning on of the target entity.
       selector:
         entity:
-          domain: sensor
-          device_class: illuminance
+          domain: binary_sensor
+          device_class: motion      
     light_target:
-      name: Light
+      name: Target light
+      description: The lightto turn on when the automation is triggered.
       selector:
         target:
           entity:
             domain: light
     no_motion_wait:
-      name: Wait time
+      name: Wait time (sec)
       description: Time to leave the light on after last motion is detected.
       default: 120
       selector:
@@ -28,40 +26,124 @@ blueprint:
           min: 0
           max: 3600
           unit_of_measurement: seconds
-    lux_trigger:
-      name: Minimum brightness
+    no_motion_warning:
+      name: (OPTIONAL) Warning time (sec)
+      description: Waring duration of reduce brigness before turning it off (0 means no warning).
+      default: 0
+      selector:
+        number:
+          min: 0
+          max: 60
+          unit_of_measurement: seconds
+    light_sensor:
+      name: (OPTIONAL) Illuminance sensor
+      description: This sensor will be used to determine the illumination.
+      default:
+      selector:
+        entity:
+          domain: sensor
+          device_class: illuminance
+
+    lux_cutoff:
+      name: (OPTIONAL) Illuminance cutoff value
       description: minimum brightness that is triggering.
-      default: 20
+      default: 
       selector:
         number:
           min: 0
           max: 1000
           unit_of_measurement: lux
 
+    adaptive_lighting:
+      name: (OPTIONAL) Adaptive lighting switch
+      description: use adaptive lighting mode if enabled
+      default: 
+      selector:
+        entity:
+          integration: adaptive_lighting
+          domain: switch
+
 # If motion is detected within the delay,
 # we restart the script.
 mode: restart
 max_exceeded: silent
 
-trigger:
-  platform: state
-  entity_id: !input motion_sensor_entity
-  from: "off"
-  to: "on"
+variables:
+  light_target: !input 'light_target'
+  no_motion_wait: !input 'no_motion_wait'
+  no_motion_warning: !input 'no_motion_warning'
+  light_sensor: !input 'light_sensor'
+  lux_cutoff: !input 'lux_cutoff'
+  adaptive_lighting: !input 'adaptive_lighting'
 
-#condition:
-# condition: numeric_state
-#  entity_id: !input light_sensor_entity
-#  below: !input lux_trigger
+  warning_disable: '{{ (no_motion_warning=0) or (no_motion_warning>=no_motion_wait)}}'
+  duration_before_warning: '{{ no_motion_wait - no_motion_warning }}'
+  illinance_disable: '{{(light_sensor==none) or (lux_cutoff==none)}}'
+
+trigger:
+  - platform: state
+    entity_id: !input motion_sensor
+    to: "on"
+    id: "on"
+  - platform: state
+    entity_id: !input motion_sensor
+    to: "off"
+    for:
+      seconds: !input 'no_motion_wait'
+    id: "off"
+
+condition:
+  - alias: "check if light already on, if yes don't read light sensor"
+    condition: or
+    conditions:
+      - condition: trigger
+        id: 'off'
+      - condition: state
+        entity_id: !input 'light_target'
+        state: "on"
+      - condition: template
+        value_template: '{{ (illinance_disable) or (states(light_sensor) <= states(lux_cutoff)) }}'
 
 action:
-  - service: light.turn_on
-    target: !input light_target
-  - wait_for_trigger:
-      platform: state
-      entity_id: !input motion_sensor_entity
-      from: "on"
-      to: "off"
-  - delay: !input no_motion_wait
-  - service: light.turn_off
-    target: !input light_target
+- choose:
+  - conditions:
+    - condition: trigger
+      id: 'on'
+    sequence:
+    - choose:
+        - conditions: '{{is_state(adaptive_lighting,"on")}}'
+          sequence:
+          - service: adaptive_lighting.apply
+            entity_id: !input 'adaptive_lighting'
+            data:
+              lights: !input 'light_target'
+              turn_on_lights: true
+      default:
+          - service: light.turn_on
+            target: 
+              entity_id: !input 'light_target'
+    - wait_for_trigger:
+        platform: state
+        entity_id: !input motion_sensor
+        from: "on"
+        to: "off"
+    - choose:
+      - conditions: '{{not warning_disable)}}'
+        sequence:
+          - delay:
+              seconds: '{{duration_before_warning}}'
+          - condition: state
+            entity_id: !input 'light_target'
+            state: "on"
+          - service: light.turn_on
+            target: 
+              entity_id: !input 'light_target'
+            data:
+              brightness_step_pct: -50
+  - conditions:
+    - condition: trigger
+      id: 'on'
+    sequence:
+      - service: light.turn_off
+        target: 
+          entity_id: !input 'light_target'

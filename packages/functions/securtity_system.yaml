@@ -36,11 +36,11 @@ automation:
 - id: 'function_security_arm_when_away'
   alias: 'Function - Security -  Arme quand absent'
   trigger:
-    - platform: state
-      entity_id: binary_sensor.anyone_home
-      to: 'off'
-      for:
-        minutes: 10
+  - platform: event
+    event_type: routine_event
+    event_data:
+      type: away
+    id: 'leaving'
   condition:
   - condition: state
     entity_id: alarm_control_panel.alarme_maison

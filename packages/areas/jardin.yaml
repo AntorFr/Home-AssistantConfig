@@ -67,13 +67,15 @@ automation:
       entity_id: switch.night_mode
       to: 'off'
       id: 'wake-up'
-    - platform: state
-      entity_id: binary_sensor.anyone_home
-      to: 'on'
+    - platform: event
+      event_type: routine_event
+      event_data:
+        type: home
       id: 'come-back'
-    - platform: state
-      entity_id: binary_sensor.anyone_home
-      to: 'off'
+    - platform: event
+      event_type: routine_event
+      event_data:
+        type: away
       id: 'leaving'
 
   action:
@@ -95,8 +97,8 @@ automation:
               - condition: trigger
                 id: sunset
           - condition: state
-            entity_id: binary_sensor.anyone_home
-            state: 'on'
+            entity_id: input_boolean.away_mode
+            state: 'off'
       sequence:
         - service: switch.turn_on
           entity_id: switch.guirlandes_noel_switch

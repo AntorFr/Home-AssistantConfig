@@ -233,13 +233,15 @@ automation:
       event_data:
         type: morning
       id: morning
-    - platform: state
-      entity_id: binary_sensor.anyone_home
-      to: 'on'
+    - platform: event
+      event_type: routine_event
+      event_data:
+        type: home
       id: 'come-back'
-    - platform: state
-      entity_id: binary_sensor.anyone_home
-      to: 'off'
+    - platform: event
+      event_type: routine_event
+      event_data:
+        type: away
       id: 'leaving'
 
   action:
@@ -302,6 +304,9 @@ automation:
       conditions:
         - condition: trigger
           id: children morning
+        - condition: state
+          entity_id: binary_sensor.workday_sensor
+          state: 'on'
       sequence:
         - service: light.turn_on
           data:

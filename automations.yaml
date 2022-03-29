@@ -6,8 +6,8 @@
     at: '12:00'
   condition:
   - condition: state
-    entity_id: binary_sensor.anyone_home
-    state: 'off'
+    entity_id: input_boolean.away_mode
+    state: 'on'
   action:
   - service: xiaomi_miio.vacuum_remote_control_start
     data:
