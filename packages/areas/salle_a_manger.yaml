@@ -13,10 +13,6 @@ automation:
 - id: salle-a-manger_light_auto
   alias: Area - Salle à manger - Lumière auto
   description: ''
-  # If motion is detected within the delay,
-  # we restart the script.
-  mode: restart
-  max_exceeded: silent
 
   trigger:
     - platform: state

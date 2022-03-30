@@ -42,74 +42,17 @@ automation:
 - id: 'salon_light_auto'
   alias: Area - Salon - Lumière auto
   description: ''
-
-  mode: restart
-  max_exceeded: silent
-
-  trigger:
-    - platform: state
-      entity_id: binary_sensor.salon_capteur_mouvement_occupancy
-      to: "on"
-      id: "on"
-    - platform: state
-      entity_id: binary_sensor.salon_capteur_mouvement_occupancy
-      to: "off"
-      for:
-        minutes: 60
-      id: "off"
-
-  condition:
-    - condition: or
-      conditions:
-      - condition: and
-        conditions:
-          - condition: trigger
-            id: 'on' 
-          - condition: numeric_state
-            entity_id: sensor.salon_capteur_luminosite_illuminance_lux
-            below: 60
-          - condition: state
-            entity_id: light.salon_lumieres
-            state: 'off'
-      - condition: and
-        conditions:
-          - condition: trigger
-            id: 'off' 
-          - condition: state
-            entity_id: light.salon_lumieres
-            state: 'on'        
-
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: 'on'
-      sequence:
-      - choose:
-          - conditions:
-            - condition: state
-              entity_id: switch.adaptive_lighting_salon
-              state: 'on'
-            sequence:
-            - service: adaptive_lighting.apply
-              entity_id: switch.adaptive_lighting_salon
-              data:
-                lights:
-                  - light.salon_lumieres
-                turn_on_lights: true
-        default:
-            - service: light.turn_on
-              target: 
-                entity_id: light.salon_lumieres
-      - wait_for_trigger:
-          platform: state
-          entity_id: binary_sensor.salon_capteur_mouvement_occupancy
-          to: "off"
-          for:
-            minutes: 30
-  - service: light.turn_off
-    target: 
-      entity_id: light.salon_lumieres
+  use_blueprint:
+  path: antorfr/motion_light.yaml
+  input:
+    light_target:
+      entity_id: light.entree_spots
+    motion_sensor: binary_sensor.salon_capteur_mouvement_occupancy
+    no_motion_wait: 3600
+    no_motion_warning: 30
+    light_sensor: sensor.salon_capteur_luminosite_illuminance_lux
+    lux_cutoff: 60
+    adaptive_lighting: switch.adaptive_lighting_salon
 ################################################################################
 
     

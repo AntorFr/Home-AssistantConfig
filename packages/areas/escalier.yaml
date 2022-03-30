@@ -22,57 +22,19 @@ automation:
 - id: escalier_light_auto
   alias: Area - Escalier - Lumière auto
   description: ''
-  # If motion is detected within the delay,
-  # we restart the script.
-  mode: restart
-  max_exceeded: silent
-  trigger:
-    - platform: state
-      entity_id: group.escalier_sensors
-      to: 'on'
-      id: 'on'
-    - platform: state
-      entity_id: group.escalier_sensors
-      to: 'off'
-      for:
-        minutes: 3
-      id: 'off'
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: 'on'
-      sequence:
-      - choose:
-        - conditions:
-            - condition: state
-              entity_id: switch.adaptive_lighting_default
-              state: 'on'
-          sequence:
-            - service: adaptive_lighting.apply
-              entity_id: switch.adaptive_lighting_default
-              data:
-                lights:
-                  - light.couloir_etage
-                  - light.escaliers
-                turn_on_lights: true
-        default:
-            - service: light.turn_on
-              target: 
-                entity_id:
-                  - light.couloir_etage
-                  - light.escaliers
-      - wait_for_trigger:
-          platform: state
-          entity_id: group.escalier_sensors
-          from: "on"
-          to: "off"
-          for: 30
-  - service: light.turn_off
-    target: 
-      entity_id:
+  use_blueprint:
+  path: antorfr/motion_light.yaml
+  input:
+    light_target:
+      entity_id: 
         - light.couloir_etage
         - light.escaliers
+    motion_sensor: group.escalier_sensors
+    no_motion_wait: 60
+    no_motion_warning: 30
+    light_sensor:
+    lux_cutoff:
+    adaptive_lighting: switch.adaptive_lighting_default
 ################################################################################
 - id: escalier_light_button
   alias: Area - Escalier - Lumière bouton

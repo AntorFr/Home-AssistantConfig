@@ -39,74 +39,17 @@ automation:
 - id: 'entree_light_auto'
   alias: Area - Entrée - Lumière auto
   description: ''
-
-  mode: restart
-  max_exceeded: silent
-
-  trigger:
-    - platform: state
-      entity_id: binary_sensor.entree_capteur_mouvement_occupancy
-      to: "on"
-      id: "on"
-    - platform: state
-      entity_id: binary_sensor.entree_capteur_mouvement_occupancy
-      to: "off"
-      for:
-        minutes: 3
-      id: "off"
-
-  condition:
-    - condition: or
-      conditions:
-      - condition: and
-        conditions:
-          - condition: trigger
-            id: 'on' 
-          - condition: numeric_state
-            entity_id: sensor.entree_capteur_luminosite_illuminance_lux
-            below: 60
-          - condition: state
-            entity_id: light.entree_spots
-            state: 'off'
-      - condition: and
-        conditions:
-          - condition: trigger
-            id: 'off' 
-          - condition: state
-            entity_id: light.entree_spots
-            state: 'on'        
-
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: 'on'
-      sequence:
-      - choose:
-          - conditions:
-            - condition: state
-              entity_id: switch.adaptive_lighting_default
-              state: 'on'
-            sequence:
-            - service: adaptive_lighting.apply
-              entity_id: switch.adaptive_lighting_default
-              data:
-                lights:
-                  - light.entree_spots
-                turn_on_lights: true
-        default:
-            - service: light.turn_on
-              target: 
-                entity_id: light.entree_spots
-      - wait_for_trigger:
-          platform: state
-          entity_id: binary_sensor.entree_capteur_mouvement_occupancy
-          to: "off"
-          for:
-            minutes: 2
-  - service: light.turn_off
-    target: 
+  use_blueprint:
+  path: antorfr/motion_light.yaml
+  input:
+    light_target:
       entity_id: light.entree_spots
+    motion_sensor: binary_sensor.entree_capteur_mouvement_occupancy
+    no_motion_wait: 180
+    no_motion_warning: 30
+    light_sensor: sensor.entree_capteur_luminosite_illuminance_lux
+    lux_cutoff: 60
+    adaptive_lighting: switch.adaptive_lighting_default
 ################################################################################
 
 ################################################################################
