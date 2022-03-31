@@ -21,4 +21,5 @@ automation:
       no_motion_wait: 300
       no_motion_warning: 15
       adaptive_lighting: switch.adaptive_lighting_default
+      only_during_night: 0
 ################################################################################

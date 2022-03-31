@@ -26,3 +26,21 @@ sensor:
     type: time
     duration: 00:05:00
     end: "{{now()}}"
+
+automation:
+################################################################################
+- id: bureau_light_auto
+  alias: Area - Bureau - Lumière auto
+  description: ''
+  use_blueprint:
+    path: antorfr/motion_light.yaml
+    input:
+      light_target:
+        entity_id:
+          - light.hue_color_lamp_5_3
+          - light.barre_led_ecran
+      motion_sensor: binary_sensor.bureau_motion
+      no_motion_wait: 1800
+      no_motion_warning: 30
+      only_turn_off: 1
+################################################################################

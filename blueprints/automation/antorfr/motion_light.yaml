@@ -43,7 +43,6 @@ blueprint:
         entity:
           domain: sensor
           device_class: illuminance
-
     lux_cutoff:
       name: (OPTIONAL) Illuminance cutoff value
       description: minimum brightness that is triggering.
@@ -53,7 +52,24 @@ blueprint:
           min: 0
           max: 1000
           unit_of_measurement: lux
-
+    only_during_night:
+      name: (OPTIONAL) Only turn light on at night
+      description: Only turn light on when when sun is below horizon.
+      default: 0
+      selector:
+        number:
+          min: 0
+          max: 1
+          step: 1
+    only_turn_off:
+      name: (OPTIONAL) Only turn light off(
+      description: Only turn light off when no more motion, but never on
+      default: 0
+      selector:
+        number:
+          min: 0
+          max: 1
+          step: 1
     adaptive_lighting:
       name: (OPTIONAL) Adaptive lighting switch
       description: use adaptive lighting mode if enabled
@@ -75,10 +91,40 @@ variables:
   light_sensor: !input 'light_sensor'
   lux_cutoff: !input 'lux_cutoff'
   adaptive_lighting: !input 'adaptive_lighting'
+  only_during_night: !input 'only_during_night'
+  only_turn_off: !input 'only_turn_off'
 
   warning_disable: '{{ (no_motion_warning==0) or (no_motion_warning>=no_motion_wait)}}'
   duration_before_warning: '{{ no_motion_wait - no_motion_warning }}'
   illinance_disable: '{{(light_sensor==none) or (lux_cutoff==none)}}'
+  night_only_disable: "{{only_during_night==0}}"
+  turn_on_disable: '{{only_turn_off == 1}}'
+  light_entities: >
+    {%- set ns = namespace(light_entities=[]) %}
+
+    {%- if light_target.entity_id is not none %}
+    {%- set entity_ids = iif(light_target.entity_id is string,[light_target.entity_id],light_target.entity_id) %}
+    {%- set entity_light_ids = light_target.entity_id|select('match','^light\..*')| list %}
+    {%- set ns.light_entities =  entity_light_ids|unique|list%}
+    {%- endif %}
+
+    {%- if light_target.area_id is not none %}
+    {%- set area_ids = iif(light_target.area_id is string,[light_target.area_id],light_target.area_id) %}
+    {%- for area in light_target.area_id %}
+    {%- set area_light_ids = area_entities(area)|select('match','^light\..*') | list %}
+    {%- set ns.light_entities =  (ns.light_entities + area_light_ids)|unique|list%}
+    {%- endfor %}
+    {%- endif %}
+
+    {%- if light_target.device_id is not none %}
+    {%- set device_ids = iif(light_target.device_id is string,[light_target.device_id],light_target.device_id) %}
+    {%- for device in device_ids %}
+    {%- set device_light_ids = device_entities(device)|select('match','^light\..*') | list %}
+    {%- set ns.light_entities =  (ns.light_entities + device_light_ids)|unique|list%}
+    {%- endfor %}
+    {%- endif %}
+
+    {{ns.light_entities}}
 
 trigger:
   - platform: state
@@ -93,18 +139,35 @@ trigger:
     id: "off"
 
 condition:
-  - alias: "check if light already on, if yes don't read light sensor"
-    condition: or
+  - condition: or
     conditions:
       - alias: "no more movement since configured period"
         condition: trigger
         id: 'off'
-      - alias: "any entity id is on" 
-        condition: template
-        value_template: '{{ expand(light_target.entity_id) | selectattr("state", "==", "on") | list | count > 0 }}'
-      - alias: "illinance disable or illinance lower than thershold"
-        condition: template
-        value_template: '{{ (illinance_disable) or (states(light_sensor) <= lux_cutoff) }}'
+      - condition: and
+        conditions:  
+          - alias: "turn on enabled"
+            condition: template
+            value_template: >
+              {{ 
+                 not (turn_on_disable)
+              }} 
+          - alias: "night only disable or sun is down"
+            condition: template
+            value_template: >
+              {{ 
+                (night_only_disable) or 
+                (is_state("sun.sun","below_horizon"))
+              }}     
+          - alias: "illinance disable or illinance lower than thershold or any entity id is on" 
+            condition: template
+            value_template: >
+              {{ 
+                  (illinance_disable) or
+                  (states(light_sensor)|int <= lux_cutoff) or
+                  (expand(light_entities) | selectattr("state", "==", "on") | list | count > 0)
+              }}
+
 
 action:
 - choose:
@@ -118,7 +181,7 @@ action:
         - service: adaptive_lighting.apply
           entity_id: !input 'adaptive_lighting'
           data:
-            lights: '{{light_target.entity_id}}'
+            lights: '{{light_entities}}'
             turn_on_lights: true
       default:
           - service: light.turn_on
@@ -135,10 +198,10 @@ action:
             seconds: '{{duration_before_warning}}'
         - alias: "any light still on" 
           condition: template
-          value_template: '{{ expand(light_target.entity_id) | selectattr("state", "eq", "on") | list | count > 0 }}'
+          value_template: '{{ expand(light_entities) | selectattr("state", "eq", "on") | list | count > 0 }}'
         - service: light.turn_on
           target:
-            entity_id: '{{expand(light_target.entity_id) | selectattr("state", "eq", "on") | map(attribute="entity_id")| list}}'
+            entity_id: '{{expand(light_entities) | selectattr("state", "eq", "on") | map(attribute="entity_id")| list}}'
           data:
             brightness_step_pct: -50
   - conditions:

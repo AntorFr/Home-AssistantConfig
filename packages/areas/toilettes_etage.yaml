@@ -12,53 +12,14 @@ automation:
 - id: toilettes_etage_light_auto
   alias: Area - Toilettes Etage - Lumière auto
   description: ''
-  # If motion is detected within the delay,
-  # we restart the script.
-  mode: restart
-  max_exceeded: silent
-  trigger:
-    - platform: state
-      entity_id: binary_sensor.toilettes_etage_capteur_de_mouvement_occupancy
-      to: 'on'
-      id: 'on'
-    - platform: state
-      entity_id: binary_sensor.toilettes_etage_capteur_de_mouvement_occupancy
-      to: 'off'
-      for:
-        minutes: 10
-      id: 'off'
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: 'on'
-      sequence:
-      - choose:
-          - conditions:
-            - condition: state
-              entity_id: switch.adaptive_lighting_default
-              state: 'on'
-            sequence:
-            - service: adaptive_lighting.apply
-              entity_id: switch.adaptive_lighting_default
-              data:
-                lights:
-                  - light.toilette_etage
-                turn_on_lights: true
-        default:
-            - service: light.turn_on
-              target: 
-                entity_id:
-                  - light.toilette_etage
-      - wait_for_trigger:
-          platform: state
-          entity_id: binary_sensor.toilettes_etage_capteur_de_mouvement_occupancy
-          from: "on"
-          to: "off"
-          for: 
-            minutes: 3
-  - service: light.turn_off
-    target: 
-      entity_id:
-        - light.toilette_etage
+  use_blueprint:
+    path: antorfr/motion_light.yaml
+    input:
+      light_target:
+        entity_id: light.toilette_etage
+      motion_sensor: binary_sensor.toilettes_etage_capteur_de_mouvement_occupancy
+      no_motion_wait: 300
+      no_motion_warning: 15
+      adaptive_lighting: switch.adaptive_lighting_default
+      only_during_night: 0
 ################################################################################

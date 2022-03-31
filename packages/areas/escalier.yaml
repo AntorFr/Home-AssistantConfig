@@ -23,18 +23,19 @@ automation:
   alias: Area - Escalier - Lumière auto
   description: ''
   use_blueprint:
-  path: antorfr/motion_light.yaml
-  input:
-    light_target:
-      entity_id: 
-        - light.couloir_etage
-        - light.escaliers
-    motion_sensor: group.escalier_sensors
-    no_motion_wait: 60
-    no_motion_warning: 30
-    light_sensor:
-    lux_cutoff:
-    adaptive_lighting: switch.adaptive_lighting_default
+    path: antorfr/motion_light.yaml
+    input:
+      light_target:
+        entity_id: 
+          - light.couloir_etage
+          - light.escaliers
+      motion_sensor: group.escalier_sensors
+      no_motion_wait: 60
+      no_motion_warning: 30
+      only_during_night: 0
+      light_sensor:
+      lux_cutoff:
+      adaptive_lighting: switch.adaptive_lighting_default
 ################################################################################
 - id: escalier_light_button
   alias: Area - Escalier - Lumière bouton
