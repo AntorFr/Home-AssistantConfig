@@ -206,7 +206,7 @@ action:
             brightness_step_pct: -50
   - conditions:
     - condition: trigger
-      id: 'on'
+      id: 'off'
     sequence:
       - service: light.turn_off
         target: !input 'light_target'
