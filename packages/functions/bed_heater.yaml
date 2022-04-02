@@ -15,7 +15,7 @@ automation:
       state: 'off'
     - condition: numeric_state
       entity_id: sensor.temperature_exterieur
-      below: '15'
+      below: '17'
   action:
   - choose:
     - conditions:

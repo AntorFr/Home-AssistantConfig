@@ -44,9 +44,92 @@
 - id: '1636653311804'
   alias: Area - Salon - Bouton volume
   description: ''
-  use_blueprint:
-    path: seamus65/zha-ikea-symfonisk-sound-controller-for-media-the-spinny-one.yaml
-    input:
-      remote: 8520a3d7a4d1efa899ed5a4f009284fb
-      media_player:
-        entity_id: media_player.salon_2
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 3bb5ed9c9e9e2edd6ae8fcb01e447fa0
+    type: action
+    subtype: brightness_move_up
+    discovery_id: 0xec1bbdfffef3f050 action_brightness_move_up
+    id: move_up
+  - platform: device
+    domain: mqtt
+    device_id: 3bb5ed9c9e9e2edd6ae8fcb01e447fa0
+    type: action
+    subtype: brightness_move_down
+    discovery_id: 0xec1bbdfffef3f050 action_brightness_move_down
+    id: move_down
+  - platform: device
+    domain: mqtt
+    device_id: 3bb5ed9c9e9e2edd6ae8fcb01e447fa0
+    type: action
+    subtype: toggle
+    discovery_id: 0xec1bbdfffef3f050 action_toggle
+    id: toggle
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: move_up
+      sequence:
+      - service: media_player.volume_up
+        data: {}
+        target:
+          entity_id: media_player.salon
+    - conditions:
+      - condition: trigger
+        id: move_down
+      sequence:
+      - service: media_player.volume_down
+        data: {}
+        target:
+          entity_id: media_player.salon
+    - conditions:
+      - condition: trigger
+        id: toggle
+      sequence:
+      - service: media_player.media_play_pause
+        data: {}
+        target:
+          entity_id: media_player.salon
+    default: []
+- id: '1648896218853'
+  alias: Area - Chambre parent - Bouton Lumière
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 93938827448076f36b0d4acf9ae34cdb
+    type: action
+    subtype: left_press
+    discovery_id: 0x0017880109d4d98b action_left_press
+    id: left_press
+  - platform: device
+    domain: mqtt
+    device_id: 93938827448076f36b0d4acf9ae34cdb
+    type: action
+    subtype: right_press
+    discovery_id: 0x0017880109d4d98b action_right_press
+    id: right_press
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: left_press
+      sequence:
+      - service: light.toggle
+        data: {}
+        target:
+          entity_id: light.plafonnier_chambre_parents
+    - conditions:
+      - condition: trigger
+        id: right_press
+      sequence:
+      - service: light.toggle
+        data: {}
+        target:
+          entity_id: light.veilleuse_lit_parent
+    default: []
+  mode: parallel

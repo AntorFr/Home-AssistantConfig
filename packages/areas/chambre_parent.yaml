@@ -6,6 +6,13 @@ light:
       - light.chambre
       - light.veilleuse_lit_parent
 
+template:
+  - sensor:
+    - unique_id: temperature_chambre_parent
+      name: Chambre parent temperature 
+      device_class: temperature
+      state: "{{ state_attr('climate.netatmo_chambre', 'current_temperature') }}"
+
 automation:
 ################################################################################
 - id: 'chambre_parent_button_seb'
