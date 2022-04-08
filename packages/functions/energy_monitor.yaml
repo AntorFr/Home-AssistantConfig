@@ -1,0 +1,22 @@
+sensor:
+  - platform: integration
+    source: sensor.bureau_prise_pc_1_power
+    name: energy_bureau_prise_pc_1_power
+    unit_prefix: k
+    unit_time: h
+    round: 2
+    method: left
+  - platform: integration
+    source: sensor.bureau_prise_pc_2_power
+    name: energy_bureau_prise_pc_2_power
+    unit_prefix: k
+    unit_time: h
+    round: 2
+    method: left
+  - platform: integration
+    source: sensor.bureau_prise_pc_3_power
+    name: energy_bureau_prise_pc_3_power
+    unit_prefix: k
+    unit_time: h
+    round: 2
+    method: left

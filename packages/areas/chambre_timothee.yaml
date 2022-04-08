@@ -68,3 +68,43 @@ automation:
     target:
       entity_id: light.plafonnier_timothee
 ################################################################################
+- id: 'chambre_timothee_button_volet'
+  alias: Area - Chambre Timothée - Bouton volets
+  description: ''
+  mode: single
+  trigger:
+    - platform: device
+      domain: mqtt
+      device_id: ff76dd5000f655268be400dc3d22cf31
+      type: action
+      subtype: open
+      discovery_id: 0x0004740000ad983d action_open
+      id: open
+    - platform: device
+      domain: mqtt
+      device_id: ff76dd5000f655268be400dc3d22cf31
+      type: action
+      subtype: close
+      discovery_id: 0x0004740000ad983d action_close
+      id: close
+  condition: []
+  action:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id: open
+          sequence:
+            - service: cover.open_cover
+              data: {}
+              target:
+                area_id: chambre_timothee
+        - conditions:
+            - condition: trigger
+              id: close
+          sequence:
+            - service: cover.close_cover
+              data: {}
+              target:
+                area_id: chambre_timothee
+      default: []
+################################################################################
