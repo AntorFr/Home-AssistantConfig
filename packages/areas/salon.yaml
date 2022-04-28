@@ -48,12 +48,52 @@ automation:
       light_target:
         entity_id: light.salon_lumieres
       motion_sensor: binary_sensor.salon_capteur_mouvement_occupancy
-      no_motion_wait: 3600
+      no_motion_wait:
+        hours: 1
       no_motion_warning: 30
       light_sensor: sensor.salon_capteur_luminosite_illuminance_lux
       lux_cutoff: 60
       adaptive_lighting: switch.adaptive_lighting_salon
-      only_during_night: 0
+      only_during_night: false
 ################################################################################
-
+- id: 'salon_bouton_light'
+  alias: Area - Salon - Bouton Lumière
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 19daa3eaef6aa64f927feeb5d8a47dc4
+    type: action
+    subtype: left_press
+    discovery_id: 0x001788010b01dcce action_left_press
+    id: left_press
+  - platform: device
+    domain: mqtt
+    device_id: 19daa3eaef6aa64f927feeb5d8a47dc4
+    type: action
+    subtype: right_press
+    discovery_id: 0x001788010b01dcce action_right_press
+    id: right_press
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: left_press
+      sequence:
+      - service: light.toggle
+        data: {}
+        target:
+          entity_id: light.salon
+    - conditions:
+      - condition: trigger
+        id: right_press
+      sequence:
+      - service: light.toggle
+        data: {}
+        target:
+          entity_id: light.salon_led_buffet
+    default: []
+  mode: parallel
+################################################################################
     

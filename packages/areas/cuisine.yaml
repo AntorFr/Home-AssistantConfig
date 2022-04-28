@@ -27,86 +27,22 @@ sensor:
 
 automation:
 ################################################################################
-- id: 'cuisine_light_auto'
+- id: cuisine_light_auto
   alias: Area - Cuisine - Lumière auto
   description: ''
-
-  mode: restart
-  max_exceeded: silent
-
-  trigger:
-    - platform: state
-      entity_id: binary_sensor.cuisine_capteur_mouvement_occupancy
-      to: 'on'
-      id: 'on'
-    - platform: state
-      entity_id: binary_sensor.cuisine_capteur_mouvement_occupancy
-      to: 'off'
-      for:
+  use_blueprint:
+    path: antorfr/motion_light.yaml
+    input:
+      light_target:
+        entity_id: 
+          - light.cusine_plafonier
+          - light.cusine_spot
+      motion_sensor: binary_sensor.cuisine_capteur_mouvement_occupancy
+      no_motion_wait: 
         minutes: 10
-      id: 'off'
-
-  condition:
-    - condition: or
-      conditions:
-      - condition: and
-        conditions:
-          - condition: trigger
-            id: 'on' 
-          - condition: state
-            entity_id: sun.sun
-            state: "below_horizon"
-          - condition: state
-            entity_id: light.cusine_plafonier
-            state: 'off'
-      - condition: and
-        conditions:
-          - condition: trigger
-            id: 'off'
-          - condition: or
-            conditions:
-              - condition: state
-                entity_id: light.cusine_plafonier
-                state: 'on'
-              - condition: state
-                entity_id: light.cusine_spot
-                state: 'on'  
-
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: 'on'
-      sequence:
-      - choose:
-          - conditions:
-            - condition: state
-              entity_id: switch.adaptive_lighting_cuisine
-              state: 'on'
-            sequence:
-            - service: adaptive_lighting.apply
-              entity_id: switch.adaptive_lighting_cuisine
-              data:
-                lights:
-                  - light.cusine_plafonier
-                  - light.cusine_spot
-                turn_on_lights: true
-        default:
-            - service: light.turn_on
-              target: 
-                entity_id: 
-                  - light.cusine_plafonier
-                  - light.cusine_spot
-      - wait_for_trigger:
-          platform: state
-          entity_id: binary_sensor.cuisine_capteur_mouvement_occupancy
-          from: "on"
-          to: "off"
-          for:
-            minutes: 5
-  - service: light.turn_off
-    target: 
-      entity_id: 
-        - light.cusine_plafonier
-        - light.cusine_spot
+      no_motion_warning: 30
+      only_during_night: true
+      light_sensor:
+      lux_cutoff:
+      adaptive_lighting: switch.adaptive_lighting_cuisine
 ################################################################################

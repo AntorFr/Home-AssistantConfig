@@ -1,25 +1,25 @@
 automation:
 
 ################################################################################
-- id: 'work_back_from_office_Laurine'
-  alias: Routine - Work - Laurine rentre du bureau
-  description: ''
-  trigger:
-  - platform: zone
-    entity_id: device_tracker.oneplus_a6013
-    zone: zone.talentsoft
-    event: leave
-  condition:
-  - condition: state
-    entity_id: binary_sensor.workday_sensor
-    state: 'on'
-  action:
-  - service: notify.mobile_app_intra_mob08
-    data:
-      message: Laurine rentre du bureau
-      data:
-        push:
-          sound: US-EN-Morgan-Freeman-Wife-Is-Arriving.wav
-  mode: single
+#- id: 'work_back_from_office_Laurine'
+#  alias: Routine - Work - Laurine rentre du bureau
+#  description: ''
+#  trigger:
+#  - platform: zone
+#    entity_id: device_tracker.oneplus_a6013
+#    zone: zone.talentsoft
+#    event: leave
+#  condition:
+#  - condition: state
+#    entity_id: binary_sensor.workday_sensor
+#    state: 'on'
+#  action:
+#  - service: notify.mobile_app_intra_mob08
+#    data:
+#      message: Laurine rentre du bureau
+#     data:
+#        push:
+#          sound: US-EN-Morgan-Freeman-Wife-Is-Arriving.wav
+#  mode: single
 ################################################################################
 

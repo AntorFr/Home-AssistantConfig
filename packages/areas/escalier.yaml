@@ -30,9 +30,10 @@ automation:
           - light.couloir_etage
           - light.escaliers
       motion_sensor: group.escalier_sensors
-      no_motion_wait: 60
+      no_motion_wait:
+        minutes: 1
       no_motion_warning: 30
-      only_during_night: 0
+      only_during_night: false
       light_sensor:
       lux_cutoff:
       adaptive_lighting: switch.adaptive_lighting_default

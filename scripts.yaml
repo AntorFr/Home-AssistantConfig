@@ -3,15 +3,15 @@ sonos_rdc_ambiance_pop:
   sequence:
   - service: sonos.join
     data:
-      master: media_player.salon_2
+      master: media_player.salon
       entity_id: media_player.salle_a_manger
   - service: sonos.join
     data:
-      master: media_player.salon_2
-      entity_id: media_player.move
+      master: media_player.salon
+      entity_id: media_player.cuisine_move
   - service: media_player.select_source
     target:
-      entity_id: media_player.salon_2
+      entity_id: media_player.salon
     data:
       source: La vie est belle
   mode: single
@@ -21,11 +21,11 @@ sonos_rdc_ambiance_meditation:
   sequence:
   - service: sonos.join
     data:
-      master: media_player.salon_2
+      master: media_player.salon
       entity_id: media_player.salle_a_manger
   - service: media_player.select_source
     target:
-      entity_id: media_player.salon_2
+      entity_id: media_player.salon
     data:
       source: Peaceful Meditation
   mode: single
@@ -35,11 +35,11 @@ sonos_rdc_ambiance_piano:
   sequence:
   - service: sonos.join
     data:
-      master: media_player.salon_2
+      master: media_player.salon
       entity_id: media_player.salle_a_manger
   - service: media_player.select_source
     target:
-      entity_id: media_player.salon_2
+      entity_id: media_player.salon
     data:
       source: Easy & Beautiful Piano | Peaceful & Relaxing
   mode: single
@@ -49,15 +49,15 @@ sonos_rdc_ambiance_matin:
   sequence:
   - service: sonos.join
     data:
-      master: media_player.salon_2
+      master: media_player.salon
       entity_id: media_player.salle_a_manger
   - service: sonos.join
     data:
-      master: media_player.salon_2
+      master: media_player.salon
       entity_id: media_player.move
   - service: media_player.select_source
     target:
-      entity_id: media_player.salon_2
+      entity_id: media_player.salon
     data:
       source: Café / Croissant
   mode: single
@@ -109,7 +109,7 @@ routine_sleep_mode:
       - salle_de_bain
       - salle_de_douche
       - salle_a_manger
-      entity_id: media_player.salon_2
+      entity_id: media_player.salon
   - service: alarm_control_panel.alarm_arm_night
     target:
       entity_id: alarm_control_panel.alarme_maison

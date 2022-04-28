@@ -20,16 +20,23 @@ blueprint:
     no_motion_wait:
       name: Wait time (sec)
       description: Time to leave the light on after last motion is detected.
-      default: 120
       selector:
-        number:
-          min: 0
-          max: 3600
-          unit_of_measurement: seconds
+        duration:
+          #enable_days: false
+      default:
+        minutes: 2
+    #toggle_devices:
+    #  name: (Not implemented yet) toggle devices.
+    #  description: list of device to manually trigger a light toggle
+    #  selector:
+    #    entity:
+    #      #multiple: true
+    #      domain: binary_sensor
+    #      device_class: motion       
     no_motion_warning:
       name: (OPTIONAL) Warning time (sec)
       description: Waring duration of reduce brigness before turning it off (0 means no warning).
-      default: 0
+      default: 30
       selector:
         number:
           min: 0
@@ -55,21 +62,15 @@ blueprint:
     only_during_night:
       name: (OPTIONAL) Only turn light on at night
       description: Only turn light on when when sun is below horizon.
-      default: 0
+      default: false
       selector:
-        number:
-          min: 0
-          max: 1
-          step: 1
+        boolean:
     only_turn_off:
       name: (OPTIONAL) Only turn light off(
       description: Only turn light off when no more motion, but never on
-      default: 0
+      default: false
       selector:
-        number:
-          min: 0
-          max: 1
-          step: 1
+        boolean:
     adaptive_lighting:
       name: (OPTIONAL) Adaptive lighting switch
       description: use adaptive lighting mode if enabled
@@ -94,17 +95,18 @@ variables:
   only_during_night: !input 'only_during_night'
   only_turn_off: !input 'only_turn_off'
 
-  warning_disable: '{{ (no_motion_warning==0) or (no_motion_warning>=no_motion_wait)}}'
-  duration_before_warning: '{{ no_motion_wait - no_motion_warning }}'
+  no_motion_wait_sec: '{{ ((no_motion_wait.hours or 0)*3600+(no_motion_wait.minutes or 0)*60+(no_motion_wait.seconds or 0))|int}}'
+  warning_disable: '{{ (no_motion_warning==0) or (no_motion_warning>=no_motion_wait_sec)}}'
+  duration_before_warning: '{{ (no_motion_wait_sec - no_motion_warning) }}'
   illinance_disable: '{{(light_sensor==none) or (lux_cutoff==none)}}'
-  night_only_disable: "{{only_during_night==0}}"
-  turn_on_disable: '{{only_turn_off == 1}}'
+  night_only_disable: "{{not only_during_night}}"
+  turn_on_disable: '{{only_turn_off}}'
   light_entities: >
     {%- set ns = namespace(light_entities=[]) %}
 
     {%- if light_target.entity_id is not none %}
     {%- set entity_ids = iif(light_target.entity_id is string,[light_target.entity_id],light_target.entity_id) %}
-    {%- set entity_light_ids = light_target.entity_id|select('match','^light\..*')| list %}
+    {%- set entity_light_ids = entity_ids|select('match','^light\..*')| list %}
     {%- set ns.light_entities =  entity_light_ids|unique|list%}
     {%- endif %}
 
@@ -134,8 +136,7 @@ trigger:
   - platform: state
     entity_id: !input motion_sensor
     to: "off"
-    for:
-      seconds: !input 'no_motion_wait'
+    for: !input 'no_motion_wait'
     id: "off"
 
 condition:
@@ -204,6 +205,8 @@ action:
             entity_id: '{{expand(light_entities) | selectattr("state", "eq", "on") | map(attribute="entity_id")| list}}'
           data:
             brightness_step_pct: -50
+        - service: light.turn_off
+          target: !input 'light_target'
   - conditions:
     - condition: trigger
       id: 'off'

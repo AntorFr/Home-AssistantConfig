@@ -20,3 +20,38 @@ sensor:
     unit_time: h
     round: 2
     method: left
+  - platform: integration
+    source: sensor.salon_prise_tv_power
+    name: energy_salon_prise_tv_power
+    unit_prefix: k
+    unit_time: h
+    round: 2
+    method: left
+  - platform: integration
+    source: sensor.bureau_prise_1_power
+    name: energy_bureau_prise_1_power
+    unit_prefix: k
+    unit_time: h
+    round: 2
+    method: left
+  - platform: integration
+    source: sensor.bureau_prise_routeur_power
+    name: energy_bureau_prise_routeur_power
+    unit_prefix: k
+    unit_time: h
+    round: 2
+    method: left
+  - platform: integration
+    source: sensor.chambre_emilie_prise_bureau_power
+    name: energy_chambre_emilie_prise_bureau_power
+    unit_prefix: k
+    unit_time: h
+    round: 2
+    method: left
+  - platform: integration
+    source: sensor.mezzanine_prise_1_power
+    name: energy_mezzanine_prise_1_power
+    unit_prefix: k
+    unit_time: h
+    round: 2
+    method: left

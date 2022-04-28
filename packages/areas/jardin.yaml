@@ -16,7 +16,7 @@ sensor:
     end: "{{now()}}"
   - name: mouvement_air_de_jeux_10min
     platform: history_stats
-    entity_id: binary_sensor.motion_air_de_jeux
+    entity_id: binary_sensor.air_de_jeux_motion
     state: "on"
     type: time
     duration: 00:10:00
@@ -37,7 +37,7 @@ sensor:
     end: "{{now()}}"
   - name: mouvement_terasse_10min
     platform: history_stats
-    entity_id: binary_sensor.motion_terrasse
+    entity_id: binary_sensor.terrasse_motion
     state: "on"
     type: time
     duration: 00:10:00

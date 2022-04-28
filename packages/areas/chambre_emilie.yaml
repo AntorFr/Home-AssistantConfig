@@ -16,9 +16,9 @@ automation:
           after: '20:00:00'
           before: '06:00:00'
   action:
-  - entity_id:  switch.smart_power_outlet_2
+  - entity_id:  switch.chambre_emilie_prise_bureau
     service: switch.turn_on
   - delay: 00:45:00
-  - entity_id: switch.smart_power_outlet_2
+  - entity_id: switch.chambre_emilie_prise_bureau
     service: switch.turn_off
 ################################################################################

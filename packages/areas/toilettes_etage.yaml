@@ -18,8 +18,9 @@ automation:
       light_target:
         entity_id: light.toilette_etage
       motion_sensor: binary_sensor.toilettes_etage_capteur_de_mouvement_occupancy
-      no_motion_wait: 300
-      no_motion_warning: 15
+      no_motion_wait:
+        minutes: 3
+      no_motion_warning: 30
       adaptive_lighting: switch.adaptive_lighting_default
-      only_during_night: 0
+      only_during_night: false
 ################################################################################

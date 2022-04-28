@@ -19,9 +19,10 @@ automation:
       light_target:
         entity_id: light.salle_a_manger
       motion_sensor: binary_sensor.salle_a_manger_capteur_mouvement_occupancy
-      no_motion_wait: 2400
+      no_motion_wait:
+        minutes: 40
       no_motion_warning: 30
-      only_during_night: 1
+      only_during_night: true
       light_sensor:
       lux_cutoff:
       adaptive_lighting: switch.adaptive_lighting_salle_a_manger

@@ -26,7 +26,7 @@ binary_sensor:
       anyone_home:
         device_class: occupancy
         friendly_name: 'A la maison'
-        value_template: "{{ (states.person | selectattr('state','eq','home') | list | count > 0) or (is_state('input_boolean.gest_mode','on')) }}"
+        value_template: "{{ (states.person | selectattr('state','eq','home') | list | count > 0) or (is_state('input_boolean.guest_mode','on')) }}"
 
   - name: "maison_rdc_presence"
     device_class: occupancy

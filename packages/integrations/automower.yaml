@@ -1,10 +1,12 @@
-template:
-  - binary_sensor:
-    - unique_id: automower_error
-      name: Etat Robot tondeuse
-      device_class: problem
-      state: >
-          {{ is_state('vacuum.automower_r_450x_gardenbot','error')}}
+
+binary_sensor:
+  - platform: template
+    sensors:
+      automower_error:
+        friendly_name: Etat Robot tondeuse
+        device_class: problem
+        value_template: >
+            {{ is_state('vacuum.automower_r_450x_gardenbot','error')}}
           
 alert:
   automower:

@@ -11,7 +11,7 @@ light:
 sensor:
   - name: mouvement_piscine_10min
     platform: history_stats
-    entity_id: binary_sensor.motion_piscine
+    entity_id: binary_sensor.piscine_person_motion
     state: "on"
     type: time
     duration: 00:10:00
@@ -102,33 +102,33 @@ automation:
           - switch.piscine_lumiere
   mode: single
 ################################################################################
-- id: 'Swimingpool_auto_filtering_barry'
-  alias: Area - Piscine - Filtration automatique (barry)
-  description: Filtration de la piscine en fonction du prix de l'electricité
-  trigger:
-  - platform: time_pattern
-    minutes: '0'
-    seconds: '0'
-  condition: []
-  variables:
-    duree: 12    
-  action:
-  - choose:
-    - conditions:
-      - condition: template
-        value_template: >
-          {{state_attr('sensor.barry_kwh_total_price','current_frame') < duree}}
-      sequence:
-      - type: turn_on
-        device_id: a2fceb42992a0147a40d883d02e130f8
-        entity_id: switch.hub_cf4cac
-        domain: switch
-    default:
-    - type: turn_off
-      device_id: a2fceb42992a0147a40d883d02e130f8
-      entity_id: switch.hub_cf4cac
-      domain: switch
-  mode: single
+#- id: 'Swimingpool_auto_filtering_barry'
+#  alias: Area - Piscine - Filtration automatique (barry)
+#  description: Filtration de la piscine en fonction du prix de l'electricité
+#  trigger:
+#  - platform: time_pattern
+#    minutes: '0'
+#    seconds: '0'
+#  condition: []
+#  variables:
+#    duree: 12    
+#  action:
+#  - choose:
+#    - conditions:
+#      - condition: template
+#        value_template: >
+#          {{state_attr('sensor.barry_kwh_total_price','current_frame') < duree}}
+#      sequence:
+#      - type: turn_on
+#        device_id: a2fceb42992a0147a40d883d02e130f8
+#        entity_id: switch.hub_cf4cac
+#        domain: switch
+#    default:
+#    - type: turn_off
+#      device_id: a2fceb42992a0147a40d883d02e130f8
+#      entity_id: switch.hub_cf4cac
+#      domain: switch
+#  mode: single
 ################################################################################
 - id: 'Swimingpool_auto_filtering_hchp'
   alias: Area - Piscine - Filtration automatique (HP-HC)
@@ -155,33 +155,33 @@ automation:
       domain: switch
   mode: single
 ################################################################################
-- id: 'Swimingpool_auto_boiler_barry'
-  alias: Area - Piscine - Chauffe eau automatique (barry)
-  description: Chauffe eau en fonction du prix de l'electricité
-  trigger:
-  - platform: time_pattern
-    minutes: '0'
-    seconds: '0'
-  condition: []
-  variables:
-    duree: 2   
-  action:
-  - choose:
-    - conditions:
-      - condition: template
-        value_template: >
-          {{state_attr('sensor.barry_kwh_total_price','current_frame') < duree}}
-      sequence:
-      - type: turn_on
-        device_id: 4d5af4c5d0a5bd84eafb9ef394b320b5
-        entity_id: switch.piscine_chauffe_eau
-        domain: switch
-    default:
-    - type: turn_off
-      device_id: 4d5af4c5d0a5bd84eafb9ef394b320b5
-      entity_id: switch.piscine_chauffe_eau
-      domain: switch
-  mode: single
+#- id: 'Swimingpool_auto_boiler_barry'
+#  alias: Area - Piscine - Chauffe eau automatique (barry)
+#  description: Chauffe eau en fonction du prix de l'electricité
+#  trigger:
+#  - platform: time_pattern
+#    minutes: '0'
+#    seconds: '0'
+#  condition: []
+#  variables:
+#    duree: 2   
+#  action:
+#  - choose:
+#    - conditions:
+#      - condition: template
+#        value_template: >
+#          {{state_attr('sensor.barry_kwh_total_price','current_frame') < duree}}
+#      sequence:
+#      - type: turn_on
+#        device_id: 4d5af4c5d0a5bd84eafb9ef394b320b5
+#        entity_id: switch.piscine_chauffe_eau
+#        domain: switch
+#    default:
+#    - type: turn_off
+#      device_id: 4d5af4c5d0a5bd84eafb9ef394b320b5
+#      entity_id: switch.piscine_chauffe_eau
+#      domain: switch
+#  mode: single
 ################################################################################
 - id: 'Swimingpool_auto_boiler_hphc'
   alias: Area - Piscine - Chauffe eau automatique (HP-HC)
@@ -215,5 +215,5 @@ automation:
 ################################################################################
 homeassistant:
   customize:
-    automation.function_piscine_filtration_automatique:
+    automation.area_piscine_filtration_automatique_hp_hc:
       icon: mdi:pool
