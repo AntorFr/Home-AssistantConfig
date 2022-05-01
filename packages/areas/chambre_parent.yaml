@@ -104,13 +104,15 @@ automation:
               after: '05:00:00'
               before: '19:00:00'
             sequence:
-            - service: switch.turn_off
+            - service: input_boolean.turn_off
+              data: {}
               target:
-                entity_id: switch.night_mode
+                entity_id: input_boolean.night_mode
           default:
-          - service: switch.turn_on
+          - service: input_boolean.turn_on
+            data: {}
             target:
-              entity_id: switch.night_mode
+              entity_id: input_boolean.night_mode
     - conditions: 
       - condition: trigger
         id: action_2_single
@@ -280,13 +282,15 @@ automation:
               after: '05:00:00'
               before: '19:00:00'
             sequence:
-            - service: switch.turn_off
+            - service: input_boolean.turn_off
+              data: {}
               target:
-                entity_id: switch.night_mode
+                entity_id: input_boolean.night_mode
           default:
-          - service: switch.turn_on
+          - service: input_boolean.turn_on
+            data: {}
             target:
-              entity_id: switch.night_mode
+              entity_id: input_boolean.night_mode
     - conditions: 
       - condition: trigger
         id: action_1_single

@@ -5,8 +5,6 @@ input_boolean:
     icon: mdi:home-export-outline
 
 
-
-
 automation:
 ################################################################################
 - id: 'routine_detect_away'
@@ -98,8 +96,9 @@ script:
         entity_id: 
           - script.routine_all_light_turn_off
           - script.routine_all_media_player_off
-          - script.routine_all_power_device_off
+          - script.routine_away_all_power_device_off
           - script.routine_all_cover_close
+          - script.routine_all_garage_door_close
 ################################################################################
   routine_back_home:
     alias: Routine - Retour maison
@@ -122,96 +121,3 @@ script:
               entity_id: script.routine_all_cover_open
 
       
-################################################################################
-  routine_all_light_turn_off:
-    alias: Routine - All light off
-    sequence:
-    - service: light.turn_off
-      target:
-        area_id:
-        - bureau
-        - chambre_parent
-        - chambre_timothee
-        - chambre_emilie
-        - couloir_etage
-        - cuisine
-        - entree
-        - toilettes_etage
-        - couloir_etage
-        - vestibule
-        - salle_de_bain
-        - salle_a_manger
-        - toilettes_rdc
-        - toilettes_etage
-        - piscine
-        - garage
-        entity_id:
-        - light.salon
-        - light.salon_led_buffet
-        - light.plafonnier_entree
-
-################################################################################
-  routine_all_media_player_off:
-    alias: Routine - All Media player off
-    sequence:
-    - service: media_player.media_stop
-      target:
-        area_id:
-        - bureau
-        - chambre_timothee
-        - chambre_emilie
-        - cuisine
-        - salle_de_bain
-        - salle_de_douche
-        - salle_a_manger
-        entity_id: media_player.salon_2
-################################################################################
-  routine_all_power_device_off:
-    alias: Routine - All power saving device off
-    sequence:
-    - service: switch.turn_off
-      target:
-        entity_id:
-        - switch.couverture_laurine
-        - switch.couverture_seb
-        - switch.chambre_emilie_prise_bureau
-        - switch.piscine_chauffe_eau
-
-################################################################################
-  routine_all_power_device_on:
-    alias: Routine - All power saving device on
-    sequence:
-    - service: switch.turn_off
-      target:
-        entity_id:
-        - switch.mezzanine_prise_1
-
-################################################################################
-  routine_all_cover_close:
-    alias: Routine - Close all cover
-    sequence:
-    - service: cover.close_cover
-      target:
-        area_id:
-        - cuisine
-        - salon
-        - salle_a_manger
-        - chambre_parent
-        - chambre_timothee
-        - chambre_emilie
-        - chambre_d_amis
-
-################################################################################
-  routine_all_cover_open:
-    alias: Routine - Open all cover
-    sequence:
-    - service: cover.open_cover
-      target:
-        area_id:
-        - cuisine
-        - salon
-        - salle_a_manger
-        - chambre_parent
-        - chambre_timothee
-        - chambre_emilie
-        - chambre_d_amis

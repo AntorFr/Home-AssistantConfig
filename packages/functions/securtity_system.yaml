@@ -39,8 +39,7 @@ automation:
   - platform: event
     event_type: routine_event
     event_data:
-      type: away
-    id: 'leaving'
+      type: night
   condition:
   - condition: state
     entity_id: alarm_control_panel.alarme_maison
@@ -50,16 +49,52 @@ automation:
       target:
         entity_id: alarm_control_panel.alarme_maison
 ###############################################
+- id: 'function_security_arm_when_sleep'
+  alias: 'Function - Security - Arme quand mode nuit'
+  trigger:
+  - platform: event
+    event_type: routine_event
+    event_data:
+      type: away
+  condition:
+  - condition: state
+    entity_id: alarm_control_panel.alarme_maison
+    state: disarmed
+  action:
+    - service: alarm_control_panel.alarm_arm_night
+      target:
+        entity_id: alarm_control_panel.alarme_maison
+###############################################
 - id: 'function_security_desarm_when_home'
   alias: 'Function - Security -  Désarme au retours des parents'
   trigger:
-    - platform: state
-      entity_id: group.parent_home
-      to: home
+  - platform: state
+    entity_id: group.parent_home
+    to: home
   condition:
   - condition: state
     entity_id: alarm_control_panel.alarme_maison
     state: 'armed_away'
+  action:
+    - service: alarm_control_panel.alarm_disarm
+      target:
+        entity_id: alarm_control_panel.alarme_maison
+###############################################
+- id: 'function_security_desarm_when_morning'
+  alias: 'Function - Security -  Désarme au reveil'
+  trigger:
+  - platform: event
+    event_type: routine_event
+    event_data:
+      type: morning
+  - platform: event
+    event_type: routine_event
+    event_data:
+      type: aurore
+  condition:
+  - condition: state
+    entity_id: alarm_control_panel.alarme_maison
+    state: 'armed_night'
   action:
     - service: alarm_control_panel.alarm_disarm
       target:

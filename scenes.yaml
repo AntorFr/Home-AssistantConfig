@@ -1,7 +1,1 @@
-- id: '1611438470640'
-  name: Soirée
-  entities:
-    light.veilleuse_timothee:
-      brightness: 255
-      state: 'on'
-  icon: mdi:clock-time-eight-outline
+[]

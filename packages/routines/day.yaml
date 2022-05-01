@@ -10,33 +10,10 @@ binary_sensor:
     workdays: [mon, tue, wed, thu, fri]
     excludes: [sat, sun, holiday]
 
-switch:
-  - platform: template
-    switches:
-      night_mode:
-        unique_id: night_mode
-        turn_on:
-          - service: script.routine_sleep_mode
-            data: {}
-          - service: input_select.select_option  
-            target:
-              entity_id: input_select.day_phase
-            data:
-              option: Nuit
-        turn_off:
-          - service: script.routine_matin
-            data: {}
-          - service: input_select.select_option  
-            target:
-              entity_id: input_select.day_phase
-            data:
-              option: Matin
-        icon_template: >-
-          {% if is_state('switch.night_mode', 'on') %}
-            mdi:weather-night
-          {% else %}
-            mdi:weather-sunny
-          {% endif %}
+input_boolean:
+  night_mode:
+    name: Mode nuit
+    icon: mdi:weather-night
     
 input_select:
   day_phase:
@@ -45,6 +22,7 @@ input_select:
       - Aurore
       - "Matin - reveil enfants"
       - Matin
+      - Après-midi
       - Soirée
       - "Soirée - retour au calme"
       - "Soirée - enfants couché"
@@ -57,6 +35,9 @@ input_datetime:
     has_time: true
   morning_time_we:
     name: Matin - weekend
+    has_time: true
+  afternoon_time:
+    name: Après midi
     has_time: true
   evening_time:
     name: Soirée
@@ -84,8 +65,9 @@ input_datetime:
   children_night_time_we:
     name: Soirée (we) - enfants couché
     has_time: true
+################################################################################
 
-
+################################################################################
 automation:
 ################################################################################
 - id: 'routine_manual'
@@ -96,11 +78,11 @@ automation:
       Aurore: aurore
       "Matin - reveil enfants": children morning
       Matin: morning
+      Après-midi: after-noon
       Soirée: evening
       "Soirée - retour au calme": children evening ritual
       "Soirée - enfants couché": children night
       Nuit: night
-    test: toto
 
   trigger:
   - platform: state
@@ -113,6 +95,7 @@ automation:
       type: "{{ day_phase[trigger.to_state.state]}}"
 
   mode: single
+
 ################################################################################
 - id: 'routine_evening'
   alias: Routine - Day - Soirée
@@ -154,11 +137,34 @@ automation:
       entity_id: input_select.day_phase
     data:
       option: Soirée
-  - scene: scene.soiree
+  - service: switch.turn_off
+    target:
+      entity_id: switch.adaptive_lighting_sleep_mode_salle_a_manger
   mode: single
 
 ################################################################################
-
+- id: 'routine_after-noon'
+  alias: Routine - Day - Après-midi
+  description: ''
+  trigger:
+  - platform: time
+    at: input_datetime.afternoon_time
+  condition:
+  - condition: state
+    entity_id: input_boolean.away_mode
+    state: 'off'     
+  action:
+  - alias: "Fire after-noon routine event"
+    event: routine_event
+    event_data:
+      type: after-noon
+  - service: input_select.select_option  
+    target:
+      entity_id: input_select.day_phase
+    data:
+      option: Après-midi
+  mode: single
+################################################################################
 - id: 'routine_children_evening_ritual'
   alias: Routine - Day - Children evening ritual
   description: ''
@@ -201,7 +207,6 @@ automation:
       option: "Soirée - retour au calme"
 
 ################################################################################
-
 - id: 'routine_children_night'
   alias: Routine - Day - Children night
   description: ''
@@ -242,9 +247,11 @@ automation:
       entity_id: input_select.day_phase
     data:
       option:  "Soirée - enfants couché"
+  - service: switch.turn_on
+    target:
+      entity_id: switch.adaptive_lighting_sleep_mode_salle_a_manger
 
 ################################################################################
-
 - id: 'routine_children_morning'
   alias: Routine - Day - Children morning
   description: ''
@@ -287,43 +294,8 @@ automation:
       option: "Matin - reveil enfants"
 
 ################################################################################
-
-- id: 'routine_aurore'
-  alias: Routine - Day - Aurore
-  description: 'De bonne heure'
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.maison_rdc_presence
-    from: 'off'
-    to: 'on'
-  condition:
-      - condition: and
-        conditions:
-          - condition: state
-            entity_id: input_boolean.away_mode
-            state: 'off'
-          - condition: state
-            entity_id: switch.night_mode
-            state: 'on'
-          - condition: time
-            after: '05:00:00'
-            before: '06:29:59'
-  action:
-  - alias: "Fire aurore routine event"
-    event: routine_event
-    event_data:
-      type: aurore
-  - service: input_select.select_option  
-    target:
-      entity_id: input_select.day_phase
-    data:
-      option: Aurore
-  - service: script.routine_aurore
-  mode: single
-
-################################################################################
-- id: 'routine_morning'
-  alias: Routine - Day - Matin
+- id: 'routine_detect_morning'
+  alias: Routine - Day - Detect Matin
   description: 'Routine matin'
   trigger:
   - platform: time
@@ -343,7 +315,7 @@ automation:
             entity_id: input_boolean.away_mode
             state: 'off'
           - condition: state
-            entity_id: switch.night_mode
+            entity_id: input_boolean.night_mode
             state: 'on'
           - condition: time
             after: '06:30:00'
@@ -367,19 +339,15 @@ automation:
                   entity_id: binary_sensor.workday_sensor
                   state: 'off' 
   action:
-  - alias: "Fire aurore routine event"
-    event: routine_event
-    event_data:
-      type: morning
-  - service: switch.turn_off
+  - service: input_boolean.turn_off
+    data: {}
     target:
-      entity_id: switch.night_mode
+      entity_id: input_boolean.night_mode
   mode: single
-################################################################################
 
 ################################################################################
-- id: 'routine_night'
-  alias: Routine - Day - Nuit
+- id: 'routine_detect_night'
+  alias: Routine - Day - Detect Nuit
   description: ''
   trigger:
   - platform: time
@@ -396,18 +364,163 @@ automation:
             entity_id: input_boolean.away_mode
             state: 'off'
           - condition: state
-            entity_id: switch.night_mode
+            entity_id: input_boolean.night_mode
             state: 'off'
           - condition: time
             after: '22:00:00'
             before: '06:00:00'
   action:
-  - alias: "Fire aurore routine event"
-    event: routine_event
-    event_data:
-      type: night
-  - service: switch.turn_on
+  - service: input_boolean.turn_on
+    data: {}
     target:
-      entity_id: switch.night_mode
+      entity_id: input_boolean.night_mode
   mode: single
+
 ################################################################################
+- id: 'routine_detect_aurore'
+  alias: Routine - Day - Detect Aurore
+  description: 'De bonne heure'
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.maison_rdc_presence
+    from: 'off'
+    to: 'on'
+  condition:
+      - condition: and
+        conditions:
+          - condition: state
+            entity_id: input_boolean.away_mode
+            state: 'off'
+          - condition: state
+            entity_id: input_boolean.night_mode
+            state: 'on'
+          - condition: time
+            after: '05:00:00'
+            before: '06:29:59'
+  action:
+  - service: script.routine_aurore
+  mode: single
+
+################################################################################
+- id: 'routine_night'
+  alias: Routine - Day - Nuit
+  description: ''
+  trigger:
+    - platform: state
+      entity_id: input_boolean.night_mode
+      to: 'on'
+  condition: []
+  action:
+    - service: script.turn_on
+      target:
+        entity_id: script.routine_sleep_mode
+
+################################################################################
+- id: 'routine_morning'
+  alias: Routine - Day - Matin
+  description: ''
+  trigger:
+    - platform: state
+      entity_id: input_boolean.night_mode
+      to: 'off'
+  condition: []
+  action:
+    - service: script.turn_on
+      target:
+        entity_id: script.routine_matin
+################################################################################
+
+################################################################################
+script:
+################################################################################
+  routine_sleep_mode:
+    alias: Routine - Sleep mode
+    mode: restart
+    icon: mdi:weather-night
+    sequence:   
+    - alias: "Fire night routine event"
+      event: routine_event
+      event_data:
+        type: night
+    - service: input_select.select_option  
+      target:
+        entity_id: input_select.day_phase
+      data:
+        option: Nuit
+    - service: notify.mobile_app_intra_mob08
+      data:
+        message: Bonne nuit
+    - service: script.turn_on
+      target:
+        entity_id: 
+          - script.routine_all_light_turn_off
+          - script.routine_all_media_player_off
+          - script.routine_night_all_power_device_off
+          - script.routine_night_all_cover_close
+          - script.routine_all_garage_door_close
+    - delay:
+        seconds: 10
+    - service: script.turn_on
+      target:
+        entity_id: 
+          - script.routine_all_light_mode_night
+################################################################################
+  routine_matin:
+    alias: Routine - Matin
+    sequence:
+    - alias: "Fire aurore routine event"
+      event: routine_event
+      event_data:
+        type: morning
+    - service: input_select.select_option  
+      target:
+        entity_id: input_select.day_phase
+      data:
+        option: Matin
+    - service: notify.mobile_app_intra_mob08
+      data:
+        message: Bonjour
+    - alias: "If sun is up"
+      choose:
+      - conditions:
+        - condition: state
+          entity_id: sun.sun
+          state: "above_horizon"
+        sequence:
+          - service: script.turn_on
+            target:
+              entity_id: script.routine_morning_cover_open
+################################################################################
+  routine_aurore:
+    alias: Routine - Aurore
+    sequence:
+    - alias: "Fire aurore routine event"
+      event: routine_event
+      event_data:
+        type: aurore
+    - service: input_select.select_option  
+      target:
+        entity_id: input_select.day_phase
+      data:
+        option: Aurore
+    - service: notify.mobile_app_intra_mob08
+      data:
+        message: Bonjour, pas trop dure ?
+    - service: script.turn_on
+      target:
+        entity_id: 
+          - script.routine_all_light_mode_night_off
+################################################################################
+
+################################################################################
+scene:
+################################################################################
+- id: 'scene_good_night'
+  icon: mdi:weather-night
+  name: Bonne nuit
+  entities:
+    input_boolean.night_mode:
+      editable: false
+      icon: mdi:weather-night
+      friendly_name: Mode nuit
+      state: 'on'

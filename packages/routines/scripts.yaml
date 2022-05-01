@@ -1,0 +1,194 @@
+script:  
+
+## Lights ###
+################################################################################
+  routine_all_light_turn_off:
+    alias: Routine - All light off
+    sequence:
+    - service: light.turn_off
+      target:
+        area_id:
+        - bureau
+        - chambre_parent
+        - chambre_timothee
+        - chambre_emilie
+        - couloir_etage
+        - cuisine
+        - entree
+        - toilettes_etage
+        - couloir_etage
+        - vestibule
+        - salle_de_bain
+        - salle_a_manger
+        - toilettes_rdc
+        - toilettes_etage
+        - piscine
+        - garage
+        - mezzanine
+        entity_id:
+        - light.salon
+        - light.salon_led_buffet
+        - light.plafonnier_entree
+
+
+################################################################################
+  routine_all_light_mode_night_on:
+    alias: Routine - Lumières mode nuit
+    sequence:
+    - service: switch.turn_on
+      target:
+        entity_id:
+        - switch.adaptive_lighting_sleep_mode_cuisine
+        - switch.adaptive_lighting_sleep_mode_salle_a_manger
+        - switch.adaptive_lighting_sleep_mode_salon
+        - switch.adaptive_lighting_sleep_mode_default
+
+################################################################################
+  routine_all_light_mode_night_off:
+    alias: Routine - Lumières mode jour
+    sequence:
+    - service: switch.turn_on
+      target:
+        entity_id:
+        - switch.adaptive_lighting_sleep_mode_cuisine
+        - switch.adaptive_lighting_sleep_mode_salle_a_manger
+        - switch.adaptive_lighting_sleep_mode_salon
+        - switch.adaptive_lighting_sleep_mode_default
+
+## Media players ###
+################################################################################
+  routine_all_media_player_off:
+    alias: Routine - All Media player off
+    sequence:
+    - service: media_player.media_stop
+      target:
+        area_id:
+        - bureau
+        - chambre_timothee
+        - chambre_emilie
+        - cuisine
+        - salle_de_bain
+        - salle_de_douche
+        - salle_a_manger
+        - chambre_parent
+        entity_id: 
+        - media_player.salon
+
+## Switch ###
+################################################################################
+  routine_night_all_power_device_off:
+    alias: Routine - All power saving device off (nuit)
+    sequence:
+    - service: switch.turn_off
+      target:
+        entity_id:
+        - switch.couverture_laurine
+        - switch.couverture_seb
+################################################################################
+  routine_away_all_power_device_off:
+    alias: Routine - All power saving device off (absence)
+    sequence:
+    - service: switch.turn_off
+      target:
+        entity_id:
+        - switch.couverture_laurine
+        - switch.couverture_seb
+        - switch.chambre_emilie_prise_bureau
+        - switch.piscine_chauffe_eau
+
+################################################################################
+  routine_all_power_device_on:
+    alias: Routine - All power saving device on
+    sequence:
+    - service: switch.turn_off
+      target:
+        entity_id:
+        - switch.mezzanine_prise_1
+
+## Volets / Portails  ###
+################################################################################
+  routine_all_cover_open:
+    alias: Routine - Open all cover
+    sequence:
+    - service: cover.open_cover
+      target:
+        area_id:
+        - cuisine
+        - salon
+        - salle_a_manger
+        - chambre_parent
+        - chambre_timothee
+        - chambre_emilie
+        - chambre_d_amis
+
+################################################################################
+  routine_morning_cover_open:
+    alias: Routine - Ouvre les volets le matin
+    sequence:
+    - service: cover.open_cover
+      target:
+        area_id:
+        - cuisine
+        - salle_a_manger
+        - salon
+    - choose:
+      - conditions:
+        - condition: state
+          entity_id: input_boolean.guest_mode
+          state: 'off'
+        sequence:
+        - service: cover.open_cover
+          target:
+            area_id: chambre_d_amis
+
+################################################################################
+  routine_all_cover_close:
+    alias: Routine - Ferme tous les volets
+    sequence:
+    - service: cover.close_cover
+      target:
+        area_id:
+        - cuisine
+        - salon
+        - salle_a_manger
+        - chambre_parent
+        - chambre_timothee
+        - chambre_emilie
+        - chambre_d_amis
+
+################################################################################
+  routine_night_all_cover_close:
+    alias: Routine - Ferme tous les volets (nuit)
+    sequence:
+    - service: cover.close_cover
+      target:
+        area_id:
+        - cuisine
+        - salon
+        - salle_a_manger
+        - chambre_parent
+        - chambre_timothee
+        - chambre_emilie
+    - choose:
+      - conditions:
+        - condition: state
+          entity_id: input_boolean.guest_mode
+          state: 'off'
+        sequence:
+        - service: light.turn_off
+          target:
+            area_id: chambre_d_amis
+        - service: cover.close_cover
+          target:
+            area_id: chambre_d_amis
+
+
+################################################################################
+  routine_all_garage_door_close:
+    alias: Routine - Ferme toutes les garages
+    sequence:
+    - service: cover.close_cover
+      target:
+        area_id: garage
+
+

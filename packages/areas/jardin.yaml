@@ -59,13 +59,15 @@ automation:
     - platform: sun
       event: sunrise
       id: 'sunrise'
-    - platform: state
-      entity_id: switch.night_mode
-      to: 'on'
+    - platform: event
+      event_type: routine_event
+      event_data:
+        type: night
       id: 'sleep'
-    - platform: state
-      entity_id: switch.night_mode
-      to: 'off'
+    - platform: event
+      event_type: routine_event
+      event_data:
+        type: morning
       id: 'wake-up'
     - platform: event
       event_type: routine_event

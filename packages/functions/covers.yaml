@@ -1,0 +1,12 @@
+cover:
+  - platform: template
+    covers:
+      covers_house:
+        device_class: shutter
+        value_template: "{{'unknown'}}"
+        friendly_name: "Volets Maison"
+        open_cover:
+          service: script.routine_morning_cover_open
+        close_cover:
+          service: script.routine_all_cover_close
+       
