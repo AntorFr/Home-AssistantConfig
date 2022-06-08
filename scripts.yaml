@@ -62,43 +62,4 @@ sonos_rdc_ambiance_matin:
       source: Café / Croissant
   mode: single
   icon: mdi:bookmark-music-outline
-roborock_salle_a_manger:
-  sequence:
-  - service: xiaomi_miio.vacuum_clean_segment
-    data:
-      segments: 17
-    target:
-      entity_id: vacuum.roborock_s7
-  mode: single
-  alias: Aspiration Salle à manger
-  icon: bha:roborock
-aspiration_salon:
-  alias: Aspiration Salon
-  sequence:
-  - service: xiaomi_miio.vacuum_clean_segment
-    data:
-      segments: 16
-    target:
-      entity_id: vacuum.roborock_s7
-  mode: single
-  icon: bha:roborock
-aspiration_entree:
-  alias: Aspiration Entrée
-  sequence:
-  - service: xiaomi_miio.vacuum_clean_segment
-    data:
-      segments: 19
-    target:
-      entity_id: vacuum.roborock_s7
-  mode: single
-  icon: bha:roborock
-aspiration_cuisine:
-  alias: Aspiration Cuisine
-  sequence:
-  - service: xiaomi_miio.vacuum_clean_segment
-    data:
-      segments: 22
-    target:
-      entity_id: vacuum.roborock_s7
-  mode: single
-  icon: bha:roborock
+

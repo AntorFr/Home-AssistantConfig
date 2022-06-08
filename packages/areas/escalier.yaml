@@ -36,7 +36,7 @@ automation:
       only_during_night: false
       light_sensor:
       lux_cutoff:
-      adaptive_lighting: switch.adaptive_lighting_default
+      adaptive_lighting: switch.adaptive_lighting_couloir_etage
 ################################################################################
 - id: escalier_light_button
   alias: Area - Escalier - Lumière bouton

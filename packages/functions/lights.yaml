@@ -9,11 +9,15 @@ adaptive_lighting:
       - light.salle_a_manger
     take_over_control: true
 
+  - name: Couloir etage
+    lights:
+      - light.couloir_etage
+      - light.escaliers
+    take_over_control: true
+
   - name: default
     lights:
       - light.entree_spots
-      - light.couloir_etage
-      - light.escaliers
       - light.toilettes_rdc
       - light.toilette_etage
     take_over_control: true
@@ -21,4 +25,13 @@ adaptive_lighting:
   - name: Cuisine
     lights:
       - light.cusine_plafonier
+    take_over_control: true
+  - name: Chambre Emilie
+    lights:
+      - light.chambre_emilie_plafonnier
+    take_over_control: true
+  - name: Salle de douche
+    lights:
+      - light.dressing_plafonnier
+      - light.salle_de_douche_plafonnier
     take_over_control: true

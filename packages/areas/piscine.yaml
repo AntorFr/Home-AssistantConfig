@@ -144,15 +144,15 @@ automation:
         entity_id: sensor.teleinfo_periode_tarifaire
         state: HC
       sequence:
-      - type: turn_on
-        device_id: a2fceb42992a0147a40d883d02e130f8
-        entity_id: switch.hub_cf4cac
-        domain: switch
+        - service: switch.turn_on
+          entity_id:
+            - switch.piscine_filtration
+            - switch.piscine_electrolyse
     default:
-    - type: turn_off
-      device_id: a2fceb42992a0147a40d883d02e130f8
-      entity_id: switch.hub_cf4cac
-      domain: switch
+      - service: switch.turn_off
+        entity_id:
+          - switch.piscine_filtration
+          - switch.piscine_electrolyse
   mode: single
 ################################################################################
 #- id: 'Swimingpool_auto_boiler_barry'

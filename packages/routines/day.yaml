@@ -137,9 +137,10 @@ automation:
       entity_id: input_select.day_phase
     data:
       option: Soirée
-  - service: switch.turn_off
+  - alias: "desable adaptative light during diner"
+    service: switch.turn_off
     target:
-      entity_id: switch.adaptive_lighting_sleep_mode_salle_a_manger
+      entity_id: switch.adaptive_lighting_salle_a_manger
   mode: single
 
 ################################################################################
@@ -205,6 +206,9 @@ automation:
       entity_id: input_select.day_phase
     data:
       option: "Soirée - retour au calme"
+  - service: script.turn_on
+    target:
+      entity_id: script.routine_children_cover_workday
 
 ################################################################################
 - id: 'routine_children_night'
@@ -238,7 +242,7 @@ automation:
         entity_id: binary_sensor.workday_tomorrow
         state: 'off' 
   action:
-  - alias: "Fire evening routine event"
+  - alias: "Fire children night routine event"
     event: routine_event
     event_data:
       type: children night
@@ -247,9 +251,13 @@ automation:
       entity_id: input_select.day_phase
     data:
       option:  "Soirée - enfants couché"
+  - alias: "enable adaptative light in dinning room"
+    service: switch.turn_off
+    target:
+      entity_id: switch.adaptive_lighting_salle_a_manger
   - service: switch.turn_on
     target:
-      entity_id: switch.adaptive_lighting_sleep_mode_salle_a_manger
+      entity_id: switch.adaptive_lighting_sleep_mode_couloir_etage
 
 ################################################################################
 - id: 'routine_children_morning'
@@ -463,7 +471,7 @@ script:
     - service: script.turn_on
       target:
         entity_id: 
-          - script.routine_all_light_mode_night
+          - script.routine_all_light_mode_night_on
 ################################################################################
   routine_matin:
     alias: Routine - Matin
@@ -480,6 +488,10 @@ script:
     - service: notify.mobile_app_intra_mob08
       data:
         message: Bonjour
+    - service: script.turn_on
+      target:
+        entity_id: 
+          - script.routine_all_light_mode_night_off
     - alias: "If sun is up"
       choose:
       - conditions:

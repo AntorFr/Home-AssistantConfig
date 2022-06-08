@@ -22,3 +22,61 @@ automation:
   - entity_id: switch.chambre_emilie_prise_bureau
     service: switch.turn_off
 ################################################################################
+- id: 'chambre_emilie_bouton_light'
+  alias: Area - Chambre Émilie - Bouton Lumière
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: fc73b6b036fdd98cf9d503d256aa2dce
+    type: action
+    subtype: left_press
+    discovery_id: 0x001788010b01dccc action_left_press
+    id: left_press
+  - platform: device
+    domain: mqtt
+    device_id: fc73b6b036fdd98cf9d503d256aa2dce
+    type: action
+    subtype: right_press
+    discovery_id: 0x001788010b01dccc action_right_press
+    id: right_press
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: left_press
+      sequence:
+      - service: light.toggle
+        data: {}
+        target:
+          entity_id: light.chambre_emilie_plafonnier
+    - conditions:
+      - condition: trigger
+        id: right_press
+      sequence:
+      - service: light.toggle
+        data: {}
+        target:
+          entity_id: light.horloge_emilie
+    default: []
+  mode: parallel
+################################################################################
+- id: 'chambre_emilie_button_lit'
+  alias: Area - Chambre Émilie - Bouton lit
+  description: ''
+  mode: restart
+  trigger:
+    - platform: device
+      domain: mqtt
+      device_id: 23afcee06ee96560d15972e61663763b
+      type: toggle
+      subtype: 'toggle'
+      discovery_id: 0x0004740000890033 action_toggle
+  condition: []
+  action:
+  - service: light.toggle
+    data: {}
+    target:
+      entity_id: light.chambre_emilie_plafonnier
+################################################################################

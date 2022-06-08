@@ -1,0 +1,46 @@
+light:
+  - platform: group
+    name: Salle de douche lumieres
+    entities:
+      - light.dressing_plafonnier
+      - light.salle_de_douche_plafonnier
+
+automation:
+################################################################################
+- id: 'salle_de_douche_bouton_light'
+  alias: Area - Salle de douche - Bouton Lumière
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: a6f8505efa0f2a49cd2b59f18df944a7
+    type: action
+    subtype: on_press
+    discovery_id: 0x001788010872dc24 action_on_press
+    id: on_press
+  - platform: device
+    domain: mqtt
+    device_id: a6f8505efa0f2a49cd2b59f18df944a7
+    type: action
+    subtype: off_press
+    discovery_id: 0x001788010872dc24 action_off_press
+    id: off_press
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: on_press
+      sequence:
+      - service: light.turn_on
+        target:
+          entity_id: light.salle_de_douche_lumieres
+    - conditions:
+      - condition: trigger
+        id: off_press
+      sequence:
+      - service: light.turn_off
+        target:
+          entity_id: light.salle_de_douche_lumieres
+    default: []
+  mode: parallel

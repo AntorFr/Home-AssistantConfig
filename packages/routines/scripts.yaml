@@ -25,6 +25,7 @@ script:
         - piscine
         - garage
         - mezzanine
+        - salle_de_douche
         entity_id:
         - light.salon
         - light.salon_led_buffet
@@ -42,18 +43,22 @@ script:
         - switch.adaptive_lighting_sleep_mode_salle_a_manger
         - switch.adaptive_lighting_sleep_mode_salon
         - switch.adaptive_lighting_sleep_mode_default
+        - switch.adaptive_lighting_sleep_mode_couloir_etage
+        - switch.adaptive_lighting_sleep_mode_salle_de_douche
 
 ################################################################################
   routine_all_light_mode_night_off:
     alias: Routine - Lumières mode jour
     sequence:
-    - service: switch.turn_on
+    - service: switch.turn_off
       target:
         entity_id:
         - switch.adaptive_lighting_sleep_mode_cuisine
         - switch.adaptive_lighting_sleep_mode_salle_a_manger
         - switch.adaptive_lighting_sleep_mode_salon
         - switch.adaptive_lighting_sleep_mode_default
+        - switch.adaptive_lighting_sleep_mode_couloir_etage
+        - switch.adaptive_lighting_sleep_mode_salle_de_douche
 
 ## Media players ###
 ################################################################################
@@ -155,6 +160,22 @@ script:
         - chambre_timothee
         - chambre_emilie
         - chambre_d_amis
+
+################################################################################
+  routine_children_cover_workday:
+    alias: Routine - Ferme tous les volets dans enfants en semaine
+    sequence:
+    - choose:
+      - conditions:
+        - condition: state
+          entity_id: binary_sensor.workday_tomorrow
+          state: 'on'
+        sequence:
+        - service: cover.close_cover
+          target:
+            area_id:
+            - chambre_timothee
+            - chambre_emilie
 
 ################################################################################
   routine_night_all_cover_close:

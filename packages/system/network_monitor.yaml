@@ -1,6 +1,12 @@
 ---
-### Monitor system ###
+#### VPN Gatway ###
+binary_sensor:
+  - name: VPN connection
+    platform: ping
+    host: 10.1.1.1
 
+
+### Monitor system ###
 group:
   required_hub_devices:
     name: Hub devices
