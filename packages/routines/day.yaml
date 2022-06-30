@@ -252,7 +252,7 @@ automation:
     data:
       option:  "Soirée - enfants couché"
   - alias: "enable adaptative light in dinning room"
-    service: switch.turn_off
+    service: switch.turn_on
     target:
       entity_id: switch.adaptive_lighting_salle_a_manger
   - service: switch.turn_on
@@ -461,7 +461,7 @@ script:
     - service: script.turn_on
       target:
         entity_id: 
-          - script.routine_all_light_turn_off
+          - script.routine_night_all_light_turn_off
           - script.routine_all_media_player_off
           - script.routine_night_all_power_device_off
           - script.routine_night_all_cover_close

@@ -26,11 +26,50 @@ script:
         - garage
         - mezzanine
         - salle_de_douche
+        - chambre_d_amis
         entity_id:
         - light.salon
         - light.salon_led_buffet
         - light.plafonnier_entree
 
+################################################################################
+  routine_night_all_light_turn_off:
+    alias: Routine - All light off night
+    sequence:
+    - service: light.turn_off
+      target:
+        area_id:
+        - bureau
+        - chambre_parent
+        - chambre_timothee
+        - chambre_emilie
+        - couloir_etage
+        - cuisine
+        - entree
+        - toilettes_etage
+        - couloir_etage
+        - vestibule
+        - salle_de_bain
+        - salle_a_manger
+        - toilettes_rdc
+        - toilettes_etage
+        - piscine
+        - garage
+        - mezzanine
+        - salle_de_douche
+        entity_id:
+        - light.salon
+        - light.salon_led_buffet
+        - light.plafonnier_entree
+    - choose:
+      - conditions:
+        - condition: state
+          entity_id: input_boolean.guest_mode
+          state: 'off'
+        sequence:
+        - service: light.turn_off
+          target:
+            area_id: chambre_d_amis
 
 ################################################################################
   routine_all_light_mode_night_on:

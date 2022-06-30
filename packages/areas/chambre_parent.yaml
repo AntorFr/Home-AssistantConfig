@@ -31,6 +31,13 @@ automation:
       domain: mqtt
       device_id: b65a33ba24ff394bf8586fa47f15177c
       type: action
+      subtype: 1_double
+      discovery_id: 0x84fd27fffe849e6c action_1_double
+      id: action_1_double
+    - platform: device
+      domain: mqtt
+      device_id: b65a33ba24ff394bf8586fa47f15177c
+      type: action
       subtype: 1_hold
       discovery_id: 0x84fd27fffe849e6c action_1_hold
       id: action_1_hold
@@ -90,10 +97,14 @@ automation:
       - condition: trigger
         id: action_1_single
       sequence:
-        - type: toggle
-          device_id: e9d42fb1963c8eb9bdee7c45834230b8
-          entity_id: light.plafonnier_chambre_parents
-          domain: light
+        - service: light.toggle
+          target:
+            entity_id: light.plafonnier_chambre_parents
+    - conditions: 
+      - condition: trigger
+        id: action_1_double
+      sequence:
+        - service: script.routine_night_all_light_turn_off
     - conditions: 
       - condition: trigger
         id: action_1_hold
@@ -230,6 +241,13 @@ automation:
       domain: mqtt
       device_id: 704f5c1ef5a473ba50b11b5730e36ba3
       type: action
+      subtype: 2_double
+      discovery_id: 0x60a423fffefbc33d action_2_double
+      id: action_2_double
+    - platform: device
+      domain: mqtt
+      device_id: 704f5c1ef5a473ba50b11b5730e36ba3
+      type: action
       subtype: 2_hold
       discovery_id: 0x60a423fffefbc33d action_2_hold
       id: action_2_hold
@@ -268,10 +286,14 @@ automation:
       - condition: trigger
         id: action_2_single
       sequence:
-        - type: toggle
-          device_id: e9d42fb1963c8eb9bdee7c45834230b8
-          entity_id: light.plafonnier_chambre_parents
-          domain: light
+        - service: light.toggle
+          target:
+            entity_id: light.plafonnier_chambre_parents
+    - conditions: 
+      - condition: trigger
+        id: action_2_double
+      sequence:
+        - service: script.routine_night_all_light_turn_off
     - conditions: 
       - condition: trigger
         id: action_2_hold
