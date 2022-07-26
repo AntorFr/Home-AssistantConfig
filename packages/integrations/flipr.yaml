@@ -1,14 +1,4 @@
 
-sensor:
-  - platform: history_stats
-    name: Durée filtration piscine 24h
-    entity_id: switch.hub_cf4cac
-    state: "on"
-    type: time
-    duration: "24:00:00"
-    end: "{{now()}}"
-
-
 binary_sensor:
   - platform: template
     sensors:
@@ -56,18 +46,5 @@ alert:
     repeat: 180
     can_acknowledge: true  # Optional, default is true
     skip_first: true  # Optional, false is the default
-    notifiers:
-      - notify
-  flipr_flitering_alert:
-    name: "Alerte Flipr filtration"
-    message: >
-      "Alerte pas de filtration depuis 24h"
-    done_message: >
-      "Filtration Flipr de nouveau actif"
-    entity_id: sensor.duree_filtration_piscine_24h
-    state: 0.0
-    repeat: 180
-    can_acknowledge: true  # Optional, default is true
-    skip_first: false  # Optional, false is the default
     notifiers:
       - notify

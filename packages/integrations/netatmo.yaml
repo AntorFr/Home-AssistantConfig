@@ -214,10 +214,6 @@ automation:
             data:
               dev_id: 'netatmo_sebastien'
               location_name: 'home'
-          - service: notify.mobile_seb
-            data:
-              title: 'Netatmo Detection'
-              message: 'Sébastien detecté'
       default: []
     - choose:
       - conditions:
@@ -229,10 +225,6 @@ automation:
             data:
               dev_id: 'netatmo_laurine'
               location_name: 'home'
-          - service: notify.mobile_seb
-            data:
-              title: 'Netatmo Detection'
-              message: 'Laurine detectée'
       default: []
     - choose:
       - conditions:
@@ -244,10 +236,6 @@ automation:
             data:
               dev_id: 'netatmo_emilie'
               location_name: 'home'
-          - service: notify.mobile_seb
-            data:
-              title: 'Netatmo Detection'
-              message: 'Émilie detectée'
       default: []
     - choose:
       - conditions:
@@ -259,10 +247,6 @@ automation:
             data:
               dev_id: 'netatmo_timothee'
               location_name: 'home'
-          - service: notify.mobile_seb
-            data:
-              title: 'Netatmo Detection'
-              message: 'Timothée detectée'
       default: []
   mode: parallel
 ################################################################################

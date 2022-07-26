@@ -139,6 +139,8 @@ script:
         - switch.couverture_seb
         - switch.chambre_emilie_prise_bureau
         - switch.piscine_chauffe_eau
+        - switch.salon_multiprise_canapee
+        - switch.salon_prise_tv
 
 ################################################################################
   routine_all_power_device_on:
@@ -147,7 +149,8 @@ script:
     - service: switch.turn_off
       target:
         entity_id:
-        - switch.mezzanine_prise_1
+        - switch.salon_multiprise_canapee
+        - switch.salon_prise_tv
 
 ## Volets / Portails  ###
 ################################################################################

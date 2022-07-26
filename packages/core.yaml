@@ -4,6 +4,20 @@ default_config:
 # Text to speech
 tts:
   - platform: google_translate
+    service_name: google_say
+  - platform: marytts
+    host: "marytts-kah-common-chart"
+    port: 59125
+    codec: "WAVE_FILE"
+    voice: "upmc-pierre-hsmm"
+    language: "fr"
+
+notify:
+  - platform: tts
+    name: notify_salon
+    tts_service: tts.google_say
+    media_player: media_player.salon
+    language: fr
 
 #web
 http:
@@ -23,6 +37,9 @@ recorder:
   exclude:
     domains:
       - device_tracker
+
+
+
 
 wake_on_lan:
 

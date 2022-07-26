@@ -272,12 +272,12 @@ automation:
         - choose:
             - conditions:
                 - condition: state
-                  entity_id: light.plafonnier_emilie
+                  entity_id: light.chambre_emilie_plafonnier
                   state: "on"
               sequence:
                 - service: light.turn_on
                   target:
-                    entity_id: light.plafonnier_emilie
+                    entity_id: light.chambre_emilie_plafonnier
                   data:
                     brightness_pct: 10
     - alias: "Evening - Children Sleep time"

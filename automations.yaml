@@ -9,8 +9,9 @@
     entity_id: input_boolean.away_mode
     state: 'on'
   action:
-  - service: xiaomi_miio.vacuum_remote_control_start
-    data:
+  - service: vacuum.start
+    data: {}
+    target:
       entity_id: vacuum.roborock_s7
   - service: notify.mobile_seb
     data:

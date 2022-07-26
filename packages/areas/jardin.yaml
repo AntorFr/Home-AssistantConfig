@@ -101,6 +101,9 @@ automation:
           - condition: state
             entity_id: input_boolean.away_mode
             state: 'off'
+          - condition: state
+            entity_id: input_boolean.mode_noel
+            state: 'on'
       sequence:
         - service: switch.turn_on
           entity_id: switch.guirlandes_noel_switch
@@ -118,4 +121,76 @@ automation:
           entity_id: switch.guirlandes_noel_switch
         - service: light.turn_off
           entity_id: light.guirlandes_noel
+################################################################################
+- id: 'jardin_sonette_portail'
+  alias: Area - Jardin - Sonnette portail
+  description: ''
+
+  mode: restart
+  max_exceeded: silent
+
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.sonette_portail_doorbell
+      to: 'on'
+
+  action:
+  - choose:
+    - alias: "Si a la maison"
+      conditions:
+        - condition: state
+          entity_id: input_boolean.away_mode
+          state: 'off'
+      sequence:
+        - service: script.sound_notify
+          data:
+            media_player_entities:
+              - media_player.cuisine
+              - media_player.salon
+              - media_player.salle_a_manger
+              - media_player.cuisine_move
+              - media_player.bureau
+            media_content_id: "media-source://media_source/sounds/bb8_sound.mp3"
+  - service: notify.all_mobile
+    data:
+      message: "Quelqu'un sonne au portail"
+      data:
+        #ios
+        entity_id: camera.g4_doorbell_high
+        push:
+          sound:
+            name: "default"
+            critical: 1
+            volume: 1.0
+        #android
+        image: "/api/camera_proxy/camera.g4_doorbell_high"
+        ttl: 0
+        priority: high
+
+        actions:
+          - action: "URI" # The key you are sending for the event
+            title: "camera" # The button title
+            uri: "/lovelace-maison/portails"
+            icone: "sfsymbols:video.doorbell"
+          - action: "OPEN_FRONTE_GATE" # Must be set to URI if you plan to use a URI
+            title: "Ouvrir le portail"
+            icone: "sfsymbols:pedestrian.gate.open"
+   
+################################################################################
+- id: 'jardin_sonette_portail_action_notif'
+  alias: Area - Jardin - Sonnette portail Actionable
+  description: ''
+  mode: parallel
+  max_exceeded: silent
+
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data:
+      actionName: 'OPEN_FRONTE_GATE'
+  action:
+      - service: cover.open_cover
+        target:
+          entity_id: cover.portail
+
 ################################################################################

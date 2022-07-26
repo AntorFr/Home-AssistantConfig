@@ -11,11 +11,25 @@ light:
 sensor:
   - name: mouvement_piscine_10min
     platform: history_stats
-    entity_id: binary_sensor.piscine_person_motion
+    entity_id: binary_sensor.piscine_person_motion_2
     state: "on"
     type: time
     duration: 00:10:00
     end: "{{ now() }}"
+  - platform: history_stats
+    name: Durée filtration piscine 24h
+    entity_id: switch.piscine_filtration
+    state: "on"
+    type: time
+    duration: "24:00:00"
+    end: "{{now()}}"
+  - platform: history_stats
+    name: Durée electrolyse piscine 24h
+    entity_id: switch.piscine_electrolyse
+    state: "on"
+    type: time
+    duration: "24:00:00"
+    end: "{{now()}}"
 
 binary_sensor:
   - platform: template
@@ -38,6 +52,17 @@ alert:
       Tout va bien
       {% endif %}
     done_message: "Porte Piscine sécurisée"
+    data:
+      entity_id: camera.piscine_high
+      push:
+        sound:
+          name: "default"
+          critical: 1
+          volume: 1.0
+        #android
+      image: "/api/camera_proxy/camera.piscine_high"
+      ttl: 0
+      priority: high
     entity_id: binary_sensor.swiming_pool_door_problem
     state: "on"   # Optional, 'on' is the default value
     repeat:
@@ -46,29 +71,23 @@ alert:
     can_acknowledge: false  # Optional, default is true
     skip_first: true  # Optional, false is the default
     notifiers:
+      - all_mobile
+
+  pool_flitering_alert:
+    name: "Alerte Piscine filtration"
+    message: >
+      "Alerte pas de filtration depuis 24h"
+    done_message: >
+      "Filtration de nouveau actif"
+    entity_id: sensor.duree_filtration_piscine_24h
+    state: 0.0
+    repeat: 180
+    can_acknowledge: true  # Optional, default is true
+    skip_first: false  # Optional, false is the default
+    notifiers:
       - notify
 
 automation:
-################################################################################
-- id: 'Swimingpool_door_notification'
-  alias: Area - Piscine - Notification - Porte Piscine ouverte
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.piscine_porte_bulle_contact
-    to: 'on'
-    for: 00:30:00
-  condition: []
-  action:
-  - service: notify.notify
-    data:
-      message: Porte Piscine ouverte depuis plus de 30 minutes
-      title: Alerte Piscine
-  - service: notify.mobile_seb
-    data:
-      message: Porte Piscine ouverte depuis plus de 30 minutes
-      title: Alerte Piscine
-  mode: single
 ################################################################################
 - id: 'Swimingpool_light_auto'
   alias: Area - Piscine - Lumière auto

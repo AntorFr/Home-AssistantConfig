@@ -21,3 +21,54 @@
 #  name: Prusa MK3S video
 #  still_image_url: http://rsp3dprint.intra.sberard.fr/webcam/?action=snapshot
 #  mjpeg_url: http://rsp3dprint.intra.sberard.fr/webcam/?action=stream
+
+
+automation: 
+################################################################################
+- id: Octoprint_start
+  alias: 'Integration - Octoprint - Debut impression'
+  trigger:
+    platform: state
+    entity_id: sensor.octoprint_current_state
+    from: 'Operational'
+    to: 'Printing'
+  action:
+    - service: notify.mobile_seb
+      data:
+        message: "Octoprint - Debut impression"
+
+################################################################################
+- id: Octoprint_halfway
+  alias: 'Integration - Octoprint - Impression 50%'
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.octoprint_job_percentage
+    above: 50
+  action:
+    service: notify.mobile_seb
+    data:
+      message: "Octoprint - impression à {{states.sensor.octoprint_job_percentage.state}}%" 
+
+################################################################################
+- id: Octoprint_end
+  alias: 'Integration - Octoprint - Impression terminée'
+  trigger:
+    platform: state
+    entity_id: sensor.octoprint_current_state
+    from: 'Printing'
+    to: 'Operational'
+  action:
+    - service: notify.mobile_seb
+      data:
+        message: "Octoprint - impression terminée"
+################################################################################
+- id: Octoprint_error
+  alias: 'Integration - Octoprint - Erreur'
+  trigger:
+    platform: state
+    entity_id: binary_sensor.octoprint_printing_error
+    to: 'on'
+  action:
+    - service: notify.mobile_seb
+      data:
+        message: "Octoprint - Probleme détecté"

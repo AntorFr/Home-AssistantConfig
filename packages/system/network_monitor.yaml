@@ -14,9 +14,9 @@ group:
     icon: mdi:router-network
     entities:
       - device_tracker.zha01
-      - device_tracker.legrand_gateway
+      - device_tracker.legrand_home_controle
       - device_tracker.dream_machine
-      - device_tracker.netatmo_relay
+      - device_tracker.netatmo_thermostat
 
   required_security_devices:
     name: Security devices
@@ -24,8 +24,10 @@ group:
     icon: mdi:cctv
     entities:
       - device_tracker.doorbellpro
-      - device_tracker.netatmo_presence
-      - device_tracker.netatmo_welcome_583ce7   
+      - device_tracker.netatmo_presence_entree
+      - device_tracker.netatmo_presence_parking
+      - device_tracker.netatmo_welcome
+      - device_tracker.netatmo_welcome_2  
 
   required_door_devices:
     name: Door devices

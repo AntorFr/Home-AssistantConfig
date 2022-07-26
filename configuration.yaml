@@ -1,6 +1,10 @@
 
 homeassistant:
   packages: !include_dir_named packages
+  media_dirs: 
+    sounds: /media/sounds
+  allowlist_external_dirs:
+    - '/media/sounds'
 
 automation: !include automations.yaml
 script: !include scripts.yaml

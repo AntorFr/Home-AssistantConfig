@@ -27,3 +27,21 @@ automation:
       lux_cutoff:
       adaptive_lighting: switch.adaptive_lighting_salle_a_manger
 ################################################################################
+- id: salle-a-manger_light_button
+  alias: Area - Salle à manger - bouton
+  description: ''
+  mode: single
+  trigger:
+    - platform: device
+      domain: tasmota
+      device_id: dda5bae70a918c994d724c42d0f35c55
+      type: button_short_press
+      subtype: switch_1
+      discovery_id: 24A160119D21_switch_1_TOGGLE
+  condition: []
+  action:
+    - service: light.toggle
+      data: {}
+      target:
+        area_id: salle_a_manger
+################################################################################
