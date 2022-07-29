@@ -3,8 +3,10 @@ homeassistant:
   packages: !include_dir_named packages
   media_dirs: 
     sounds: /media/sounds
+    deepstack: /media/deepstack
   allowlist_external_dirs:
     - '/media/sounds'
+    - '/media/deepstack'
 
 automation: !include automations.yaml
 script: !include scripts.yaml

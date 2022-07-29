@@ -11,7 +11,7 @@ light:
 sensor:
   - name: mouvement_piscine_10min
     platform: history_stats
-    entity_id: binary_sensor.piscine_person_motion_2
+    entity_id: binary_sensor.piscine_person_motion
     state: "on"
     type: time
     duration: 00:10:00
@@ -154,13 +154,13 @@ automation:
   description: Filtration de la piscine en fonction du prix de l'electricité
   trigger:
     - platform: state
-      entity_id: sensor.teleinfo_periode_tarifaire
+      entity_id: sensor.template_teleinfo_periode_tarifaire
   condition: []  
   action:
   - choose:
     - conditions:
       - condition: state
-        entity_id: sensor.teleinfo_periode_tarifaire
+        entity_id: sensor.template_teleinfo_periode_tarifaire
         state: HC
       sequence:
         - service: switch.turn_on
@@ -207,7 +207,7 @@ automation:
   description: Chauffe eau en fonction du prix de l'electricité
   trigger:
     - platform: state
-      entity_id: sensor.teleinfo_periode_tarifaire
+      entity_id: sensor.template_teleinfo_periode_tarifaire
   condition: []
   action:
   - choose:
@@ -218,7 +218,7 @@ automation:
           entity_id: input_boolean.away_mode
           state: 'off'
         - condition: state
-          entity_id: sensor.teleinfo_periode_tarifaire
+          entity_id: sensor.template_teleinfo_periode_tarifaire
           state: HC
       sequence:
       - type: turn_on

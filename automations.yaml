@@ -15,7 +15,7 @@
       entity_id: vacuum.roborock_s7
   - service: notify.mobile_seb
     data:
-      title: Roomba - Lancement auto
+      message: Roomba - Lancement auto
   mode: single
 - id: area_salon_bouton
   alias: Area - Salon - Bouton

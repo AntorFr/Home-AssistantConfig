@@ -6,7 +6,7 @@ tts:
   - platform: google_translate
     service_name: google_say
   - platform: marytts
-    host: "marytts-kah-common-chart"
+    host: "marytts"
     port: 59125
     codec: "WAVE_FILE"
     voice: "upmc-pierre-hsmm"
@@ -52,8 +52,10 @@ logger:
     homeassistant.components.template: critical
     homeassistant.components.mqtt: critical
     homeassistant.components.netatmo: error
+    homeassistant.components.mfi: debug
     custom_components.husqvarna_automower: error
     custom_components.flipr: error
+    custom_components.deepstack_face: error
 
 sensor:
   - platform: time_date

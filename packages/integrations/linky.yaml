@@ -1,50 +1,84 @@
-sensor:
-- platform: template
-  sensors:
-    #
-    # Power
-    teleinfo_puissance:
-      value_template: '{{ state_attr("sensor.linky","ENERGY").Power }}'
+template:
+ - sensor:     
+    - unique_id: "teleinfo_puissance" # Power
+      availability: >
+         {{ "true" if(state_attr("sensor.linky","ENERGY").Power is defined) else "false" }}
+      state: >
+        {%- if(state_attr("sensor.linky","ENERGY").Power is defined) %}
+          {{ state_attr("sensor.linky","ENERGY").Power }}
+        {%- endif %}
       unit_of_measurement: "W"
-    #
-    # EnergyHC
-    teleinfo_energyhc:
-      value_template: '{{ state_attr("sensor.linky","TIC").HCHC }}'
+      state_class: "measurement"
+
+    - unique_id: "teleinfo_energyhc" #EnergyHC
+      availability: >
+        {{ "true" if(state_attr("sensor.linky","TIC").HCHC is defined) else "false" }}
+      state: >
+        {%- if(state_attr("sensor.linky","TIC").HCHC is defined) %}
+          {{ state_attr("sensor.linky","TIC").HCHC }}
+        {%- endif %}
       unit_of_measurement: "Wh"
-    #
-    # EnergyHP
-    teleinfo_energyhp:
-      value_template: '{{ state_attr("sensor.linky","TIC").HCHP }}'
+      state_class: "total_increasing"
+
+    - unique_id: "teleinfo_energyhp" # EnergyHP
+      availability: >
+        {{ "true" if(state_attr("sensor.linky","TIC").HCHP is defined) else "false" }}
+      state: >
+        {%- if(state_attr("sensor.linky","TIC").HCHP is defined) %}
+          {{ state_attr("sensor.linky","TIC").HCHP }}
+        {%- endif %}
       unit_of_measurement: "Wh"
-    #
-    # Energy Total + attr HP/HC
-    teleinfo_energy:
-      value_template: '{{ state_attr("sensor.linky","TIC").HCHC + state_attr("sensor.linky","TIC").HCHP }}'
+      state_class: "total_increasing"
+
+    - unique_id: "teleinfo_energy" # Energy Total + attr HP/HC
+      availability: >
+        {{ "true" if((state_attr("sensor.linky","TIC").HCHC is defined) and (state_attr("sensor.linky","TIC").HCHP is defined)) else "false" }}
+      state: >
+        {%- if((state_attr("sensor.linky","TIC").HCHC is defined) and (state_attr("sensor.linky","TIC").HCHP is defined)) %}
+          {% set HCHC = state_attr("sensor.linky","TIC").HCHC | int %}
+          {% set HCHP = state_attr("sensor.linky","TIC").HCHP | int %}
+
+          {{ (HCHC + HCHP) }}
+        {%- endif %}
       unit_of_measurement: "Wh"
-      attribute_templates:
+      state_class: "total_increasing"
+      attributes:
         Index HP: >-
           {{ state_attr("sensor.linky","TIC").HCHP }}
         Index HC: >-
           {{ state_attr("sensor.linky","TIC").HCHC }}
-    #
-    # Energy yesterday
-    teleinfo_energy_yesterday:
-      value_template: '{{ ( state_attr("sensor.linky","ENERGY").Yesterday *1000 ) |int }}'
-      unit_of_measurement: "Wh"
-    #
-    # Energy total (year)
-    teleinfo_energy_total:
-      value_template: '{{ ( state_attr("sensor.linky","ENERGY").Total *1000 ) |int }}'
-      unit_of_measurement: "Wh"
-    #
-    # Periode Tarifaire
-    teleinfo_periode_tarifaire:
-      value_template: '{{ (state_attr("sensor.linky","TIC").PTEC) |replace("..","") }}'
+    
 
-    # Periode Tarifaire
-    teleinfo_prix_kwh:
-      value_template: >
-              {% if is_state('sensor.teleinfo_periode_tarifaire', 'HC') %}
+    - unique_id: "teleinfo_energy_yesterday" # Energy yesterday
+      availability: >
+        {{ "true" if(state_attr("sensor.linky","ENERGY").Yesterday is defined) else "false" }}
+      state: >
+        {%- if(state_attr("sensor.linky","ENERGY").Yesterday is defined) %}
+          {{ ( state_attr("sensor.linky","ENERGY").Yesterday *1000 ) |int }}
+        {%- endif %}
+      
+      unit_of_measurement: "Wh"
+
+    - unique_id: "teleinfo_energy_total" # Energy total (year)
+      availability: >
+        {{ "true" if(state_attr("sensor.linky","ENERGY").Total is defined)  else "false" }}
+      state: >
+        {%- if(state_attr("sensor.linky","ENERGY").Total is defined) %}
+          {{ ( state_attr("sensor.linky","ENERGY").Total *1000 ) |int }}
+        {%- endif %}
+      unit_of_measurement: "Wh"
+      state_class: "total_increasing"
+
+    - unique_id: "teleinfo_periode_tarifaire"  # Periode Tarifaire
+      availability: >
+        {{ "true" if(state_attr("sensor.linky","TIC").PTEC is defined) else "false" }}
+      state: >
+        {%- if(state_attr("sensor.linky","TIC").PTEC is defined) %}
+          {{ (state_attr("sensor.linky","TIC").PTEC) |replace("..","") }}
+        {%- endif %}
+    - unique_id: "teleinfo_prix_kwh" # Prix 
+      state: >
+              {% if is_state('sensor.template_teleinfo_periode_tarifaire', 'HC') %}
               0.1312
               {% else %}
               0.1749
@@ -54,14 +88,14 @@ sensor:
 
 utility_meter:
   daily_energy:
-    source: sensor.teleinfo_energy_total
+    source: sensor.template_teleinfo_energy_total
     cycle: daily
   hourly_energy:
-    source: sensor.teleinfo_energy_total
+    source: sensor.template_teleinfo_energy_total
     cycle: hourly
   quarter_hourly_energy:
-    source: sensor.teleinfo_energy_total
+    source: sensor.template_teleinfo_energy_total
     cycle: quarter-hourly
   yearly_energy:
-    source: sensor.teleinfo_energy_total
+    source: sensor.template_teleinfo_energy_total
     cycle: yearly
