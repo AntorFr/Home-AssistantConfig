@@ -14,7 +14,7 @@ automation:
 #    entity_id: binary_sensor.workday_sensor
 #    state: 'on'
 #  action:
-#  - service: notify.mobile_app_intra_mob08
+#  - service: notify.mobile_seb
 #    data:
 #      message: Laurine rentre du bureau
 #     data:

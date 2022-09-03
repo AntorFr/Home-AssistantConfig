@@ -455,7 +455,7 @@ script:
         entity_id: input_select.day_phase
       data:
         option: Nuit
-    - service: notify.mobile_app_intra_mob08
+    - service: notify.mobile_seb
       data:
         message: Bonne nuit
     - service: script.turn_on
@@ -485,7 +485,7 @@ script:
         entity_id: input_select.day_phase
       data:
         option: Matin
-    - service: notify.mobile_app_intra_mob08
+    - service: notify.mobile_seb
       data:
         message: Bonjour
     - service: script.turn_on
@@ -515,7 +515,7 @@ script:
         entity_id: input_select.day_phase
       data:
         option: Aurore
-    - service: notify.mobile_app_intra_mob08
+    - service: notify.mobile_seb
       data:
         message: Bonjour, pas trop dure ?
     - service: script.turn_on

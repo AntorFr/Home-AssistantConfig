@@ -1,0 +1,270 @@
+script:  
+################################################################################
+  play_music:
+    alias: "Function - Music manager - Play the right playlist"
+    mode: parallel
+    variables:
+      playlists:
+      ## Famille ##
+        - title: La vie est belle
+          content_id: spotify:playlist:37i9dQZF1DXdrln2UyZD7F
+          content_type: playlist
+          style: ['motivation']
+          public: ['Sebastien', 'Laurine', 'Famille']
+        - title: Feel good acoustic
+          content_id: spotify:playlist:37i9dQZF1DWXRvPx3nttRN
+          content_type: playlist
+          style: ['chill']
+          public: ['Sebastien', 'Laurine', 'Famille']
+        - title: Chilled Classical
+          content_id: spotify:playlist:37i9dQZF1DWUvHZA1zLcjW
+          content_type: playlist
+          style: ['chill']
+          public: ['Sebastien', 'Laurine', 'Famille']
+        - title: Peaceful Meditation
+          content_id: spotify:playlist:37i9dQZF1DWZqd5JICZI0u
+          content_type: playlist
+          style: ['zen','work']
+          public: ['Sebastien', 'Laurine', 'Famille']
+        - title: Ambient Relaxation
+          content_id: spotify:playlist:37i9dQZF1DX3Ogo9pFvBkY
+          content_type: playlist
+          style: ['zen','work']
+          public: ['Sebastien', 'Laurine', 'Famille']
+      ## Sebastien ##
+        - title: Malukah
+          content_id: spotify:playlist:5ZLgTnEANdMIgkfsX63Ykv
+          content_type: playlist
+          style: ['chill','motivation']
+          public: ['Sebastien']
+        - title: Fantasy board gaming
+          content_id: spotify:playlist:37i9dQZF1DWVdDMUimLXxx
+          content_type: playlist
+          style: ['chill','work']
+          public: ['Sebastien']
+        - title: Reading Adventure
+          content_id: spotify:playlist:37i9dQZF1DWUWUfWSLE7dn
+          content_type: playlist
+          style: ['chill','work']
+          public: ['Sebastien']
+      ## Enfants ##
+        - title: Milie D
+          content_id: spotify:show:6xZWDWtjxF6dEV9KZZNRTF
+          content_type: playlist
+          style: ['histoire']
+          public: ['Timothee','Emilie']
+        - title: Noisette
+          content_id: spotify:show:0cfuaJnYvp6iTwXXOFjt0y
+          content_type: playlist
+          style: ['histoire']
+          public: ['Timothee','Emilie']
+        - title: Kidico
+          content_id: spotify:show:5no3pub2QBaaaeeBdiobLo
+          content_type: playlist
+          style: ['histoire']
+          public: ['Emilie']
+        - title: KidStory
+          content_id: spotify:show:2OApiYYyIQpZ7VTTPLBp7A
+          content_type: playlist
+          style: ['histoire']
+          public: ['Emilie']
+
+    fields:
+      media_player:
+        name: Enceinte
+        required: True
+        selector: 
+          entity:
+            domain: media_player
+            multiple: true
+      style:
+        name: style
+        required: False
+        selector: 
+          select:
+            options: ['motivation','chill','work','zen','histoire']
+      public:
+        name: public
+        required: False
+        selector: 
+          select:
+            options: ['Famille','Sebastien','Laurine','Timothee','Emilie']
+      title:
+        name: titre
+        selector:
+          text:
+
+    sequence:
+      - variables:
+          selected_playlists: >
+            {%- set ns = namespace(selected_playlists=[]) %}
+
+            {%for playlist in playlists%}
+              {% if (style is not defined or style in playlist.style)
+                  and (public is not defined or public in playlist.public)
+                  and (title is not defined or title==playlist.title) %}
+              {%- set ns.selected_playlists = ns.selected_playlists + [playlist] %}
+              {% endif %}
+            {% endfor  %}
+
+            {{ns.selected_playlists}}
+          random_playlist: >
+            {{selected_playlists|random }}
+
+      - service: media_player.play_media
+        target:
+          entity_id: "{{ media_player }}"
+        data:
+          media_content_id: "{{ random_playlist.content_id }}"
+          media_content_type: "{{ random_playlist.content_type }}"
+          enqueue: replace
+      - service: notify.mobile_seb
+        data:
+          message: "Ok c'est partie ! {{random_playlist.title}} sur {{state_attr(media_player,'friendly_name')}}"
+
+################################################################################
+  play_mood_music:
+      alias: "Function - Music manager - Guess what to play"
+      variables:
+        zone_ids:
+          RdC:
+            manager:  media_player.salle_a_manger
+            group_members:
+              - media_player.cuisine
+              - media_player.cuisine_move
+              - media_player.salon
+          Bureau:
+            manager: media_player.bureau
+            group_members: []
+  
+      fields:
+        zone:
+          name: zone de lecture
+          required: True
+          selector: 
+            select:
+              options: ['RdC','Bureau']      
+      
+      sequence:
+        - variables:
+            media_player_id: "{{ zone_ids[zone].manager}}"
+            group_members: > 
+              {{
+              (expand(zone_ids[zone].group_members)
+                |selectattr('state', 'ne', 'unavailable')
+                |rejectattr('attributes.source','defined')
+                |map(attribute="entity_id")
+                |list) +
+              (expand(zone_ids[zone].group_members)
+                |selectattr('state', 'ne', 'unavailable')
+                |selectattr('attributes.source','defined')
+                |rejectattr('attributes.source','eq','TV')
+                |map(attribute="entity_id")
+                |list) 
+              }}
+
+
+            public: >
+              {%if zone=="Bureau" %}
+                {% if (is_state('person.sebastien','home')) %}
+                Sebastien
+                {% elif (is_state('person.laurine','home')) %}
+                Laurine
+                {%endif%}
+              {%elif zone=="RdC" %}
+                 {% if (is_state('person.sebastien','home') 
+                  and is_state('person.laurine','home')) %}
+                Famille
+                {% elif (is_state('person.sebastien','home')) %}
+                Sebastien
+                {% elif (is_state('person.laurine','home')) %}
+                Laurine
+                {%endif%}             
+              {% endif %}
+
+            style: >
+              {%if zone=="Bureau" %}
+                {% if (utcnow().hour <= 6) %}
+                  zen
+                {% elif is_state('binary_sensor.workday_sensor','on') 
+                    and utcnow().hour <= 19  %}
+                  work
+                {% elif utcnow().hour <= 10 %}
+                  chill
+                {% elif utcnow() <= today_at(states('input_datetime.'+iif(is_state('binary_sensor.workday_tomorrow','on'),'children_night_time','children_night_time_we')))  %}
+                  motivation
+                {% else %}
+                  zen
+                {%endif %}
+              {%elif zone=="RdC" %}
+                {% if (utcnow().hour <= 6) %}
+                  zen
+                {% elif (utcnow().hour <= 10) %}
+                  chill
+                {% elif utcnow() <= today_at(states('input_datetime.'+iif(is_state('binary_sensor.workday_tomorrow','on'),'children_night_time','children_night_time_we'))) %}
+                  motivation
+                {% else %}
+                  zen
+                {%endif %}
+              {% endif %}
+
+        - service: media_player.join
+          target:
+            entity_id: "{{media_player_id}}"
+          data:
+            group_members: "{{group_members}}"
+        - service: script.play_music
+          data:
+            media_player: "{{media_player_id}}"
+            style: "{{style}}"
+            public: "{{public}}"
+################################################################################
+
+
+automation:
+################################################################################
+- id: handle_tag_scan
+  alias: "Function - Music manager - Handle Tag Scan"
+  mode: single
+  # Hide warnings when triggered while in delay.
+  max_exceeded: silent
+  variables:
+    # Map scanner device ID to media player entity ID
+    media_players:
+      fa37e0c36e836c9a3fa47145157df38f: media_player.emilie
+    # Map tag ID to content
+    tags:
+      04-15-91-FA-85-0C-25: #Milie D
+        media_content_id: spotify:show:6xZWDWtjxF6dEV9KZZNRTF
+        media_content_type: playlist
+      04-15-91-FA-C3-37-25: #Noisette
+        media_content_id: spotify:show:0cfuaJnYvp6iTwXXOFjt0y
+        media_content_type: playlist
+      04-15-91-1A-19-16-26: #Kidico
+        media_content_id: spotify:show:5no3pub2QBaaaeeBdiobLo
+        media_content_type: playlist
+  trigger:
+    platform: event
+    event_type: tag_scanned
+  condition:
+    # Test that we support this device and tag
+    - "{{ trigger.event.data.tag_id in tags }}"
+    - "{{ trigger.event.data.device_id in media_players }}"
+  action:
+    - variables:
+        media_player_entity_id: "{{ media_players[trigger.event.data.device_id] }}"
+        media_content_id: "{{ tags[trigger.event.data.tag_id].media_content_id }}"
+        media_content_type: "{{ tags[trigger.event.data.tag_id].media_content_type }}"
+    - service: media_player.play_media
+      target:
+        entity_id: "{{ media_player_entity_id }}"
+      data:
+        media_content_id: "{{ media_content_id }}"
+        media_content_type: "{{ media_content_type }}"
+        enqueue: replace
+    - delay: 2 # timeout before we allow processing next scan
+
+          
+  
+
+

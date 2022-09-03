@@ -145,7 +145,7 @@ automation:
       entity_id: alarm_control_panel.alarme_maison
       to: "triggered"
   action:
-  - service: notify.mobile_app_intra_mob08
+  - service: notify.mobile_seb
     data:
       message: "ALARME! Mouvement detecté: {{ expand('group.home_occupancy') | selectattr('state', 'eq', 'on') | list | map(attribute='name') | join(', ') }}"
 

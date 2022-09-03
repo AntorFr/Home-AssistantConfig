@@ -42,6 +42,8 @@ automation:
       motion_sensor: binary_sensor.bureau_motion
       no_motion_wait: 
         minutes: 30
-      no_motion_warning: 30
+      no_motion_warning: 28
       only_turn_off: true
+      light_sensor:
+      lux_cutoff:
 ################################################################################

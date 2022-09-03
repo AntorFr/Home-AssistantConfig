@@ -25,11 +25,11 @@ http:
   #ssl_key: /letsencrypt/live/intra.sberard.fr/privkey.pem
   use_x_forwarded_for: true
   trusted_proxies:
-  - 192.168.10.0/24
+  - 192.168.10.0/23
   - 127.0.0.1
   - 10.0.0.0/24
   - 172.21.0.0/24
-  - 10.42.2.0/24
+  - 10.42.0.0/16
 
 recorder:
   db_url: !secret k3s_db_url

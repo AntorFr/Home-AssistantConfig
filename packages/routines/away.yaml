@@ -88,7 +88,7 @@ script:
   routine_away:
     alias: Routine - Absence
     sequence:
-    - service: notify.mobile_app_intra_mob08
+    - service: notify.mobile_seb
       data:
         message: Au revoir
     - service: script.turn_on
@@ -103,7 +103,7 @@ script:
   routine_back_home:
     alias: Routine - Retour maison
     sequence:
-    - service: notify.mobile_app_intra_mob08
+    - service: notify.mobile_seb
       data:
         message: Bienvenue à la maison 
     - service: script.turn_on

@@ -5,7 +5,7 @@ blueprint:
   input:
     light_target:
       name: Target light
-      description: The lightto turn on when the automation is triggered.
+      description: The light to turn on when the automation is triggered.
       selector:
         target:
           entity:
@@ -79,6 +79,13 @@ blueprint:
         entity:
           integration: adaptive_lighting
           domain: switch
+    kill_switch:
+      name: (OPTIONAL) Disable automatic turn on/off
+      description: input boolean to disable automatic turn on/off if ON
+      default: 
+      selector:
+        entity:
+          domain: input_boolean
 
 # If motion is detected within the delay,
 # we restart the script.
@@ -94,6 +101,7 @@ variables:
   adaptive_lighting: !input 'adaptive_lighting'
   only_during_night: !input 'only_during_night'
   only_turn_off: !input 'only_turn_off'
+  kill_switch_id: !input 'kill_switch'
 
   no_motion_wait_sec: '{{ ((no_motion_wait.hours or 0)*3600+(no_motion_wait.minutes or 0)*60+(no_motion_wait.seconds or 0))|int}}'
   warning_disable: '{{ (no_motion_warning==0) or (no_motion_warning>=no_motion_wait_sec)}}'
@@ -128,6 +136,13 @@ variables:
 
     {{ns.light_entities}}
 
+  kill_switch_active: >
+    {% if kill_switch_id is none %}
+      False
+    {%else%}
+      {{is_state(kill_switch_id, "on")}}
+    {%endif%}
+
 trigger:
   - platform: state
     entity_id: !input motion_sensor
@@ -140,34 +155,39 @@ trigger:
     id: "off"
 
 condition:
-  - condition: or
-    conditions:
-      - alias: "no more movement since configured period"
-        condition: trigger
-        id: 'off'
-      - condition: and
-        conditions:  
-          - alias: "turn on enabled"
-            condition: template
-            value_template: >
-              {{ 
-                 not (turn_on_disable)
-              }} 
-          - alias: "night only disable or sun is down"
-            condition: template
-            value_template: >
-              {{ 
-                (night_only_disable) or 
-                (is_state("sun.sun","below_horizon"))
-              }}     
-          - alias: "illinance disable or illinance lower than thershold or any entity id is on" 
-            condition: template
-            value_template: >
-              {{ 
-                  (illinance_disable) or
-                  (states(light_sensor)|int <= lux_cutoff) or
-                  (expand(light_entities) | selectattr("state", "==", "on") | list | count > 0)
-              }}
+  - condition: and
+    conditions: 
+    - alias: "Kill switch is not enabled or off"
+      condition: template
+      value_template: '{{not (kill_switch_active)}}'
+    - condition: or
+      conditions:
+        - alias: "no more movement since configured period"
+          condition: trigger
+          id: 'off'
+        - condition: and
+          conditions:  
+            - alias: "turn on enabled"
+              condition: template
+              value_template: >
+                {{ 
+                  not (turn_on_disable)
+                }} 
+            - alias: "night only disable or sun is down"
+              condition: template
+              value_template: >
+                {{ 
+                  (night_only_disable) or 
+                  (is_state("sun.sun","below_horizon"))
+                }}     
+            - alias: "illinance disable or illinance lower than thershold or any entity id is on" 
+              condition: template
+              value_template: >
+                {{ 
+                    (illinance_disable) or
+                    (states(light_sensor)|int <= lux_cutoff) or
+                    (expand(light_entities) | selectattr("state", "==", "on") | list | count > 0)
+                }}
 
 
 action:
@@ -192,6 +212,9 @@ action:
         entity_id: !input motion_sensor
         from: "on"
         to: "off"
+    - condition: template
+      alias: "kill scenario if kill_switch has been activated"
+      value_template: '{{not (kill_switch_active)}}'
     - choose:
       - conditions: '{{not warning_disable}}'
         sequence:

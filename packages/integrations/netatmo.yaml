@@ -1,6 +1,6 @@
-netatmo:
-  client_id: !secret netatmo_client_id
-  client_secret: !secret netatmo_client_secret
+#netatmo:
+#  client_id: !secret netatmo_client_id
+#  client_secret: !secret netatmo_client_secret
 
 counter:
   netatmo_event_counter:

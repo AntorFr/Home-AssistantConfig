@@ -55,6 +55,7 @@ automation:
       lux_cutoff: 60
       adaptive_lighting: switch.adaptive_lighting_salon
       only_during_night: false
+      kill_switch: input_boolean.salon_lumiere_mode_tv
 ################################################################################
 - id: 'salon_bouton_light'
   alias: Area - Salon - Bouton Lumière
@@ -96,4 +97,32 @@ automation:
     default: []
   mode: parallel
 ################################################################################
-    
+- id: 'salon_mode_TV_auto'
+  alias: Area - Salon - Lumière mode TV On/Off
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - media_player.tv01
+      to: "on"
+      id: "on"
+    - platform: state
+      entity_id:
+        - media_player.tv01
+      to: "off"
+      id: "off"
+  condition: []
+  action:
+    - if:
+        - condition: trigger
+          id: "on"
+      then:
+        - service: input_boolean.turn_on
+          data: {}
+          target:
+            entity_id: input_boolean.salon_lumiere_mode_tv
+      else:
+        - service: input_boolean.turn_off
+          data: {}
+          target:
+            entity_id: input_boolean.salon_lumiere_mode_tv

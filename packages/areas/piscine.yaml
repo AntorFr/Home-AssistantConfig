@@ -38,7 +38,7 @@ binary_sensor:
         device_class: safety
         friendly_name: Piscine Sécurisée
         value_template: >
-          {{not is_state('binary_sensor.piscine_porte_bulle_contact','off')}}
+          {{is_state('input_boolean.alarme_piscine', 'on') and not is_state('binary_sensor.piscine_porte_bulle_contact','off')}}
 
 alert:
   swiming_pool:
@@ -51,7 +51,12 @@ alert:
       {% else %}
       Tout va bien
       {% endif %}
-    done_message: "Porte Piscine sécurisée"
+    done_message: >
+      {% if is_state('input_boolean.alarme_piscine', 'off') %}
+      Alarme désactivée
+      {% else %}
+      "Porte Piscine sécurisée"
+      {% endif %}
     data:
       entity_id: camera.piscine_high
       push:
