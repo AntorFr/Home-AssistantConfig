@@ -234,14 +234,17 @@ automation:
       fa37e0c36e836c9a3fa47145157df38f: media_player.emilie
     # Map tag ID to content
     tags:
-      04-15-91-FA-85-0C-25: #Milie D
+      F7-E3-4D-3D: #Milie D
         media_content_id: spotify:show:6xZWDWtjxF6dEV9KZZNRTF
         media_content_type: playlist
-      04-15-91-FA-C3-37-25: #Noisette
+      08-E4-4D-3D: #Noisette
         media_content_id: spotify:show:0cfuaJnYvp6iTwXXOFjt0y
         media_content_type: playlist
-      04-15-91-1A-19-16-26: #Kidico
+      10-E4-4D-3D: #Kidico
         media_content_id: spotify:show:5no3pub2QBaaaeeBdiobLo
+        media_content_type: playlist
+      00-E4-4D-3D: #Magic system
+        media_content_id: spotify:playlist:7aUx9jE0vqYsLFAUIZvkkz
         media_content_type: playlist
   trigger:
     platform: event
@@ -264,7 +267,46 @@ automation:
         enqueue: replace
     - delay: 2 # timeout before we allow processing next scan
 
-          
+ ################################################################################         
+- id: adapte_volume_salon 
+  alias: "Function - Music manager - Adapte volume Salon"
+  description: ""
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - media_player.salon
+      attribute: source
+      to: TV
+      id: tv
+    - platform: state
+      entity_id:
+        - media_player.salon
+      attribute: source
+      from: TV
+      id: music
+  condition: []
+  action:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id: tv
+          sequence:
+            - service: media_player.volume_set
+              data:
+                volume_level: 0.16
+              target:
+                entity_id: media_player.salon
+        - conditions:
+            - condition: trigger
+              id: music
+          sequence:
+            - service: media_player.volume_set
+              data:
+                volume_level: 0.08
+              target:
+                entity_id: media_player.salon
+      default: []
   
 
 
