@@ -15,3 +15,62 @@ automation:
       mac: 70:af:24:0d:b4:b7
   mode: single
   ###############################################
+- id: function_tv_xbox_switch_source
+  alias: Function - TV - Switch source XBOX
+  description: ""
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - media_player.xbox_salon
+      from: "off"
+      to: "on"
+      id: turned_on
+    - platform: state
+      entity_id:
+        - media_player.xbox_salon
+      from: "on"
+      to: "off"
+      id: turned_off
+  condition: []
+  action:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id: turned_on
+          sequence:
+            - if:
+                - condition: state
+                  entity_id: media_player.tv01
+                  state: "off"
+              then:
+                - service: media_player.turn_on
+                  data: {}
+                  target:
+                    entity_id: media_player.tv01
+                - delay:
+                    hours: 0
+                    minutes: 0
+                    seconds: 10
+                    milliseconds: 0
+            - service: remote.send_command
+              data:
+                delay_secs: 0.5
+                command:
+                  - Source
+                  - CursorDown
+                  - CursorDown
+                  - CursorDown
+                  - CursorUp
+                  - Confirm
+              target:
+                entity_id: remote.tv01
+        - conditions:
+            - condition: trigger
+              id: turned_off
+          sequence:
+            - service: media_player.turn_off
+              data: {}
+              target:
+                entity_id: media_player.tv01
+      default: []
