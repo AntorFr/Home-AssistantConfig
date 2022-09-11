@@ -203,14 +203,32 @@ automation:
       light_target:
         entity_id: 
           - light.lumiere_jardin_devant
-      motion_sensor: binary_sensor.entree_person_motion
+          - light.garden_parking_light
+      motion_sensor: 
+        - binary_sensor.entree_person_motion
+        - binary_sensor.entree_car_motion
       no_motion_wait:
-        minutes: 10
+        minutes: 3
+      no_motion_warning: 0
+      only_during_night: true
+################################################################################
+- id: jardin_front_light2_auto
+  alias: Area - Jardin - Lumière parking auto
+  description: ''
+  use_blueprint:
+    path: antorfr/motion_light.yaml
+    input:
+      light_target:
+        entity_id: 
+          - light.garden_parking_light
+      motion_sensor: binary_sensor.parking_person_motion
+      no_motion_wait:
+        minutes: 3
       no_motion_warning: 0
       only_during_night: true
 ################################################################################
 - id: jardin_back_light_auto
-  alias: Area - Jardin - Lumière devant auto
+  alias: Area - Jardin - Lumière arriere auto
   description: ''
   use_blueprint:
     path: antorfr/motion_light.yaml
