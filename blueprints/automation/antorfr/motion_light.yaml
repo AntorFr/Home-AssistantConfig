@@ -94,6 +94,7 @@ max_exceeded: silent
 
 variables:
   light_target: !input 'light_target'
+  motion_sensor: !input 'motion_sensor'
   no_motion_wait: !input 'no_motion_wait'
   no_motion_warning: !input 'no_motion_warning'
   light_sensor: !input 'light_sensor'
@@ -143,11 +144,16 @@ variables:
       {{is_state(kill_switch_id, "on")}}
     {%endif%}
 
+
 trigger:
   - platform: state
     entity_id: !input motion_sensor
     to: "on"
     id: "on"
+  - platform: state
+    entity_id: !input motion_sensor
+    to: "off"
+    id: "warning"
   - platform: state
     entity_id: !input motion_sensor
     to: "off"
@@ -191,6 +197,9 @@ condition:
 
 
 action:
+- condition: template
+  alias: "kill scenario if kill_switch has been activated"
+  value_template: '{{not (kill_switch_active)}}'
 - choose:
   - conditions:
     - condition: trigger
@@ -207,32 +216,43 @@ action:
       default:
           - service: light.turn_on
             target: !input 'light_target'
-    - wait_for_trigger:
-        platform: state
-        entity_id: !input motion_sensor
-        from: "on"
-        to: "off"
+  - conditions:
+    - condition: trigger
+      id: 'warning'
     - condition: template
-      alias: "kill scenario if kill_switch has been activated"
-      value_template: '{{not (kill_switch_active)}}'
-    - choose:
-      - conditions: '{{not warning_disable}}'
-        sequence:
-        - delay:
-            seconds: '{{duration_before_warning}}'
+      value_template: "{{not(warning_disable)}}"
+    sequence:
+      - wait_template: '{{ expand(motion_sensor) | selectattr("state", "eq", "on") | list | count == 0 }}'
+      - delay: 
+          seconds: '{{duration_before_warning}}'
+      # TODO: Debug why never reach next step         
+      #- wait_for_trigger:
+      #  - platform: template
+      #    value_template: '{{ expand(motion_sensor) | selectattr("state", "eq", "on") | list | count == 0 }}'
+      #    for:
+      #      seconds: "{{duration_before_warning}}"
+      - if:
         - alias: "any light still on" 
           condition: template
           value_template: '{{ expand(light_entities) | selectattr("state", "eq", "on") | list | count > 0 }}'
-        - service: light.turn_on
-          target:
-            entity_id: '{{expand(light_entities) | selectattr("state", "eq", "on") | map(attribute="entity_id")| list}}'
-          data:
-            brightness_step_pct: -50
-        - service: light.turn_off
-          target: !input 'light_target'
+        then:
+          - service: light.turn_on
+            target:
+              entity_id: '{{expand(light_entities) | selectattr("state", "eq", "on") | map(attribute="entity_id")| list}}'
+            data:
+              brightness_step_pct: -50
   - conditions:
     - condition: trigger
       id: 'off'
     sequence:
+      - wait_template: '{{ expand(motion_sensor) | selectattr("state", "eq", "on") | list | count == 0 }}'
+      # TODO: Debug why never reach next step 
+      #- wait_for_trigger:
+      #  - platform: template
+      #    value_template: '{{ expand(motion_sensor) | selectattr("state", "eq", "on") | list | count == 0 }}'
+      #    for:
+      #      seconds: "{{no_motion_wait}}"
       - service: light.turn_off
         target: !input 'light_target'
+
+
