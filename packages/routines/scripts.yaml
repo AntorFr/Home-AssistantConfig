@@ -28,6 +28,13 @@ script:
         - salle_de_douche
         - chambre_d_amis
         entity_id:
+        #jardin 
+        - light.jardin_lumiere_arriere
+        - light.lumiere_jardin_devant
+        - light.garden_parking_light
+        - light.jardin
+
+        #salon
         - light.salon
         - light.salon_led_buffet
         - light.plafonnier_entree
