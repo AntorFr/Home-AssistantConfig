@@ -6,16 +6,16 @@ binary_sensor:
         device_class: problem
         friendly_name: Flipr réception données
         value_template: >
-          {{ (now() - (states('sensor.flipr_1a5be6_date_measure')| as_datetime)) > timedelta(hours=12) }}
+          {{ (now() - (states('sensor.flipr_1a4c76_date_measure')| as_datetime)) > timedelta(hours=12) }}
 
 alert:
   flipr_ph_alert:
     name: "Alerte PH Piscine"
     message: >
-      "PH piscine anormal ({{ states('sensor.flipr_1a5be6_ph') }})"
+      "PH piscine anormal ({{ states('sensor.flipr_1a4c76_ph') }})"
     done_message: >
-      "PH piscine de nouveau normal ({{ states('sensor.flipr_1a5be6_ph') }})"
-    entity_id: binary_sensor.flipr_1a5be6_ph_status
+      "PH piscine de nouveau normal ({{ states('sensor.flipr_1a4c76_ph') }})"
+    entity_id: binary_sensor.flipr_1a4c76_ph_status
     state: "on"   # Optional, 'on' is the default value
     repeat: 1440
     can_acknowledge: true  # Optional, default is true
@@ -25,10 +25,10 @@ alert:
   flipr_clore_alert:
     name: "Alerte clore Piscine"
     message: >
-      "Clore piscine anormal ({{ states('sensor.flipr_1a5be6_chlorine') | round(2)}})"
+      "Clore piscine anormal ({{ states('sensor.flipr_1a4c76_chlorine') | round(2)}})"
     done_message: >
-      "Clore piscine de nouveau normal ({{ states('sensor.flipr_1a5be6_chlorine') | round(2) }})"
-    entity_id: binary_sensor.flipr_1a5be6_chlorine_status
+      "Clore piscine de nouveau normal ({{ states('sensor.flipr_1a4c76_chlorine') | round(2) }})"
+    entity_id: binary_sensor.flipr_1a4c76_chlorine_status
     state: "on"   # Optional, 'on' is the default value
     repeat: 1440
     can_acknowledge: true  # Optional, default is true
@@ -38,7 +38,7 @@ alert:
   flipr_disconnected_alert:
     name: "Alerte Flipr déconnecté"
     message: >
-      "Flipr déconnecté depuis {{ relative_time((states('sensor.flipr_1a5be6_date_measure')| as_datetime))}}"
+      "Flipr déconnecté depuis {{ relative_time((states('sensor.flipr_1a4c76_date_measure')| as_datetime))}}"
     done_message: >
       "Flipr de nouveau connecté"
     entity_id: binary_sensor.flipr_data_freshness
