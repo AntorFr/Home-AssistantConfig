@@ -35,7 +35,7 @@ blueprint:
     #      device_class: motion       
     no_motion_warning:
       name: (OPTIONAL) Warning time (sec)
-      description: Waring duration of reduce brigness before turning it off (0 means no warning).
+      description: Waring duration of reduce brightness before turning it off (0 means no warning).
       default: 30
       selector:
         number:
@@ -66,7 +66,7 @@ blueprint:
       selector:
         boolean:
     only_turn_off:
-      name: (OPTIONAL) Only turn light off(
+      name: (OPTIONAL) Only turn light off
       description: Only turn light off when no more motion, but never on
       default: false
       selector:
@@ -192,14 +192,11 @@ condition:
                 {{ 
                     (illinance_disable) or
                     (states(light_sensor)|int <= lux_cutoff) or
-                    (expand(light_entities) | selectattr("state", "==", "on") | list | count > 0)
+                    (expand(light_entities) | selectattr("state", "eq", "on") | list | count > 0)
                 }}
 
 
 action:
-- condition: template
-  alias: "kill scenario if kill_switch has been activated"
-  value_template: '{{not (kill_switch_active)}}'
 - choose:
   - conditions:
     - condition: trigger
@@ -225,6 +222,9 @@ action:
       - wait_template: '{{ expand(motion_sensor) | selectattr("state", "eq", "on") | list | count == 0 }}'
       - delay: 
           seconds: '{{duration_before_warning}}'
+      - condition: template
+        alias: "kill scenario if kill_switch has been activated"
+        value_template: '{{not (kill_switch_active)}}'
       # TODO: Debug why never reach next step         
       #- wait_for_trigger:
       #  - platform: template
