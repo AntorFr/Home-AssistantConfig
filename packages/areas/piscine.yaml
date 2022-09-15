@@ -38,14 +38,17 @@ binary_sensor:
         device_class: safety
         friendly_name: Piscine Sécurisée
         value_template: >
-          {{is_state('input_boolean.alarme_piscine', 'on') and not is_state('binary_sensor.piscine_porte_bulle_contact','off')}}
+          {{is_state('input_boolean.alarme_piscine', 'on') 
+          and not(is_state('binary_sensor.piscine_porte_bulle_contact','off'))
+          and not(is_state('binary_sensor.indoor_pool_person_motion', 'on'))
+          }}
 
 alert:
   swiming_pool:
     name: "Porte Piscine non sécurisée"
     message: >
       {% if is_state('binary_sensor.piscine_porte_bulle_contact', 'on') %}
-      Attention, la porte de la piscine est restée ouverte
+      Attention, la porte de la piscine est restée ouverte sans personne
       {% elif is_state('binary_sensor.piscine_porte_bulle_contact', 'unavailable') %}
       Attention, la porte de la piscine est déconnectée.
       {% else %}
@@ -71,6 +74,7 @@ alert:
     entity_id: binary_sensor.swiming_pool_door_problem
     state: "on"   # Optional, 'on' is the default value
     repeat:
+      - 15
       - 30
       - 60
     can_acknowledge: false  # Optional, default is true
@@ -97,34 +101,20 @@ automation:
 - id: 'Swimingpool_light_auto'
   alias: Area - Piscine - Lumière auto
   description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.piscine_porte_bulle_contact
-    to:
-    - 'on'
-    - 'off'
-  condition:
-  - condition: state
-    entity_id: binary_sensor.nuit
-    state: 'on'
-  action:
-  - choose:
-    - conditions:
-      - condition: template
-        value_template: "{{ trigger.to_state.state == 'on' }}"
-      sequence:
-      - service: homeassistant.turn_on
-        target:
-          entity_id: 
-            - light.piscine_spot_immergee
-            - switch.piscine_lumiere
-    default:
-    - service: homeassistant.turn_off
-      target:
-        entity_id:
+  use_blueprint:
+    path: antorfr/motion_light.yaml
+    input:
+      light_target:
+        entity_id: 
           - light.piscine_spot_immergee
           - switch.piscine_lumiere
-  mode: single
+      motion_sensor:
+        - binary_sensor.piscine_porte_bulle_contact
+        - binary_sensor.indoor_pool_person_motion
+      no_motion_wait:
+        minutes: 10
+      no_motion_warning: 0
+      only_during_night: true
 ################################################################################
 #- id: 'Swimingpool_auto_filtering_barry'
 #  alias: Area - Piscine - Filtration automatique (barry)
