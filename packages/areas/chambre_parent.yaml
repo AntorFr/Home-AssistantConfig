@@ -330,7 +330,8 @@ automation:
       sequence:
         - service: light.turn_on
           target:
-            entity_id: light.veilleuse_lit_parent
+            entity_id:
+              - light.veilleuse_lit_parent
           data:
             color_name: red
             effect: color
@@ -341,7 +342,8 @@ automation:
       sequence:
         - service: light.turn_on
           target:
-            entity_id: light.veilleuse_lit_parent
+            entity_id:
+              - light.veilleuse_lit_parent
           data:
             color_name: red
             effect: color
@@ -391,5 +393,57 @@ automation:
         - service: switch.toggle
           data: {}
           entity_id: switch.couverture_laurine
-
 ################################################################################
+- id: 'chambre_parent_coeur_auto'
+  alias: Area - Chambre - Coeur auto
+  description: ""
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.chambre_parent_capteur_presence_lit_presence
+      from: "off"
+      to: "on"
+      id: presence
+    - platform: state
+      entity_id:
+        - binary_sensor.chambre_parent_capteur_presence_lit_presence
+      from: "on"
+      to: "off"
+      id: absence
+  condition:
+    - condition: state
+      entity_id: input_boolean.night_mode
+      state: "off"
+    - condition: state
+      entity_id: input_boolean.away_mode
+      state: "off"
+  action:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id: presence
+          sequence:
+            - service: light.turn_on
+              data:
+                rgb_color: [255, 0, 0]
+                brightness_pct: 42
+              target:
+                entity_id: light.chambre_parent_coeur_ardent
+            - service: light.turn_on
+              data:
+                rgb_color: [0, 0, 255]
+                brightness_pct: 100
+                effect: Twinkle
+              target:
+                entity_id: light.chambre_parent_coeur_ardent_ambiance
+        - conditions:
+            - condition: trigger
+              id: absence
+          sequence:
+            - service: light.turn_off
+              data: {}
+              target:
+                entity_id:
+                  - light.chambre_parent_coeur_ardent
+                  - light.chambre_parent_coeur_ardent_ambiance
