@@ -1,17 +1,20 @@
+binary_sensor:
+  - platform: group
+    name: "Capteurs mouvement salon"
+    device_class: motion
+    unique_id: salon_motion_sensors
+    all: false
+    entities:
+      - binary_sensor.salon_person_motion
+      - binary_sensor.salon_capteur_mouvement_occupancy
+      - binary_sensor.salon_capteur_presence_presence
+
 light:
   - platform: group
     name: Salon lumieres
     entities:
       - light.salon
       - light.salon_led_buffet
-
-group:
-  salon_sensors:
-    name: Capteurs mouvement salon
-    all: false
-    entities:
-      - binary_sensor.camera_salon
-      - binary_sensor.salon_capteur_mouvement_occupancy
   
 sensor:
   - platform: history_stats
@@ -31,7 +34,7 @@ sensor:
 
   - name: mouvement_salon_5min
     platform: history_stats
-    entity_id: group.salon_sensors
+    entity_id: binary_sensor.capteurs_mouvement_salon
     state: "on"
     type: time
     duration: 00:05:00
@@ -47,9 +50,9 @@ automation:
     input:
       light_target:
         entity_id: light.salon_lumieres
-      motion_sensor: binary_sensor.salon_capteur_mouvement_occupancy
+      motion_sensor: binary_sensor.capteurs_mouvement_salon
       no_motion_wait:
-        hours: 1
+        minutes: 10
       no_motion_warning: 30
       light_sensor: sensor.salon_capteur_luminosite_illuminance_lux
       lux_cutoff: 60
