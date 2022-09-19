@@ -206,7 +206,7 @@ automation:
           - light.garden_parking_light
       motion_sensor: 
         - binary_sensor.entree_person_motion
-        - binary_sensor.entree_car_motion
+        - binary_sensor.entrance_driveway_car_motion
       no_motion_wait:
         minutes: 3
       no_motion_warning: 0
