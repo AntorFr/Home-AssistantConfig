@@ -13,7 +13,6 @@ group:
     all: true
     icon: mdi:router-network
     entities:
-      - device_tracker.zha01
       - device_tracker.legrand_home_controle
       - device_tracker.dream_machine
       - device_tracker.netatmo_thermostat
@@ -23,7 +22,6 @@ group:
     all: true
     icon: mdi:cctv
     entities:
-      - device_tracker.doorbellpro
       - device_tracker.netatmo_presence_entree
       - device_tracker.netatmo_presence_parking
       - device_tracker.netatmo_welcome
