@@ -213,6 +213,8 @@ action:
       default:
           - service: light.turn_on
             target: !input 'light_target'
+            data:
+              brightness_pct: 100
   - conditions:
     - condition: trigger
       id: 'warning'
