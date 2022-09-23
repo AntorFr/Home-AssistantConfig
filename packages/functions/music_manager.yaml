@@ -47,6 +47,11 @@ script:
           content_type: playlist
           style: ['chill','work']
           public: ['Sebastien']
+        - title: Sith Mediation
+          content_id: spotify:playlist:0YCerIiq6AF59sE3NlRPLQ
+          content_type: playlist
+          style: ['chill','work']
+          public: ['Sebastien']
       ## Enfants ##
         - title: Milie D
           content_id: spotify:show:6xZWDWtjxF6dEV9KZZNRTF
