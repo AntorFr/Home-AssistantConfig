@@ -191,7 +191,7 @@ automation:
   action:
       - service: cover.open_cover
         target:
-          entity_id: cover.portail
+          entity_id: cover.portail_2
 
 ################################################################################
 - id: jardin_front_light_auto

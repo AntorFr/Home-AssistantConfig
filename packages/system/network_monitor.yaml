@@ -45,9 +45,7 @@ group:
     entities:
       - device_tracker.bed_heater
       - device_tracker.teddy_light
-      - device_tracker.flipr_hub
       - device_tracker.flipr_wifi_relay
-###      - device_tracker.filpr_wifi_connect
 
   required_devices:
     name: monitored devices
