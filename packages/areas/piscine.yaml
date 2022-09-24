@@ -6,12 +6,12 @@ light:
     name: piscine
     entities:
       - light.piscine_spot_immergee
-      #- switch.piscine_lumiere
+      - light.piscine_lumiere
 
 sensor:
   - name: mouvement_piscine_10min
     platform: history_stats
-    entity_id: binary_sensor.piscine_person_motion
+    entity_id: binary_sensor.indoor_pool_person_occupancy
     state: "on"
     type: time
     duration: 00:10:00
@@ -40,7 +40,7 @@ binary_sensor:
         value_template: >
           {{is_state('input_boolean.alarme_piscine', 'on') 
           and not(is_state('binary_sensor.piscine_porte_bulle_contact','off'))
-          and not(is_state('binary_sensor.indoor_pool_person_motion', 'on'))
+          and not(is_state('binary_sensor.indoor_pool_person_occupancy', 'on'))
           }}
 
 alert:
@@ -107,10 +107,10 @@ automation:
       light_target:
         entity_id: 
           - light.piscine_spot_immergee
-          - light.piscine_lumiere_2
+          - light.piscine_lumiere
       motion_sensor:
         - binary_sensor.piscine_porte_bulle_contact
-        - binary_sensor.indoor_pool_person_motion
+        - binary_sensor.indoor_pool_person_occupancy
       no_motion_wait:
         minutes: 10
       no_motion_warning: 0

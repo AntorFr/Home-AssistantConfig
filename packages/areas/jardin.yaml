@@ -205,8 +205,8 @@ automation:
           - light.lumiere_jardin_devant
           - light.garden_parking_light
       motion_sensor: 
-        - binary_sensor.entree_person_motion
-        - binary_sensor.entrance_driveway_car_motion
+        - binary_sensor.entree_person_occupancy
+        - binary_sensor.entrance_driveway_car_occupancy
       no_motion_wait:
         minutes: 3
       no_motion_warning: 0
@@ -221,7 +221,8 @@ automation:
       light_target:
         entity_id: 
           - light.garden_parking_light
-      motion_sensor: binary_sensor.parking_person_motion
+      motion_sensor: 
+        - binary_sensor.entree_person_occupancy
       no_motion_wait:
         minutes: 3
       no_motion_warning: 0
@@ -236,7 +237,7 @@ automation:
       light_target:
         entity_id: 
           - light.jardin_lumiere_arriere
-      motion_sensor: binary_sensor.terasse_person_motion
+      motion_sensor: binary_sensor.terasse_person_occupancy
       no_motion_wait:
         minutes: 10
       no_motion_warning: 0

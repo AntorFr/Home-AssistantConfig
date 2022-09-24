@@ -5,7 +5,7 @@ binary_sensor:
     unique_id: salon_motion_sensors
     all: false
     entities:
-      - binary_sensor.salon_person_motion
+      - binary_sensor.salon_person_occupancy
       - binary_sensor.salon_capteur_mouvement_occupancy
       - binary_sensor.salon_capteur_presence_presence
 

@@ -18,9 +18,9 @@ binary_sensor:
     unique_id: bureau_motion_sensors #binary_sensor.capteurs_mouvement_bureau
     all: false
     entities:
-      - binary_sensor.bureau_capteur_presence_presence_2
+      - binary_sensor.bureau_capteur_presence_presence
       - binary_sensor.bureau_capteur_mouvement_occupancy
-      - binary_sensor.bureau_person_motion
+      - binary_sensor.bureau_person_occupancy
 
 template:
   - sensor:

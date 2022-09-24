@@ -2,7 +2,7 @@
 sensor:
   - name: mouvement_garage-3_10min
     platform: history_stats
-    entity_id: binary_sensor.garage_3_person_motion
+    entity_id: binary_sensor.garage_3_person_occupancy
     state: "on"
     type: time
     duration: 00:10:00
