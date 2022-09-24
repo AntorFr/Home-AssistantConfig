@@ -1,11 +1,11 @@
 sonos_rdc_ambiance_pop:
   alias: Sonos - RdC - Ambiance Pop
   sequence:
-  - service: sonos.join
+  - service: media_player.join
     data:
       master: media_player.salon
       entity_id: media_player.salle_a_manger
-  - service: sonos.join
+  - service: media_player.join
     data:
       master: media_player.salon
       entity_id: media_player.cuisine_move
@@ -19,7 +19,7 @@ sonos_rdc_ambiance_pop:
 sonos_rdc_ambiance_meditation:
   alias: Sonos - RdC - Ambiance Meditation
   sequence:
-  - service: sonos.join
+  - service: media_player.join
     data:
       master: media_player.salon
       entity_id: media_player.salle_a_manger
@@ -33,7 +33,7 @@ sonos_rdc_ambiance_meditation:
 sonos_rdc_ambiance_piano:
   alias: Sonos - RdC - Ambiance Piano
   sequence:
-  - service: sonos.join
+  - service: media_player.join
     data:
       master: media_player.salon
       entity_id: media_player.salle_a_manger
@@ -47,11 +47,11 @@ sonos_rdc_ambiance_piano:
 sonos_rdc_ambiance_matin:
   alias: Sonos - RdC - Ambiance Matin
   sequence:
-  - service: sonos.join
+  - service: media_player.join
     data:
       master: media_player.salon
       entity_id: media_player.salle_a_manger
-  - service: sonos.join
+  - service: media_player.join
     data:
       master: media_player.salon
       entity_id: media_player.cuisine_move
