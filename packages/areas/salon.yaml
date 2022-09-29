@@ -173,7 +173,7 @@ automation:
           - service: light.toggle
             data: {}
             target:
-              entity_id: light.salon
+              entity_id: light.salon_led_buffet
         - conditions:
           - condition: trigger
             id: button_2_single
@@ -181,7 +181,7 @@ automation:
           - service: light.toggle
             data: {}
             target:
-              entity_id: light.salon_led_buffet
+              entity_id: light.salon
         - conditions:
           - condition: trigger
             id: button_3_single
