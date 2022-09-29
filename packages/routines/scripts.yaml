@@ -124,6 +124,18 @@ script:
         - chambre_parent
         entity_id: 
         - media_player.salon
+    
+################################################################################
+  routine_rdc_media_player_off:
+    alias: Routine - All Media player RdC off
+    sequence:
+    - service: media_player.media_stop
+      target:
+        area_id:
+        - cuisine
+        - salle_a_manger
+        entity_id: 
+        - media_player.salon
 
 ## Switch ###
 ################################################################################

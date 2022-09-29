@@ -129,3 +129,123 @@ automation:
           data: {}
           target:
             entity_id: input_boolean.salon_lumiere_mode_tv
+################################################################################
+- id: 'salon_bouton_telecommande'
+  alias: Area - Salon - Telecommande 
+  description: ""
+  mode: single
+  trigger:
+    - platform: device
+      domain: mqtt
+      device_id: 4ea8e4d68946d72103f54aa45e3bbc0f
+      type: action
+      subtype: button_1_single
+      discovery_id: 0x04cf8cdf3c7dc822 action_button_1_single
+      id: button_1_single
+    - platform: device
+      domain: mqtt
+      device_id: 4ea8e4d68946d72103f54aa45e3bbc0f
+      type: action
+      subtype: button_2_single
+      discovery_id: 0x04cf8cdf3c7dc822 action_button_2_single
+      id: button_2_single
+    - platform: device
+      domain: mqtt
+      device_id: 4ea8e4d68946d72103f54aa45e3bbc0f
+      type: action
+      subtype: button_3_single
+      discovery_id: 0x04cf8cdf3c7dc822 action_button_3_single
+      id: button_3_single
+    - platform: device
+      domain: mqtt
+      device_id: 4ea8e4d68946d72103f54aa45e3bbc0f
+      type: action
+      subtype: button_4_single
+      discovery_id: 0x04cf8cdf3c7dc822 action_button_4_single
+      id: button_4_single
+  condition: []
+  action:
+    - choose:
+        - conditions:
+          - condition: trigger
+            id: button_1_single
+          sequence:
+          - service: light.toggle
+            data: {}
+            target:
+              entity_id: light.salon
+        - conditions:
+          - condition: trigger
+            id: button_2_single
+          sequence:
+          - service: light.toggle
+            data: {}
+            target:
+              entity_id: light.salon_led_buffet
+        - conditions:
+          - condition: trigger
+            id: button_3_single
+          sequence:
+          - service: script.play_mood_music
+            data:
+              zone: RdC
+            target: {}
+        - conditions:
+          - condition: trigger
+            id: button_4_single
+          sequence:
+            - service: script.routine_rdc_media_player_off
+################################################################################
+- id: 'salon_bouton_volume'
+  alias: Area - Salon - Bouton volume
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 3bb5ed9c9e9e2edd6ae8fcb01e447fa0
+    type: action
+    subtype: brightness_move_up
+    discovery_id: 0xec1bbdfffef3f050 action_brightness_move_up
+    id: move_up
+  - platform: device
+    domain: mqtt
+    device_id: 3bb5ed9c9e9e2edd6ae8fcb01e447fa0
+    type: action
+    subtype: brightness_move_down
+    discovery_id: 0xec1bbdfffef3f050 action_brightness_move_down
+    id: move_down
+  - platform: device
+    domain: mqtt
+    device_id: 3bb5ed9c9e9e2edd6ae8fcb01e447fa0
+    type: action
+    subtype: toggle
+    discovery_id: 0xec1bbdfffef3f050 action_toggle
+    id: toggle
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: move_up
+      sequence:
+      - service: media_player.volume_up
+        data: {}
+        target:
+          entity_id: media_player.salon
+    - conditions:
+      - condition: trigger
+        id: move_down
+      sequence:
+      - service: media_player.volume_down
+        data: {}
+        target:
+          entity_id: media_player.salon
+    - conditions:
+      - condition: trigger
+        id: toggle
+      sequence:
+      - service: media_player.media_play_pause
+        data: {}
+        target:
+          entity_id: media_player.salon
+    default: []

@@ -1,10 +1,36 @@
 ---
-#### VPN Gatway ###
+ ###
 binary_sensor:
-  - name: VPN connection
+  - name: VPN connection #### VPN Gatway
     platform: ping
     host: 10.1.1.1
-
+  - name: odr01
+    platform: ping
+    host: odr01.intra.sberard.fr
+  - name: odr02
+    platform: ping
+    host: odr02.intra.sberard.fr
+  - name: odr03
+    platform: ping
+    host: odr03.intra.sberard.fr
+  - name: up01
+    platform: ping
+    host: up01.intra.sberard.fr
+  - name: up02
+    platform: ping
+    host: up02.intra.sberard.fr
+  - name: up03
+    platform: ping
+    host: up03.intra.sberard.fr
+  - name: nuc01
+    platform: ping
+    host: nuc01.intra.sberard.fr
+  - name: nuc02
+    platform: ping
+    host: nuc02.intra.sberard.fr
+  - name: nuc03
+    platform: ping
+    host: nuc03.intra.sberard.fr
 
 ### Monitor system ###
 group:
@@ -37,6 +63,21 @@ group:
       - device_tracker.garagedoor_3
       - device_tracker.entrance_gate #Portail
 
+  required_cluster_devices:
+    name: cluster devices
+    all: true
+    icon: mdi:server-network
+    entities:
+      - binary_sensor.up01
+      - binary_sensor.up02
+      - binary_sensor.up03
+      - binary_sensor.odr01
+      - binary_sensor.odr02
+      - binary_sensor.odr03
+      - binary_sensor.nuc01
+      - binary_sensor.nuc02
+      - binary_sensor.nuc03
+
 
   required_other_devices:
     name: Other devices
@@ -55,6 +96,7 @@ group:
       - group.required_hub_devices
       - group.required_security_devices
       - group.required_door_devices
+      - group.required_cluster_devices
       - group.required_other_devices
 
 automation:
