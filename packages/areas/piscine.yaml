@@ -1,12 +1,9 @@
 light:
-  - platform: switch
-    name: piscine lumière
-    entity_id: switch.piscine_lumiere
   - platform: group
     name: piscine
     entities:
-      - light.piscine_spot_immergee
-      - light.piscine_lumiere
+      - light.piscine_lumiere_immergee
+      - light.piscine_lumiere_2
 
 sensor:
   - name: mouvement_piscine_10min
@@ -106,8 +103,8 @@ automation:
     input:
       light_target:
         entity_id: 
-          - light.piscine_spot_immergee
-          - light.piscine_lumiere
+          - light.piscine_lumiere_immergee
+          - light.piscine_lumiere_2
       motion_sensor:
         - binary_sensor.piscine_porte_bulle_contact
         - binary_sensor.indoor_pool_person_occupancy
