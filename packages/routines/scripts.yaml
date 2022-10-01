@@ -186,6 +186,8 @@ script:
         - chambre_timothee
         - chambre_emilie
         - chambre_d_amis
+        entity_id:
+        - cover.volets_rdc
 
 ################################################################################
   routine_morning_cover_open:
@@ -197,6 +199,8 @@ script:
         - cuisine
         - salle_a_manger
         - salon
+      entity_id:
+        - cover.volets_rdc
     - choose:
       - conditions:
         - condition: state
@@ -221,6 +225,8 @@ script:
         - chambre_timothee
         - chambre_emilie
         - chambre_d_amis
+        entity_id:
+        - cover.volets_rdc
 
 ################################################################################
   routine_children_cover_workday:
@@ -251,6 +257,8 @@ script:
         - chambre_parent
         - chambre_timothee
         - chambre_emilie
+        entity_id:
+        - cover.volets_rdc
     - choose:
       - conditions:
         - condition: state
