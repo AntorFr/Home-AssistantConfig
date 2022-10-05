@@ -37,14 +37,17 @@ binary_sensor:
     - entity_id: sensor.mouvement_salon_5min
       platform: "numeric_state"
       prob_given_true: 0.80
+      prob_given_false: 0.20
       above: 0
     - entity_id: sensor.mouvement_entree_5min
       platform: "numeric_state"
       prob_given_true: 0.70
+      prob_given_false: 0.20
       above: 0
     - entity_id: sensor.mouvement_salle_a_manger_5min
       platform: "numeric_state"
       prob_given_true: 0.90
+      prob_given_false: 0.50
       above: 0
     - entity_id: sensor.mouvement_cuisine_5min
       platform: "numeric_state"
@@ -54,6 +57,7 @@ binary_sensor:
     - entity_id: media_player.tv01
       platform: "state"
       prob_given_true: 0.90
+      prob_given_false: 0.20
       to_state: "on"     
     - entity_id: sensor.mouvement_wc_rdc_5min
       platform: "numeric_state"
@@ -97,38 +101,43 @@ binary_sensor:
     - entity_id: "sensor.mouvement_air_de_jeux_10min"
       platform: "numeric_state"
       prob_given_true: 0.95
+      prob_given_false: 0.20
       above: 0
     - entity_id: "sensor.mouvement_garage_3_10min"
       platform: "numeric_state"
       prob_given_true: 0.95
+      prob_given_false: 0.20
       above: 0
     - entity_id: "sensor.mouvement_patio_10min"
       platform: "numeric_state"
       prob_given_true: 0.95
+      prob_given_false: 0.20
       above: 0
     - entity_id: "sensor.mouvement_piscine_10min"
       platform: "numeric_state"
       prob_given_true: 0.95
+      prob_given_false: 0.20
       above: 0
     - entity_id: "sensor.mouvement_camera_entree_10min"
       platform: "numeric_state"
       prob_given_true: 0.95
+      prob_given_false: 0.20
       above: 0
     - entity_id: "sensor.mouvement_camera_parking_10min"
       platform: "numeric_state"
       prob_given_true: 0.95
+      prob_given_false: 0.20
       above: 0
     - entity_id: "sensor.mouvement_terasse_10min"
       platform: "numeric_state"
       prob_given_true: 0.95
+      prob_given_false: 0.20
       above: 0
     - entity_id: "vacuum.automower_r_450x_gardenbot"
       platform: "state"
       prob_given_true: 0.25
       prob_given_false: 0.05
       to_state: docked
-
-
 
 
 ### Todo set children there by default if parent are there when HA start

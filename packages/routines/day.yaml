@@ -436,7 +436,59 @@ automation:
     - service: script.turn_on
       target:
         entity_id: script.routine_matin
+
 ################################################################################
+- id: 'routine_sunset'
+  alias: Routine - Day - Sunset (+45min)
+  description: ''
+  trigger:
+    - platform: sun
+      event: sunset
+      offset: "00:45:00"
+  condition:
+    - condition: state
+      entity_id: input_boolean.away_mode
+      state: 'off'
+    - condition: numeric_state
+      entity_id: sensor.hue_outdoor_motion_sensor_1_temperature
+      below: 20
+
+  action:
+    - service: script.turn_on
+      target:
+        entity_id: script.routine_night_all_cover_close
+
+################################################################################
+- id: 'routine_sunrise'
+  alias: Routine - Day - sunrise
+  description: ''
+  trigger:
+    - platform: sun
+      event: sunrise
+  condition:
+    - condition: state
+      entity_id: input_boolean.away_mode
+      state: 'off'
+    - condition: state
+      entity_id: input_boolean.night_mode
+      state: 'off'
+#    - condition: or
+#      conditions:
+#      - alias: "time is after morning time"
+#        condition: template
+#        value_template: >
+#          {{is_state("binary_sensor.workday_sensor","off")
+#          and (now()>today_at(states("input_datetime.morning_time_we")))}}
+#      - alias: "time is after morning_time"
+#        condition: template
+#        value_template: >
+#          {{is_state("binary_sensor.workday_sensor","on")
+#          and (now()>today_at(states("input_datetime.morning_time")))}}
+
+  action:
+    - service: script.turn_on
+      target:
+        entity_id: script.routine_morning_cover_open
 
 ################################################################################
 script:

@@ -207,6 +207,7 @@ automation:
       motion_sensor: 
         - binary_sensor.entree_person_occupancy
         - binary_sensor.entrance_driveway_car_occupancy
+        - binary_sensor.camera_entree_person
       no_motion_wait:
         minutes: 3
       no_motion_warning: 0
@@ -223,6 +224,7 @@ automation:
           - light.garden_parking_light
       motion_sensor: 
         - binary_sensor.entree_person_occupancy
+        - binary_sensor.camera_parking_person
       no_motion_wait:
         minutes: 3
       no_motion_warning: 0

@@ -265,9 +265,6 @@ script:
           entity_id: input_boolean.guest_mode
           state: 'off'
         sequence:
-        - service: light.turn_off
-          target:
-            area_id: chambre_d_amis
         - service: cover.close_cover
           target:
             area_id: chambre_d_amis

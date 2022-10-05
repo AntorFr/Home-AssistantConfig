@@ -35,6 +35,19 @@ template:
         attributes: 
           event_type: >
             {{ trigger.event.data["type"]}}
+  - trigger: #Camera entrée personne
+    - platform: event
+      event_type: netatmo_event
+      event_data:
+        type: human
+        data:
+          device_id: 70:ee:50:63:b8:30
+    binary_sensor:
+      - name: Camera entrée person
+        auto_off: "00:05:00"
+        state: "true"
+        device_class: motion
+
   - trigger: #Camera parking
     - platform: event
       event_type: netatmo_event
@@ -62,6 +75,19 @@ template:
         attributes: 
           event_type: >
             {{ trigger.event.data["type"]}}
+  - trigger: #Camera parking person
+      - platform: event
+        event_type: netatmo_event
+        event_data:
+          type: human
+          data:
+            device_id: 70:ee:50:6d:3a:ee
+    binary_sensor:
+      - name: Camera parking person
+        auto_off: "00:05:00"
+        state: "true"
+        device_class: motion
+        
   - trigger: #Camera Salon
     - platform: event
       event_type: netatmo_event
