@@ -51,10 +51,11 @@ logger:
     homeassistant.components.apple_tv: critical
     homeassistant.components.template: critical
     homeassistant.components.mqtt: critical
+    homeassistant.components.flipr: critical
     homeassistant.components.netatmo: error
-    homeassistant.components.mfi: debug
+    homeassistant.components.mfi: error
+
     custom_components.husqvarna_automower: error
-    custom_components.flipr: error
     custom_components.deepstack_face: error
 
 sensor:
