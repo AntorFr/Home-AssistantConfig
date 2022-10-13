@@ -73,6 +73,16 @@ script:
           content_type: playlist
           style: ['histoire']
           public: ['Emilie']
+        - title: Dance Émilie
+          content_id: spotify:playlist:1OdvIJp6A9yvaFsksZANVj
+          content_type: playlist
+          style: ['motivation']
+          public: ['Emilie']
+        - title: Princess disney france
+          content_id: spotify:playlist:6YTRixD9kjc4T9oj0SBNXp
+          content_type: playlist
+          style: ['chill']
+          public: ['Emilie']
 
     fields:
       media_player:
@@ -215,9 +225,11 @@ script:
 
         - service: media_player.join
           target:
-            entity_id: "{{media_player_id}}"
+            entity_id: > 
+              {{media_player_id}}
           data:
-            group_members: "{{group_members}}"
+            group_members: >
+              {{group_members}}
         - service: script.play_music
           data:
             media_player: "{{media_player_id}}"
@@ -251,6 +263,14 @@ automation:
       00-E4-4D-3D: #Magic system
         media_content_id: spotify:playlist:7aUx9jE0vqYsLFAUIZvkkz
         media_content_type: playlist
+      1A-E5-4D-3D: #Dance Émilie
+        media_content_id: spotify:playlist:1OdvIJp6A9yvaFsksZANVj
+        media_content_type: playlist
+      F8-E5-4D-3D: #Princess disney france
+        media_content_id: spotify:playlist:6YTRixD9kjc4T9oj0SBNXp
+        media_content_type: playlist
+
+
   trigger:
     platform: event
     event_type: tag_scanned
@@ -317,6 +337,3 @@ automation:
               target:
                 entity_id: media_player.salon
       default: []
-  
-
-

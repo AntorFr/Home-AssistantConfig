@@ -44,7 +44,8 @@ template:
           device_id: 70:ee:50:63:b8:30
     binary_sensor:
       - name: Camera entrée person
-        auto_off: "00:05:00"
+        unique_id: camera_entree_person
+        auto_off: "00:03:00"
         state: "true"
         device_class: motion
 
@@ -84,7 +85,8 @@ template:
             device_id: 70:ee:50:6d:3a:ee
     binary_sensor:
       - name: Camera parking person
-        auto_off: "00:05:00"
+        unique_id: camera_parking_person
+        auto_off: "00:03:00"
         state: "true"
         device_class: motion
         

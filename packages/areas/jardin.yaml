@@ -5,6 +5,37 @@ template:
       unit_of_measurement: "°C"
       device_class: temperature
       state_class: measurement
+  - trigger: #Portail viens de s'ouvrir
+      - platform: state
+        entity_id:
+          - cover.portail_2
+        to: open
+    binary_sensor:
+      - name: Portail just open
+        auto_off: "00:01:00"
+        state: "true"
+        device_class: occupancy
+
+binary_sensor:
+  - platform: group
+    name: "Jardin devant presence"
+    unique_id: jardin_devant_presence
+    device_class: occupancy
+    all: false
+    entities:
+      - binary_sensor.entree_person_occupancy
+      - binary_sensor.entrance_driveway_car_occupancy
+      - binary_sensor.camera_entree_person
+      - binary_sensor.portail_front_car_occupancy
+      - binary_sensor.portail_just_open
+  - platform: group
+    name: "Jardin parking presence"
+    unique_id: jardin_parking_presence
+    device_class: occupancy
+    all: false
+    entities:
+      - binary_sensor.camera_parking_person
+      - binary_sensor.parking_person_occupancy
 
 sensor:
   - name: mouvement_patio_10min
@@ -23,14 +54,14 @@ sensor:
     end: "{{now()}}"
   - name: mouvement_camera_entree_10min
     platform: history_stats
-    entity_id: binary_sensor.camera_entree
+    entity_id: binary_sensor.jardin_devant_presence
     state: "on"
     type: time
     duration: 00:10:00
     end: "{{now()}}"
   - name: mouvement_camera_parking_10min
     platform: history_stats
-    entity_id: binary_sensor.camera_parking
+    entity_id: binary_sensor.jardin_parking_presence
     state: "on"
     type: time
     duration: 00:10:00
@@ -118,9 +149,11 @@ automation:
             - 'leaving'
       sequence:
         - service: switch.turn_off
-          entity_id: switch.guirlandes_noel_switch
+          entity_id:
+            - switch.guirlandes_noel_switch
         - service: light.turn_off
-          entity_id: light.guirlandes_noel
+          entity_id:
+            - light.guirlandes_noel
 ################################################################################
 - id: 'jardin_sonette_portail'
   alias: Area - Jardin - Sonnette portail
@@ -205,11 +238,9 @@ automation:
           - light.lumiere_jardin_devant
           - light.garden_parking_light
       motion_sensor: 
-        - binary_sensor.entree_person_occupancy
-        - binary_sensor.entrance_driveway_car_occupancy
-        - binary_sensor.camera_entree_person
+        - binary_sensor.jardin_devant_presence
       no_motion_wait:
-        minutes: 3
+        minutes: 2
       no_motion_warning: 0
       only_during_night: true
 ################################################################################
@@ -223,8 +254,7 @@ automation:
         entity_id: 
           - light.garden_parking_light
       motion_sensor: 
-        - binary_sensor.entree_person_occupancy
-        - binary_sensor.camera_parking_person
+        - binary_sensor.jardin_parking_presence
       no_motion_wait:
         minutes: 3
       no_motion_warning: 0

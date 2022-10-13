@@ -1,15 +1,3 @@
-climate:
-  - platform: generic_thermostat
-    name: Bureau thermostat
-    heater: switch.bureau_prise_1
-    target_sensor: sensor.bureau_capteur_temperature_temperature
-    hot_tolerance: 0.5
-    min_temp: 12
-    max_temp: 26
-    min_cycle_duration:
-      minutes: 2
-    keep_alive:
-      minutes: 5
 
 binary_sensor:
   - platform: group
