@@ -1,9 +1,0 @@
-mqtt:
-  discovery: true
-  discovery_prefix: "home/discovery/homeassistant"
-  birth_message:
-    topic: "home/log/state/hass"
-    payload: "online"
-  will_message:
-    topic: "home/log/state/hass"
-    payload: "offline"
