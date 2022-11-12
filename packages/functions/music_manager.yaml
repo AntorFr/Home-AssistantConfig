@@ -249,6 +249,7 @@ automation:
     # Map scanner device ID to media player entity ID
     media_players:
       fa37e0c36e836c9a3fa47145157df38f: media_player.emilie
+      7b6a7b292afbcb0ad93f19416ce95b43: media_player.timothee
     # Map tag ID to content
     tags:
       F7-E3-4D-3D: #Milie D
