@@ -40,17 +40,22 @@ script:
         - title: Fantasy board gaming
           content_id: spotify:playlist:37i9dQZF1DWVdDMUimLXxx
           content_type: playlist
-          style: ['chill','work']
+          style: ['zen','chill','work']
           public: ['Sebastien']
         - title: Reading Adventure
           content_id: spotify:playlist:37i9dQZF1DWUWUfWSLE7dn
           content_type: playlist
-          style: ['chill','work']
+          style: ['zen','chill','work']
           public: ['Sebastien']
         - title: Sith Mediation
           content_id: spotify:playlist:0YCerIiq6AF59sE3NlRPLQ
           content_type: playlist
           style: ['chill','work']
+          public: ['Sebastien']
+        - title: Sea Song
+          content_id: spotify:playlist:24f4OwL1tOAyqbRjrpWqhH
+          content_type: playlist
+          style: ['chill','motivation']
           public: ['Sebastien']
       ## Enfants ##
         - title: Milie D
@@ -275,6 +280,9 @@ automation:
         media_content_type: playlist
       09-E6-4D-3D: #Petit loup
         media_content_id: spotify:album:3b5RlFQSq0ivPNktaRYa9c
+        media_content_type: playlist
+      30-E5-4D-3D: #Bulle et Bob
+        media_content_id: spotify:playlist:4Gj26yoPs0XKz1DJ5iT01G
         media_content_type: playlist
 
   trigger:
