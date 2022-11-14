@@ -252,7 +252,10 @@ automation:
       7b6a7b292afbcb0ad93f19416ce95b43: media_player.timothee
     # Map tag ID to content
     tags:
-      F7-E3-4D-3D: #Milie D
+      F7-E3-4D-3D: #Milie D (Emilie)
+        media_content_id: spotify:show:6xZWDWtjxF6dEV9KZZNRTF
+        media_content_type: playlist
+      01-E6-4D-3D: #Milie D (Timothée)
         media_content_id: spotify:show:6xZWDWtjxF6dEV9KZZNRTF
         media_content_type: playlist
       08-E4-4D-3D: #Noisette
@@ -270,7 +273,9 @@ automation:
       F8-E5-4D-3D: #Princess disney france
         media_content_id: spotify:playlist:6YTRixD9kjc4T9oj0SBNXp
         media_content_type: playlist
-
+      09-E6-4D-3D: #Petit loup
+        media_content_id: spotify:album:3b5RlFQSq0ivPNktaRYa9c
+        media_content_type: playlist
 
   trigger:
     platform: event
