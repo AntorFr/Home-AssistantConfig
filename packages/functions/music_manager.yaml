@@ -31,6 +31,11 @@ script:
           content_type: playlist
           style: ['zen','work']
           public: ['Sebastien', 'Laurine', 'Famille']
+        - title: Sleep
+          content_id: spotify:playlist:37i9dQZF1DWZd79rJ6a7lp
+          content_type: playlist
+          style: ['zen','work']
+          public: ['Sebastien', 'Laurine', 'Famille']
       ## Sebastien ##
         - title: Malukah
           content_id: spotify:playlist:5ZLgTnEANdMIgkfsX63Ykv
