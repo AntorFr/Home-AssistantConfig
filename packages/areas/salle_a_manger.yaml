@@ -1,8 +1,17 @@
+binary_sensor:
+  - platform: group
+    name: "Salle a manger Capteurs mouvement"
+    device_class: motion
+    unique_id: salle_a_manger_motion_sensors
+    all: false
+    entities:
+      - binary_sensor.salle_a_manger_capteur_mouvement_occupancy
+      - binary_sensor.salle_a_manger_presence_presence
 
 sensor:
   - name: mouvement_salle_a_manger_5min
     platform: history_stats
-    entity_id: binary_sensor.salle_a_manger_capteur_mouvement_occupancy
+    entity_id: binary_sensor.salle_a_manger_capteurs_mouvement
     state: "on"
     type: time
     duration: 00:05:00
@@ -18,7 +27,7 @@ automation:
     input:
       light_target:
         entity_id: light.salle_a_manger
-      motion_sensor: binary_sensor.salle_a_manger_capteur_mouvement_occupancy
+      motion_sensor: binary_sensor.salle_a_manger_capteurs_mouvement
       no_motion_wait:
         minutes: 40
       no_motion_warning: 30
