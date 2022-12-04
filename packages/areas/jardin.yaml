@@ -236,7 +236,8 @@ automation:
       light_target:
         entity_id: 
           - light.lumiere_jardin_devant
-          - light.garden_parking_light
+          #comment parking light to avoid short-circuit
+          #- light.garden_parking_light
       motion_sensor: 
         - binary_sensor.jardin_devant_presence
       no_motion_wait:
