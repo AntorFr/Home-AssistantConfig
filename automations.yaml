@@ -81,3 +81,19 @@
           entity_id: light.veilleuse_lit_parent
     default: []
   mode: parallel
+- id: '1670768030905'
+  alias: Temp - VPN Notif
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.vpn_connection
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - service: notify.mobile_app_intra_mob08
+    data:
+      message: VPN reconnecté
+      title: VPN reconnecté
+  mode: single
