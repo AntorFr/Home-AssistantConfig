@@ -116,6 +116,7 @@ script:
             options: ['Famille','Sebastien','Laurine','Timothee','Emilie']
       title:
         name: titre
+        required: False
         selector:
           text:
 
@@ -123,6 +124,17 @@ script:
       - variables:
           selected_playlists: >
             {%- set ns = namespace(selected_playlists=[]) %}
+
+            {# unset variable if defined but none #}
+            {% if style is none%}
+              {% set style = null %}
+            {% endif %}
+            {% if public is none%}
+              {% set public = null %}
+            {% endif %}
+            {% if title is none%}
+              {% set title = null %}
+            {% endif %}
 
             {%for playlist in playlists%}
               {% if (style is not defined or style in playlist.style)
@@ -134,18 +146,32 @@ script:
 
             {{ns.selected_playlists}}
           random_playlist: >
-            {{selected_playlists|random }}
+            {%if selected_playlists|length > 0 %}
+              {{selected_playlists|random }}
+            {% endif %}
+      
+      - if:
+          - condition: template
+            value_template: "{{ random_playlist is mapping  }}"
+        then:
+          - service: media_player.play_media
+            target:
+              entity_id: "{{ media_player }}"
+            data:
+              media_content_id: "{{ random_playlist.content_id }}"
+              media_content_type: "{{ random_playlist.content_type }}"
+              enqueue: replace
+          - service: notify.mobile_seb
+            data:
+              message: >
+                {% if media_player is not iterable %}
+                  {% set media_player = [media_player]%}
+                {%endif%}
+                "Ok c'est partie ! {{random_playlist.title}} sur {{expand(media_player)|map(attribute="name")|join(', ')}}
+        else:
+          - stop: "Aucune playlist trouvée"
+            error: true
 
-      - service: media_player.play_media
-        target:
-          entity_id: "{{ media_player }}"
-        data:
-          media_content_id: "{{ random_playlist.content_id }}"
-          media_content_type: "{{ random_playlist.content_type }}"
-          enqueue: replace
-      - service: notify.mobile_seb
-        data:
-          message: "Ok c'est partie ! {{random_playlist.title}} sur {{state_attr(media_player,'friendly_name')}}"
 
 ################################################################################
   play_mood_music:
@@ -168,7 +194,12 @@ script:
           required: True
           selector: 
             select:
-              options: ['RdC','Bureau']      
+              options: ['RdC','Bureau'] 
+        title:
+          name: titre
+          required: False
+          selector:
+            text:     
       
       sequence:
         - variables:
@@ -190,7 +221,8 @@ script:
 
 
             public: >
-              {%if zone=="Bureau" %}
+              {%if title is defined%}
+              {%elif zone=="Bureau" %}
                 {% if (is_state('person.sebastien','home')) %}
                 Sebastien
                 {% elif (is_state('person.laurine','home')) %}
@@ -208,7 +240,8 @@ script:
               {% endif %}
 
             style: >
-              {%if zone=="Bureau" %}
+              {%if title is defined%}
+              {%elif zone=="Bureau" %}
                 {% if (utcnow().hour <= 6) %}
                   zen
                 {% elif is_state('binary_sensor.workday_sensor','on') 
@@ -245,6 +278,7 @@ script:
             media_player: "{{media_player_id}}"
             style: "{{style}}"
             public: "{{public}}"
+            title: "{{title}}"
 ################################################################################
 
 
