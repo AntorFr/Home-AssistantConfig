@@ -268,6 +268,12 @@ automation:
       01-E6-4D-3D: #Milie D (Timothée)
         media_content_id: spotify:show:6xZWDWtjxF6dEV9KZZNRTF
         media_content_type: playlist
+      C0-E6-4D-3D: #Kidico (Timothée)
+        media_content_id: spotify:show:5no3pub2QBaaaeeBdiobLo
+        media_content_type: playlist
+      DF-E7-4D-3D: #Noisette (Timothée)
+        media_content_id: spotify:show:0cfuaJnYvp6iTwXXOFjt0y
+        media_content_type: playlist      
       08-E4-4D-3D: #Noisette
         media_content_id: spotify:show:0cfuaJnYvp6iTwXXOFjt0y
         media_content_type: playlist
@@ -288,6 +294,12 @@ automation:
         media_content_type: playlist
       30-E5-4D-3D: #Bulle et Bob
         media_content_id: spotify:playlist:4Gj26yoPs0XKz1DJ5iT01G
+        media_content_type: playlist
+      AF-E6-4D-3D: #Bulle et Bob (Emilie)
+        media_content_id: spotify:playlist:4Gj26yoPs0XKz1DJ5iT01G
+        media_content_type: playlist
+      CE-E7-4D-3D: #Champs Marin
+        media_content_id: spotify:playlist:0wR5cFFOx16rfxOVHo4Kdg
         media_content_type: playlist
 
   trigger:
