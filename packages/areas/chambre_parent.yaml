@@ -19,6 +19,8 @@ binary_sensor:
     all: false
     entities:
       - binary_sensor.chambre_parent_capteur_presence_lit_presence
+      - binary_sensor.presence_lit
+
 
 
 light:
@@ -35,6 +37,11 @@ template:
       name: Chambre parent temperature 
       device_class: temperature
       state: "{{ state_attr('climate.netatmo_chambre', 'current_temperature') }}"
+  - binary_sensor:
+    - unique_id: withing_bed_presence_1
+      name: Presence lit
+      device_class: occupancy
+      state: "{{ is_state('input_boolean.withing_bed_presence_1', 'on') }}"
 
 automation:
 ################################################################################
