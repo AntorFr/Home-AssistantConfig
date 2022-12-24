@@ -71,6 +71,9 @@ automation:
   - platform: state
     entity_id: group.parent_home
     to: home
+  - platform: state
+    entity_id: input_boolean.away_mode
+    to: 'on'
   condition:
   - condition: state
     entity_id: alarm_control_panel.alarme_maison

@@ -1,98 +1,9 @@
+
 script:  
 ################################################################################
   play_music:
     alias: "Function - Music manager - Play the right playlist"
     mode: parallel
-    variables:
-      playlists:
-      ## Famille ##
-        - title: La vie est belle
-          content_id: spotify:playlist:37i9dQZF1DXdrln2UyZD7F
-          content_type: playlist
-          style: ['motivation']
-          public: ['Sebastien', 'Laurine', 'Famille']
-        - title: Feel good acoustic
-          content_id: spotify:playlist:37i9dQZF1DWXRvPx3nttRN
-          content_type: playlist
-          style: ['chill']
-          public: ['Sebastien', 'Laurine', 'Famille']
-        - title: Chilled Classical
-          content_id: spotify:playlist:37i9dQZF1DWUvHZA1zLcjW
-          content_type: playlist
-          style: ['chill']
-          public: ['Sebastien', 'Laurine', 'Famille']
-        - title: Peaceful Meditation
-          content_id: spotify:playlist:37i9dQZF1DWZqd5JICZI0u
-          content_type: playlist
-          style: ['zen','work']
-          public: ['Sebastien', 'Laurine', 'Famille']
-        - title: Ambient Relaxation
-          content_id: spotify:playlist:37i9dQZF1DX3Ogo9pFvBkY
-          content_type: playlist
-          style: ['zen','work']
-          public: ['Sebastien', 'Laurine', 'Famille']
-        - title: Sleep
-          content_id: spotify:playlist:37i9dQZF1DWZd79rJ6a7lp
-          content_type: playlist
-          style: ['zen','work']
-          public: ['Sebastien', 'Laurine', 'Famille']
-      ## Sebastien ##
-        - title: Malukah
-          content_id: spotify:playlist:5ZLgTnEANdMIgkfsX63Ykv
-          content_type: playlist
-          style: ['chill','motivation']
-          public: ['Sebastien']
-        - title: Fantasy board gaming
-          content_id: spotify:playlist:37i9dQZF1DWVdDMUimLXxx
-          content_type: playlist
-          style: ['zen','chill','work']
-          public: ['Sebastien']
-        - title: Reading Adventure
-          content_id: spotify:playlist:37i9dQZF1DWUWUfWSLE7dn
-          content_type: playlist
-          style: ['zen','chill','work']
-          public: ['Sebastien']
-        - title: Sith Mediation
-          content_id: spotify:playlist:0YCerIiq6AF59sE3NlRPLQ
-          content_type: playlist
-          style: ['chill','work']
-          public: ['Sebastien']
-        - title: Sea Song
-          content_id: spotify:playlist:24f4OwL1tOAyqbRjrpWqhH
-          content_type: playlist
-          style: ['chill','motivation']
-          public: ['Sebastien']
-      ## Enfants ##
-        - title: Milie D
-          content_id: spotify:show:6xZWDWtjxF6dEV9KZZNRTF
-          content_type: playlist
-          style: ['histoire']
-          public: ['Timothee','Emilie']
-        - title: Noisette
-          content_id: spotify:show:0cfuaJnYvp6iTwXXOFjt0y
-          content_type: playlist
-          style: ['histoire']
-          public: ['Timothee','Emilie']
-        - title: Kidico
-          content_id: spotify:show:5no3pub2QBaaaeeBdiobLo
-          content_type: playlist
-          style: ['histoire']
-          public: ['Emilie']
-        - title: KidStory
-          content_id: spotify:show:2OApiYYyIQpZ7VTTPLBp7A
-          content_type: playlist
-          style: ['histoire']
-          public: ['Emilie']
-        - title: Dance Émilie
-          content_id: spotify:playlist:1OdvIJp6A9yvaFsksZANVj
-          content_type: playlist
-          style: ['motivation']
-          public: ['Emilie']
-        - title: Princess disney france
-          content_id: spotify:playlist:6YTRixD9kjc4T9oj0SBNXp
-          content_type: playlist
-          style: ['chill']
-          public: ['Emilie']
 
     fields:
       media_player:
@@ -119,35 +30,62 @@ script:
         required: False
         selector:
           text:
+      
+    variables:
+      playlists: "{{state_attr('input_select.playlist','playlists') |to_json(ensure_ascii=True)}}"
 
     sequence:
       - variables:
-          selected_playlists: >
+          input_playlist: "{{states('input_select.playlist')}}"
+          reset_playlist: >
+            {% if ((title is not defined) or (title is none)  or (title == '')) 
+                  and (not is_state('input_select.playlist', ' ')) %}
+                True
+            {%else%}
+                False
+            {%endif%} 
+      - if:
+          - condition: template
+            value_template: "{{reset_playlist}}"
+        then:
+          - service: input_select.select_option
+            data:
+              option: " "
+            target:
+              entity_id: input_select.playlist
+      - variables:
+          selected_playlists: >          
             {%- set ns = namespace(selected_playlists=[]) %}
 
-            {# unset variable if defined but none #}
-            {% if style is none%}
-              {% set style = null %}
+            {# set to None if not defined or empty #}
+            {% if (style is not defined) or (style == '') %}
+              {% set style = None %}
             {% endif %}
-            {% if public is none%}
-              {% set public = null %}
+            {% if (public is not defined) or (public == '')%}
+              {% set public = None %}
             {% endif %}
-            {% if title is none%}
-              {% set title = null %}
+            {% if (title is not defined) or (title == '')%}
+              {% set title = None %}
+            {% endif %}
+
+            {% if (reset_playlist)%}
+              {% set title = input_playlist %}
             {% endif %}
 
             {%for playlist in playlists%}
-              {% if (style is not defined or style in playlist.style)
-                  and (public is not defined or public in playlist.public)
-                  and (title is not defined or title==playlist.title) %}
-              {%- set ns.selected_playlists = ns.selected_playlists + [playlist] %}
+              {% if (title is not none and title==playlist.title)%}
+                {%- set ns.selected_playlists = ns.selected_playlists + [playlist] %}
+              {% elif (style is none or style in playlist.style)
+                  and (public is none or public in playlist.public)
+                  and (title is none) %}
+                {%- set ns.selected_playlists = ns.selected_playlists + [playlist] %}
               {% endif %}
             {% endfor  %}
 
-            {{ns.selected_playlists}}
+            {{ns.selected_playlists |to_json(ensure_ascii=True)}}         
           random_playlist: >
             {%if selected_playlists|length > 0 %}
-              {{selected_playlists|random }}
+              {{selected_playlists|random |to_json(ensure_ascii=True)}}
             {% endif %}
       
       - if:
@@ -219,7 +157,6 @@ script:
                 |list) 
               }}
 
-
             public: >
               {%if title is defined%}
               {%elif zone=="Bureau" %}
@@ -240,6 +177,10 @@ script:
               {% endif %}
 
             style: >
+              {% if (title is none) or (title == '')%}
+                {% set title = null %}
+              {% endif %}
+
               {%if title is defined%}
               {%elif zone=="Bureau" %}
                 {% if (utcnow().hour <= 6) %}
@@ -294,48 +235,16 @@ automation:
     media_players:
       fa37e0c36e836c9a3fa47145157df38f: media_player.emilie
       7b6a7b292afbcb0ad93f19416ce95b43: media_player.timothee
-    # Map tag ID to content
-    tags:
-      F7-E3-4D-3D: #Milie D (Emilie)
-        media_content_id: spotify:show:6xZWDWtjxF6dEV9KZZNRTF
-        media_content_type: playlist
-      01-E6-4D-3D: #Milie D (Timothée)
-        media_content_id: spotify:show:6xZWDWtjxF6dEV9KZZNRTF
-        media_content_type: playlist
-      C0-E6-4D-3D: #Kidico (Timothée)
-        media_content_id: spotify:show:5no3pub2QBaaaeeBdiobLo
-        media_content_type: playlist
-      DF-E7-4D-3D: #Noisette (Timothée)
-        media_content_id: spotify:show:0cfuaJnYvp6iTwXXOFjt0y
-        media_content_type: playlist      
-      08-E4-4D-3D: #Noisette
-        media_content_id: spotify:show:0cfuaJnYvp6iTwXXOFjt0y
-        media_content_type: playlist
-      10-E4-4D-3D: #Kidico
-        media_content_id: spotify:show:5no3pub2QBaaaeeBdiobLo
-        media_content_type: playlist
-      00-E4-4D-3D: #Magic system
-        media_content_id: spotify:playlist:7aUx9jE0vqYsLFAUIZvkkz
-        media_content_type: playlist
-      1A-E5-4D-3D: #Dance Émilie
-        media_content_id: spotify:playlist:1OdvIJp6A9yvaFsksZANVj
-        media_content_type: playlist
-      F8-E5-4D-3D: #Princess disney france
-        media_content_id: spotify:playlist:6YTRixD9kjc4T9oj0SBNXp
-        media_content_type: playlist
-      09-E6-4D-3D: #Petit loup
-        media_content_id: spotify:album:3b5RlFQSq0ivPNktaRYa9c
-        media_content_type: playlist
-      30-E5-4D-3D: #Bulle et Bob
-        media_content_id: spotify:playlist:4Gj26yoPs0XKz1DJ5iT01G
-        media_content_type: playlist
-      AF-E6-4D-3D: #Bulle et Bob (Emilie)
-        media_content_id: spotify:playlist:4Gj26yoPs0XKz1DJ5iT01G
-        media_content_type: playlist
-      CE-E7-4D-3D: #Champs Marin
-        media_content_id: spotify:playlist:0wR5cFFOx16rfxOVHo4Kdg
-        media_content_type: playlist
 
+    playlists: "{{state_attr('input_select.playlist','playlists') |to_json(ensure_ascii=True)}}"
+    tags: >
+      {%- set ns = namespace(tags=[]) %}
+      {%- for tag in (playlists|map(attribute="tags")|list) %}
+        {% if (tag|length > 0)%}
+          {%- set ns.tags = ns.tags + tag%}
+        {% endif %}
+      {%endfor%}
+      {{ns.tags|unique|list|to_json(ensure_ascii=True)}} 
   trigger:
     platform: event
     event_type: tag_scanned
@@ -345,9 +254,19 @@ automation:
     - "{{ trigger.event.data.device_id in media_players }}"
   action:
     - variables:
+        tag: "{{ trigger.event.data.tag_id}}"
+        selected_playlist: >
+          {%- set ns = namespace(selected_playlists=[]) %}
+          {%for playlist in playlists%}
+            {% if (tag is not none and tag in playlist.tags)%}
+              {%- set ns.selected_playlists = ns.selected_playlists + [playlist] %}
+            {% endif %}
+          {% endfor  %}
+          {{ns.selected_playlists|first|to_json(ensure_ascii=True)}} 
+
         media_player_entity_id: "{{ media_players[trigger.event.data.device_id] }}"
-        media_content_id: "{{ tags[trigger.event.data.tag_id].media_content_id }}"
-        media_content_type: "{{ tags[trigger.event.data.tag_id].media_content_type }}"
+        media_content_id: "{{ selected_playlist.content_id }}"
+        media_content_type: "{{ selected_playlist.content_type }}"
     - service: media_player.play_media
       target:
         entity_id: "{{ media_player_entity_id }}"
@@ -402,3 +321,180 @@ automation:
               target:
                 entity_id: media_player.salon
       default: []
+
+################################################################################
+input_select:
+  playlist:
+    name: Playlist
+    options:
+        - ' '
+      ## Famille ##
+        - La vie est belle
+        - Feel good acoustic
+        - Chilled Classical
+        - Peaceful Meditation
+        - Ambient Relaxation
+        - Sleep
+      ## Sebastien ##
+        - Malukah
+        - Fantasy board gaming
+        - Reading Adventure
+        - Sith Mediation
+        - Sea Song
+        - Champs Marin
+      ## Enfants ##
+        - Milie D
+        - Noisette
+        - Kidico
+        - KidStory
+        - Dance Émilie
+        - Princess disney france
+        - Magic system
+        - Petit loup
+        - Bulle et Bob
+    icon: mdi:playlist-music
+
+homeassistant:
+  customize:
+    input_select.playlist:
+      playlists:
+      ## Famille ##
+        - title: La vie est belle
+          content_id: spotify:playlist:37i9dQZF1DXdrln2UyZD7F
+          content_type: playlist
+          style: ['motivation']
+          public: ['Sebastien', 'Laurine', 'Famille']
+          tags: []
+        - title: Feel good acoustic
+          content_id: spotify:playlist:37i9dQZF1DWXRvPx3nttRN
+          content_type: playlist
+          style: ['chill']
+          public: ['Sebastien', 'Laurine', 'Famille']
+          tags: []
+        - title: Chilled Classical
+          content_id: spotify:playlist:37i9dQZF1DWUvHZA1zLcjW
+          content_type: playlist
+          style: ['chill']
+          public: ['Sebastien', 'Laurine', 'Famille']
+          tags: []
+        - title: Peaceful Meditation
+          content_id: spotify:playlist:37i9dQZF1DWZqd5JICZI0u
+          content_type: playlist
+          style: ['zen','work']
+          public: ['Sebastien', 'Laurine', 'Famille']
+          tags: []
+        - title: Ambient Relaxation
+          content_id: spotify:playlist:37i9dQZF1DX3Ogo9pFvBkY
+          content_type: playlist
+          style: ['zen','work']
+          public: ['Sebastien', 'Laurine', 'Famille']
+          tags: []
+        - title: Sleep
+          content_id: spotify:playlist:37i9dQZF1DWZd79rJ6a7lp
+          content_type: playlist
+          style: ['zen','work']
+          public: ['Sebastien', 'Laurine', 'Famille']
+          tags: []
+      ## Sebastien ##
+        - title: Malukah
+          content_id: spotify:playlist:5ZLgTnEANdMIgkfsX63Ykv
+          content_type: playlist
+          style: ['chill','motivation']
+          public: ['Sebastien']
+          tags: []
+        - title: Fantasy board gaming
+          content_id: spotify:playlist:37i9dQZF1DWVdDMUimLXxx
+          content_type: playlist
+          style: ['zen','chill','work']
+          public: ['Sebastien']
+          tags: []
+        - title: Reading Adventure
+          content_id: spotify:playlist:37i9dQZF1DWUWUfWSLE7dn
+          content_type: playlist
+          style: ['zen','chill','work']
+          public: ['Sebastien']
+          tags: []
+        - title: Sith Mediation
+          content_id: spotify:playlist:0YCerIiq6AF59sE3NlRPLQ
+          content_type: playlist
+          style: ['chill','work']
+          public: ['Sebastien']
+          tags: []
+        - title: Sea Song
+          content_id: spotify:playlist:24f4OwL1tOAyqbRjrpWqhH
+          content_type: playlist
+          style: ['chill','motivation']
+          public: ['Sebastien']
+          tags: []
+        - title: Champs Marin
+          content_id: spotify:playlist:0wR5cFFOx16rfxOVHo4Kdg
+          content_type: playlist
+          style: ['motivation']
+          public: ['Emilie']
+          tags: ['CE-E7-4D-3D']
+      ## Enfants ##
+        - title: Milie D
+          content_id: spotify:show:6xZWDWtjxF6dEV9KZZNRTF
+          content_type: playlist
+          style: ['histoire']
+          public: ['Timothee','Emilie']
+          tags: ['F7-E3-4D-3D','01-E6-4D-3D']
+        - title: Noisette
+          content_id: spotify:show:0cfuaJnYvp6iTwXXOFjt0y
+          content_type: playlist
+          style: ['histoire']
+          public: ['Timothee','Emilie']
+          tags: ['DF-E7-4D-3D','08-E4-4D-3D']
+        - title: Kidico
+          content_id: spotify:show:5no3pub2QBaaaeeBdiobLo
+          content_type: playlist
+          style: ['histoire']
+          public: ['Emilie']
+          tags: ['C0-E6-4D-3D','10-E4-4D-3D']
+        - title: KidStory
+          content_id: spotify:show:2OApiYYyIQpZ7VTTPLBp7A
+          content_type: playlist
+          style: ['histoire']
+          public: ['Emilie']
+          tags: []
+        - title: Dance Émilie
+          content_id: spotify:playlist:1OdvIJp6A9yvaFsksZANVj
+          content_type: playlist
+          style: ['motivation']
+          public: ['Emilie']
+          tags: ['1A-E5-4D-3D']
+        - title: Princess disney france
+          content_id: spotify:playlist:6YTRixD9kjc4T9oj0SBNXp
+          content_type: playlist
+          style: ['chill']
+          public: ['Emilie']
+          tags: ['F8-E5-4D-3D']
+        - title: Magic system
+          content_id: spotify:playlist:7aUx9jE0vqYsLFAUIZvkkz
+          content_type: playlist
+          style: ['motivation']
+          public: ['Emilie']
+          tags: ['00-E4-4D-3D']
+        - title: Petit loup
+          content_id: spotify:album:3b5RlFQSq0ivPNktaRYa9c
+          content_type: playlist
+          style: ['histoire']
+          public: ['Emilie','Timothee']
+          tags: ['09-E6-4D-3D']
+        - title: Bulle et Bob
+          content_id: spotify:playlist:4Gj26yoPs0XKz1DJ5iT01G
+          content_type: playlist
+          style: ['histoire']
+          public: ['Emilie','Timothee']
+          tags: ['30-E5-4D-3D','AF-E6-4D-3D']
+
+
+
+
+
+
+
+
+
+
+
