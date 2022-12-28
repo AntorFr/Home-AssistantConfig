@@ -147,7 +147,10 @@ automation:
   trigger:
     - platform: state
       entity_id: sensor.template_teleinfo_periode_tarifaire
-  condition: []  
+  condition:
+    - condition: state
+      entity_id: input_boolean.piscine_en_hivernage 
+      state: 'off'
   action:
   - choose:
     - conditions:
@@ -156,14 +159,46 @@ automation:
         state: HC
       sequence:
         - service: switch.turn_on
+          target:
+            entity_id:
+              - switch.piscine_filtration
+              - switch.piscine_electrolyse
+    default:
+      - service: switch.turn_off
+        target:
           entity_id:
             - switch.piscine_filtration
             - switch.piscine_electrolyse
+  mode: single
+################################################################################
+- id: 'Swimingpool_auto_filtering_winter'
+  alias: Area - Piscine - Filtration automatique (hivernage)
+  description: Filtration de la piscine (hivernage)
+  trigger:
+    - platform: state
+      entity_id: schedule.filtration_piscine_hivernage
+  condition: 
+    - condition: state
+      entity_id: input_boolean.piscine_en_hivernage 
+      state: 'on'
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: schedule.filtration_piscine_hivernage
+        state: 'on'
+      sequence:
+        - service: switch.turn_on
+          target:
+            entity_id:
+              - switch.piscine_filtration
+              - switch.piscine_electrolyse
     default:
       - service: switch.turn_off
-        entity_id:
-          - switch.piscine_filtration
-          - switch.piscine_electrolyse
+        target:
+          entity_id:
+            - switch.piscine_filtration
+            - switch.piscine_electrolyse
   mode: single
 ################################################################################
 #- id: 'Swimingpool_auto_boiler_barry'
