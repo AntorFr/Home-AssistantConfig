@@ -292,3 +292,24 @@ automation:
       data: {}
 ################################################################################
 
+script:
+################################################################################
+  toggle_netatmo_presence:
+    alias: "Integrations - Netatmo - toggle presence"
+    mode: parallel
+
+    fields:
+      device_tracker:
+        name: Tracker
+        required: True
+        selector: 
+          entity:
+            domain: device_tracker
+            multiple: false
+
+    sequence:
+      - service: device_tracker.see
+        data:
+          dev_id: "{{device_tracker|replace('device_tracker.','')}}"
+          location_name: "{{'home' if is_state(device_tracker,'not_home') else 'not_home'}}"
+

@@ -16,6 +16,13 @@ light:
       - light.hue_ambiance_spot_5
       - light.hue_ambiance_spot_6
 
+template:
+  - sensor:
+    - unique_id: temperature_cuisine
+      name: Cuisine temperature 
+      device_class: temperature
+      state: "{{ state_attr('climate.netatmo_cuisine', 'current_temperature')|float }}"
+
 sensor:
   - name: mouvement_cuisine_5min
     platform: history_stats

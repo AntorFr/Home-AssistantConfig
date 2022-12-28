@@ -8,6 +8,13 @@ binary_sensor:
       - binary_sensor.salle_a_manger_capteur_mouvement_occupancy
       - binary_sensor.salle_a_manger_presence_presence
 
+template:
+  - sensor:
+    - unique_id: temperature_salle_a_manger
+      name: Salle à manger temperature 
+      device_class: temperature
+      state: "{{ state_attr('climate.netatmo_salle_a_manger', 'current_temperature')|float }}"
+
 sensor:
   - name: mouvement_salle_a_manger_5min
     platform: history_stats

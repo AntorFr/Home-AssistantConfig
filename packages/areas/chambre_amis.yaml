@@ -1,0 +1,6 @@
+template:
+  - sensor:
+    - unique_id: temperature_chambre_amis
+      name: Chambre Amis temperature 
+      device_class: temperature
+      state: "{{ state_attr('climate.netatmo_chambre_d_amis', 'current_temperature')|float }}"

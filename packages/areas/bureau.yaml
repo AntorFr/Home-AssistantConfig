@@ -10,13 +10,6 @@ binary_sensor:
       - binary_sensor.bureau_capteur_mouvement_occupancy
       - binary_sensor.bureau_person_occupancy
 
-template:
-  - sensor:
-    - unique_id: temperature_bureau
-      name: Temperature Bureau
-      device_class: temperature
-      state: "{{ state_attr('climate.netatmo_bureau', 'current_temperature') }}"
-
 sensor:
   - name: mouvement_bureau_5min
     platform: history_stats

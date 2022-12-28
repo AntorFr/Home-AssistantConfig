@@ -125,14 +125,18 @@ script:
           Bureau:
             manager: media_player.bureau
             group_members: []
-  
+          Cuisine:
+            manager: media_player.cuisine
+            group_members: 
+              - media_player.cuisine_move
+
       fields:
         zone:
           name: zone de lecture
           required: True
           selector: 
             select:
-              options: ['RdC','Bureau'] 
+              options: ['RdC','Bureau','Cuisine'] 
         title:
           name: titre
           required: False

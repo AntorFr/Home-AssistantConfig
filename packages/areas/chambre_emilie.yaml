@@ -3,7 +3,7 @@ template:
     - unique_id: temperature_chambre_emilie
       name: Chambre Émilie temperature 
       device_class: temperature
-      state: "{{ state_attr('climate.netatmo_chambre_emilie', 'current_temperature') }}"
+      state: "{{ state_attr('climate.netatmo_chambre_emilie', 'current_temperature')|float }}"
 
 automation:
 ################################################################################

@@ -36,7 +36,7 @@ template:
     - unique_id: temperature_chambre_parent
       name: Chambre parent temperature 
       device_class: temperature
-      state: "{{ state_attr('climate.netatmo_chambre', 'current_temperature') }}"
+      state: "{{ state_attr('climate.netatmo_chambre', 'current_temperature')|float }}"
   - binary_sensor:
     - unique_id: withing_bed_presence_1
       name: Presence lit
