@@ -1,17 +1,19 @@
-group:
-  escalier_sensors:
-    name: Capteurs mouvement escalier
+binary_sensor:
+  - platform: group
+    name: "Escalier Capteurs mouvement"
+    device_class: motion
+    unique_id: escaliers_motion_sensors
     all: false
     entities:
       - binary_sensor.escalier_capteur_mouvement_occupancy
       - binary_sensor.couloir_etage_capteur_mouvement_occupancy
       - binary_sensor.escalier_capteur_mouvement_haut_occupancy
-
+      - binary_sensor.couloir_person_occupancy
 
 sensor:
   - name: mouvement_escalier_5min
     platform: history_stats
-    entity_id: group.escalier_sensors
+    entity_id: binary_sensor.escalier_capteurs_mouvement
     state: "on"
     type: time
     duration: 00:05:00
@@ -29,7 +31,7 @@ automation:
         entity_id: 
           - light.couloir_etage
           - light.escaliers
-      motion_sensor: group.escalier_sensors
+      motion_sensor: binary_sensor.escalier_capteurs_mouvement
       no_motion_wait:
         minutes: 1
       no_motion_warning: 30

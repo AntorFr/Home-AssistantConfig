@@ -2,7 +2,7 @@ climate:
   - platform: generic_thermostat
     name: Chambre parent thermostat
     heater: switch.radiateur_mobile
-    target_sensor: sensor.chambre_parent_temperature
+    target_sensor: sensor.chambre_parents_capteur_temperature_temperature
     hot_tolerance: 0.5
     min_temp: 12
     max_temp: 28
@@ -32,12 +32,6 @@ light:
       - light.chambre_parent_coeur_ardent
 
 template:
-  - sensor:
-    - unique_id: temperature_chambre_parent
-      name: Chambre parent temperature 
-      device_class: temperature
-      unit_of_measurement: "°C"
-      state: "{{ state_attr('climate.netatmo_chambre', 'current_temperature')|float }}"
   - binary_sensor:
     - unique_id: withing_bed_presence_1
       name: Presence lit
