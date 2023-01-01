@@ -17,9 +17,14 @@ adaptive_lighting:
 
   - name: default
     lights:
-      - light.entree_spots
       - light.toilettes_rdc
       - light.toilette_etage
+    take_over_control: true
+
+  - name: entree
+    lights:
+      - light.entree_spots
+      - light.entree_vestibule
     take_over_control: true
 
   - name: Cuisine
@@ -30,6 +35,7 @@ adaptive_lighting:
     lights:
       - light.chambre_emilie_plafonnier
     take_over_control: true
+    
   - name: Salle de douche
     lights:
       - light.dressing_plafonnier

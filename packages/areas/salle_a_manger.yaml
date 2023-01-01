@@ -39,9 +39,9 @@ automation:
       no_motion_wait:
         minutes: 40
       no_motion_warning: 30
-      only_during_night: true
-      light_sensor:
-      lux_cutoff:
+      only_during_night: false
+      light_sensor: sensor.salle_a_manger_capteur_luminosite_illuminance_lux
+      lux_cutoff: 60
       adaptive_lighting: switch.adaptive_lighting_salle_a_manger
 ################################################################################
 - id: salle-a-manger_light_button

@@ -124,7 +124,7 @@ automation:
       sequence:
         - service: light.toggle
           target:
-            entity_id: light.plafonnier_chambre_parents
+            entity_id: light.chambre
     - conditions: 
       - condition: trigger
         id: action_1_double
@@ -313,7 +313,7 @@ automation:
       sequence:
         - service: light.toggle
           target:
-            entity_id: light.plafonnier_chambre_parents
+            entity_id: light.chambre
     - conditions: 
       - condition: trigger
         id: action_2_double

@@ -88,6 +88,7 @@ script:
         - switch.adaptive_lighting_sleep_mode_cuisine
         - switch.adaptive_lighting_sleep_mode_salle_a_manger
         - switch.adaptive_lighting_sleep_mode_salon
+        - switch.adaptive_lighting_sleep_mode_entree
         - switch.adaptive_lighting_sleep_mode_default
         - switch.adaptive_lighting_sleep_mode_couloir_etage
         - switch.adaptive_lighting_sleep_mode_salle_de_douche
@@ -102,6 +103,7 @@ script:
         - switch.adaptive_lighting_sleep_mode_cuisine
         - switch.adaptive_lighting_sleep_mode_salle_a_manger
         - switch.adaptive_lighting_sleep_mode_salon
+        - switch.adaptive_lighting_sleep_mode_entree
         - switch.adaptive_lighting_sleep_mode_default
         - switch.adaptive_lighting_sleep_mode_couloir_etage
         - switch.adaptive_lighting_sleep_mode_salle_de_douche
