@@ -30,3 +30,23 @@ automation:
     target:
       entity_id: cover.garage_2 
 ################################################################################
+- id: 'garage_switch_garage1'
+  alias: Area - Garage - Bouton Garage 1
+  description: ''
+  mode: parallel
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: ca89b98653f56284ee8d128ac1d6c5cf
+    type: action
+    subtype: single
+    discovery_id: 0x00124b0022424be8 action_single
+  condition:
+  - condition: state
+    entity_id: alarm_control_panel.alarme_maison
+    state: disarmed
+  action:
+  - service: cover.toggle
+    target:
+      entity_id: cover.garage_1
+################################################################################
