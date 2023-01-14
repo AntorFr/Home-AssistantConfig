@@ -92,6 +92,7 @@ script:
         - switch.adaptive_lighting_sleep_mode_default
         - switch.adaptive_lighting_sleep_mode_couloir_etage
         - switch.adaptive_lighting_sleep_mode_salle_de_douche
+        - switch.adaptive_lighting_sleep_mode_chambre_parent
 
 ################################################################################
   routine_all_light_mode_night_off:
@@ -107,6 +108,7 @@ script:
         - switch.adaptive_lighting_sleep_mode_default
         - switch.adaptive_lighting_sleep_mode_couloir_etage
         - switch.adaptive_lighting_sleep_mode_salle_de_douche
+        - switch.adaptive_lighting_sleep_mode_chambre_parent
 
 ## Media players ###
 ################################################################################

@@ -51,13 +51,21 @@ automation:
                 - delay:
                     hours: 0
                     minutes: 0
-                    seconds: 10
+                    seconds: 8
                     milliseconds: 0
             - service: remote.send_command
               data:
                 delay_secs: 0.5
                 command:
                   - Source
+              target:
+                entity_id: remote.tv01
+            - delay:
+                seconds: 2
+            - service: remote.send_command
+              data:
+                delay_secs: 0.5
+                command:
                   - CursorDown
                   - CursorDown
                   - CursorDown

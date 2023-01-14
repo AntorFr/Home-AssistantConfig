@@ -41,3 +41,10 @@ adaptive_lighting:
       - light.dressing_plafonnier
       - light.salle_de_douche_plafonnier
     take_over_control: true
+
+  - name: Chambre parent
+    lights:
+      - light.plafonnier_chambre_parents
+      - light.hue_go_1
+      - light.hue_go_2
+    take_over_control: true

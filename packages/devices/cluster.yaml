@@ -1,0 +1,77 @@
+switch:
+  - platform: wake_on_lan
+    name: up01
+    host: "up01.intra.sberard.fr"
+    mac: 00:07:32:7e:e3:b6
+    turn_off:
+      service: shell_command.turn_off_remote_pc
+      data:
+        host: "up01"
+  - platform: wake_on_lan
+    name: up02
+    host: "up02.intra.sberard.fr"
+    mac: 00:07:32:43:0f:0e
+    turn_off:
+      service: shell_command.turn_off_remote_pc
+      data:
+        host: "up02"
+  - platform: wake_on_lan
+    name: up03
+    host: "up03.intra.sberard.fr"
+    mac: 00:07:32:7e:e1:d6
+    turn_off:
+      service: shell_command.turn_off_remote_pc
+      data:
+        host: "up03"
+  - platform: wake_on_lan
+    name: odr01
+    host: "odr01.intra.sberard.fr"
+    mac: 00:1e:06:39:a3:10
+    turn_off:
+      service: shell_command.turn_off_remote_pc
+      data:
+        host: "odr01"
+  - platform: wake_on_lan
+    name: odr02
+    host: "odr02.intra.sberard.fr"
+    mac: 00:1e:06:43:27:d7
+    turn_off:
+      service: shell_command.suspend_remote_pc
+      data:
+        host: "odr02"
+  - platform: wake_on_lan
+    name: odr03
+    host: "odr03.intra.sberard.fr"
+    mac: 00:1e:06:43:27:d2
+    turn_off:
+      service: shell_command.suspend_remote_pc
+      data:
+        host: "odr03"
+  - platform: wake_on_lan
+    name: nuc01
+    host: "nuc01.intra.sberard.fr"
+    mac: 88:ae:dd:05:b5:06
+    turn_off:
+      service: shell_command.turn_off_remote_pc
+      data:
+        host: "nuc01"
+  - platform: wake_on_lan
+    name: nuc02
+    host: "nuc02.intra.sberard.fr"
+    mac: 48:21:0b:32:e7:e9
+    turn_off:
+      service: shell_command.turn_off_remote_pc
+      data:
+        host: "nuc02"
+  - platform: wake_on_lan
+    name: nuc03
+    host: "nuc03.intra.sberard.fr"
+    mac: 48:21:0b:33:35:cb
+    turn_off:
+      service: shell_command.turn_off_remote_pc
+      data:
+        host: "nuc03"
+
+shell_command:
+  turn_off_remote_pc: "ssh -i /config/.keys/homeassistant -o 'StrictHostKeyChecking=no' homeassistant@{{host}} sudo shutdown -h now"
+  suspend_remote_pc: "ssh -i /config/.keys/homeassistant -o 'StrictHostKeyChecking=no' homeassistant@{{host}} sudo systemctl suspend"
