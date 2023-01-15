@@ -161,7 +161,34 @@ template:
         attributes: 
           event_type: >
             {{ trigger.event.data["type"]}}
-
+  - trigger: #Capteur Fumée Salon
+    - platform: event
+      event_type: netatmo_event
+      event_data:
+        type: smoke
+        data:
+          device_id: 70:ee:50:7d:9e:2e
+    - platform: event
+      event_type: netatmo_event
+      event_data:
+        type: hush
+        data:
+          device_id: 70:ee:50:7d:9e:2e
+    binary_sensor:
+      - name: Capteur Fumée Salon
+        unique_id: netatmo_smoke_sensor_salon
+        state: >
+          {% if trigger.event.data["type"] == 'smoke'  %}
+          on
+          {% elif trigger.event.data["type"] == 'hush' %}
+          off
+          {% else %}
+          off
+          {% endif %}
+        device_class: smoke
+        attributes: 
+          event_type: >
+            {{ trigger.event.data["type"]}}
 
 #Person id
 #Sebastien / 426f58a6-fd7a-4c11-8673-32c64fae246a / person.sebastien
