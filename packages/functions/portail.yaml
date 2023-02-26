@@ -1,0 +1,45 @@
+automation:
+################################################################################
+- id: 'function_portail_auto-close'
+  alias: Function portail - Fermeture auto
+  description: Fermeture automatique du portail
+  trigger:
+  - platform: state
+    entity_id: cover.portail_2
+    to: open
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  condition: []
+  action:
+  - wait_template: "{{ is_state('binary_sensor.entrance_driveway_car_occupancy', 'off') }}"
+    timeout: 
+      minutes: 3
+    continue_on_timeout: false
+  - service: cover.close_cover
+    data: {}
+    target:
+      entity_id: cover.portail_2
+  mode: single
+################################################################################
+- id: 'function_portail_auto-open'
+  alias: Function portail - Ouverture auto
+  description: Ouverture automatique du portail
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.entrance_gate_driveway_car_occupancy
+      to: on
+  condition: 
+    condition: state
+    entity_id: cover.portail_2
+    state: close
+    for:
+      minutes: 3
+  action:
+  - service: cover.close_cover
+    data: {}
+    target:
+      entity_id: cover.portail_2
+  mode: single
+################################################################################
