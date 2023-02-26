@@ -23,56 +23,16 @@ automation:
     - platform: state
       entity_id:
         - media_player.xbox_salon
-      from: "off"
       to: "on"
       id: turned_on
     - platform: state
       entity_id:
         - media_player.xbox_salon
-      from: "on"
       to: "off"
       id: turned_off
   condition: []
   action:
     - choose:
-        - conditions:
-            - condition: trigger
-              id: turned_on
-          sequence:
-            - if:
-                - condition: state
-                  entity_id: media_player.tv01
-                  state: "off"
-              then:
-                - service: media_player.turn_on
-                  data: {}
-                  target:
-                    entity_id: media_player.tv01
-                - delay:
-                    hours: 0
-                    minutes: 0
-                    seconds: 8
-                    milliseconds: 0
-            - service: remote.send_command
-              data:
-                delay_secs: 0.5
-                command:
-                  - Source
-              target:
-                entity_id: remote.tv01
-            - delay:
-                seconds: 2
-            - service: remote.send_command
-              data:
-                delay_secs: 0.5
-                command:
-                  - CursorDown
-                  - CursorDown
-                  - CursorDown
-                  - CursorUp
-                  - Confirm
-              target:
-                entity_id: remote.tv01
         - conditions:
             - condition: trigger
               id: turned_off
@@ -81,4 +41,38 @@ automation:
               data: {}
               target:
                 entity_id: media_player.tv01
-      default: []
+      default:
+        - if:
+            - condition: state
+              entity_id: media_player.tv01
+              state: "off"
+          then:
+            - service: media_player.turn_on
+              data: {}
+              target:
+                entity_id: media_player.tv01
+            - delay:
+                hours: 0
+                minutes: 0
+                seconds: 8
+                milliseconds: 0
+        - service: remote.send_command
+          data:
+            delay_secs: 0.5
+            command:
+              - Source
+          target:
+            entity_id: remote.tv01
+        - delay:
+            seconds: 2
+        - service: remote.send_command
+          data:
+            delay_secs: 0.5
+            command:
+              - CursorDown
+              - CursorDown
+              - CursorDown
+              - CursorUp
+              - Confirm
+          target:
+            entity_id: remote.tv01

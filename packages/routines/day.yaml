@@ -548,9 +548,10 @@ script:
     - alias: "If sun is up"
       choose:
       - conditions:
-        - condition: state
-          entity_id: sun.sun
-          state: "above_horizon"
+        - condition: sun
+          after: sunrise
+          after_offset: "-00:30:00"
+          before: sunset
         sequence:
           - service: script.turn_on
             target:
