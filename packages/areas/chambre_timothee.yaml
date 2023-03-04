@@ -32,7 +32,7 @@ automation:
             after: '20:00'
             before: '07:00'
           - condition: state
-            entity_id: cover.volet_roulant_chambre_timothee
+            entity_id: cover.chambre_timothee_volet_roulant
             state: open
             for:
               hours: 0
@@ -45,7 +45,7 @@ automation:
               area_id: chambre_timothee
       - conditions:
           - condition: state
-            entity_id: cover.volet_roulant_chambre_timothee
+            entity_id: cover.chambre_timothee_volet_roulant
             state: closed
             for:
               hours: 0
