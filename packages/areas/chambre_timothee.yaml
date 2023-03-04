@@ -26,7 +26,7 @@ automation:
           - condition: device
             type: is_off
             device_id: 6bb7ab79426cb51ac7610517636240b4
-            entity_id: light.plafonnier_timothee
+            entity_id: light.chambre_timothee_plafonnier
             domain: light
           - condition: time
             after: '20:00'
@@ -54,7 +54,7 @@ automation:
           - condition: device
             type: is_off
             device_id: 6bb7ab79426cb51ac7610517636240b4
-            entity_id: light.plafonnier_timothee
+            entity_id: light.chambre_timothee_plafonnier
             domain: light
           - condition: time
             after: '08:00'
@@ -68,7 +68,7 @@ automation:
   - service: light.toggle
     data: {}
     target:
-      entity_id: light.plafonnier_timothee
+      entity_id: light.chambre_timothee_plafonnier
 ################################################################################
 - id: 'chambre_timothee_button_volet'
   alias: Area - Chambre Timothée - Bouton volets
