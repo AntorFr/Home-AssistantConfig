@@ -46,7 +46,7 @@ automation:
       - conditions:
           - condition: state
             entity_id: cover.volet_roulant_chambre_timothee
-            state: close
+            state: closed
             for:
               hours: 0
               minutes: 30

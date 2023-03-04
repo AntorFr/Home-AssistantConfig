@@ -1,3 +1,13 @@
+binary_sensor:
+  - platform: group
+    name: "portail detection voiture"
+    device_class: occupancy
+    unique_id: entrance_car_occupancy
+    #icon: mdi:car-off
+    entities:
+      - binary_sensor.entrance_gate_driveway_car_occupancy
+      - binary_sensor.portail_front_car_occupancy
+
 automation:
 ################################################################################
 - id: 'function_portail_auto-close'
@@ -6,22 +16,29 @@ automation:
   trigger:
   - platform: state
     entity_id: cover.portail_2
-    to: open
+    to: "open"
     for:
-      hours: 0
-      minutes: 5
-      seconds: 0
-  condition: []
-  action:
-  - wait_template: "{{ is_state('binary_sensor.entrance_driveway_car_occupancy', 'off') }}"
-    timeout: 
       minutes: 3
-    continue_on_timeout: false
-  - service: cover.close_cover
-    data: {}
-    target:
+      seconds: 0
+  - platform: state
+    entity_id: binary_sensor.portail_detection_voiture
+    from: "on"
+    to: "off"
+    for:
+      seconds: 30
+  condition: 
+    - condition: state
       entity_id: cover.portail_2
-  mode: single
+      state: "open"
+    - condition: state
+      entity_id: binary_sensor.portail_detection_voiture
+      state: "off"
+  action:
+    - service: cover.close_cover
+      data: {}
+      target:
+        entity_id: cover.portail_2
+  mode: restart
 ################################################################################
 - id: 'function_portail_auto-open'
   alias: Function portail - Ouverture auto
@@ -29,17 +46,17 @@ automation:
   trigger:
     - platform: state
       entity_id: binary_sensor.entrance_gate_driveway_car_occupancy
-      to: on
+      to: "on"
   condition: 
     condition: state
     entity_id: cover.portail_2
-    state: close
+    state: closed
     for:
-      minutes: 3
+      minutes: 2
   action:
-  - service: cover.close_cover
-    data: {}
-    target:
-      entity_id: cover.portail_2
+    - service: cover.open_cover
+      data: {}
+      target:
+        entity_id: cover.portail_2
   mode: single
 ################################################################################
