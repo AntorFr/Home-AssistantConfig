@@ -356,6 +356,7 @@ input_select:
         - Magic system
         - Petit loup
         - Bulle et Bob
+        - Histoire Aldebert
     icon: mdi:playlist-music
 
 homeassistant:
@@ -491,6 +492,11 @@ homeassistant:
           style: ['histoire']
           public: ['Emilie','Timothee']
           tags: ['30-E5-4D-3D','AF-E6-4D-3D']
+        - title: Histoire Aldebert
+          content_id: spotify:playlist:3IBqtadarJNvU5FXB0VvhZ
+          content_type: playlist
+          style: ['histoire']
+          public: ['Emilie','Timothee']
 
 
 

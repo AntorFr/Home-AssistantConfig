@@ -32,7 +32,7 @@ binary_sensor:
     device_class: occupancy
     platform: "bayesian"
     prior: 0.60
-    probability_threshold: 0.80
+    probability_threshold: 0.70
     observations:
     - entity_id: sensor.mouvement_salon_5min
       platform: "numeric_state"
@@ -41,7 +41,7 @@ binary_sensor:
       above: 0
     - entity_id: sensor.mouvement_entree_5min
       platform: "numeric_state"
-      prob_given_true: 0.70
+      prob_given_true: 0.80
       prob_given_false: 0.50
       above: 0
     - entity_id: sensor.mouvement_salle_a_manger_5min
@@ -51,7 +51,7 @@ binary_sensor:
       above: 0
     - entity_id: sensor.mouvement_cuisine_5min
       platform: "numeric_state"
-      prob_given_true: 0.70
+      prob_given_true: 0.80
       prob_given_false: 0.50
       above: 0
     - entity_id: media_player.tv01
@@ -61,7 +61,7 @@ binary_sensor:
       to_state: "on"     
     - entity_id: sensor.mouvement_wc_rdc_5min
       platform: "numeric_state"
-      prob_given_true: 0.65
+      prob_given_true: 0.80
       prob_given_false: 0.50
       above: 0
 

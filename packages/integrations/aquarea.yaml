@@ -1,0 +1,13 @@
+template:
+  - unique_id: "pompe_a_chaleur"
+    sensor:
+      - name: "Pap - Temperature eau chaude"
+        unit_of_measurement: "°C"
+        state: "{{ '%+.1f'|format(state_attr('water_heater.pac_tank','current_temperature')) }}"
+        state_class: "measurement"
+        device_class: "temperature"
+      - name: "Pap - Temperature chauffage"
+        unit_of_measurement: "°C"
+        state: "{{ '%+.1f'|format(state_attr('climate.pac_maison','current_temperature')) }}"
+        state_class: "measurement"
+        device_class: "temperature"

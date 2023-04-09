@@ -88,7 +88,7 @@ automation:
       - service: light.toggle
         data: {}
         target:
-          entity_id: light.salon
+          entity_id: light.salon_led_buffet
     - conditions:
       - condition: trigger
         id: right_press
@@ -96,7 +96,7 @@ automation:
       - service: light.toggle
         data: {}
         target:
-          entity_id: light.salon_led_buffet
+          entity_id: light.salon
     default: []
   mode: parallel
 ################################################################################
@@ -163,6 +163,20 @@ automation:
       subtype: button_4_single
       discovery_id: 0x04cf8cdf3c7dc822 action_button_4_single
       id: button_4_single
+    - platform: device
+      domain: mqtt
+      device_id: 4ea8e4d68946d72103f54aa45e3bbc0f
+      type: action
+      subtype: button_5_single
+      discovery_id: 0x04cf8cdf3c7dc822 action_button_5_single
+      id: button_5_single
+    - platform: device
+      domain: mqtt
+      device_id: 4ea8e4d68946d72103f54aa45e3bbc0f
+      type: action
+      subtype: button_6_single
+      discovery_id: 0x04cf8cdf3c7dc822 action_button_6_single
+      id: button_6_single
   condition: []
   action:
     - choose:
@@ -195,6 +209,15 @@ automation:
             id: button_4_single
           sequence:
             - service: script.routine_rdc_media_player_off
+        - conditions:
+          - condition: trigger
+            id: button_5_single
+          sequence:
+            - service: xiaomi_miio.vacuum_clean_segment
+              data:
+                segments: [17,22]
+              target:
+                entity_id: vacuum.roborock_s7
 ################################################################################
 - id: 'salon_bouton_volume'
   alias: Area - Salon - Bouton volume
