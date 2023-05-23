@@ -183,7 +183,8 @@ automation:
               - media_player.salle_a_manger
               - media_player.cuisine_move
               - media_player.bureau
-            media_content_id: "media-source://media_source/sounds/bb8_sound.mp3"
+            #media_content_id: "media-source://media_source/sounds/bb8_sound.mp3" > sonos doesn't find local url anymore (home.intra.sberard.fr)
+            media_content_id: "https://njm0evdcyztwiwq3vdi76nyi8dbd4zkf.ui.nabu.casa/media/sounds/bb8_sound.mp3"
   - service: notify.all_mobile
     data:
       message: "Quelqu'un sonne au portail"

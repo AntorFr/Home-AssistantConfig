@@ -347,7 +347,7 @@ input_select:
         - Sea Song
         - Champs Marin
       ## Enfants ##
-        - Milie D
+        - Millie D
         - Noisette
         - Kidico
         - KidStory
@@ -357,6 +357,9 @@ input_select:
         - Petit loup
         - Bulle et Bob
         - Histoire Aldebert
+        - Il etait une fois
+        - Mortel Adele
+        - Planete Alpha
     icon: mdi:playlist-music
 
 homeassistant:
@@ -438,7 +441,7 @@ homeassistant:
           public: ['Emilie']
           tags: ['CE-E7-4D-3D']
       ## Enfants ##
-        - title: Milie D
+        - title: Millie D
           content_id: spotify:show:6xZWDWtjxF6dEV9KZZNRTF
           content_type: playlist
           style: ['histoire']
@@ -497,6 +500,26 @@ homeassistant:
           content_type: playlist
           style: ['histoire']
           public: ['Emilie','Timothee']
+        - title: Il etait une fois
+          content_id: spotify:playlist:00MqrM9DRedq5S8sZbimva
+          content_type: playlist
+          style: ['histoire']
+          public: ['Emilie','Timothee']
+          tags: ['04-7F-D7-DA-B4-49-80','04-8A-D7-DA-B4-49-80']
+        - title: Mortel Adele
+          content_id: spotify:playlist:5HM0G3ehNa5VQnqbyQorvd
+          content_type: playlist
+          style: ['histoire']
+          public: ['Emilie','Timothee']
+          tags: ['04-7A-D7-DA-B4-49-80','04-85-D7-DA-B4-49-80']
+        - title: Planete Alpha
+          content_id: https://editionsrecrealire.com/img/cms/qrcode/CONTE_PLANETE_ALPHA__AUDIO_MP3_OK.mp3
+          content_type: music
+          style: ['histoire']
+          public: ['Emilie','Timothee']
+          tags: ['04-70-D7-DA-B4-49-80','04-75-D7-DA-B4-49-80']
+
+
 
 
 
