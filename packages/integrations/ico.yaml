@@ -1,0 +1,71 @@
+
+binary_sensor:
+  - platform: template
+    sensors:
+      ico_data_freshness:
+        device_class: problem
+        friendly_name: Ico réception données
+        value_template: >
+          {{(now() - as_local(states.sensor.plouf_oxydo_reduction_potential.last_changed)) > timedelta(hours=12)}}
+      ico_ph:
+        device_class: problem
+        friendly_name: Ico Ph problem
+        value_template: >
+          {{ (states('sensor.plouf_ph') | float) < 7.0 or (states('sensor.plouf_ph') | float) > 7.5 }}
+      ico_temperature:
+        device_class: problem
+        friendly_name: Ico temperature problem
+        value_template: >
+          {{ (states('sensor.plouf_temperature') | float) < 26 or (states('sensor.plouf_temperature') | float) > 34 }}
+      ico_redox:
+        device_class: problem
+        friendly_name: ico redox problem
+        value_template: >
+          {{ 
+            (states('sensor.plouf_oxydo_reduction_potential') | float) < state_attr('sensor.plouf_oxydo_reduction_potential','treshold_low')
+            or (states('sensor.plouf_oxydo_reduction_potential') | float) > state_attr('sensor.plouf_oxydo_reduction_potential','treshold_high')
+          }}
+      ico_salt:
+        device_class: problem
+        friendly_name: ico salt problem
+        value_template: >
+          {{ (states('sensor.plouf_salt') | float) < 3000 or (states('sensor.plouf_salt') | float) > 5000 }}
+      ico_battery:
+        device_class: problem
+        friendly_name: ico battery problem
+        value_template: >
+          {{ (states('sensor.plouf_battery') | float) < 15 }}
+
+alert:
+  ico_disconnected_alert:
+    name: "Alerte Ico déconnecté"
+    message: >
+      "Ico déconnecté depuis {{ relative_time(states.sensor.plouf_oxydo_reduction_potential.last_changed)}}"
+    done_message: >
+      "Ico de nouveau connecté"
+    entity_id: binary_sensor.ico_data_freshness
+    state: "on"   # Optional, 'on' is the default value
+    repeat: 180
+    can_acknowledge: true  # Optional, default is true
+    skip_first: true  # Optional, false is the default
+    notifiers:
+      - notify
+  ico_battery_alert:
+    name: "Alerte Ico pile faible"
+    message: >
+      "niveau de pile Ico faible {{ states('sensor.plouf_battery') }}"
+    done_message: >
+      "Ico à de nouveau des piles"
+    entity_id: binary_sensor.ico_battery
+    state: "on"   # Optional, 'on' is the default value
+    repeat: 1440
+    can_acknowledge: true  # Optional, default is true
+    skip_first: true  # Optional, false is the default
+    notifiers:
+      - notify
+
+homeassistant:
+  customize:
+   sensor.plouf_oxydo_reduction_potential:
+      treshold_low: 650
+      treshold_high: 750

@@ -93,6 +93,40 @@ alert:
     notifiers:
       - notify
 
+  pool_ph_alert:
+    name: "Alerte PH Piscine"
+    message: >
+      "PH piscine anormal ({{ states('sensor.plouf_ph') }})"
+    done_message: >
+      "PH piscine de nouveau normal ({{ states('sensor.plouf_ph') }})"
+    entity_id: binary_sensor.ico_ph
+    state: "on"   # Optional, 'on' is the default value
+    repeat: 1440
+    can_acknowledge: true  # Optional, default is true
+    skip_first: true  # Optional, false is the default
+    notifiers:
+      - notify
+
+  pool_clore_alert:
+    name: "Alerte clore Piscine"
+    message: >
+      {% if (states('sensor.plouf_oxydo_reduction_potential') | float) < state_attr('sensor.plouf_oxydo_reduction_potential','treshold_low') %}
+      "Clore piscine trop bas: {{ states('sensor.plouf_oxydo_reduction_potential') | round(2)}}"
+      {% elif (states('sensor.plouf_oxydo_reduction_potential') | float) > state_attr('sensor.plouf_oxydo_reduction_potential','treshold_high') %}
+      "Clore piscine trop élevé: {{ states('sensor.plouf_oxydo_reduction_potential') | round(2)}}"
+      {% else %}
+      Tout va bien
+      {% endif %}
+    done_message: >
+      "Clore piscine de nouveau normal ({{ states('sensor.plouf_oxydo_reduction_potential') | round(2) }})"
+    entity_id: binary_sensor.ico_redox
+    state: "on"   # Optional, 'on' is the default value
+    repeat: 1440
+    can_acknowledge: true  # Optional, default is true
+    skip_first: true  # Optional, false is the default
+    notifiers:
+      - notify
+
 automation:
 ################################################################################
 - id: 'Swimingpool_light_auto'
@@ -162,7 +196,18 @@ automation:
           target:
             entity_id:
               - switch.piscine_filtration
-              - switch.piscine_electrolyse
+        - if:
+          - condition: template
+            value_template: >
+              {% set th = state_attr('sensor.plouf_oxydo_reduction_potential','treshold_high') %}
+              {% set tl = state_attr('sensor.plouf_oxydo_reduction_potential','treshold_low') %}
+              {% set target = (th-tl)/2+tl %}
+              {{(states('sensor.plouf_oxydo_reduction_potential') | float) < target}}            
+          then:
+          - service: switch.turn_on
+            target:
+              entity_id:
+                - switch.piscine_electrolyse
     default:
       - service: switch.turn_off
         target:
@@ -265,4 +310,4 @@ automation:
 homeassistant:
   customize:
     automation.area_piscine_filtration_automatique_hp_hc:
-      icon: mdi:pool
+      icon: mdi:air-filter
