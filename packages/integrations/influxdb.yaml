@@ -10,4 +10,7 @@ influxdb:
     source: HA
   tags_attributes:
     - friendly_name
+  ignore_attributes:
+    - icon
+    - access_token
   default_measurement: units
