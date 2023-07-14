@@ -36,7 +36,7 @@ binary_sensor:
         friendly_name: Piscine Sécurisée
         value_template: >
           {{is_state('input_boolean.alarme_piscine', 'on') 
-          and not(is_state('binary_sensor.piscine_porte_bulle_contact','off'))
+          and not(is_state('binary_sensor.piscine_capteur_porte_door','off'))
           and not(is_state('binary_sensor.indoor_pool_person_occupancy', 'on'))
           }}
 
@@ -44,9 +44,9 @@ alert:
   swiming_pool:
     name: "Porte Piscine non sécurisée"
     message: >
-      {% if is_state('binary_sensor.piscine_porte_bulle_contact', 'on') %}
+      {% if is_state('binary_sensor.piscine_capteur_porte_door', 'on') %}
       Attention, la porte de la piscine est restée ouverte sans personne
-      {% elif is_state('binary_sensor.piscine_porte_bulle_contact', 'unavailable') %}
+      {% elif is_state('binary_sensor.piscine_capteur_porte_door', 'unavailable') %}
       Attention, la porte de la piscine est déconnectée.
       {% else %}
       Tout va bien
@@ -140,7 +140,7 @@ automation:
           - light.piscine_lumiere_immergee
           - light.piscine_lumiere_2
       motion_sensor:
-        - binary_sensor.piscine_porte_bulle_contact
+        - binary_sensor.piscine_capteur_porte_door
         - binary_sensor.indoor_pool_person_occupancy
       no_motion_wait:
         minutes: 10

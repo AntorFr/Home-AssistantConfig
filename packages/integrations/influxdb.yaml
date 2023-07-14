@@ -1,0 +1,13 @@
+influxdb:
+  api_version: 2
+  ssl: false
+  host: influxdb2
+  port: 80
+  token: lyifvC8eOXNf6BID0wP9zdiP9l2zp0GjeqRswtMWDlhWXTFWC5DHllVNCTk-rOljjCJPLEIyn9DJOeCXPea0aw==
+  organization: 8d392ba0d7f98621
+  bucket: home
+  tags:
+    source: HA
+  tags_attributes:
+    - friendly_name
+  default_measurement: units

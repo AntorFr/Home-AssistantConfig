@@ -70,11 +70,13 @@ template:
       state_class: "total_increasing"
 
     - unique_id: "teleinfo_periode_tarifaire"  # Periode Tarifaire
-      availability: >
-        {{ "true" if(state_attr("sensor.linky","TIC").PTEC is defined) else "false" }}
+      #availability: >
+      #  {{ "true" if(state_attr("sensor.linky","TIC").PTEC is defined) else "false" }}
       state: >
-        {%- if(state_attr("sensor.linky","TIC").PTEC is defined) %}
+        {%-if(state_attr("sensor.linky","TIC").PTEC is defined)%}
           {{ (state_attr("sensor.linky","TIC").PTEC) |replace("..","") }}
+        {%- else %}
+          {{'HC' if(is_state('schedule.backup_hc_schedule','on')) else 'HP'}}
         {%- endif %}
     - unique_id: "teleinfo_prix_kwh" # Prix 
       state: >
@@ -99,3 +101,42 @@ utility_meter:
   yearly_energy:
     source: sensor.template_teleinfo_energy_total
     cycle: yearly
+
+schedule:
+  backup_hc_schedule:
+    name: "Heure creuse (backup)"
+    monday:
+      - from: "01:00:00"
+        to: "06:00:00"
+      - from: "12:40:00"
+        to: "15:30:00"
+    tuesday:
+      - from: "01:00:00"
+        to: "06:00:00"
+      - from: "12:40:00"
+        to: "15:30:00"
+    wednesday:
+      - from: "01:00:00"
+        to: "06:00:00"
+      - from: "12:40:00"
+        to: "15:30:00"
+    thursday:
+      - from: "01:00:00"
+        to: "06:00:00"
+      - from: "12:40:00"
+        to: "15:30:00"
+    friday:
+      - from: "01:00:00"
+        to: "06:00:00"
+      - from: "12:40:00"
+        to: "15:30:00"
+    saturday:
+      - from: "01:00:00"
+        to: "06:00:00"
+      - from: "12:40:00"
+        to: "15:30:00"
+    sunday:
+      - from: "01:00:00"
+        to: "06:00:00"
+      - from: "12:40:00"
+        to: "15:30:00"
