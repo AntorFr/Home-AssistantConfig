@@ -1,0 +1,107 @@
+camera:
+  - platform: local_file
+    name: platerecognizer_test
+    file_path: /media/platerecognizer/samples/Portail_10.jpg
+
+image_processing:
+  - platform: platerecognizer
+    api_token: !secret platerecognizer_token
+    regions:
+      - fr
+    watched_plates: !secret platerecognizer_watched_plates
+    
+    #detection_rule: strict
+    save_file_folder: '/media/platerecognizer'
+    save_timestamped_file: True
+    always_save_latest_file: True
+    region: strict
+    #server: http://yoururl:8080/v1/plate-reader/
+
+    source:
+      - entity_id: camera.portail_2
+      - entity_id: camera.platerecognizer_test
+
+template:
+  - binary_sensor:
+      - name: entrance_gate_plate_detected
+        delay_off:
+          seconds: 30
+        state: >
+          {%- set ns = namespace(detected_plates=[]) %}
+          {% set watched_plates = state_attr('image_processing.platerecognizer_portail_2', 'watched_plates')%}
+          {%- if watched_plates is not none %}
+            {%- for plate,status in watched_plates.items()%}
+              {%- if status %}
+              {%- set ns.detected_plates = ns.detected_plates + [plate]%}
+              {%- endif %}
+            {%- endfor %}
+          {%- endif %}
+          {{(ns.detected_plates|count) > 0}}
+        device_class: "presence"
+        attributes:
+          detected_plates: >
+            {%- set ns = namespace(detected_plates=[]) %}
+            {% set watched_plates = state_attr('image_processing.platerecognizer_portail_2', 'watched_plates')%}
+            {%- if watched_plates is not none %}
+              {%- for plate,status in watched_plates.items()%}
+                {%- if status %}
+                {%- set ns.detected_plates = ns.detected_plates + [plate]%}
+                {%- endif %}
+              {%- endfor %}
+            {%- endif %}
+            {{ns.detected_plates}}
+
+automation:
+################################################################################
+- id: 'integration_plate_recognizer_reading_gate'
+  alias: Integration Plate recognizer - lecture plaque portail
+  description: Lecture des plaques des voitures au portail
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.portail_front_car_occupancy
+      to: "on"
+  condition: 
+    condition: state
+    entity_id: cover.portail_2
+    state: closed
+  action:
+    - alias: "Read plate while: car still detected, gate still closed,less than 20 try, no authorized car detected"
+      repeat:
+        while:
+          - condition: state
+            entity_id: binary_sensor.portail_front_car_occupancy
+            state: "on"
+          - condition: state
+            entity_id: cover.portail_2
+            state: "closed"
+          - condition: template
+            value_template: "{{ repeat.index <= 20 }}"
+          - condition: state
+            entity_id: "binary_sensor.entrance_gate_plate_detected"
+            state: "off"
+            
+        sequence:
+          - service: image_processing.scan
+            data: {}
+            target:
+              entity_id: image_processing.platerecognizer_portail_2
+          - delay:
+              milliseconds: 500
+  mode: single
+################################################################################
+- id: 'integration_plate_recognizer_reset_gate'
+  alias: Integration Plate recognizer - reset
+  description: Reset sensor state
+  trigger:
+    - platform: state
+      entity_id: cover.portail_2
+      to: "closed"
+  condition:
+    condition: template
+    value_template: "{{ states('image_processing.platerecognizer_portail_2')|int(0)>0 }}"
+  action:
+    - service: image_processing.scan
+      data: {}
+      target:
+        entity_id: image_processing.platerecognizer_portail_2
+  mode: single

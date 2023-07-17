@@ -47,6 +47,9 @@ automation:
     - platform: state
       entity_id: binary_sensor.entrance_gate_driveway_car_occupancy
       to: "on"
+    - platform: state
+      entity_id: binary_sensor.entrance_gate_plate_detected
+      to: "on"
   condition: 
     condition: state
     entity_id: cover.portail_2
@@ -59,4 +62,4 @@ automation:
       target:
         entity_id: cover.portail_2
   mode: single
-################################################################################
+

@@ -4,9 +4,11 @@ homeassistant:
   media_dirs: 
     sounds: /media/sounds
     deepstack: /media/deepstack
+    platerecognizer: /media/platerecognizer
   allowlist_external_dirs:
     - '/media/sounds'
     - '/media/deepstack'
+    - '/media/platerecognizer'
 
 automation: !include automations.yaml
 script: !include scripts.yaml
