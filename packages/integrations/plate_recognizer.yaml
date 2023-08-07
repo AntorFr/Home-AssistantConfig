@@ -15,11 +15,13 @@ image_processing:
     save_timestamped_file: True
     always_save_latest_file: True
     region: strict
-    #server: http://yoururl:8080/v1/plate-reader/
+    #server: http://platerec:8080/v1/plate-reader/
 
     source:
       - entity_id: camera.portail_2
       - entity_id: camera.platerecognizer_test
+      - entity_id: camera.g4_doorbell_high
+
 
 template:
   - binary_sensor:
@@ -86,7 +88,7 @@ automation:
             target:
               entity_id: image_processing.platerecognizer_portail_2
           - delay:
-              milliseconds: 500
+              milliseconds: 1000 #1500
   mode: single
 ################################################################################
 - id: 'integration_plate_recognizer_reset_gate'

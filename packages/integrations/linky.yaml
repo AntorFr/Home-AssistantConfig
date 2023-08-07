@@ -1,83 +1,40 @@
 template:
  - sensor:     
-    - unique_id: "teleinfo_puissance" # Power
-      availability: >
-         {{ "true" if(state_attr("sensor.linky","ENERGY").Power is defined) else "false" }}
-      state: >
-        {%- if(state_attr("sensor.linky","ENERGY").Power is defined) %}
-          {{ state_attr("sensor.linky","ENERGY").Power }}
-        {%- endif %}
-      unit_of_measurement: "W"
-      state_class: "measurement"
-
-    - unique_id: "teleinfo_energyhc" #EnergyHC
-      availability: >
-        {{ "true" if(state_attr("sensor.linky","TIC").HCHC is defined) else "false" }}
-      state: >
-        {%- if(state_attr("sensor.linky","TIC").HCHC is defined) %}
-          {{ state_attr("sensor.linky","TIC").HCHC }}
-        {%- endif %}
-      unit_of_measurement: "Wh"
-      state_class: "total_increasing"
-
-    - unique_id: "teleinfo_energyhp" # EnergyHP
-      availability: >
-        {{ "true" if(state_attr("sensor.linky","TIC").HCHP is defined) else "false" }}
-      state: >
-        {%- if(state_attr("sensor.linky","TIC").HCHP is defined) %}
-          {{ state_attr("sensor.linky","TIC").HCHP }}
-        {%- endif %}
-      unit_of_measurement: "Wh"
-      state_class: "total_increasing"
-
     - unique_id: "teleinfo_energy" # Energy Total + attr HP/HC
       availability: >
-        {{ "true" if((state_attr("sensor.linky","TIC").HCHC is defined) and (state_attr("sensor.linky","TIC").HCHP is defined)) else "false" }}
+        {{ "true" }}
       state: >
-        {%- if((state_attr("sensor.linky","TIC").HCHC is defined) and (state_attr("sensor.linky","TIC").HCHP is defined)) %}
-          {% set HCHC = state_attr("sensor.linky","TIC").HCHC | int %}
-          {% set HCHP = state_attr("sensor.linky","TIC").HCHP | int %}
+        {% set HCHC = states('sensor.linky_index_hc')  | float * 1000  %} 
+        {% set HCHP = states('sensor.linky_index_hp')  | float * 1000 %}
 
-          {{ (HCHC + HCHP) }}
-        {%- endif %}
+        {{ (HCHC + HCHP) }}
+
       unit_of_measurement: "Wh"
       state_class: "total_increasing"
+      device_class: energy
       attributes:
         Index HP: >-
-          {{ state_attr("sensor.linky","TIC").HCHP }}
+          {{ states('sensor.linky_index_hp') | float * 1000 }}
         Index HC: >-
-          {{ state_attr("sensor.linky","TIC").HCHC }}
+          {{ states('sensor.linky_index_hc') | float * 1000 }}
     
-
-    - unique_id: "teleinfo_energy_yesterday" # Energy yesterday
-      availability: >
-        {{ "true" if(state_attr("sensor.linky","ENERGY").Yesterday is defined) else "false" }}
-      state: >
-        {%- if(state_attr("sensor.linky","ENERGY").Yesterday is defined) %}
-          {{ ( state_attr("sensor.linky","ENERGY").Yesterday *1000 ) |int }}
-        {%- endif %}
-      
-      unit_of_measurement: "Wh"
-
-    - unique_id: "teleinfo_energy_total" # Energy total (year)
-      availability: >
-        {{ "true" if(state_attr("sensor.linky","ENERGY").Total is defined)  else "false" }}
-      state: >
-        {%- if(state_attr("sensor.linky","ENERGY").Total is defined) %}
-          {{ ( state_attr("sensor.linky","ENERGY").Total *1000 ) |int }}
-        {%- endif %}
-      unit_of_measurement: "Wh"
-      state_class: "total_increasing"
-
     - unique_id: "teleinfo_periode_tarifaire"  # Periode Tarifaire
       #availability: >
       #  {{ "true" if(state_attr("sensor.linky","TIC").PTEC is defined) else "false" }}
       state: >
-        {%-if(state_attr("sensor.linky","TIC").PTEC is defined)%}
-          {{ (state_attr("sensor.linky","TIC").PTEC) |replace("..","") }}
+        {%-if(is_state('sensor.linky_priode_tarifaire',['HP','HC']))%}
+          {{ states('sensor.linky_priode_tarifaire') }}
         {%- else %}
           {{'HC' if(is_state('schedule.backup_hc_schedule','on')) else 'HP'}}
         {%- endif %}
+      attributes:
+        source: >
+          {%-if(is_state('sensor.linky_priode_tarifaire',['HP','HC']))%}
+          linky
+          {%- else %}
+          backup_hc_schedule
+          {%- endif %}       
+
     - unique_id: "teleinfo_prix_kwh" # Prix 
       state: >
               {% if is_state('sensor.template_teleinfo_periode_tarifaire', 'HC') %}

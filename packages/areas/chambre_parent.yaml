@@ -20,7 +20,9 @@ binary_sensor:
     entities:
       - binary_sensor.chambre_parent_capteur_presence_lit_presence
       - binary_sensor.presence_lit
-
+      - binary_sensor.lit_parents_mouvement_gauche
+      - binary_sensor.lit_parents_presence_gauche
+      - binary_sensor.lit_parents_mouvement_droite
 
 
 light:
@@ -30,6 +32,7 @@ light:
       - light.chambre
       - light.veilleuse_lit_parent
       - light.chambre_parent_coeur_ardent
+      - light.lit_parents_lit_parents_lumiere_gauche
 
 template:
   - binary_sensor:
@@ -472,3 +475,38 @@ automation:
                 entity_id:
                   - light.chambre_parent_coeur_ardent
                   - light.chambre_parent_coeur_ardent_ambiance
+
+################################################################################
+- id: chambre_parent_bed_light_auto_left
+  alias: Area - Chambre parent - Lumière lit auto gauche
+  description: ''
+  use_blueprint:
+    path: antorfr/motion_light.yaml
+    input:
+      light_target:
+        entity_id: light.lit_parents_lit_parents_lumiere_gauche
+      motion_sensor: binary_sensor.lit_parents_mouvement_gauche
+      no_motion_wait:
+        seconds: 5
+      only_during_night: true
+      turn_on_data:
+        color_name: red
+        brightness_pct: 20
+
+################################################################################
+- id: chambre_parent_bed_light_auto_right
+  alias: Area - Chambre parent - Lumière lit auto droite
+  description: ''
+  use_blueprint:
+    path: antorfr/motion_light.yaml
+    input:
+      light_target:
+        entity_id: light.smart_parent_bed_lit_parents_lumire_droite
+      motion_sensor: binary_sensor.lit_parents_mouvement_droite
+      no_motion_wait:
+        seconds: 5
+      only_during_night: true
+      turn_on_data:
+        color_name: red
+        brightness_pct: 20
+################################################################################

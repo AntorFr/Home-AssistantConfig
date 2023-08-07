@@ -59,6 +59,10 @@ blueprint:
           min: 0
           max: 1000
           unit_of_measurement: lux
+    turn_on_data:
+      name: (OPTIONAL) Light data
+      description: Data to be used during light.turn_on service call (if Adaptive lighting is not active).
+      default: ""
     only_during_night:
       name: (OPTIONAL) Only turn light on at night
       description: Only turn light on when when sun is below horizon.
@@ -91,6 +95,35 @@ blueprint:
 # we restart the script.
 mode: restart
 max_exceeded: silent
+
+trigger_variables:
+  light_target: !input 'light_target'
+  light_entities: >
+    {%- set ns = namespace(light_entities=[]) %}
+
+    {%- if light_target.entity_id is not none %}
+    {%- set entity_ids = iif(light_target.entity_id is string,[light_target.entity_id],light_target.entity_id) %}
+    {%- set entity_light_ids = entity_ids|select('match','^light\..*')| list %}
+    {%- set ns.light_entities =  entity_light_ids|unique|list%}
+    {%- endif %}
+
+    {%- if light_target.area_id is not none %}
+    {%- set area_ids = iif(light_target.area_id is string,[light_target.area_id],light_target.area_id) %}
+    {%- for area in light_target.area_id %}
+    {%- set area_light_ids = area_entities(area)|select('match','^light\..*') | list %}
+    {%- set ns.light_entities =  (ns.light_entities + area_light_ids)|unique|list%}
+    {%- endfor %}
+    {%- endif %}
+
+    {%- if light_target.device_id is not none %}
+    {%- set device_ids = iif(light_target.device_id is string,[light_target.device_id],light_target.device_id) %}
+    {%- for device in device_ids %}
+    {%- set device_light_ids = device_entities(device)|select('match','^light\..*') | list %}
+    {%- set ns.light_entities =  (ns.light_entities + device_light_ids)|unique|list%}
+    {%- endfor %}
+    {%- endif %}
+
+    {{ns.light_entities}}  
 
 variables:
   light_target: !input 'light_target'
@@ -160,6 +193,14 @@ trigger:
     for: !input 'no_motion_wait'
     id: "off"
 
+  # TODO: Does not work, as entity_id can't use trigger_variables templage. Need to edit 
+  # homeassistant/components/homeassistant/triggers/state.py to add template reading.
+  #- platform: state
+  #  entity_id: '{{light_entities}}'
+  #  to: "on"
+  #  for: !input 'no_motion_wait'
+  #  id: "light_target_on"
+
 condition:
   - condition: and
     conditions: 
@@ -168,11 +209,18 @@ condition:
       value_template: '{{not (kill_switch_active)}}'
     - condition: or
       conditions:
+        - alias: "no more movement"
+          condition: trigger
+          id: 'warning'
         - alias: "no more movement since configured period"
           condition: trigger
           id: 'off'
-        - condition: and
-          conditions:  
+        - alias: "Motion detected (check if light should be turn on)"
+          condition: and
+          conditions:
+            - alias: "Motion detected"
+              condition: trigger
+              id: 'on'  
             - alias: "turn on enabled"
               condition: template
               value_template: >
@@ -194,11 +242,19 @@ condition:
                     (states(light_sensor)|int <= lux_cutoff) or
                     (expand(light_entities) | selectattr("state", "eq", "on") | list | count > 0)
                 }}
-
+        - alias: "light on for long time and all motion sensor(s) unavailable"
+          condition: and
+          conditions:  
+           - condition: trigger
+             id: 'light_target_on'
+           - condition: template
+             value_template: >
+              {{ expand(motion_sensor) | selectattr("state", "!=", "unavailable") | list | count == 0  }}
 
 action:
 - choose:
-  - conditions:
+  - alias: "Motion detected" 
+    conditions:
     - condition: trigger
       id: 'on'
     sequence:
@@ -213,9 +269,9 @@ action:
       default:
           - service: light.turn_on
             target: !input 'light_target'
-            data:
-              brightness_pct: 100
-  - conditions:
+            data: !input 'turn_on_data'
+  - alias: "No more motion, reduce brightness after 'duration_before_warning' if warning activated" 
+    conditions:
     - condition: trigger
       id: 'warning'
     - condition: template
@@ -243,7 +299,8 @@ action:
               entity_id: '{{expand(light_entities) | selectattr("state", "eq", "on") | map(attribute="entity_id")| list}}'
             data:
               brightness_step_pct: -50
-  - conditions:
+  - alias: "No more motion after 'no_motion_wait' period"
+    conditions:
     - condition: trigger
       id: 'off'
     sequence:
@@ -256,5 +313,20 @@ action:
       #      seconds: "{{no_motion_wait}}"
       - service: light.turn_off
         target: !input 'light_target'
+  - alias: "Light on for 'no_motion_wait' and all sensor unavailable"
+    conditions:
+    - condition: trigger
+      id: 'light_target_on'
+    sequence:
+      - wait_template: '{{ expand(light_entities) | selectattr("state", "eq", "on") | list | count == 0 }}'
+        timeout: 
+          seconds: "{{ 2 * no_motion_wait_sec}}"
+      - alias: "if any light still on and motion sensor still unavailable"
+        if:
+        - "{{ not wait.completed }}"
+        - '{{ expand(motion_sensor) | selectattr("state", "!=", "unavailable") | list | count == 0  }}'
+        then:
+          - service: light.turn_off
+            target: !input 'light_target'  
 
 
