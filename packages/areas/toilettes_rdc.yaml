@@ -23,4 +23,10 @@ automation:
       no_motion_warning: 30
       adaptive_lighting: switch.adaptive_lighting_default
       only_during_night: false
+      toggle_trigger:
+        platform: state
+        entity_id: binary_sensor.restroom_groundfloor_light_status
+        from: ["on","off"]
+        to: ["on","off"]
+        id: toggle
 ################################################################################

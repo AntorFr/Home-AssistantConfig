@@ -475,8 +475,47 @@ automation:
                 entity_id:
                   - light.chambre_parent_coeur_ardent
                   - light.chambre_parent_coeur_ardent_ambiance
-
 ################################################################################
+- id: 'chambre_parent_bouton_lumiere'
+  alias: Area - Chambre parent - Bouton Lumière
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 93938827448076f36b0d4acf9ae34cdb
+    type: action
+    subtype: left_press
+    discovery_id: 0x0017880109d4d98b action_left_press
+    id: left_press
+  - platform: device
+    domain: mqtt
+    device_id: 93938827448076f36b0d4acf9ae34cdb
+    type: action
+    subtype: right_press
+    discovery_id: 0x0017880109d4d98b action_right_press
+    id: right_press
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: left_press
+      sequence:
+      - service: light.toggle
+        data: {}
+        target:
+          entity_id: light.chambre
+    - conditions:
+      - condition: trigger
+        id: right_press
+      sequence:
+      - service: light.toggle
+        data: {}
+        target:
+          entity_id: light.veilleuse_lit_parent
+    default: []
+  mode: parallel
+################################################################################  
 - id: chambre_parent_bed_light_auto_left
   alias: Area - Chambre parent - Lumière lit auto gauche
   description: ''
@@ -492,7 +531,6 @@ automation:
       turn_on_data:
         color_name: red
         brightness_pct: 20
-
 ################################################################################
 - id: chambre_parent_bed_light_auto_right
   alias: Area - Chambre parent - Lumière lit auto droite

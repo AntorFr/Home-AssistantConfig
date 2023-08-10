@@ -17,30 +17,38 @@ automation:
     type: action
     subtype: on_press
     discovery_id: 0x001788010872dc24 action_on_press
-    id: on_press
+    id: turn_on
   - platform: device
     domain: mqtt
     device_id: a6f8505efa0f2a49cd2b59f18df944a7
     type: action
     subtype: off_press
     discovery_id: 0x001788010872dc24 action_off_press
-    id: off_press
+    id: turn_off
   condition: []
   action:
   - choose:
-    - conditions:
-      - condition: trigger
-        id: on_press
+    - alias: "Turn on pressed" 
+      conditions:
+        - condition: trigger
+          id: turn_on
       sequence:
-      - service: light.turn_on
-        target:
-          entity_id: light.salle_de_douche_lumieres
-    - conditions:
-      - condition: trigger
-        id: off_press
+        - choose:
+          - conditions: '{{is_state("switch.adaptive_lighting_default","on")}}'
+            sequence:
+              - service: adaptive_lighting.apply
+                entity_id: switch.adaptive_lighting_default
+                data:
+                  lights: light.salle_de_douche_lumieres
+                  turn_on_lights: true
+          default:
+              - service: light.turn_on
+                target: light.salle_de_douche_lumieres
+    - alias: "Turn off pressed"
+      conditions:
+        - condition: trigger
+          id: 'turn_off'
       sequence:
-      - service: light.turn_off
-        target:
-          entity_id: light.salle_de_douche_lumieres
-    default: []
-  mode: parallel
+        - service: light.turn_off
+          target: light.salle_de_douche_lumieres
+  mode: restart

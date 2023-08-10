@@ -15,8 +15,9 @@ blueprint:
       description: This sensor will trigger the turning on of the target entity.
       selector:
         entity:
-          domain: binary_sensor
-          device_class: motion      
+          filter:
+            - domain: binary_sensor
+              device_class: motion      
     no_motion_wait:
       name: Wait time (sec)
       description: Time to leave the light on after last motion is detected.
@@ -24,15 +25,7 @@ blueprint:
         duration:
           #enable_days: false
       default:
-        minutes: 2
-    #toggle_devices:
-    #  name: (Not implemented yet) toggle devices.
-    #  description: list of device to manually trigger a light toggle
-    #  selector:
-    #    entity:
-    #      #multiple: true
-    #      domain: binary_sensor
-    #      device_class: motion       
+        minutes: 2    
     no_motion_warning:
       name: (OPTIONAL) Warning time (sec)
       description: Waring duration of reduce brightness before turning it off (0 means no warning).
@@ -48,8 +41,9 @@ blueprint:
       default:
       selector:
         entity:
-          domain: sensor
-          device_class: illuminance
+          filter:
+            - domain: sensor
+              device_class: illuminance
     lux_cutoff:
       name: (OPTIONAL) Illuminance cutoff value
       description: minimum brightness that is triggering.
@@ -81,15 +75,38 @@ blueprint:
       default: 
       selector:
         entity:
-          integration: adaptive_lighting
-          domain: switch
+          filter:
+           - integration: adaptive_lighting
+             domain: switch
     kill_switch:
       name: (OPTIONAL) Disable automatic turn on/off
       description: input boolean to disable automatic turn on/off if ON
       default: 
       selector:
         entity:
-          domain: input_boolean
+          filter:
+            - domain: input_boolean
+    turn_on_trigger:
+      name: (OPTIONAL) turn on trigger
+      description: Provid one trigger to turn on lights (id should be turn_on).
+      default:
+        platform: template
+        value_template: "{{ false }}"
+        id: turn_on
+    turn_off_trigger:
+      default:
+        platform: template
+        value_template: "{{ false }}"
+        id: turn_off
+      name: (OPTIONAL) turn off trigger
+      description: Provid one trigger to turn off lights (id should be turn_off).
+    toggle_trigger:
+      name: (OPTIONAL) toggle trigger
+      description: Provid one trigger to toggle lights (id should be toggle).
+      default:
+        platform: template
+        value_template: "{{ false }}"
+        id: toggle
 
 # If motion is detected within the delay,
 # we restart the script.
@@ -182,7 +199,7 @@ trigger:
   - platform: state
     entity_id: !input motion_sensor
     to: "on"
-    id: "on"
+    id: "motion"
   - platform: state
     entity_id: !input motion_sensor
     to: "off"
@@ -191,7 +208,10 @@ trigger:
     entity_id: !input motion_sensor
     to: "off"
     for: !input 'no_motion_wait'
-    id: "off"
+    id: "no_motion"
+  - !input turn_on_trigger
+  - !input turn_off_trigger
+  - !input toggle_trigger
 
   # TODO: Does not work, as entity_id can't use trigger_variables templage. Need to edit 
   # homeassistant/components/homeassistant/triggers/state.py to add template reading.
@@ -199,64 +219,73 @@ trigger:
   #  entity_id: '{{light_entities}}'
   #  to: "on"
   #  for: !input 'no_motion_wait'
-  #  id: "light_target_on"
+  #  id: "too_long_on"
 
 condition:
-  - condition: and
-    conditions: 
-    - alias: "Kill switch is not enabled or off"
-      condition: template
-      value_template: '{{not (kill_switch_active)}}'
-    - condition: or
-      conditions:
-        - alias: "no more movement"
-          condition: trigger
-          id: 'warning'
-        - alias: "no more movement since configured period"
-          condition: trigger
-          id: 'off'
-        - alias: "Motion detected (check if light should be turn on)"
-          condition: and
-          conditions:
-            - alias: "Motion detected"
-              condition: trigger
-              id: 'on'  
-            - alias: "turn on enabled"
-              condition: template
+  - condition: or
+    conditions:
+    - alias: button triggers
+      condition: trigger
+      id:
+        - turn_on
+        - turn_off
+        - toggle
+    - alias: motions triggers
+      condition: and
+      conditions: 
+      - alias: "Kill switch is not enabled or off"
+        condition: template
+        value_template: '{{not (kill_switch_active)}}'
+      - condition: or
+        conditions:
+          - alias: "no more movement"
+            condition: trigger
+            id: 'warning'
+          - alias: "no more movement since configured period"
+            condition: trigger
+            id: 'no_motion'
+          - alias: "Motion detected (check if light should be turn on)"
+            condition: and
+            conditions:
+              - alias: "Motion detected"
+                condition: trigger
+                id: 'motion'  
+              - alias: "turn on enabled"
+                condition: template
+                value_template: >
+                  {{ 
+                    not (turn_on_disable)
+                  }} 
+              - alias: "night only disable or sun is down"
+                condition: template
+                value_template: >
+                  {{ 
+                    (night_only_disable) or 
+                    (is_state("sun.sun","below_horizon"))
+                  }}     
+              - alias: "illinance disable or illinance lower than thershold or any entity id is on" 
+                condition: template
+                value_template: >
+                  {{ 
+                      (illinance_disable) or
+                      (states(light_sensor)|int <= lux_cutoff) or
+                      (expand(light_entities) | selectattr("state", "eq", "on") | list | count > 0)
+                  }}
+          - alias: "light on for long time and all motion sensor(s) unavailable"
+            condition: and
+            conditions:  
+            - condition: trigger
+              id: 'too_long_on'
+            - condition: template
               value_template: >
-                {{ 
-                  not (turn_on_disable)
-                }} 
-            - alias: "night only disable or sun is down"
-              condition: template
-              value_template: >
-                {{ 
-                  (night_only_disable) or 
-                  (is_state("sun.sun","below_horizon"))
-                }}     
-            - alias: "illinance disable or illinance lower than thershold or any entity id is on" 
-              condition: template
-              value_template: >
-                {{ 
-                    (illinance_disable) or
-                    (states(light_sensor)|int <= lux_cutoff) or
-                    (expand(light_entities) | selectattr("state", "eq", "on") | list | count > 0)
-                }}
-        - alias: "light on for long time and all motion sensor(s) unavailable"
-          condition: and
-          conditions:  
-           - condition: trigger
-             id: 'light_target_on'
-           - condition: template
-             value_template: >
-              {{ expand(motion_sensor) | selectattr("state", "!=", "unavailable") | list | count == 0  }}
+                {{ expand(motion_sensor) | selectattr("state", "!=", "unavailable") | list | count == 0  }}
 
 action:
 - choose:
   - alias: "Motion detected" 
     conditions:
     - condition: trigger
-      id: 'on'
+      id: motion
     sequence:
     - choose:
       - conditions: '{{is_state(adaptive_lighting,"on")}}'
@@ -270,6 +299,58 @@ action:
           - service: light.turn_on
             target: !input 'light_target'
             data: !input 'turn_on_data'
+  
+  - alias: "Turn on pressed" 
+    conditions:
+    - condition: trigger
+      id: turn_on
+    sequence:
+    - choose:
+      - conditions: '{{is_state(adaptive_lighting,"on")}}'
+        sequence:
+        - service: adaptive_lighting.apply
+          entity_id: !input 'adaptive_lighting'
+          data:
+            lights: '{{light_entities}}'
+            turn_on_lights: true
+      default:
+          - service: light.turn_on
+            target: !input 'light_target'
+            data: !input 'turn_on_data'
+  - alias: "Turn off pressed"
+    conditions:
+    - condition: trigger
+      id: 'turn_off'
+    sequence:
+      - service: light.turn_off
+        target: !input 'light_target'
+  - alias: "Toggle pressed"
+    conditions:
+    - condition: trigger
+      id: 'toggle'
+    sequence:
+      - if:
+          - alias: "any light still on" 
+            condition: template
+            value_template: '{{ expand(light_entities) | selectattr("state", "eq", "on") | list | count > 0 }}'
+        then:
+          - service: light.turn_off
+            target: !input 'light_target'
+        else:
+        - if:
+            - alias: "adaptive_lighting active"
+              condition: template
+              value_template: '{{is_state(adaptive_lighting,"on")}}'
+          then:
+            - service: adaptive_lighting.apply
+              entity_id: !input 'adaptive_lighting'
+              data:
+                lights: '{{light_entities}}'
+                turn_on_lights: true
+          else:
+              - service: light.turn_on
+                target: !input 'light_target'
+                data: !input 'turn_on_data'
   - alias: "No more motion, reduce brightness after 'duration_before_warning' if warning activated" 
     conditions:
     - condition: trigger
@@ -302,7 +383,7 @@ action:
   - alias: "No more motion after 'no_motion_wait' period"
     conditions:
     - condition: trigger
-      id: 'off'
+      id: 'no_motion'
     sequence:
       - wait_template: '{{ expand(motion_sensor) | selectattr("state", "eq", "on") | list | count == 0 }}'
       # TODO: Debug why never reach next step 
@@ -316,7 +397,7 @@ action:
   - alias: "Light on for 'no_motion_wait' and all sensor unavailable"
     conditions:
     - condition: trigger
-      id: 'light_target_on'
+      id: 'too_long_on'
     sequence:
       - wait_template: '{{ expand(light_entities) | selectattr("state", "eq", "on") | list | count == 0 }}'
         timeout: 
