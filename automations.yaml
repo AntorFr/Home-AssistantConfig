@@ -58,3 +58,42 @@
       message: VPN reconnecté
       title: VPN reconnecté
   mode: single
+- id: '1691696416271'
+  alias: Automatic Backups
+  description: Automatic Backups
+  use_blueprint:
+    path: jcwillox/automatic_backups.yaml
+    input:
+      backup_action:
+      - service: auto_backup.backup
+        data:
+          name: '{{ name }}'
+          password: '{{ password }}'
+          keep_days: '{{ keep_days }}'
+- id: '1693738236863'
+  description: ''
+  trigger: []
+  condition: []
+  action:
+  - service: tts.cloud_say
+    data:
+      entity_id: media_player.assistant_timothee
+      message: Super, faisons la fête !
+      cache: true
+  - service: light.turn_on
+    data:
+      effect: Color Wipe
+      brightness_pct: 100
+    target:
+      entity_id: light.timothee_bed_light_lumires_lit_timothe
+  - service: script.play_mood_music
+    data:
+      rooms:
+      - chambre_timothee
+      title: Dance Émilie
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+  mode: single

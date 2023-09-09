@@ -2,13 +2,22 @@
 binary_sensor:
   - platform: group
     name: "Capteurs mouvement bureau"
-    device_class: motion
+    device_class: occupancy
     unique_id: bureau_motion_sensors #binary_sensor.capteurs_mouvement_bureau
     all: false
     entities:
       - binary_sensor.bureau_capteur_presence_presence
       - binary_sensor.bureau_capteur_mouvement_occupancy
       - binary_sensor.bureau_person_occupancy
+
+light:
+  - platform: group
+    name: bureau lumieres
+    entities:
+      - light.hue_color_lamp_5_3
+      - light.wled
+      - light.office_light_switch_l1
+      - light.office_light_switch_l2
 
 sensor:
   - name: mouvement_bureau_5min
@@ -29,8 +38,7 @@ automation:
     input:
       light_target:
         entity_id:
-          - light.hue_color_lamp_5_3
-          - light.barre_led_ecran
+          - light.bureau_lumieres
       motion_sensor: binary_sensor.capteurs_mouvement_bureau
       no_motion_wait: 
         minutes: 10
@@ -39,3 +47,36 @@ automation:
       light_sensor:
       lux_cutoff:
 ################################################################################
+- id: bureau_turn_off
+  alias: Area - Bureau - Tout eteindre
+  description: ''
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.capteurs_mouvement_bureau
+      from: "on"
+      to: "off"
+    - platform: state
+      entity_id:
+        - binary_sensor.office_light_switch_multi_touch
+      from: "off"
+      to: "on"
+  condition: []
+  action:
+    - service: homeassistant.turn_off
+      data: {}
+      target:
+        entity_id:
+          - light.bureau_lumieres
+          - media_player.bureau
+          - switch.fire_tablet_screen
+
+################################################################################
+homeassistant:
+  customize:
+    binary_sensor.capteurs_mouvement_bureau:
+      room_main: occupancy
+    media_player.fire_tablet:
+      room_main: tts
+

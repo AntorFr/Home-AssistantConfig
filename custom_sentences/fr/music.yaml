@@ -1,0 +1,8 @@
+language: "fr"
+intents:
+  MusicTurnOn:
+    data:
+      - sentences:
+          - "(joue | mets|lance|change) [de] la musique [<dans>] <area>"
+          - "(joue | mets|lance|change) [de] la musique"
+        response: default

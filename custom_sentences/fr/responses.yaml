@@ -1,0 +1,5 @@
+language: "fr"
+responses:
+  intents:
+    MusicTurnOn:
+      default: "Ok, j'ai lancé la musique {{ slots.area }}"

@@ -11,8 +11,9 @@ blueprint:
           entity:
             domain: light
     motion_sensor:
-      name: Motion Sensor
+      name: (OPTIONAL) Motion Sensor
       description: This sensor will trigger the turning on of the target entity.
+      default: 
       selector:
         entity:
           filter:
@@ -56,7 +57,7 @@ blueprint:
     turn_on_data:
       name: (OPTIONAL) Light data
       description: Data to be used during light.turn_on service call (if Adaptive lighting is not active).
-      default: ""
+      default: {}
     only_during_night:
       name: (OPTIONAL) Only turn light on at night
       description: Only turn light on when when sun is below horizon.

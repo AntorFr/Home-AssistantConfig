@@ -1,0 +1,27 @@
+{% from 'room_functions.jinja' import areas_entities %}
+
+{%- macro sonos_in_area(areas) -%}
+    {{ expand(integration_entities("sonos")) 
+    | selectattr('domain','eq','media_player')
+    | selectattr('state', 'ne', 'unavailable')
+    | selectattr('entity_id', 'in', (areas_entities(areas)| from_json))
+    | map(attribute="entity_id")
+    | list | to_json }}
+{%- endmacro -%}
+
+{%- macro sonos_not_playing_tv(entity_id) -%}
+    {{ (
+    (expand(entity_id)
+        |rejectattr('attributes.source','defined')
+        |map(attribute="entity_id")
+        |list
+    ) 
+    +
+    (expand(entity_id)
+        |selectattr('attributes.source','defined')
+        |rejectattr('attributes.source','eq','TV')
+        |map(attribute="entity_id")
+        |list
+    ) 
+    ) | to_json}}
+{%- endmacro -%}

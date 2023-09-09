@@ -14,7 +14,7 @@ climate:
 binary_sensor:
   - platform: group
     name: "Capteurs mouvement chambre parents"
-    device_class: motion
+    device_class: occupancy
     unique_id: chambre_parents_motion_sensors
     all: false
     entities:
@@ -479,42 +479,23 @@ automation:
 - id: 'chambre_parent_bouton_lumiere'
   alias: Area - Chambre parent - Bouton Lumière
   description: ''
-  trigger:
-  - platform: device
-    domain: mqtt
-    device_id: 93938827448076f36b0d4acf9ae34cdb
-    type: action
-    subtype: left_press
-    discovery_id: 0x0017880109d4d98b action_left_press
-    id: left_press
-  - platform: device
-    domain: mqtt
-    device_id: 93938827448076f36b0d4acf9ae34cdb
-    type: action
-    subtype: right_press
-    discovery_id: 0x0017880109d4d98b action_right_press
-    id: right_press
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: left_press
-      sequence:
-      - service: light.toggle
-        data: {}
-        target:
-          entity_id: light.chambre
-    - conditions:
-      - condition: trigger
-        id: right_press
-      sequence:
-      - service: light.toggle
-        data: {}
-        target:
-          entity_id: light.veilleuse_lit_parent
-    default: []
-  mode: parallel
+  use_blueprint:
+    path: antorfr/motion_light.yaml
+    input:
+      light_target:
+        entity_id: light.chambre
+      adaptive_lighting: switch.adaptive_lighting_chambre_parent
+      motion_sensor: binary_sensor.capteurs_mouvement_chambre_parents
+      no_motion_wait:
+        minutes: 15
+      no_motion_warning: 30  
+      only_turn_off: true      
+      toggle_trigger:
+        platform: state
+        entity_id: binary_sensor.parent_light_switch_touchfield_1
+        from: ["off"]
+        to: ["on"]
+        id: toggle
 ################################################################################  
 - id: chambre_parent_bed_light_auto_left
   alias: Area - Chambre parent - Lumière lit auto gauche
@@ -548,3 +529,9 @@ automation:
         color_name: red
         brightness_pct: 20
 ################################################################################
+
+
+homeassistant:
+  customize:
+   binary_sensor.capteurs_mouvement_chambre_parents:
+      room_main: occupancy

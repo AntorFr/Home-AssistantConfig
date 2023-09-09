@@ -1,7 +1,7 @@
 binary_sensor:
   - platform: group
     name: "Escalier Capteurs mouvement"
-    device_class: motion
+    device_class: occupancy
     unique_id: escaliers_motion_sensors
     all: false
     entities:
@@ -77,3 +77,8 @@ automation:
       seconds: 1
   mode: single
   ################################################################################
+
+homeassistant:
+  customize:
+   binary_sensor.escalier_capteurs_mouvement:
+      room_main: occupancy

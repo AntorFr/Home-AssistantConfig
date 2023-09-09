@@ -1,0 +1,18 @@
+language: "fr"
+intents:
+  LunchTime:
+    data:
+      - sentences:
+          - "(c'est l'heure d'allez) (A|à) table"
+        response: default
+  SayTo:
+    data:
+      - sentences:
+          - "dis à {name} {message}"
+        response: default
+        requires_context:
+          domain: 'person'
+        expansion_rules:
+          message:
+            wildcard: true
+

@@ -1,54 +1,34 @@
 light:
   - platform: group
     name: Salle de douche lumieres
+    unique_id: salle_de_douche_lumieres
     entities:
       - light.dressing_plafonnier
       - light.salle_de_douche_plafonnier
+      - light.shower_light_switch_l2
+      - light.shower_light_switch_l1
 
 automation:
 ################################################################################
 - id: 'salle_de_douche_bouton_light'
   alias: Area - Salle de douche - Bouton Lumière
   description: ''
-  trigger:
-  - platform: device
-    domain: mqtt
-    device_id: a6f8505efa0f2a49cd2b59f18df944a7
-    type: action
-    subtype: on_press
-    discovery_id: 0x001788010872dc24 action_on_press
-    id: turn_on
-  - platform: device
-    domain: mqtt
-    device_id: a6f8505efa0f2a49cd2b59f18df944a7
-    type: action
-    subtype: off_press
-    discovery_id: 0x001788010872dc24 action_off_press
-    id: turn_off
-  condition: []
-  action:
-  - choose:
-    - alias: "Turn on pressed" 
-      conditions:
-        - condition: trigger
-          id: turn_on
-      sequence:
-        - choose:
-          - conditions: '{{is_state("switch.adaptive_lighting_default","on")}}'
-            sequence:
-              - service: adaptive_lighting.apply
-                entity_id: switch.adaptive_lighting_default
-                data:
-                  lights: light.salle_de_douche_lumieres
-                  turn_on_lights: true
-          default:
-              - service: light.turn_on
-                target: light.salle_de_douche_lumieres
-    - alias: "Turn off pressed"
-      conditions:
-        - condition: trigger
-          id: 'turn_off'
-      sequence:
-        - service: light.turn_off
-          target: light.salle_de_douche_lumieres
-  mode: restart
+  use_blueprint:
+    path: antorfr/motion_light.yaml
+    input:
+      light_target:
+        entity_id: light.salle_de_douche_lumieres
+      adaptive_lighting: switch.adaptive_lighting_default   
+      motion_sensor: binary_sensor.anyone_home
+      only_turn_off: true   
+      no_motion_wait:
+        minutes: 5
+      no_motion_warning: 30
+      toggle_trigger:
+        platform: state
+        entity_id: 
+          - binary_sensor.dressing_light_switch_touchfield_1
+          - binary_sensor.shower_light_switch_touchfield_2
+        from: ["off"]
+        to: ["on"]
+        id: toggle

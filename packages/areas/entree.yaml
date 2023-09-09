@@ -12,6 +12,18 @@ light:
       - light.hue_ambiance_spot_8
       - light.hue_ambiance_spot_9
 
+template:
+  - binary_sensor:
+    - unique_id: entree presence
+      name: Entrée presence
+      device_class: occupancy
+      state: "{{ is_state('binary_sensor.entree_capteur_mouvement_occupancy','on')}}"
+      delay_off:
+        minutes: 2
+      attributes:
+        room_main: "occupancy"
+      availability: "{{ has_value('binary_sensor.entree_capteur_mouvement_occupancy')}}"
+
 sensor:
   - name: mouvement_entree_5min
     platform: history_stats

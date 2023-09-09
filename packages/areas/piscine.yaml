@@ -39,6 +39,14 @@ binary_sensor:
           and not(is_state('binary_sensor.piscine_capteur_porte_door','off'))
           and not(is_state('binary_sensor.indoor_pool_person_occupancy', 'on'))
           }}
+  - platform: group
+    name: "Piscine capteurs presence"
+    device_class: occupancy
+    unique_id: piscine_occupancy_sensors
+    all: false
+    entities:
+      - binary_sensor.indoor_pool_person_occupancy
+
 
 alert:
   swiming_pool:
@@ -311,3 +319,6 @@ homeassistant:
   customize:
     automation.area_piscine_filtration_automatique_hp_hc:
       icon: mdi:air-filter
+    binary_sensor.piscine_capteurs_presence:
+      room_main: occupancy
+

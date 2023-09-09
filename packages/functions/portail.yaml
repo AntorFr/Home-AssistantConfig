@@ -50,6 +50,14 @@ automation:
     - platform: state
       entity_id: binary_sensor.entrance_gate_plate_detected
       to: "on"
+    - platform: zone
+      entity_id: person.sebastien
+      zone: zone.home
+      event: enter
+    - platform: zone
+      entity_id: person.laurine
+      zone: zone.home
+      event: enter
   condition: 
     condition: state
     entity_id: cover.portail_2

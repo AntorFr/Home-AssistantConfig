@@ -1,0 +1,56 @@
+sensor:
+  - platform: mqtt_room
+    name: "iWatch Seb"
+    unique_id: "espresence_iwatch_seb"
+    device_id: "irk:f4b704aaaf0f2d270d66bd27a58ee304"
+    state_topic: "espresense/devices/irk:f4b704aaaf0f2d270d66bd27a58ee304"
+    timeout: 10
+    away_timeout: 120
+  - platform: mqtt_room
+    name: "iPhone Seb"
+    unique_id: "espresence_iphone_seb"
+    device_id: "intra_mob08"
+    state_topic: "espresense/devices/intra_mob08"
+    timeout: 10
+    away_timeout: 120
+  - platform: mqtt_room
+    name: "iPad Seb"
+    device_id: "ipad_seb"
+    unique_id: "espresence_ipad_seb"
+    state_topic: "espresense/devices/ipad_seb"
+    timeout: 10
+    away_timeout: 120
+
+template:
+  - trigger:
+      - platform: state
+        id: espresence
+        entity_id:
+          - sensor.iwatch_seb
+          - sensor.iphone_seb
+          - sensor.ipad_seb
+        not_to: 
+          - 'not_home'
+          - 'unknown'
+          - 'unavailable'
+      - platform: state
+        id: person
+        entity_id:
+          - person.sebastien
+        not_to: 
+          - 'home'
+          - 'unknown'
+          - 'unavailable'
+    unique_id: esppresence_
+    sensor:
+      - name: "room_seb"
+        unique_id: "room_seb"
+        state: >
+          {%- if trigger.id == 'person'  -%}
+          not_home
+          {%- elif trigger.id == 'espresence'  -%}
+          {{trigger.to_state.state}}
+          {%- endif  -%}
+        attributes: 
+          updated_from: "{{trigger.entity_id}}"
+

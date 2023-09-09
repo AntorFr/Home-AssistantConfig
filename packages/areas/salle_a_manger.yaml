@@ -1,7 +1,7 @@
 binary_sensor:
   - platform: group
     name: "Salle a manger Capteurs mouvement"
-    device_class: motion
+    device_class: occupancy
     unique_id: salle_a_manger_motion_sensors
     all: false
     entities:
@@ -62,3 +62,8 @@ automation:
       target:
         area_id: salle_a_manger
 ################################################################################
+
+homeassistant:
+  customize:
+   binary_sensor.salle_a_manger_capteurs_mouvement:
+      room_main: occupancy

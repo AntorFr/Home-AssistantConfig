@@ -16,6 +16,17 @@ template:
         state: "true"
         device_class: occupancy
 
+light:
+  - platform: group
+    unique_id: jardin_lumieres
+    name: Jardin lumieres
+    entities:
+      - light.guirlandes_noel
+      - light.jardin_lumiere_arriere
+      - light.garden_parking_light
+      - light.lumiere_jardin_devant
+      - light.jardin
+
 binary_sensor:
   - platform: group
     name: "Jardin devant presence"
@@ -36,6 +47,24 @@ binary_sensor:
     entities:
       - binary_sensor.camera_parking_person
       - binary_sensor.parking_person_occupancy
+  - platform: group
+    name: "Jardin derrière presence"
+    unique_id: jardin_derriere_presence
+    device_class: occupancy
+    all: false
+    entities:
+      - binary_sensor.air_de_jeux_person_occupancy
+      - binary_sensor.terasse_person_occupancy
+  - platform: group
+    name: "Jardin presence"
+    unique_id: jardin_presence
+    device_class: occupancy
+    all: false
+    entities:
+      - binary_sensor.jardin_devant_presence
+      - binary_sensor.jardin_parking_presence
+      - binary_sensor.jardin_derriere_presence
+
 
 sensor:
   - name: mouvement_patio_10min
@@ -275,3 +304,9 @@ automation:
         minutes: 10
       no_motion_warning: 0
       only_during_night: true
+
+homeassistant:
+  customize:
+   binary_sensor.jardin_presence:
+      room_main: occupancy
+      

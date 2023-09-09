@@ -26,14 +26,16 @@ script:
         input_boolean.aspiration_entree: 19
         input_boolean.aspiration_cuisine: 22
     sequence:
-    - service: xiaomi_miio.vacuum_clean_segment
+    - service: vacuum.send_command
       data:
-        segments: >
-          {%- set ns = namespace(selected_room=[]) %}
-          {% for room in expand(room_nb.keys()) | selectattr('state', 'eq', 'on') | map(attribute="entity_id")| list  %}
-          {% set ns.selected_room = ns.selected_room + [room_nb[room]]%}
-          {% endfor %}
-          {{ns.selected_room}}
+        command: app_segment_clean
+        params:
+          - segments: >
+              {%- set ns = namespace(selected_room=[]) %}
+              {% for room in expand(room_nb.keys()) | selectattr('state', 'eq', 'on') | map(attribute="entity_id")| list  %}
+              {% set ns.selected_room = ns.selected_room + [room_nb[room]]%}
+              {% endfor %}
+              {{ns.selected_room}}
       target:
         entity_id: vacuum.roborock_s7
     - service: input_boolean.turn_off

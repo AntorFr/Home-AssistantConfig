@@ -1,0 +1,224 @@
+notify:
+  - platform: tts
+    name: bureau
+    tts_service: tts.cloud_say
+    media_player: media_player.fire_tablet
+
+
+intent_script:
+###############################################################################
+  LunchTime:
+    async_action: false
+    speech:
+      text: "Ok, message envoyé"
+    action:
+      - service: script.lunchtime
+################################################################################
+  SayTo:
+    async_action: false
+    speech:
+      text: "Ok, message envoyé"
+    action:
+      - service: script.sayto
+################################################################################
+
+
+script:
+###############################################
+  light_notify_red_alarm:
+    alias: "Light Notify - Alarm"
+    mode: parallel
+    icon: mdi:alarm-light-outline
+    fields:
+      light_entities:
+        name: Light entities
+        description: List of light entities to be used
+        required: true
+    sequence:
+      - service: light.turn_on
+        data:
+          color_name: red
+          effect: breathe
+          brightness_pct: 100
+        target:
+          entity_id: "{{light_entities}}"
+      - service: number.set_value
+        data:
+          value: 60
+        target:
+          entity_id: >-
+            {%- set ns = namespace(speed_entities=[]) %}
+
+            {%- if light_entities is not none %}
+              {%- set light_entities = iif(light_entities is string,[light_entities],light_entities) %}
+              {%- for light_entity in light_entities %}
+                {%- set speed_entitiy = device_entities(device_id(light_entity))|select('match','^number\..*')|list %}
+                {%- set ns.speed_entities =  (ns.speed_entities+speed_entitiy)|unique|list%}
+              {%- endfor %}
+            {%- endif %}
+            {{ns.speed_entities}}
+###############################################
+  room_tts_notify:
+    alias: "Room tts notify"
+    icon: mdi:microphone-message
+    mode: parallel
+    fields:
+      room:
+        name: Room name
+        description: Room name or room id
+        required: true
+      message:
+        name: message
+        description: tts message to be used
+        required: true
+      tts_service:
+        name: tts service
+        description: tts service used
+        required: false
+        default: 'tts.cloud_say'
+    variables:   
+      tts_service: >
+        {%- if (tts_service is not defined ) or  (tts_service is none) or (tts_service == '')-%}
+          tts.cloud_say
+        {%- else -%}
+          {{tts_service}}
+        {%- endif -%}     
+    sequence:
+    - if:
+        - condition: template
+          value_template: >
+            {% from 'room_functions.jinja' import area_entity_id %}
+            {{is_state(area_entity_id(room,"occupancy"),'on')
+              and (area_entity_id(room,'tts') | string != 'None') }}
+      then: 
+        - variables:
+            media_player: >
+              {% from 'room_functions.jinja' import area_entity_id %}
+              {{area_entity_id(room,'tts')}}
+        - service: "{{tts_service}}"
+          data:
+            message: "{{message}}"
+            entity_id: "{{media_player}}"
+      else:
+        - service: notify.mobile_seb
+          data:
+            message: "{{message}}"
+ 
+###############################################
+  light_notify_stop:
+    alias: "Light Notify - Stop"
+    icon: mdi:alarm-light-off-outline
+    mode: parallel
+    sequence:
+      - service: light.turn_off
+        target:
+          entity_id: "{{light_entities}}"
+###############################################
+  sound_notify:
+    alias: "Sound Notify"
+    mode: parallel
+    icon: mdi:alarm-light-outline
+    fields:
+      media_player_entities:
+        name: Media player entities
+        description: List of media player to be used
+        required: true
+      media_content_id:
+        description: content id to be displayed
+        required: true
+    sequence:
+      - service: media_player.play_media
+        data:
+          announce: true
+          media_content_type: "music"
+          media_content_id: "{{media_content_id}}"
+        target:
+          entity_id: "{{media_player_entities}}"
+###############################################
+  sonos_say:
+    alias: "Sonos TTS script"
+    sequence:
+    - service: sonos.snapshot
+      data_template:
+        entity_id: "{{ sonos_entity }}"
+    - service: media_player.unjoin
+      data_template:
+        entity_id: "{{ sonos_entity }}"
+    - service: media_player.volume_set
+      data_template:
+        entity_id: "{{ sonos_entity }}"
+        volume_level: "{{ volume }}"
+    - service: tts.google_say
+    #- service: tts.voicerss_say
+      data_template:
+        entity_id: "{{ sonos_entity }}"
+        message: "{{ message }}"
+    - delay: "{{ delay }}"
+    - service: sonos.restore
+      data_template:
+        entity_id: "{{ sonos_entity }}"
+###############################################
+  lunchtime:
+    alias: "Notification A table"
+    sequence: 
+    - alias: List area with presence
+      variables:
+        media_player: >
+          {%- set area_list = ["chambre_emilie","chambre_timothee"] -%}
+          
+          {% from 'room_functions.jinja' import is_area_entity_room %}
+          {%- if is_area_entity_room('bureau','occupancy','on') -%}
+            {%- set area_list = area_list + ["bureau"] -%}
+          {%- endif -%}
+
+          {%- from 'music_functions.jinja' import sonos_in_area -%}
+          {{sonos_in_area(area_list)|from_json}}
+
+    - service: tts.cloud_say
+      data:
+        entity_id: "{{media_player}}"
+        message: "A table."
+        cache: true
+###############################################
+  sayto:
+    alias: "Notification message"
+    fields:
+      person:
+        required: True
+        selector: 
+          entity:
+            multiple: false
+            filter:
+              - domain: person
+      message:
+        required: true
+        selector:
+          text:
+            multiline: true
+            type: text
+
+    sequence:
+    - variables:
+        media_player: >
+          {%- from 'music_functions.jinja' import sonos_in_area -%}
+          {% from 'room_functions.jinja' import is_area_entity_room %}
+
+          {%- if person == "person.emilie"  -%}
+            {{sonos_in_area('chambre_emilie')|from_json}}
+          {%- elif person == "person.timothee"  -%}
+            {{sonos_in_area('chambre_emilie')|from_json}}
+          {%- else  -%}
+            {%- if is_area_entity_room('bureau','occupancy','on') -%}
+              {{sonos_in_area('bureau')|from_json}}
+            {%- endif -%}
+          {%- endif -%}
+
+    - service: tts.cloud_say
+      data:
+        entity_id: "{{media_player}}"
+        message: "{{message}}"
+        cache: false
+
+          
+
+

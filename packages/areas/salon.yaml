@@ -1,7 +1,7 @@
 binary_sensor:
   - platform: group
     name: "Capteurs mouvement salon"
-    device_class: motion
+    device_class: occupancy
     unique_id: salon_motion_sensors
     all: false
     entities:
@@ -11,6 +11,7 @@ binary_sensor:
 
 light:
   - platform: group
+    unique_id: salon_lumieres
     name: Salon lumieres
     entities:
       - light.salon
@@ -272,3 +273,8 @@ automation:
         target:
           entity_id: media_player.salon
     default: []
+
+homeassistant:
+  customize:
+   binary_sensor.capteurs_mouvement_salon:
+      room_main: occupancy

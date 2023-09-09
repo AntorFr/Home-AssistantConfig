@@ -1,3 +1,29 @@
+intent_script:
+###############################################################################
+  MusicTurnOn:
+    async_action: false
+    speech:
+      text: "Ok, j'ai lancé la musique {{ ' dans ' if area|length > 0}}{{area}}" #{{response.playlist}} 
+    action:
+      - alias: "select zone"
+        variables:
+          zone: >
+            {% from 'room_functions.jinja' import area_identifiers %}
+            {%-if area is undefined -%}
+            RdC
+            {%-else -%}
+              {%-if area in area_identifiers(["salon","salle_a_manger"]) | from_json -%}
+                RdC
+              {%-else -%}
+                {{area}}
+              {%-endif -%}
+            {%-endif -%}
+      - service: script.play_mood_music
+        data:
+          rooms: "{{zone}}"
+        response_variable: response
+################################################################################
+
 
 script:  
 ################################################################################
@@ -11,8 +37,9 @@ script:
         required: True
         selector: 
           entity:
-            domain: media_player
             multiple: true
+            filter:
+              - domain: media_player
       style:
         name: style
         required: False
@@ -33,17 +60,49 @@ script:
       
     variables:
       playlists: "{{state_attr('input_select.playlist','playlists') |to_json(ensure_ascii=True)}}"
+      input_playlist: "{{states('input_select.playlist')}}"
+      reset_playlist: >
+        {%- if ((title is not defined) or (title is none)  or (title == '')) 
+            and (not is_state('input_select.playlist', ' ')) -%}
+          True
+        {%- else -%}
+          False
+        {%- endif -%} 
+      selected_playlists: >          
+        {%- set ns = namespace(selected_playlists=[]) %}
+
+        {# set to None if not defined or empty #}
+        {% if (style is not defined) or (style == '') %}
+          {% set style = None %}
+        {% endif %}
+        {% if (public is not defined) or (public == '')%}
+          {% set public = None %}
+        {% endif %}
+        {% if (title is not defined) or (title == '')%}
+          {% set title = None %}
+        {% endif %}
+
+        {% if (reset_playlist)%}
+          {% set title = input_playlist %}
+        {% endif %}
+
+        {%for playlist in playlists%}
+          {% if (title is not none and title==playlist.title)%}
+            {%- set ns.selected_playlists = ns.selected_playlists + [playlist] %}
+          {% elif (style is none or style in playlist.style)
+              and (public is none or public in playlist.public)
+              and (title is none) %}
+            {%- set ns.selected_playlists = ns.selected_playlists + [playlist] %}
+          {% endif %}
+        {% endfor  %}
+
+        {{ns.selected_playlists |to_json(ensure_ascii=True)}}         
+      random_playlist: >
+        {%if selected_playlists|length > 0 %}
+          {{selected_playlists|random |to_json(ensure_ascii=True)}}
+        {% endif %}
 
     sequence:
-      - variables:
-          input_playlist: "{{states('input_select.playlist')}}"
-          reset_playlist: >
-            {% if ((title is not defined) or (title is none)  or (title == '')) 
-                  and (not is_state('input_select.playlist', ' ')) %}
-                True
-            {%else%}
-                False
-            {%endif%} 
       - if:
           - condition: template
             value_template: "{{reset_playlist}}"
@@ -52,178 +111,167 @@ script:
             data:
               option: " "
             target:
-              entity_id: input_select.playlist
-      - variables:
-          selected_playlists: >          
-            {%- set ns = namespace(selected_playlists=[]) %}
-
-            {# set to None if not defined or empty #}
-            {% if (style is not defined) or (style == '') %}
-              {% set style = None %}
-            {% endif %}
-            {% if (public is not defined) or (public == '')%}
-              {% set public = None %}
-            {% endif %}
-            {% if (title is not defined) or (title == '')%}
-              {% set title = None %}
-            {% endif %}
-
-            {% if (reset_playlist)%}
-              {% set title = input_playlist %}
-            {% endif %}
-
-            {%for playlist in playlists%}
-              {% if (title is not none and title==playlist.title)%}
-                {%- set ns.selected_playlists = ns.selected_playlists + [playlist] %}
-              {% elif (style is none or style in playlist.style)
-                  and (public is none or public in playlist.public)
-                  and (title is none) %}
-                {%- set ns.selected_playlists = ns.selected_playlists + [playlist] %}
-              {% endif %}
-            {% endfor  %}
-
-            {{ns.selected_playlists |to_json(ensure_ascii=True)}}         
-          random_playlist: >
-            {%if selected_playlists|length > 0 %}
-              {{selected_playlists|random |to_json(ensure_ascii=True)}}
-            {% endif %}
-      
+              entity_id: input_select.playlist 
       - if:
           - condition: template
-            value_template: "{{ random_playlist is mapping  }}"
+            value_template: "{{ random_playlist is not mapping  }}"
         then:
-          - service: media_player.play_media
-            target:
-              entity_id: "{{ media_player }}"
-            data:
-              media_content_id: "{{ random_playlist.content_id }}"
-              media_content_type: "{{ random_playlist.content_type }}"
-              enqueue: replace
-          - service: notify.mobile_seb
-            data:
-              message: >
-                {% if media_player is not iterable %}
-                  {% set media_player = [media_player]%}
-                {%endif%}
-                "Ok c'est partie ! {{random_playlist.title}} sur {{expand(media_player)|map(attribute="name")|join(', ')}}
-        else:
           - stop: "Aucune playlist trouvée"
             error: true
-
+      - service: media_player.play_media
+        target:
+          entity_id: "{{ media_player }}"
+        data:
+          media_content_id: "{{ random_playlist.content_id }}"
+          media_content_type: "{{ random_playlist.content_type }}"
+          enqueue: replace
+      - variables:
+          response:
+            playlist: "{{random_playlist.title}}"
+            player: "{{expand(media_player)|map(attribute='name')| list }}"
+            message: >
+              {% if media_player is string %}
+                {% set media_player = [media_player]%}
+              {%endif%}
+              playlist {{random_playlist.title}} lancée sur {{expand(media_player)|map(attribute="name")|join(', ')}}
+            room: >
+              {% if (media_player is not string) and (media_player is iterable) %}
+                {% set media_player = media_player | first %}
+              {%endif%}
+              {{area_id(media_player)}}
+      - service: script.room_tts_notify
+        data:
+          room: "{{response.room}}"
+          message: "{{response.message}}"
+      - stop: "Playlist launched"
+        response_variable: response
 
 ################################################################################
   play_mood_music:
-      alias: "Function - Music manager - Guess what to play"
-      variables:
-        zone_ids:
-          RdC:
-            manager:  media_player.salle_a_manger
-            group_members:
-              - media_player.cuisine
-              - media_player.cuisine_move
-              - media_player.salon
-          Bureau:
-            manager: media_player.bureau
-            group_members: []
-          Cuisine:
-            manager: media_player.cuisine
-            group_members: 
-              - media_player.cuisine_move
+    alias: "Function - Music manager - Guess what to play"
+    variables:
+      zone_ids:
+        rdc:
+          - 'salon'
+          - 'salle_a_manger'
+          - 'cuisine'
+    fields:
+      rooms:
+        name: zone de lecture
+        required: False
+        selector: 
+          area:
+            multiple: true
+            device:
+              - integration: sonos
 
-      fields:
-        zone:
-          name: zone de lecture
-          required: True
-          selector: 
-            select:
-              options: ['RdC','Bureau','Cuisine'] 
-        title:
-          name: titre
-          required: False
-          selector:
-            text:     
-      
-      sequence:
-        - variables:
-            media_player_id: "{{ zone_ids[zone].manager}}"
-            group_members: > 
-              {{
-              (expand(zone_ids[zone].group_members)
-                |selectattr('state', 'ne', 'unavailable')
-                |rejectattr('attributes.source','defined')
-                |map(attribute="entity_id")
-                |list) +
-              (expand(zone_ids[zone].group_members)
-                |selectattr('state', 'ne', 'unavailable')
-                |selectattr('attributes.source','defined')
-                |rejectattr('attributes.source','eq','TV')
-                |map(attribute="entity_id")
-                |list) 
-              }}
+      title:
+        name: titre
+        required: False
+        selector:
+          text:     
+    
+    sequence:
+      - variables:
+          rooms: >
+            {% from 'room_functions.jinja' import all_area_identifiers %}
 
-            public: >
-              {%if title is defined%}
-              {%elif zone=="Bureau" %}
-                {% if (is_state('person.sebastien','home')) %}
-                Sebastien
-                {% elif (is_state('person.laurine','home')) %}
-                Laurine
-                {%endif%}
-              {%elif zone=="RdC" %}
-                 {% if (is_state('person.sebastien','home') 
-                  and is_state('person.laurine','home')) %}
-                Famille
-                {% elif (is_state('person.sebastien','home')) %}
-                Sebastien
-                {% elif (is_state('person.laurine','home')) %}
-                Laurine
-                {%endif%}             
-              {% endif %}
+            {%- set ns = namespace(zone=[]) %}
 
-            style: >
-              {% if (title is none) or (title == '')%}
-                {% set title = null %}
-              {% endif %}
+            {% if (rooms is none) or (rooms == '')%}
+              {%- set rooms = [] -%}
+            {%- elif rooms is string  -%}
+              {%- set rooms = [rooms] -%}
+            {% endif %}
 
-              {%if title is defined%}
-              {%elif zone=="Bureau" %}
-                {% if (utcnow().hour <= 6) %}
-                  zen
-                {% elif is_state('binary_sensor.workday_sensor','on') 
-                    and utcnow().hour <= 19  %}
-                  work
-                {% elif utcnow().hour <= 10 %}
-                  chill
-                {% elif utcnow() <= today_at(states('input_datetime.'+iif(is_state('binary_sensor.workday_tomorrow','on'),'children_night_time','children_night_time_we')))  %}
-                  motivation
-                {% else %}
-                  zen
-                {%endif %}
-              {%elif zone=="RdC" %}
-                {% if (utcnow().hour <= 6) %}
-                  zen
-                {% elif (utcnow().hour <= 10) %}
-                  chill
-                {% elif utcnow() <= today_at(states('input_datetime.'+iif(is_state('binary_sensor.workday_tomorrow','on'),'children_night_time','children_night_time_we'))) %}
-                  motivation
-                {% else %}
-                  zen
-                {%endif %}
-              {% endif %}
+            {%- for room in rooms -%}
+              {%- if (room |lower) in zone_ids -%}
+                {%- set ns.zone = ns.zone + zone_ids[(room |lower)] -%}
+              {%- endif -%}
+            {%- endfor -%}
 
-        - service: media_player.join
-          target:
-            entity_id: > 
-              {{media_player_id}}
-          data:
-            group_members: >
-              {{group_members}}
-        - service: script.play_music
-          data:
-            media_player: "{{media_player_id}}"
-            style: "{{style}}"
-            public: "{{public}}"
-            title: "{{title}}"
+            {%- set rooms =  (ns.zone + rooms)
+                              | unique
+                              | select ("in",all_area_identifiers()|from_json) 
+                              |list -%}
+
+            {{rooms}}
+
+          media_players: > 
+            {%- from 'music_functions.jinja' import sonos_in_area, sonos_not_playing_tv -%}
+            {{sonos_not_playing_tv(sonos_in_area(rooms)|from_json)|from_json }}
+          media_player_id: "{{ media_players | first }}"
+          group_members: "{{ media_players | reject('eq', media_player_id) | list }}"
+            
+          public: >
+            {%if title is defined%}
+            {%elif rooms == ['bureau'] %}
+              {% if (is_state('person.sebastien','home')) %}
+              Sebastien
+              {% elif (is_state('person.laurine','home')) %}
+              Laurine
+              {%endif%}
+            {%else %}
+                {% if (is_state('person.sebastien','home') 
+                and is_state('person.laurine','home')) %}
+              Famille
+              {% elif (is_state('person.sebastien','home')) %}
+              Sebastien
+              {% elif (is_state('person.laurine','home')) %}
+              Laurine
+              {%endif%}             
+            {% endif %}
+
+          style: >
+            {% if (title is none) or (title == '')%}
+              {% set title = null %}
+            {% endif %}
+
+            {%if title is defined%}
+            {%elif rooms == ['bureau'] %}
+              {% if (now().hour <= 9) %}
+                zen
+              {% elif is_state('binary_sensor.workday_sensor','on') 
+                  and now().hour <= 19  %}
+                work
+              {% elif now().hour <= 10 %}
+                chill
+              {% elif now() <= today_at(states('input_datetime.'+iif(is_state('binary_sensor.workday_tomorrow','on'),'children_night_time','children_night_time_we')))  %}
+                motivation
+              {% else %}
+                zen
+              {%endif %}
+            {%else %}
+              {% if (now().hour <= 9) %}
+                zen
+              {% elif (now().hour <= 10) %}
+                chill
+              {% elif now() <= today_at(states('input_datetime.'+iif(is_state('binary_sensor.workday_tomorrow','on'),'children_night_time','children_night_time_we'))) %}
+                motivation
+              {% else %}
+                zen
+              {%endif %}
+            {% endif %}
+
+      - service: media_player.join
+        enabled: true ## Debug > To remove
+        target:
+          entity_id: > 
+            {{media_player_id}}
+        data:
+          group_members: >
+            {{group_members}}
+      - service: script.play_music
+        enabled: true ## Debug > To remove
+        data:
+          media_player: "{{media_player_id}}"
+          style: "{{style}}"
+          public: "{{public}}"
+          title: "{{title}}"
+        response_variable: response
+      - stop: "Playlist launched"
+        enabled: true
+        response_variable: response
 ################################################################################
 
 
@@ -344,8 +392,12 @@ input_select:
         - Fantasy board gaming
         - Reading Adventure
         - Sith Mediation
+        - Star Wars (epic)
         - Sea Song
         - Champs Marin
+      ## Laurine ##
+        - Sleepy Ghibli
+        - Harry Potter
       ## Enfants ##
         - Millie D
         - Noisette
@@ -403,7 +455,6 @@ homeassistant:
           style: ['zen','work']
           public: ['Sebastien', 'Laurine', 'Famille']
           tags: []
-      ## Sebastien ##
         - title: Malukah
           content_id: spotify:playlist:5ZLgTnEANdMIgkfsX63Ykv
           content_type: playlist
@@ -428,6 +479,12 @@ homeassistant:
           style: ['chill','work']
           public: ['Sebastien']
           tags: []
+        - title: Star Wars (epic)
+          content_id: spotify:playlist:4iHfX38Gd6isG7FoizRTPg
+          content_type: playlist
+          style: ['chill','work']
+          public: ['Sebastien']
+          tags: []
         - title: Sea Song
           content_id: spotify:playlist:24f4OwL1tOAyqbRjrpWqhH
           content_type: playlist
@@ -440,6 +497,19 @@ homeassistant:
           style: ['motivation']
           public: ['Emilie']
           tags: ['CE-E7-4D-3D']
+      ## Laurine ##
+        - title: Sleepy Ghibli
+          content_id: spotify:playlist:14TCh5wWTPpF2C3RuRTPX9
+          content_type: playlist
+          style: ['zen','work']
+          public: ['Laurine', 'Famille']
+          tags: []
+        - title: Harry Potter
+          content_id: spotify:playlist:2nI2TA9KrHvlcrZWH5xPbz
+          content_type: playlist
+          style: ['zen','work']
+          public: ['Laurine']
+          tags: []
       ## Enfants ##
         - title: Millie D
           content_id: spotify:show:6xZWDWtjxF6dEV9KZZNRTF
@@ -518,6 +588,8 @@ homeassistant:
           style: ['histoire']
           public: ['Emilie','Timothee']
           tags: ['04-70-D7-DA-B4-49-80','04-75-D7-DA-B4-49-80']
+
+
 
 
 

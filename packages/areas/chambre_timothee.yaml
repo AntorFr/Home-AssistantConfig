@@ -110,3 +110,33 @@ automation:
                 area_id: chambre_timothee
       default: []
 ################################################################################
+- id: 'chambre_timothee_party_mode'
+  alias: Area - Chambre Timothée - Mode fête
+  description: "Chambre Timothée - Mode fête"
+  trigger:
+    - platform: tag
+      tag_id: 53-4F-E4-D7-60-00-01
+  condition: []
+  action:
+    - service: tts.cloud_say
+      data:
+        entity_id: media_player.timothee
+        message: Super, c'est la fête !
+        cache: true
+    - service: light.turn_on
+      data:
+        effect: Color Wipe
+        brightness_pct: 100
+      target:
+        entity_id: light.timothee_bed_light_lumires_lit_timothe
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 10
+        milliseconds: 0
+    - service: script.play_mood_music
+      data:
+        rooms:
+          - chambre_timothee
+        title: Dance Émilie
+  mode: single

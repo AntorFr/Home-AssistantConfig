@@ -23,6 +23,16 @@ template:
       device_class: temperature
       unit_of_measurement: "°C"
       state: "{{ state_attr('climate.netatmo_cuisine', 'current_temperature')|float }}"
+  - binary_sensor:
+    - unique_id: cuisine presence
+      name: Cuisine presence
+      device_class: occupancy
+      state: "{{ is_state('binary_sensor.cuisine_capteur_mouvement_occupancy','on')}}"
+      delay_off:
+        minutes: 5
+      attributes:
+        room_main: "occupancy"
+      availability: "{{ has_value('binary_sensor.cuisine_capteur_mouvement_occupancy')}}"
 
 sensor:
   - name: mouvement_cuisine_5min

@@ -1,0 +1,52 @@
+{%- macro all_area_identifiers() -%}
+    {{( areas() 
+    + (areas()| map("area_name")|list)
+    )| to_json}}
+{%- endmacro -%}
+
+{%- macro area_identifiers(area_ids) -%}
+    {%- if area_ids is string -%}
+        {%- set area_ids = [area_ids] -%}
+    {%- endif -%}
+
+    {%- set area_ids = area_ids|select("in",areas())|list -%}
+
+    {{ (area_ids + (area_ids| map("area_name") |list)) | to_json}}
+{%- endmacro -%}
+
+
+{%- macro area_entity_id(area, filter) -%}
+    {{area_entities(area)| select('is_state_attr','room_main',filter) | first | d(none) }}
+{%- endmacro -%}
+
+{%- macro area_entity_room_color(area,filter) -%}
+    {%- set entity_id = area_entity_id(area,filter) -%}
+    {%- if states(entity_id) == "unknown" -%}
+        {{'light-blue'}}
+    {%- elif is_state(entity_id, 'on') -%}
+        {{'teal'}}
+    {%- elif is_state(entity_id, 'off') -%}
+        {{'blue-grey'}}
+    {%- else -%}
+        {{'disabled'}}
+    {%- endif -%}
+{%- endmacro -%}
+
+{%- macro is_area_entity_room(area,filter,state) -%}
+    {%- set entity_id = area_entity_id(area,filter) -%}
+    {{is_state(entity_id, state) }}
+{%- endmacro -%}
+
+
+{%- macro areas_entities(areas) -%}
+    {%- if areas is string -%}
+        {%- set areas = [areas] -%}
+    {%- endif -%}
+    {%- set ns = namespace(entites=[]) %}
+    {%- for area in  areas -%}
+      {%- set ns.entites = ns.entites + area_entities(area)|d(none) -%}
+    {%- endfor -%}
+    {{ns.entites | to_json}}
+{%- endmacro -%}
+
+
