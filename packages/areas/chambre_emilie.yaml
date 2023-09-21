@@ -6,6 +6,11 @@ template:
       unit_of_measurement: "°C"
       state: "{{ state_attr('climate.netatmo_chambre_emilie', 'current_temperature')|float }}"
 
+input_boolean:
+  curfew_emilie:
+    name: Couvre feu Émilie
+    icon: bha:night-light
+
 automation:
 ################################################################################
 - id: 'chambre_emilie_prise_moustique'
@@ -88,3 +93,11 @@ automation:
     target:
       entity_id: light.chambre_emilie_plafonnier
 ################################################################################
+- id: 'chambre_emilie_music_curfew'
+  alias: Area - Chambre Émilie - couvre-feu musique
+  description: ""
+  use_blueprint:
+    path: antorfr/curfew.yaml
+    input:
+      media_player_target: media_player.emilie
+      input_target: input_boolean.curfew_emilie

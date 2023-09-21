@@ -1,0 +1,80 @@
+blueprint:
+  name: Media Player curfew
+  description: Stop music and prevent restart when input boolean is on
+  domain: automation
+  input:
+    media_player_target:
+      name: Target Media player
+      description: The Media player to control.
+      selector:
+        entity:
+          filter:
+            - domain: media_player
+    input_target:
+      name: Target input boolean
+      description: Input boolean activating (on) / deactivating (off) curfew mode
+      default: 
+      selector:
+        entity:
+          filter:
+            - domain: input_boolean    
+description: "Stop music and prevent restart when input boolean is on"
+mode: restart
+trigger:
+  - platform: state
+    entity_id: !input media_player_target
+    to: playing
+    id: playing
+  - platform: state
+    entity_id: !input input_target
+    to: "on"
+    id: curfew
+condition: []
+
+variables:
+    media_player_target: !input 'media_player_target'
+action:
+  - choose:
+      - alias: Stop music when curfew start
+        conditions:
+          - condition: trigger
+            id:
+              - curfew
+          - condition: state
+            entity_id: !input media_player_target
+            state: playing
+        sequence:
+          - variables:
+              end_in: >
+                {%- set media_duration = state_attr(media_player_target,'media_duration') -%}
+                {%- set media_position = state_attr(media_player_target,'media_position') -%}
+                {%- set updated_at = state_attr(media_player_target,'media_position_updated_at') -%}
+
+                {%- set end_in = updated_at - utcnow() + timedelta(seconds = (media_duration - media_position)) -%}
+                {{end_in }} 
+
+              almost_over: "{{as_timedelta(end_in) <= timedelta(minutes=10)}}"
+               
+          - alias: "if almost over wait time to end curent track"
+            if:
+              - condition: template
+                value_template: "{{as_timedelta(end_in) <= timedelta(minutes=10)}}"
+            then:
+              - delay: "{{end_in}}"
+          - service: media_player.media_stop
+            data: {}
+            target:
+              entity_id: !input media_player_target
+      - alias: Prevent music to start
+        conditions:
+          - condition: trigger
+            id:
+              - playing
+          - condition: state
+            entity_id: !input input_target
+            state: "on"
+        sequence:
+          - service: media_player.media_stop
+            data: {}
+            target:
+              entity_id: !input media_player_target

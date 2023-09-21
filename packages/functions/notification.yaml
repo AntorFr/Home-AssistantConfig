@@ -20,6 +20,10 @@ intent_script:
       text: "Ok, message envoyé"
     action:
       - service: script.sayto
+        data:
+          person: "{{name}}"
+          message: "{{message}}"
+
 ################################################################################
 
 

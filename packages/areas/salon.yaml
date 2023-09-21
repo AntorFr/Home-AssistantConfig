@@ -8,6 +8,7 @@ binary_sensor:
       - binary_sensor.salon_person_occupancy
       - binary_sensor.salon_capteur_mouvement_occupancy
       - binary_sensor.salon_capteur_presence_presence
+      - binary_sensor.bibliotheque_person_occupancy
 
 light:
   - platform: group
@@ -15,7 +16,7 @@ light:
     name: Salon lumieres
     entities:
       - light.salon
-      - light.salon_led_buffet
+      - light.led_bibliotheque
   
 sensor:
   - platform: history_stats
@@ -89,7 +90,7 @@ automation:
       - service: light.toggle
         data: {}
         target:
-          entity_id: light.salon_led_buffet
+          entity_id: light.led_bibliotheque
     - conditions:
       - condition: trigger
         id: right_press
@@ -188,7 +189,7 @@ automation:
           - service: light.toggle
             data: {}
             target:
-              entity_id: light.salon_led_buffet
+              entity_id: light.led_bibliotheque
         - conditions:
           - condition: trigger
             id: button_2_single
@@ -203,7 +204,8 @@ automation:
           sequence:
           - service: script.play_mood_music
             data:
-              zone: RdC
+              rooms:
+                - Rdc
             target: {}
         - conditions:
           - condition: trigger

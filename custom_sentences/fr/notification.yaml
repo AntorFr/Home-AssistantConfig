@@ -3,7 +3,7 @@ intents:
   LunchTime:
     data:
       - sentences:
-          - "(c'est l'heure d'allez) (A|à) table"
+          - "[c'est l'heure d'aller] (A|à) table"
         response: default
   SayTo:
     data:
@@ -12,7 +12,7 @@ intents:
         response: default
         requires_context:
           domain: 'person'
-        expansion_rules:
-          message:
-            wildcard: true
 
+lists:
+  message:
+    wildcard: true

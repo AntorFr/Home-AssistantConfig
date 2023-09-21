@@ -65,6 +65,14 @@ input_datetime:
   children_night_time_we:
     name: Soirée (we) - enfants couché
     has_time: true
+  children_curfew:
+    name: Soirée - enfants couvre-feu
+    has_time: true
+    icon: bha:night-light
+  children_curfew_we:
+    name: Soirée (we) - enfants couvre-feu
+    has_time: true
+    icon: bha:night-light
 ################################################################################
 
 ################################################################################
@@ -212,7 +220,7 @@ automation:
 
 ################################################################################
 - id: 'routine_children_night'
-  alias: Routine - Day - Children night
+  alias: Routine - Day - Enfants nuit
   description: ''
   trigger:
   - platform: time
@@ -260,6 +268,51 @@ automation:
       entity_id: switch.adaptive_lighting_sleep_mode_couloir_etage
 
 ################################################################################
+- id: 'routine_children_curfew'
+  alias: Routine - Day - Enfants couvre-feu
+  description: ''
+  trigger:
+  - platform: time
+    at: input_datetime.children_curfew
+    id: week
+  - platform: time
+    at: input_datetime.children_curfew_we
+    id: weekend
+  condition:
+  - condition: or
+    conditions:
+    - condition: and
+      conditions:
+      - condition: trigger
+        id: week
+      - condition: state
+        entity_id: binary_sensor.workday_tomorrow
+        state: 'on'
+    - condition: and
+      conditions:
+      - condition: trigger
+        id: weekend
+      - condition: state
+        entity_id: binary_sensor.workday_tomorrow
+        state: 'off' 
+  action:
+  - alias: "Fire children night routine event"
+    event: routine_event
+    event_data:
+      type: children curfew
+  #- service: input_select.select_option  
+  #  target:
+  #    entity_id: input_select.day_phase
+  #  data:
+  #    option:  "Soirée - enfants couché"
+  - alias: "Activate curfiew mode"
+    service: input_boolean.turn_on
+    target:
+      entity_id: 
+        - input_boolean.curfew_timothee
+        - input_boolean.curfew_emilie
+
+################################################################################
 - id: 'routine_children_morning'
   alias: Routine - Day - Children morning
   description: ''
@@ -291,6 +344,12 @@ automation:
         entity_id: binary_sensor.workday_sensor
         state: 'off' 
   action:
+  - alias: "Activate curfiew mode"
+    service: input_boolean.turn_off
+    target:
+      entity_id: 
+        - input_boolean.curfew_timothee
+        - input_boolean.curfew_emilie
   - alias: "Fire evening routine event"
     event: routine_event
     event_data:
@@ -300,6 +359,7 @@ automation:
       entity_id: input_select.day_phase
     data:
       option: "Matin - reveil enfants"
+
 
 ################################################################################
 - id: 'routine_detect_morning'

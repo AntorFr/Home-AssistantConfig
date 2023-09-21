@@ -391,7 +391,7 @@ input_select:
         - Malukah
         - Fantasy board gaming
         - Reading Adventure
-        - Sith Mediation
+        - Sith Meditation
         - Star Wars (epic)
         - Sea Song
         - Champs Marin
@@ -473,7 +473,7 @@ homeassistant:
           style: ['zen','chill','work']
           public: ['Sebastien']
           tags: []
-        - title: Sith Mediation
+        - title: Sith Meditation
           content_id: spotify:playlist:0YCerIiq6AF59sE3NlRPLQ
           content_type: playlist
           style: ['chill','work']

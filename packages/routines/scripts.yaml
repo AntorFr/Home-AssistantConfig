@@ -164,6 +164,9 @@ script:
         - switch.piscine_chauffe_eau
         - switch.salon_multiprise_canapee
         - switch.salon_prise_tv
+        #chambre parent
+        - switch.parent_bed_power_strip_switch_2
+        - switch.parent_bed_power_strip_switch_1
 
 ################################################################################
   routine_all_power_device_on:
@@ -174,6 +177,9 @@ script:
         entity_id:
         - switch.salon_multiprise_canapee
         - switch.salon_prise_tv
+        #chambre parent
+        - switch.parent_bed_power_strip_switch_2
+        - switch.parent_bed_power_strip_switch_1
 
 ## Volets / Portails  ###
 ################################################################################

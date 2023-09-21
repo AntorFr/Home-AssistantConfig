@@ -3,6 +3,6 @@ intents:
   MusicTurnOn:
     data:
       - sentences:
-          - "(joue | mets|lance|change) [de] la musique [<dans>] <area>"
-          - "(joue | mets|lance|change) [de] la musique"
+          - "(joue|mets|lance|change) [(nous|moi)] [de] la musique [<dans>] <area>"
+          - "(joue|mets|lance|change) [(nous|moi)] la musique"
         response: default

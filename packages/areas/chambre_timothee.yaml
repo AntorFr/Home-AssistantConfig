@@ -1,4 +1,8 @@
 
+input_boolean:
+  curfew_timothee:
+    name: Couvre feu Timothée
+    icon: bha:night-light
 
 automation:
 ################################################################################
@@ -132,7 +136,7 @@ automation:
     - delay:
         hours: 0
         minutes: 0
-        seconds: 10
+        seconds: 1
         milliseconds: 0
     - service: script.play_mood_music
       data:
@@ -140,3 +144,12 @@ automation:
           - chambre_timothee
         title: Dance Émilie
   mode: single
+################################################################################
+- id: 'chambre_timothee_music_curfew'
+  alias: Area - Chambre Timothée - couvre-feu musique
+  description: ""
+  use_blueprint:
+    path: antorfr/curfew.yaml
+    input:
+      media_player_target: media_player.timothee
+      input_target: input_boolean.curfew_timothee
