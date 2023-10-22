@@ -529,7 +529,41 @@ automation:
         color_name: red
         brightness_pct: 20
 ################################################################################
-
+################################################################################
+- id: 'chambre_parent_bed_light_switch'
+  alias: Area - Chambre parent - Bouton
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: 
+      - binary_sensor.parent_light_switch_long_press
+    from: ["off"]
+    to: ["on"]
+    id: long_press
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: long_press
+      sequence:
+      - if: 
+          - condition: state
+            entity_id:
+              - media_player.chambre_parent
+            state:
+              - playing
+        then:
+          - service: media_player.media_stop
+            entity_id:
+              - media_player.chambre_parent
+        else:
+          - service: script.play_mood_music
+            data:
+              rooms:
+                - chambre_parent
+    default: []
+  mode: parallel
 
 homeassistant:
   customize:

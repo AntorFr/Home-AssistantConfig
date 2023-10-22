@@ -58,6 +58,7 @@ logger:
     homeassistant.components.sonos: error
     homeassistant.components.media_player: error
     custom_components.husqvarna_automower: error
+    custom_components.chime_tts: error
     #custom_components.deepstack_face: error
 
 sensor:

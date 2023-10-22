@@ -162,3 +162,30 @@ automation:
       dev_id: netatmo_timothee
   mode: single
 ################################################################################
+- id: 'function_presence_car_in_front'
+  alias: Function Presence - Voiture devant (on/off)
+  description: Function Presence - Voiture devant
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.entree_car_occupancy
+    to: 'on'
+    for:
+      minutes: 10
+  condition: 
+    - condition: state
+      entity_id: input_boolean.guest_mode
+      state: 'off'
+  action:
+  - service: input_boolean.turn_on
+    entity_id: input_boolean.guest_mode
+  - wait_for_trigger:
+      - platform: state
+        entity_id: binary_sensor.entree_car_occupancy
+        to: "off"
+        for:
+          minutes: 5
+  - service: input_boolean.turn_off
+    entity_id: input_boolean.guest_mode
+  mode: single
+################################################################################
+

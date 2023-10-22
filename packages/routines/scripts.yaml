@@ -38,6 +38,7 @@ script:
         - light.salon
         - light.salon_led_buffet
         - light.plafonnier_entree
+        - light.led_bibliotheque
 
 ################################################################################
   routine_night_all_light_turn_off:

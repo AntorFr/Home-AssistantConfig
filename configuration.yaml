@@ -2,6 +2,7 @@
 homeassistant:
   packages: !include_dir_named packages
   media_dirs: 
+    local: /media
     sounds: /media/sounds
     deepstack: /media/deepstack
     platerecognizer: /media/platerecognizer

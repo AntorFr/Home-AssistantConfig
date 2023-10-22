@@ -177,12 +177,16 @@ script:
 
           {%- from 'music_functions.jinja' import sonos_in_area -%}
           {{sonos_in_area(area_list)|from_json}}
-
-    - service: tts.cloud_say
+    - service: chime_tts.say
       data:
-        entity_id: "{{media_player}}"
+        tts_platform: cloud
         message: "A table."
+        chime_path: /media/sounds/tos-intercom.mp3
         cache: true
+        gender: male
+        announce: true
+      target:
+        entity_id: "{{media_player}}"
 ###############################################
   sayto:
     alias: "Notification message"
