@@ -1,0 +1,8 @@
+language: "fr"
+intents:
+  NightModeOn:
+    data:
+      - sentences:
+          - "Bonne nuit"
+          - "je me couche"
+        response: default

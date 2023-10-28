@@ -638,6 +638,20 @@ script:
           - script.routine_all_light_mode_night_off
 ################################################################################
 
+
+intent_script:
+###############################################################################
+  NightModeOn:
+    async_action: false
+    speech:
+      text: "Bonne nuit"
+    action:
+    - service: input_boolean.turn_on
+      data: {}
+      target:
+        entity_id: input_boolean.night_mode
+################################################################################
+
 ################################################################################
 scene:
 ################################################################################
@@ -650,3 +664,4 @@ scene:
       icon: mdi:weather-night
       friendly_name: Mode nuit
       state: 'on'
+
