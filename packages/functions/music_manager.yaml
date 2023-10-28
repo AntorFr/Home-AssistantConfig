@@ -412,6 +412,8 @@ input_select:
         - Il etait une fois
         - Mortel Adele
         - Planete Alpha
+        - Lolirock
+        - Histoire d’espace
     icon: mdi:playlist-music
 
 homeassistant:
@@ -588,18 +590,19 @@ homeassistant:
           style: ['histoire']
           public: ['Emilie','Timothee']
           tags: ['04-70-D7-DA-B4-49-80','04-75-D7-DA-B4-49-80']
+        - title: Lolirock
+          content_id: spotify:playlist:3SShFGhkyOSbBscaU8T3kX
+          content_type: music
+          style: ['motivation']
+          public: ['Emilie','Timothee']
+        - title: Histoire d’espace
+          content_id: spotify:playlist:2L19u0cpg3cFqn8SwQM2MQ
+          content_type: music
+          style: ['histoire']
+          public: ['Timothee']
+          tags: ['53-1D-CC-D6-60-00-01','53-22-C7-D6-60-00-01']
 
-
-
-
-
-
-
-
-
-
-
-
+          
 
 
 
