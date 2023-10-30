@@ -595,12 +595,12 @@ homeassistant:
           content_type: music
           style: ['motivation']
           public: ['Emilie','Timothee']
+          tags: ['53-1D-CC-D6-60-00-01','53-22-C7-D6-60-00-01']
         - title: Histoire d’espace
           content_id: spotify:playlist:2L19u0cpg3cFqn8SwQM2MQ
           content_type: music
           style: ['histoire']
           public: ['Timothee']
-          tags: ['53-1D-CC-D6-60-00-01','53-22-C7-D6-60-00-01']
 
           
 
