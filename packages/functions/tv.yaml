@@ -42,37 +42,54 @@ automation:
               target:
                 entity_id: media_player.tv01
       default:
-        - if:
-            - condition: state
+        - service: script.function_tv_xbox_switch_source
+          data: {}
+
+script:
+  function_tv_xbox_switch_source:
+    alias: Function - TV - Switch source XBOX
+    sequence:
+      - if:
+        - condition: state
+          entity_id: media_player.tv01
+          state: "off"
+        then:
+          - service: media_player.turn_on
+            data: {}
+            target:
               entity_id: media_player.tv01
-              state: "off"
-          then:
-            - service: media_player.turn_on
-              data: {}
-              target:
-                entity_id: media_player.tv01
-            - delay:
-                hours: 0
-                minutes: 0
-                seconds: 8
-                milliseconds: 0
-        - service: remote.send_command
-          data:
-            delay_secs: 0.5
-            command:
-              - Source
-          target:
-            entity_id: remote.tv01
-        - delay:
-            seconds: 2
-        - service: remote.send_command
-          data:
-            delay_secs: 0.5
-            command:
-              - CursorDown
-              - CursorDown
-              - CursorDown
-              - CursorUp
-              - Confirm
-          target:
-            entity_id: remote.tv01
+          - delay:
+              hours: 0
+              minutes: 0
+              seconds: 8
+              milliseconds: 0
+      - service: remote.send_command
+        data:
+          delay_secs: 0.5
+          command:
+            - Source
+        target:
+          entity_id: remote.tv01
+      - delay:
+          seconds: 2
+      - service: remote.send_command
+        data:
+          delay_secs: 0.5
+          command:
+            - CursorDown
+            - CursorDown
+            - CursorDown
+            - CursorUp
+            - Confirm
+        target:
+          entity_id: remote.tv01
+
+intent_script:
+###############################################################################
+  tvXBoxOn:
+    async_action: false
+    speech:
+      text: "c'est partie, bon jeux"
+    action:
+      - service: script.function_tv_xbox_switch_source
+        data: {}
