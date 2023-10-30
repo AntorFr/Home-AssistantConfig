@@ -644,9 +644,19 @@ intent_script:
   NightModeOn:
     async_action: false
     speech:
-      text: "Bonne nuit"
+      text: "très bien, passez une Bonne nuit"
     action:
     - service: input_boolean.turn_on
+      data: {}
+      target:
+        entity_id: input_boolean.night_mode
+################################################################################
+  WakeUpModeOn:
+    async_action: false
+    speech:
+      text: "Bonjour ! c'est partie pour une nouvelle journée"
+    action:
+    - service: input_boolean.turn_off
       data: {}
       target:
         entity_id: input_boolean.night_mode

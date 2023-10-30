@@ -6,3 +6,11 @@ intents:
           - "Bonne nuit"
           - "je me couche"
         response: default
+  WakeUpModeOn:
+    data:
+      - sentences:
+          - "Bonjour"
+          - "je (me|suis) (leve|levé|reveille|réveiller)"
+          - "reveil toi"
+          - "c'est l'heure de se (reveiller|lever)"
+        response: default
