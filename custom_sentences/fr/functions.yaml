@@ -1,0 +1,7 @@
+language: "fr"
+intents:
+  tvXBoxOn:
+    data:
+      - sentences:
+          - "(alume|met[s]|lance) (la|le) XBox"
+        response: default
