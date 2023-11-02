@@ -7,6 +7,7 @@ binary_sensor:
     entities:
       - binary_sensor.salle_a_manger_capteur_mouvement_occupancy
       - binary_sensor.salle_a_manger_presence_presence
+      - binary_sensor.presence_sensor_dining_occupancy
 
 template:
   - sensor:
