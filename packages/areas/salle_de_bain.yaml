@@ -1,0 +1,67 @@
+light:
+  - platform: group
+    name: Salle de bain lumieres
+    unique_id: salle_de_bain_lumieres
+    entities:
+      - light.salle_de_bain
+
+automation:
+################################################################################
+- id: 'salle_de_bain_light'
+  alias: Area - Salle de bain - Lumière auto
+  description: ''
+  use_blueprint:
+    path: antorfr/motion_light.yaml
+    input:
+      light_target:
+        entity_id: light.salle_de_bain_lumieres
+      adaptive_lighting: switch.adaptive_lighting_default   
+      motion_sensor: binary_sensor.anyone_home
+      only_turn_off: true   
+      no_motion_wait:
+        minutes: 5
+      no_motion_warning: 30
+      toggle_trigger:
+        platform: state
+        entity_id: 
+          - binary_sensor.bathroom_light_switch_touchfield_1
+          - binary_sensor.bathroom_light_switch_multi_touch
+        from: ["off"]
+        to: ["on"]
+        id: toggle
+################################################################################
+- id: 'salle_de_bain_light_switch'
+  alias: Area - Salle de bain - Bouton
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: 
+      - binary_sensor.bathroom_light_switch_long_press
+    from: ["off"]
+    to: ["on"]
+    id: long_press
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: long_press
+      sequence:
+      - if: 
+          - condition: state
+            entity_id:
+              - media_player.sonos_salle_de_bain
+            state:
+              - playing
+        then:
+          - service: media_player.media_stop
+            entity_id:
+              - media_player.sonos_salle_de_bain
+        else:
+          - service: script.play_mood_music
+            data:
+              rooms:
+                - salle_de_bain
+    default: []
+  mode: parallel
+

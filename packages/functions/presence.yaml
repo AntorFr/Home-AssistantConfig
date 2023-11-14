@@ -13,8 +13,6 @@ group:
       - binary_sensor.maison_floor1_presence
 
     
-  
-
 input_boolean:
   guest_mode:
     name: Mode invitée

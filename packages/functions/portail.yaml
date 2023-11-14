@@ -70,4 +70,127 @@ automation:
       target:
         entity_id: cover.portail_2
   mode: single
+################################################################################
+- id: 'function_portail_sonette'
+  alias: Function portail - Sonnette
+  description: ''
 
+  mode: restart
+  max_exceeded: silent
+
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.sonette_portail_doorbell
+      to: 'on'
+
+  action:
+  - choose:
+    - alias: "Si a la maison"
+      conditions:
+        - condition: state
+          entity_id: input_boolean.away_mode
+          state: 'off'
+      sequence:
+        - service: script.sound_notify
+          data:
+            media_player_entities:
+              - media_player.cuisine
+              - media_player.salon
+              - media_player.salle_a_manger
+              - media_player.cuisine_move
+              - media_player.bureau
+              - media_player.garage
+            #media_content_id: "media-source://media_source/sounds/bb8_sound.mp3" > sonos doesn't find local url anymore (home.intra.sberard.fr)
+            media_content_id: "https://home.intra.sberard.fr/http-sounds/bb8_sound.mp3"
+  - service: notify.all_mobile
+    data:
+      message: "Quelqu'un sonne au portail"
+      data:
+        #ios
+        entity_id: camera.g4_doorbell_high
+        push:
+          sound:
+            name: "default"
+            critical: 1
+            volume: 1.0
+        #android
+        image: "/api/camera_proxy/camera.g4_doorbell_high"
+        ttl: 0
+        priority: high
+
+        actions:
+          - action: "URI" # The key you are sending for the event
+            title: "camera" # The button title
+            uri: "/lovelace-maison/portails"
+            icone: "sfsymbols:video.doorbell"
+          - action: "OPEN_FRONTE_GATE" # Must be set to URI if you plan to use a URI
+            title: "Ouvrir le portail"
+            icone: "sfsymbols:pedestrian.gate.open"
+   
+################################################################################
+- id: 'function_portail_sonette_action_notif'
+  alias: Function portail - Sonnette Actionable
+  description: ''
+  mode: parallel
+  max_exceeded: silent
+
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data:
+      actionName: 'OPEN_FRONTE_GATE'
+  action:
+      - service: cover.open_cover
+        target:
+          entity_id: cover.portail_2
+
+script:
+################################################################################
+  parcel_delivery:
+    alias: "Function portail - Livraison de colis" 
+    icon: mdi:truck-delivery     
+    sequence: 
+    - alias: Prepare message
+      variables:
+        message_display: "Déposer sous le porche d'entré"
+        message_audio: >-
+          "Bonjour, je suis Nestor, l'assistant de la maison. 
+          mes occupants ne sont pas disponibles.
+          {%- if is_state("cover.portail_2",'closed') %}
+          je vais vous ouvrir le portail. 
+          {%- endif %}
+          Vous pouvez déposer les colis sous le porche devant la porte d'entrée. 
+          Merci"
+    - if:
+        - condition: state
+          entity_id: cover.portail_2
+          state: closed
+      then:
+        - service: cover.open_cover
+          data: {}
+          target:
+            entity_id: cover.portail_2
+    - service: text.set_value
+      data:
+        value: "{{message_display}}"
+      target:
+        entity_id: text.portail_doorbell
+    - service: tts.cloud_say
+      data:
+        cache: true
+        options:
+          voice: MauriceNeural
+        entity_id: media_player.sonette_portail_speaker
+        message: "{{message_audio}}"
+      
+################################################################################
+
+intent_script:
+###############################################################################
+  ParcelDelivery:
+    async_action: false
+    speech:
+      text: "Ok, je répond au livreur" #{{response.playlist}} 
+    action:
+      - service: script.parcel_deliver
+################################################################################

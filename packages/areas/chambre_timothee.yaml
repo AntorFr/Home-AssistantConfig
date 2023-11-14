@@ -142,7 +142,7 @@ automation:
       data:
         rooms:
           - chambre_timothee
-        title: Dance Émilie
+        title: Lolirock
   mode: single
 ################################################################################
 - id: 'chambre_timothee_music_curfew'

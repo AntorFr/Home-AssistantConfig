@@ -183,7 +183,8 @@ script:
         message: "A table."
         chime_path: /media/sounds/tos-intercom.mp3
         cache: true
-        gender: male
+        option:
+          voice: EloiseNeural
         announce: true
       target:
         entity_id: "{{media_player}}"
@@ -226,7 +227,43 @@ script:
         entity_id: "{{media_player}}"
         message: "{{message}}"
         cache: false
-
+###############################################
+  bus_time_warning:
+    alias: "Notification heure de départ"
+    fields:
+      event:
+        required: True
+      media_players:
+        required: true
+        selector: 
+          entity:
+            multiple: true
+            filter:
+              - domain: media_player
+      
+    sequence: 
+    - alias: Prepare message
+      variables:
+        delta_time: "{{as_datetime(event.start) - now()}}"
+        message: >
+          {%- if as_timedelta(delta_time) < timedelta(minutes = 1 )  -%}
+          "c'est l'heure du {{ event.summary }} "
+          {%- else  -%}
+          "{{ event.summary }} dans {{(as_timedelta(delta_time).seconds/60)| round}} minutes"
+          {%- endif -%}
+    - service: chime_tts.say
+      enabled: true
+      data:
+        tts_platform: cloud
+        message: "{{message}}"
+        chime_path: /media/sounds/Jingle_sncf_2.mp3
+        cache: true
+        #gender: male
+        announce: true
+      target:
+        entity_id: "{{media_players}}"
           
+###############################################
+
 
 

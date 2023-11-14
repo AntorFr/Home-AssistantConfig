@@ -23,6 +23,7 @@ binary_sensor:
       - binary_sensor.lit_parents_mouvement_gauche
       - binary_sensor.lit_parents_presence_gauche
       - binary_sensor.lit_parents_mouvement_droite
+      - binary_sensor.smart_parent_bed_presence_droite
 
 
 light:

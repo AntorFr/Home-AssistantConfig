@@ -4,5 +4,5 @@ intents:
     data:
       - sentences:
           - "(joue|mets|lance|change) [(nous|moi)] [de] la musique [<dans>] <area>"
-          - "(joue|mets|lance|change) [(nous|moi)] la musique"
+          - "(joue|mets|lance|change) [(nous|moi)] [de] la musique"
         response: default

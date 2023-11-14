@@ -17,7 +17,6 @@ light:
       - light.hue_color_lamp_5_3
       - light.wled
       - light.office_light_switch_l1
-      - light.office_light_switch_l2
 
 sensor:
   - name: mouvement_bureau_5min
@@ -46,6 +45,28 @@ automation:
       only_turn_off: true
       light_sensor:
       lux_cutoff:
+
+################################################################################
+- id: 'bureau_couloir_light'
+  alias: Area - Bureau - Lumière couloir
+  description: ''
+  use_blueprint:
+    path: antorfr/motion_light.yaml
+    input:
+      light_target:
+        entity_id: light.office_light_switch_l2 
+      motion_sensor: binary_sensor.anyone_home
+      only_turn_off: true   
+      no_motion_wait:
+        minutes: 5
+      no_motion_warning: 30
+      toggle_trigger:
+        platform: state
+        entity_id: 
+          - binary_sensor.office_hallway_light_switch_touchfield_1
+        from: ["off"]
+        to: ["on"]
+        id: toggle
 ################################################################################
 - id: bureau_turn_off
   alias: Area - Bureau - Tout eteindre
@@ -57,22 +78,104 @@ automation:
         - binary_sensor.capteurs_mouvement_bureau
       from: "on"
       to: "off"
-    - platform: state
-      entity_id:
-        - binary_sensor.office_light_switch_multi_touch
-      from: "off"
-      to: "on"
+      for:
+        minutes: 5
   condition: []
   action:
     - service: homeassistant.turn_off
       data: {}
       target:
         entity_id:
-          - light.bureau_lumieres
           - media_player.bureau
           - switch.fire_tablet_screen
 
 ################################################################################
+- id: 'bureau_light_switch'
+  alias: Area - Bureau - Bouton
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: 
+      - binary_sensor.desk_light_switch_long_press
+      - binary_sensor.office_hallway_light_switch_long_press
+      - binary_sensor.office_light_switch_long_press
+    from: ["off"]
+    to: ["on"]
+    id: long_press
+  - platform: state
+    entity_id: 
+      - binary_sensor.office_light_switch_multi_touch
+      - binary_sensor.office_hallway_light_switch_multi_touch
+      - binary_sensor.desk_light_switch_multi_touch
+    from: ["off"]
+    to: ["on"]
+    id: multi_touch
+  - platform: state
+    entity_id: 
+      - binary_sensor.office_hallway_light_switch_swipe_left
+    from: ["off"]
+    to: ["on"]
+    id: swipe_left
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: long_press
+      sequence:
+      - if: 
+          - condition: state
+            entity_id:
+              - media_player.bureau
+            state:
+              - playing
+        then:
+          - service: media_player.media_stop
+            entity_id:
+              - media_player.bureau
+        else:
+          - service: script.play_mood_music
+            data:
+              rooms:
+                - bureau
+    - conditions:
+      - condition: trigger
+        id: multi_touch
+      sequence:
+      - service: homeassistant.turn_off
+        data: {}
+        target:
+          entity_id:
+            - media_player.bureau
+            - switch.fire_tablet_screen
+            - light.bureau_lumieres
+            - light.office_light_switch_l2 
+    - conditions:
+      - condition: trigger
+        id: swipe_left
+      sequence:
+      - service: light.turn_on
+        data: {}
+        target:
+          entity_id:
+            - light.office_light_switch_l2
+      - delay: "00:00:03" 
+      - service: light.turn_on
+        data: {}
+        target:
+          entity_id:
+            - light.bureau_lumieres
+      - delay: "00:00:10"
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id:
+            - light.office_light_switch_l2 
+    default: []
+  mode: parallel
+################################################################################
+
+
 homeassistant:
   customize:
     binary_sensor.capteurs_mouvement_bureau:

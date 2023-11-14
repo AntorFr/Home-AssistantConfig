@@ -5,3 +5,10 @@ intents:
       - sentences:
           - "(alume|met[s]|lance) (la|le) XBox"
         response: default
+  ParcelDelivery:
+    data:
+      - sentences:
+          - "(répond|ouvre) [le portail] (au) Livreur"
+        response: default
+
+

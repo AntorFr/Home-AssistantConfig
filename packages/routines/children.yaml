@@ -181,9 +181,7 @@ automation:
             entity_id: 
               - light.cadre_lumineux_timothee_lune
               - light.cadre_lumineux_timothee_etoiles
-  ###############################################
-
-  ###############################################
+###############################################
 - id: routine_emilie_clock
   alias: Routine - Horloge Emilie - Auto
   description: ''
@@ -303,4 +301,42 @@ automation:
             effect: rainbowClock
           target:
             entity_id: light.horloge_emilie
-  ###############################################
+###############################################
+- id: routine_children_bus_time_warning
+  alias: Routine - enfants - rappel départ école
+  mode: restart
+  trigger:
+    - platform: calendar
+      event: start
+      offset: "-0:30:0"
+      entity_id: calendar.morning_notifications
+    - platform: calendar
+      event: start
+      offset: "-0:15:0"
+      entity_id: calendar.morning_notifications
+    - platform: calendar
+      event: start
+      offset: "-0:10:0"
+      entity_id: calendar.morning_notifications
+    - platform: calendar
+      event: start
+      offset: "-0:05:0"
+      entity_id: calendar.morning_notifications
+    - platform: calendar
+      event: start
+      entity_id: calendar.morning_notifications
+  condition: []
+  action:
+    - service: "script.bus_time_warning"
+      data:
+          media_players: 
+              - media_player.emilie
+              - media_player.timothee
+              - media_player.salle_a_manger
+          event:
+            start: "{{trigger.calendar_event.start}}"
+            end: "{{trigger.calendar_event.end}}"
+            summary: "{{trigger.calendar_event.summary}}"
+            description: "{{trigger.calendar_event.description}}"
+          test: "{{trigger.calendar_event}}"
+
