@@ -8,6 +8,41 @@ sensor:
     duration: 00:10:00
     end: "{{ now() }}"
 
+  - platform: min_max
+    type: mean
+    name: temperature garage
+    unique_id: garage_temperature
+    round_digits: 1
+    entity_ids:
+      - sensor.garage_door_2_temperature
+      - sensor.garage_door_3_temperature
+  - platform: min_max
+    type: mean
+    name: humiditée garage
+    unique_id: garage_humidity
+    round_digits: 1
+    entity_ids:
+      - sensor.garage_door_2_humidity
+      - sensor.garage_door_3_humidity
+  - platform: min_max
+    type: mean
+    name: humiditée garage
+    unique_id: garage_humidity
+    round_digits: 1
+    entity_ids:
+      - sensor.garage_door_2_humidity
+      - sensor.garage_door_3_humidity
+  - platform: min_max
+    type: mean
+    name: Pression garage
+    unique_id: garage_pressure
+    round_digits: 1
+    entity_ids:
+      - sensor.garage_door_2_pressure
+      - sensor.garage_door_3_pressure
+  
+
+
 automation:
 ################################################################################
 - id: 'garage_switch_garage2'
