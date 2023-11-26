@@ -26,14 +26,6 @@ sensor:
       - sensor.garage_door_3_humidity
   - platform: min_max
     type: mean
-    name: humiditée garage
-    unique_id: garage_humidity
-    round_digits: 1
-    entity_ids:
-      - sensor.garage_door_2_humidity
-      - sensor.garage_door_3_humidity
-  - platform: min_max
-    type: mean
     name: Pression garage
     unique_id: garage_pressure
     round_digits: 1
