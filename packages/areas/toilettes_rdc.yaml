@@ -25,7 +25,7 @@ automation:
       only_during_night: false
       toggle_trigger:
         platform: state
-        entity_id: binary_sensor.restroom_groundfloor_light_status
+        entity_id: binary_sensor.restroom_groundfloor_light_bouton
         from: ["on","off"]
         to: ["on","off"]
         id: toggle

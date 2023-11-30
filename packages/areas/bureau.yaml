@@ -1,6 +1,7 @@
 
 binary_sensor:
   - platform: group
+    #binary_sensor.capteurs_mouvement_bureau
     name: "Capteurs mouvement bureau"
     device_class: occupancy
     unique_id: bureau_motion_sensors #binary_sensor.capteurs_mouvement_bureau
@@ -174,6 +175,88 @@ automation:
     default: []
   mode: parallel
 ################################################################################
+- id: bureau_heater-auto
+  alias: Area - Bureau - Chauffage auto
+  description: ""
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.capteurs_mouvement_bureau
+      from: "off"
+      to: "on"
+      for:
+        minutes: 5
+      id: presence
+    - platform: state
+      entity_id:
+        - binary_sensor.capteurs_mouvement_bureau
+      from: "on"
+      to: "off"
+      for:
+        minutes: 5
+      id: absence
+    - platform: time
+      at: "08:30:00"
+      id: morning
+  condition:
+    - condition: or
+      conditions:
+        - condition: trigger
+          id:
+            - presence
+            - absence
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: person.sebastien
+              state: home
+            - condition: trigger
+              id:
+                - morning
+            - condition: state
+              entity_id: binary_sensor.workday_sensor
+              state: "on"
+  action:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id:
+                - presence
+                - morning
+          sequence:
+            - if:
+                - condition: state
+                  entity_id: binary_sensor.workday_sensor
+                  state: "on"
+              then:
+                - service: climate.set_preset_mode
+                  data:
+                    preset_mode: Travail
+                  target:
+                    entity_id: climate.mobile_heater_plug_thermostat
+              else:
+                - service: climate.set_preset_mode
+                  data:
+                    preset_mode: home
+                  target:
+                    entity_id: climate.mobile_heater_plug_thermostat
+            - service: climate.turn_on
+              data: {}
+              target:
+                entity_id: climate.mobile_heater_plug_thermostat
+        - conditions:
+            - condition: trigger
+              id:
+                - absence
+          sequence:
+            - service: climate.turn_off
+              data: {}
+              target:
+                entity_id: climate.mobile_heater_plug_thermostat
+################################################################################
+
+
 
 
 homeassistant:
