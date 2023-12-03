@@ -69,16 +69,38 @@ script:
         - light.salon
         - light.salon_led_buffet
         - light.plafonnier_entree
-    - choose:
-      - conditions:
-        - condition: state
+    - if:
+        - alias: "Gest mode off" 
+          condition: state
           entity_id: input_boolean.guest_mode
           state: 'off'
-        sequence:
+      then:
         - service: light.turn_off
           target:
             area_id: chambre_d_amis
+    - if:
+        - alias: "Christmas mode on" 
+          condition: state
+          entity_id: input_boolean.mode_noel
+          state: 'on'
+      then:
+        - service: light.turn_off
+          target:
+            entity_id: light.sapin
 
+################################################################################
+  routine_morning_all_light_turn_on:
+    alias: Routine - All light on morning
+    sequence:
+    - if:
+        - alias: "Christmas mode on" 
+          condition: state
+          entity_id: input_boolean.mode_noel
+          state: 'on'
+      then:
+        - service: light.turn_on
+          target:
+            entity_id: light.sapin
 ################################################################################
   routine_all_light_mode_night_on:
     alias: Routine - Lumières mode nuit
