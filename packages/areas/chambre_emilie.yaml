@@ -35,45 +35,26 @@ automation:
   - entity_id: switch.chambre_emilie_prise_bureau
     service: switch.turn_off
 ################################################################################
-- id: 'chambre_emilie_bouton_light'
+- id: 'chambre_emilie_bouton_lumiere'
   alias: Area - Chambre Émilie - Bouton Lumière
   description: ''
-  trigger:
-  - platform: device
-    domain: mqtt
-    device_id: fc73b6b036fdd98cf9d503d256aa2dce
-    type: action
-    subtype: left_press
-    discovery_id: 0x001788010b01dccc action_left_press
-    id: left_press
-  - platform: device
-    domain: mqtt
-    device_id: fc73b6b036fdd98cf9d503d256aa2dce
-    type: action
-    subtype: right_press
-    discovery_id: 0x001788010b01dccc action_right_press
-    id: right_press
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: left_press
-      sequence:
-      - service: light.toggle
-        data: {}
-        target:
-          entity_id: light.chambre_emilie_plafonnier
-    - conditions:
-      - condition: trigger
-        id: right_press
-      sequence:
-      - service: light.toggle
-        data: {}
-        target:
-          entity_id: light.horloge_emilie
-    default: []
-  mode: parallel
+  use_blueprint:
+    path: antorfr/motion_light.yaml
+    input:
+      light_target:
+        entity_id: light.chambre_emilie_plafonnier
+      adaptive_lighting: switch.adaptive_lighting_chambre_emilie
+      motion_sensor: binary_sensor.anyone_home
+      no_motion_wait:
+        minutes: 15
+      no_motion_warning: 30  
+      only_turn_off: true      
+      toggle_trigger:
+        platform: state
+        entity_id: binary_sensor.emilie_entrance_switch_touchfield_3
+        from: ["off"]
+        to: ["on"]
+        id: toggle
 ################################################################################
 - id: 'chambre_emilie_button_lit'
   alias: Area - Chambre Émilie - Bouton lit
@@ -101,3 +82,63 @@ automation:
     input:
       media_player_target: media_player.emilie
       input_target: input_boolean.curfew_emilie
+################################################################################
+- id: 'chambre_emilie_light_switch'
+  alias: Area - Chambre Émilie - Bouton
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: 
+      - binary_sensor.emilie_entrance_switch_long_press
+    from: ["off"]
+    to: ["on"]
+    id: long_press
+  - platform: state
+    entity_id: 
+      - binary_sensor.emilie_entrance_switch_touchfield_2
+    from: ["off"]
+    to: ["on"]
+    id: touchfield_2
+  - platform: state
+    entity_id: 
+      - binary_sensor.emilie_entrance_switch_touchfield_1
+    from: ["off"]
+    to: ["on"]
+    id: touchfield_1
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: long_press
+      sequence:
+      - if: 
+          - condition: state
+            entity_id:
+              - media_player.emilie
+            state:
+              - playing
+        then:
+          - service: media_player.media_stop
+            entity_id:
+              - media_player.emilie
+        else:
+          - service: script.play_mood_music
+            data:
+              rooms:
+                - chambre_emilie
+    - conditions:
+      - condition: trigger
+        id: touchfield_2
+      sequence:
+        - service: cover.toggle
+          entity_id: cover.chambre_emilie_volet_roulant
+    - conditions:
+      - condition: trigger
+        id: touchfield_1
+      sequence:
+        - service: light.toggle
+          entity_id: light.horloge_emilie
+    default: []
+  mode: parallel
+
