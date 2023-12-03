@@ -3,6 +3,7 @@ adaptive_lighting:
     lights:
       - light.salon
     take_over_control: true
+    adapt_only_on_bare_turn_on: true
 
   - name: Salle a manger
     lights:
@@ -14,12 +15,18 @@ adaptive_lighting:
       - light.couloir_etage
       - light.escaliers
     take_over_control: true
+    min_brightness: 15
+    sleep_brightness: 5
 
   - name: default
     lights:
       - light.toilettes_rdc
       - light.toilette_etage
     take_over_control: true
+    min_brightness: 10
+    sleep_brightness: 10
+    sleep_rgb_or_color_temp: rgb_color
+    sleep_rgb_color: [255,0,0]
 
   - name: entree
     lights:
@@ -48,3 +55,5 @@ adaptive_lighting:
       - light.hue_go_1
       - light.hue_go_2
     take_over_control: true
+    min_brightness: 10
+    sleep_brightness: 5
