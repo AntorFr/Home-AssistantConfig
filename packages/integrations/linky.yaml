@@ -1,23 +1,5 @@
 template:
  - sensor:     
-    - unique_id: "teleinfo_energy" # Energy Total + attr HP/HC
-      availability: >
-        {{ "true" }}
-      state: >
-        {% set HCHC = states('sensor.linky_index_hc')  | float * 1000  %} 
-        {% set HCHP = states('sensor.linky_index_hp')  | float * 1000 %}
-
-        {{ (HCHC + HCHP) }}
-
-      unit_of_measurement: "Wh"
-      state_class: "total_increasing"
-      device_class: energy
-      attributes:
-        Index HP: >-
-          {{ states('sensor.linky_index_hp') | float * 1000 }}
-        Index HC: >-
-          {{ states('sensor.linky_index_hc') | float * 1000 }}
-    
     - unique_id: "teleinfo_periode_tarifaire"  # Periode Tarifaire
       #availability: >
       #  {{ "true" if(state_attr("sensor.linky","TIC").PTEC is defined) else "false" }}
@@ -35,29 +17,6 @@ template:
           backup_hc_schedule
           {%- endif %}       
 
-    - unique_id: "teleinfo_prix_kwh" # Prix 
-      state: >
-              {% if is_state('sensor.template_teleinfo_periode_tarifaire', 'HC') %}
-              0.1312
-              {% else %}
-              0.1749
-              {% endif %}
-      device_class: monetary
-      unit_of_measurement: €/kWh
-
-utility_meter:
-  daily_energy:
-    source: sensor.template_teleinfo_energy_total
-    cycle: daily
-  hourly_energy:
-    source: sensor.template_teleinfo_energy_total
-    cycle: hourly
-  quarter_hourly_energy:
-    source: sensor.template_teleinfo_energy_total
-    cycle: quarter-hourly
-  yearly_energy:
-    source: sensor.template_teleinfo_energy_total
-    cycle: yearly
 
 schedule:
   backup_hc_schedule:
