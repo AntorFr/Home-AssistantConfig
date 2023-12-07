@@ -7,7 +7,7 @@ template:
         {%-if(is_state('sensor.linky_priode_tarifaire',['HP','HC']))%}
           {{ states('sensor.linky_priode_tarifaire') }}
         {%- else %}
-          {{'HC' if(is_state('schedule.backup_hc_schedule','on')) else 'HP'}}
+          {{'HP' if(is_state('schedule.backup_hp_schedule','on')) else 'HC'}}
         {%- endif %}
       attributes:
         source: >
@@ -19,26 +19,28 @@ template:
 
 
 schedule:
-  backup_hc_schedule:
-    name: "Heure creuse (backup)"
+  backup_hp_schedule:
+    name: "Heure pleine (backup)"
     monday:
-      - from: "22:00:00"
-        to: "06:00:00"
+      - from: "06:00:00"
+        to: "22:00:00"
     tuesday:
-      - from: "22:00:00"
-        to: "06:00:00"
+      - from: "06:00:00"
+        to: "22:00:00"
     wednesday:
-      - from: "22:00:00"
-        to: "06:00:00"
+      - from: "06:00:00"
+        to: "22:00:00"
     thursday:
-      - from: "22:00:00"
-        to: "06:00:00"
+      - from: "06:00:00"
+        to: "22:00:00"
     friday:
-      - from: "22:00:00"
+      - from: "00:00:00"
         to: "06:00:00"
+      - from: "22:00:00"
+        to: "00:00:00"
     saturday:
-      - from: "22:00:00"
-        to: "06:00:00"
+      - from: "06:00:00"
+        to: "22:00:00"
     sunday:
-      - from: "22:00:00"
-        to: "06:00:00"
+      - from: "06:00:00"
+        to: "22:00:00"
