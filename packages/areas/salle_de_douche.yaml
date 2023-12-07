@@ -3,9 +3,8 @@ light:
     name: Salle de douche lumieres
     unique_id: salle_de_douche_lumieres
     entities:
-      #- light.dressing_plafonnier
-      #- light.salle_de_douche_plafonnier
-      - light.dressing_light_switch_l1
+      - light.dressing_plafonnier
+      - light.salle_de_douche_plafonnier
       - light.shower_light_switch_l2
       - light.shower_light_switch_l1
 
@@ -18,7 +17,7 @@ automation:
     path: antorfr/motion_light.yaml
     input:
       light_target:
-        entity_id: light.dressing_light_switch_l1 #light.salle_de_douche_lumieres
+        entity_id: light.salle_de_douche_lumieres
       adaptive_lighting: switch.adaptive_lighting_salle_de_douche
       motion_sensor: binary_sensor.anyone_home
       only_turn_off: true   
