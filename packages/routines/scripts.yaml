@@ -67,8 +67,10 @@ script:
         - salle_de_douche
         entity_id:
         - light.salon
+        - light.led_bibliotheque
         - light.salon_led_buffet
         - light.plafonnier_entree
+
     - if:
         - alias: "Gest mode off" 
           condition: state
