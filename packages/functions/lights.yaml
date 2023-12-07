@@ -37,7 +37,9 @@ adaptive_lighting:
   - name: Cuisine
     lights:
       - light.cusine_plafonier
-    take_over_control: true
+      - light.cusine_spot
+    take_over_control: false
+    
   - name: Chambre Emilie
     lights:
       - light.chambre_emilie_plafonnier
