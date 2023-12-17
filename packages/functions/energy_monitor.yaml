@@ -57,69 +57,75 @@ sensor:
     method: left
 
 automation:
-- id: energy_change_tarrif
-  description: "Function - Enegie - Changement tarrif"
-  mode: single
+  ###############################################
+- id: energie_change_tarif
+  alias: Function - Energie - Changement tarif
+  description: Function - Energie - Changement tarif
   trigger:
-    - platform: state
-      entity_id:
-        - sensor.template_teleinfo_periode_tarifaire
-      to: HC
-      id: HC
-    - platform: state
-      entity_id:
-        - sensor.template_teleinfo_periode_tarifaire
-      to: HP
-      id: HP
+  - platform: state
+    entity_id:
+    - sensor.template_teleinfo_periode_tarifaire
+    to: HC
+    id: HC
+  - platform: state
+    entity_id:
+    - sensor.template_teleinfo_periode_tarifaire
+    to: HP
+    id: HP
   condition: []
   action:
-    - choose:
-        - alias: Preparation Tempo Rouge
-          conditions:
-            - condition: trigger
-              id:
-                - HC
-            - condition: state
-              entity_id: sensor.rte_tempo_prochaine_couleur
-              state: Rouge
-          sequence:
-            - service: script.turn_on
-              target:
-                entity_id: script.energy_tempo_red_before
+  - choose:
+    - alias: Preparation Tempo Rouge
+      conditions:
+      - condition: trigger
+        id:
+        - HC
+      - condition: state
+        entity_id: sensor.rte_tempo_prochaine_couleur
+        state: Rouge
+      sequence:
+      - service: script.turn_on
+        target:
+          entity_id: script.energy_tempo_red_before
+        data: {}
+    - alias: Tempo Rouge HP
+      conditions:
+      - condition: trigger
+        id:
+        - HP
+      - condition: state
+        entity_id: sensor.linky_couleur_actuelle
+        state: rouge
+      sequence:
+      - service: script.turn_on
+        target:
+          entity_id: script.energy_tempo_red_hp
+        data: {}
+    - alias: Fin Tempo Rouge
+      conditions:
+      - condition: trigger
+        id:
+        - HC
+      - condition: state
+        entity_id: sensor.linky_couleur_actuelle
+        state: rouge
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: sensor.rte_tempo_prochaine_couleur
+          state: Rouge
+      sequence:
+      - service: script.turn_on
+        target:
+          entity_id: script.energy_tempo_red_end
+        data: {}
+  mode: single
 
-        - alias: Tempo Rouge HP
-          conditions:
-            - condition: trigger
-              id:
-                - HP
-            - condition: state
-              entity_id: sensor.linky_couleur_actuelle
-              state: rouge
-          sequence:
-            - service: script.turn_on
-              target:
-                entity_id: script.energy_tempo_red_HP
-        - alias: Fin Tempo Rouge
-          conditions:
-            - condition: trigger
-              id:
-                - HC
-            - condition: state
-              entity_id: sensor.linky_couleur_actuelle
-              state: rouge
-            - condition: not
-              conditions:
-                - condition: state
-                  entity_id: sensor.rte_tempo_prochaine_couleur
-                  state: Rouge
-          sequence: 
-            - service: script.turn_on
-              target:
-                entity_id: script.energy_tempo_red_end
-
+  ###############################################
 script:
+  ###############################################
   energy_tempo_red_before:
-    alias: Energy - Tempo rouge Preparation
+    alias: Energie - Tempo rouge Preparation
     sequence:
       - service: notify.mobile_seb
         data:
@@ -146,9 +152,10 @@ script:
         data: {}
         target:
           entity_id: 
-            - climate.pac_maison  
-  energy_tempo_red_HP:
-    alias: Energy - Tempo rouge HP
+            - climate.pac_maison
+  ###############################################  
+  energy_tempo_red_hp:
+    alias: Energie - Tempo rouge HP
     sequence:
       - service: notify.mobile_seb
         data:
@@ -177,8 +184,9 @@ script:
           option: "Tempo rouge"
         target:
           entity_id: select.petit_mars  
+  ###############################################  
   energy_tempo_red_end:  
-    alias: Energy - Tempo rouge fin
+    alias: Energie - Tempo rouge fin
     sequence:
       - service: notify.mobile_seb
         data:
@@ -205,4 +213,5 @@ script:
         data: {}
         target:
           entity_id: 
-            - climate.pac_maison           
+            - climate.pac_maison         
+  ###############################################  
