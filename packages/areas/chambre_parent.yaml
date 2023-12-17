@@ -1,15 +1,3 @@
-climate:
-  - platform: generic_thermostat
-    name: Chambre parent thermostat
-    heater: switch.radiateur_mobile
-    target_sensor: sensor.chambre_parents_capteur_temperature_temperature
-    hot_tolerance: 0.5
-    min_temp: 12
-    max_temp: 28
-    min_cycle_duration:
-      minutes: 2
-    keep_alive:
-      minutes: 5
 
 binary_sensor:
   - platform: group
