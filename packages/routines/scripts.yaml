@@ -183,15 +183,41 @@ script:
     - service: switch.turn_off
       target:
         entity_id:
-        - switch.couverture_laurine
-        - switch.couverture_seb
-        - switch.chambre_emilie_prise_bureau
-        - switch.piscine_chauffe_eau
-        - switch.salon_multiprise_canapee
-        - switch.salon_prise_tv
-        #chambre parent
-        - switch.parent_bed_power_strip_switch_2
-        - switch.parent_bed_power_strip_switch_1
+          #Salon
+          - switch.salon_prise_tv
+          - switch.salon_multiprise_canapee
+            #TODO multiprise biblio-theque
+          #Buanderie
+          - switch.washing_machine_plug_prise_machine_laver
+          - switch.dryer_plug_prise_sche_linge
+
+          #Bureau
+          - switch.bureau_prise_1
+          - switch.bureau_prise_pc_1
+          - switch.bureau_prise_pc_2
+
+          - switch.office_entry_power_strip_switch_1
+          - switch.office_entry_power_strip_switch_2
+          - switch.office_entry_power_strip_switch_3
+
+          #Chambre parent
+          - switch.couverture_laurine
+          - switch.couverture_seb
+          - switch.parent_bed_power_strip_switch_2
+          - switch.parent_bed_power_strip_switch_1
+
+          #Chambre Emilie
+          - switch.chambre_emilie_prise_bureau
+
+          #Piscine
+          - switch.piscine_chauffe_eau
+
+          #chambre parent
+          - switch.parent_bed_power_strip_switch_2
+          - switch.parent_bed_power_strip_switch_1
+
+          #Garage
+          - switch.garage_prise_chargeurs
 
 ################################################################################
   routine_all_power_device_on:
@@ -200,11 +226,29 @@ script:
     - service: switch.turn_on
       target:
         entity_id:
-        - switch.salon_multiprise_canapee
-        - switch.salon_prise_tv
-        #chambre parent
-        - switch.parent_bed_power_strip_switch_2
-        - switch.parent_bed_power_strip_switch_1
+          #Salon
+          - switch.salon_prise_tv
+          - switch.salon_multiprise_canapee
+            #TODO multiprise biblio-theque
+          #Buanderie
+          - switch.washing_machine_plug_prise_machine_laver
+          - switch.dryer_plug_prise_sche_linge
+
+          #Bureau
+          - switch.bureau_prise_1
+          - switch.bureau_prise_pc_1
+          - switch.bureau_prise_pc_2
+
+          - switch.office_entry_power_strip_switch_1
+          - switch.office_entry_power_strip_switch_2
+          - switch.office_entry_power_strip_switch_3
+
+          #Chambre parent
+          - switch.parent_bed_power_strip_switch_2
+          - switch.parent_bed_power_strip_switch_1
+
+          #Chambre Emilie
+          - switch.chambre_emilie_prise_bureau
 
 ## Volets / Portails  ###
 ################################################################################
