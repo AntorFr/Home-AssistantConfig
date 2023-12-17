@@ -186,7 +186,7 @@ script:
           #Salon
           - switch.salon_prise_tv
           - switch.salon_multiprise_canapee
-            #TODO multiprise biblio-theque
+          - switch.library_power_strip_switch_1
           #Buanderie
           - switch.washing_machine_plug_prise_machine_laver
           - switch.dryer_plug_prise_sche_linge
@@ -229,7 +229,7 @@ script:
           #Salon
           - switch.salon_prise_tv
           - switch.salon_multiprise_canapee
-            #TODO multiprise biblio-theque
+          - switch.library_power_strip_switch_1
           #Buanderie
           - switch.washing_machine_plug_prise_machine_laver
           - switch.dryer_plug_prise_sche_linge
