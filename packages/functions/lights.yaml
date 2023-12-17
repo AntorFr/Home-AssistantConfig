@@ -44,6 +44,11 @@ adaptive_lighting:
     lights:
       - light.chambre_emilie_plafonnier
     take_over_control: true
+
+  - name: Chambre Timothée
+    lights:
+      - light.plafond_timothee
+    take_over_control: true
     
   - name: Salle de douche
     lights:

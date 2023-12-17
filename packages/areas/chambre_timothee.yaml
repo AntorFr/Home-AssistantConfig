@@ -1,78 +1,67 @@
 
+light:
+  - platform: group
+    unique_id: timothee_lumieres
+    name: Lumieres Timothée
+    entities:
+      - light.plafond_timothee
+      - light.veilleuse_timothee
+      - light.timothee_bed_light_lumires_lit_timothe
+      - light.cadre_lumineux_timothee
+
 input_boolean:
   curfew_timothee:
     name: Couvre feu Timothée
     icon: bha:night-light
 
+
 automation:
 ################################################################################
-- id: 'chambre_timothee_button_lumiere'
-  alias: Area - Chambre Timothée - Bouton lumière
+- id: 'chambre_timothee_bouton_lumiere'
+  alias: Area - Chambre Timothée - Bouton Lumière
   description: ''
-  mode: restart
-  trigger:
-    - platform: device
-      domain: mqtt
-      device_id: a4b9a8eb714cd58a2183a5af310d162d
-      type: action
-      subtype: 'off'
-      discovery_id: 0x0004740000890060 action_off
-    - platform: device
-      domain: mqtt
-      device_id: a4b9a8eb714cd58a2183a5af310d162d
-      type: action
-      subtype: 'on'
-      discovery_id: 0x0004740000890060 action_on
-  condition: []
-  action:
-  - choose:
-      - conditions:
-          - condition: device
-            type: is_off
-            device_id: 6bb7ab79426cb51ac7610517636240b4
-            entity_id: light.chambre_timothee_plafonnier
-            domain: light
-          - condition: time
-            after: '20:00'
-            before: '07:00'
-          - condition: state
-            entity_id: cover.chambre_timothee_volet_roulant
-            state: open
-            for:
-              hours: 0
-              minutes: 30
-              seconds: 0
-        sequence:
-          - service: cover.close_cover
-            data: {}
-            target:
-              area_id: chambre_timothee
-      - conditions:
-          - condition: state
-            entity_id: cover.chambre_timothee_volet_roulant
-            state: closed
-            for:
-              hours: 0
-              minutes: 30
-              seconds: 0
-          - condition: device
-            type: is_off
-            device_id: 6bb7ab79426cb51ac7610517636240b4
-            entity_id: light.chambre_timothee_plafonnier
-            domain: light
-          - condition: time
-            after: '08:00'
-            before: '12:00'
-        sequence:
-          - service: cover.open_cover
-            data: {}
-            target:
-              area_id: chambre_timothee
-    default: []
-  - service: light.toggle
-    data: {}
-    target:
-      entity_id: light.chambre_timothee_plafonnier
+  use_blueprint:
+    path: antorfr/motion_light.yaml
+    input:
+      light_target:
+        entity_id: light.plafond_timothee
+      adaptive_lighting: switch.adaptive_lighting_chambre_timothee
+      motion_sensor: binary_sensor.anyone_home
+      no_motion_wait:
+        minutes: 15
+      no_motion_warning: 30  
+      only_turn_off: true      
+      toggle_trigger:
+        platform: state
+        entity_id: 
+          - binary_sensor.timothee_bed_switch_touchfield_1
+          - binary_sensor.timothee_entrance_switch_touchfield_1
+        from: ["off"]
+        to: ["on"]
+        id: toggle
+################################################################################
+- id: 'chambre_timothee_bouton_lumiere_lit'
+  alias: Area - Chambre Timothée - Bouton Lumière lit
+  description: ''
+  use_blueprint:
+    path: antorfr/motion_light.yaml
+    input:
+      light_target:
+        entity_id: light.timothee_bed_light_lumires_lit_timothe
+      adaptive_lighting: switch.adaptive_lighting_chambre_timothee
+      motion_sensor: binary_sensor.anyone_home
+      no_motion_wait:
+        minutes: 15
+      no_motion_warning: 30  
+      only_turn_off: true      
+      toggle_trigger:
+        platform: state
+        entity_id: 
+          - binary_sensor.timothee_bed_switch_touchfield_2
+          - binary_sensor.timothee_entrance_switch_touchfield_2
+        from: ["off"]
+        to: ["on"]
+        id: toggle
 ################################################################################
 - id: 'chambre_timothee_button_volet'
   alias: Area - Chambre Timothée - Bouton volets
