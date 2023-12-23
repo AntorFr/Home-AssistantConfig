@@ -193,8 +193,8 @@ script:
 
           #Bureau
           - switch.bureau_prise_1
-          - switch.bureau_prise_pc_1
-          - switch.bureau_prise_pc_2
+          #- switch.bureau_prise_pc_1
+          #- switch.bureau_prise_pc_2
 
           - switch.office_entry_power_strip_switch_1
           - switch.office_entry_power_strip_switch_2

@@ -216,11 +216,24 @@ automation:
           - condition: trigger
             id: button_5_single
           sequence:
-            - service: xiaomi_miio.vacuum_clean_segment
-              data:
-                segments: [17,22]
-              target:
-                entity_id: vacuum.roborock_s7
+            - if:
+                - condition: state
+                  entity_id: vacuum.roborock_s7
+                  state: cleaning
+              then:
+                - service: vacuum.return_to_base
+                  target:
+                    entity_id: vacuum.roborock_s7
+              else:
+                - service: vacuum.send_command
+                  data:
+                    command: app_segment_clean
+                    params:
+                      - segments: [17,22]
+                  target:
+                    entity_id: vacuum.roborock_s7
+
+            
 ################################################################################
 - id: 'salon_bouton_volume'
   alias: Area - Salon - Bouton volume

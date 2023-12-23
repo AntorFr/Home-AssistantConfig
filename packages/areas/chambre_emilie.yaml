@@ -51,7 +51,9 @@ automation:
       only_turn_off: true      
       toggle_trigger:
         platform: state
-        entity_id: binary_sensor.emilie_entrance_switch_touchfield_3
+        entity_id: 
+          - binary_sensor.emilie_entrance_switch_touchfield_3
+          - binary_sensor.emilie_desk_switch_touchfield_2
         from: ["off"]
         to: ["on"]
         id: toggle

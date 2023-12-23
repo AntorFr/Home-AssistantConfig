@@ -31,9 +31,9 @@ http:
   - 172.21.0.0/24
   - 10.42.0.0/16
 
-#recorder:
+recorder:
+  purge_keep_days: 5
 #  db_url: !secret k3s_db_url
-#  purge_keep_days: 30
 #  exclude:
 #    domains:
 #      - device_tracker
