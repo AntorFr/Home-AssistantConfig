@@ -284,10 +284,10 @@ script:
              {{action == "play_media"
                 or (action == "play_stop" and not any_playing ) }}
         then:
-          - if:
-            - alias: "more than one player" 
-              condition: template
-              value_template: '{{ media_players | count > 1 }}'
+          - alias: "more than one player, create a groupe" 
+            if:
+              - condition: template
+                value_template: '{{ media_players | count > 1 }}'
             then:
               - service: media_player.join
                 enabled: true ## Debug > To remove
