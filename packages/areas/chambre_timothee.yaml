@@ -6,7 +6,7 @@ light:
     entities:
       - light.plafond_timothee
       - light.veilleuse_timothee
-      - light.timothee_bed_light_lumires_lit_timothe
+      - light.timothee_bed_light_lumi_res_lit_timoth_e
       - light.cadre_lumineux_timothee
 
 input_boolean:
@@ -47,7 +47,7 @@ automation:
     path: antorfr/motion_light.yaml
     input:
       light_target:
-        entity_id: light.timothee_bed_light_lumires_lit_timothe
+        entity_id: light.timothee_bed_light_lumi_res_lit_timoth_e
       adaptive_lighting: switch.adaptive_lighting_chambre_timothee
       motion_sensor: binary_sensor.anyone_home
       no_motion_wait:
@@ -159,7 +159,7 @@ automation:
         effect: Color Wipe
         brightness_pct: 100
       target:
-        entity_id: light.timothee_bed_light_lumires_lit_timothe
+        entity_id: light.timothee_bed_light_lumi_res_lit_timoth_e
     - delay:
         hours: 0
         minutes: 0

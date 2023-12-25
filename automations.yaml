@@ -85,7 +85,7 @@
       effect: Color Wipe
       brightness_pct: 100
     target:
-      entity_id: light.timothee_bed_light_lumires_lit_timothe
+      entity_id: light.timothee_bed_light_lumi_res_lit_timoth_e
   - service: script.play_mood_music
     data:
       rooms:
