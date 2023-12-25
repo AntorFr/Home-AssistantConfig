@@ -149,6 +149,7 @@ script:
 ################################################################################
   play_mood_music:
     alias: "Function - Music manager - Guess what to play"
+    icon: mdi:speaker-multiple
     variables:
       zone_ids:
         rdc:
@@ -169,7 +170,21 @@ script:
         name: titre
         required: False
         selector:
-          text:     
+          text:  
+
+      action:
+        name: action
+        required: True
+        default: play_media
+        selector:
+          select:
+            options:
+              - play_media
+              - media_stop
+              - play_stop #refresh what to play if nothing playing
+              - media_play
+              - media_pause     
+              - play_pause # media_play rather than play_media
     
     sequence:
       - variables:
@@ -196,13 +211,11 @@ script:
                               |list -%}
 
             {{rooms}}
-
           media_players: > 
             {%- from 'music_functions.jinja' import sonos_in_area, sonos_not_playing_tv -%}
             {{sonos_not_playing_tv(sonos_in_area(rooms)|from_json)|from_json }}
           media_player_id: "{{ media_players | first }}"
-          group_members: "{{ media_players | reject('eq', media_player_id) | list }}"
-            
+          group_members: "{{ media_players | reject('eq', media_player_id) | list }}"            
           public: >
             {%if title is defined%}
             {%elif rooms == ['bureau'] %}
@@ -211,8 +224,12 @@ script:
               {% elif (is_state('person.laurine','home')) %}
               Laurine
               {%endif%}
+            {%elif rooms == ['chambre_timothee'] %}
+              Timothee
+            {%elif rooms == ['chambre_emilie'] %}
+              Emilie
             {%else %}
-                {% if (is_state('person.sebastien','home') 
+              {% if (is_state('person.sebastien','home') 
                 and is_state('person.laurine','home')) %}
               Famille
               {% elif (is_state('person.sebastien','home')) %}
@@ -221,7 +238,6 @@ script:
               Laurine
               {%endif%}             
             {% endif %}
-
           style: >
             {% if (title is none) or (title == '')%}
               {% set title = null %}
@@ -252,27 +268,85 @@ script:
                 zen
               {%endif %}
             {% endif %}
+          any_playing: >
+            {{(expand(media_players) | selectattr("state", "==", "playing") | list | count) > 0}}
+          action: >
+            {%- if ((action is not defined) or (action is none)  or (action == '')) -%}
+              play_media
+            {%- else -%}
+              {{action}}
+            {%- endif -%}
 
-      - service: media_player.join
-        enabled: true ## Debug > To remove
-        target:
-          entity_id: > 
-            {{media_player_id}}
-        data:
-          group_members: >
-            {{group_members}}
-      - service: script.play_music
-        enabled: true ## Debug > To remove
-        data:
-          media_player: "{{media_player_id}}"
-          style: "{{style}}"
-          public: "{{public}}"
-          title: "{{title}}"
-        response_variable: response
-      - stop: "Playlist launched"
-        enabled: true
-        response_variable: response
-################################################################################
+      - alias: "play_media"
+        if:
+        - condition: template
+          value_template: >
+             {{action == "play_media"
+                or (action == "play_stop" and not any_playing ) }}
+        then:
+          - if:
+            - alias: "more than one player" 
+              condition: template
+              value_template: '{{ media_players | count > 1 }}'
+            then:
+              - service: media_player.join
+                enabled: true ## Debug > To remove
+                target:
+                  entity_id: > 
+                    {{media_player_id}}
+                data:
+                  group_members: >
+                    {{group_members}}
+          - service: script.play_music
+            enabled: true ## Debug > To remove
+            data:
+              media_player: "{{media_player_id}}"
+              style: "{{style}}"
+              public: "{{public}}"
+              title: "{{title}}"
+            response_variable: response
+          - stop: "Playlist launched"
+            enabled: true
+            response_variable: response
+      - alias: "stop" #stop
+        if:
+        - condition: template
+          value_template: >
+             {{action == "media_stop" or 
+             (action == "play_stop" and any_playing) }}
+        then: 
+          - service: media_player.media_stop
+            enabled: true ## Debug > To remove
+            target:
+              entity_id: > 
+                {%- from 'music_functions.jinja' import media_player_get_masters -%}
+                {{media_player_get_masters(media_players)|from_json }}
+      - alias: "media_play" 
+        if:
+        - condition: template
+          value_template: >
+             {{action == "media_play" or 
+             (action == "play_pause" and not any_playing) }}
+        then: 
+          - service: media_player.media_play
+            enabled: true ## Debug > To remove
+            target:
+              entity_id: > 
+                {%- from 'music_functions.jinja' import media_player_get_masters -%}
+                {{media_player_get_masters(media_players)|from_json }}
+      - alias: "pause" 
+        if:
+        - condition: template
+          value_template: >
+             {{action == "media_pause" or 
+             (action == "play_pause" and any_playing) }}
+        then: 
+          - service: media_player.media_pause
+            enabled: true ## Debug > To remove
+            target:
+              entity_id: > 
+                {%- from 'music_functions.jinja' import media_player_get_masters -%}
+                {{media_player_get_masters(media_players)|from_json }}
 
 
 automation:
@@ -529,7 +603,7 @@ homeassistant:
           content_id: spotify:show:5no3pub2QBaaaeeBdiobLo
           content_type: playlist
           style: ['histoire']
-          public: ['Emilie']
+          public: ['Emilie','Timothee']
           tags: ['C0-E6-4D-3D','10-E4-4D-3D']
         - title: KidStory
           content_id: spotify:show:2OApiYYyIQpZ7VTTPLBp7A
@@ -552,7 +626,7 @@ homeassistant:
         - title: Magic system
           content_id: spotify:playlist:7aUx9jE0vqYsLFAUIZvkkz
           content_type: playlist
-          style: ['motivation']
+          style: ['motivation','Timothee']
           public: ['Emilie']
           tags: ['00-E4-4D-3D']
         - title: Petit loup

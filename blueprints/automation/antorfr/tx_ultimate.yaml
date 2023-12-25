@@ -1,0 +1,203 @@
+blueprint:
+  name: TX Ultimate
+  description: Manage interaction with TX Ultimate
+  domain: automation
+  input:
+    touchfield_1:
+      name: Touchfield 1
+      description: TX Ultimate Touchfield 1
+      default: []
+      selector:
+        entity:
+          filter:
+            - integration: esphome
+            - domain: binary_sensor
+            #- device_class: None  
+    touchfield_2:
+      name: Touchfield 2
+      description: TX Ultimate Touchfield 2
+      default: []
+      selector:
+        entity:
+          filter:
+            - integration: esphome
+            - domain: binary_sensor
+            #- device_class: None  
+    touchfield_3:
+      name: Touchfield 3
+      description: TX Ultimate Touchfield 3
+      default: []
+      selector:
+        entity:
+          filter:
+            - integration: esphome
+            - domain: binary_sensor
+            #- device_class: None  
+    long_press:
+      name: Long press
+      description: TX Ultimate Long press
+      default: []
+      selector:
+        entity:
+          filter:
+            - integration: esphome
+            - domain: binary_sensor
+            #- device_class: None  
+    multi_touch:
+      name: Multi touch
+      description: TX Ultimate Multi touch
+      default: []
+      selector:
+        entity:
+          filter:
+            - integration: esphome
+            - domain: binary_sensor
+            #- device_class: None  
+    swipe_left:
+      name: Swipe left
+      description: TX Ultimate Swipe left
+      default: []
+      selector:
+        entity:
+          filter:
+            - integration: esphome
+            - domain: binary_sensor
+            #- device_class: None 
+    swipe_right:
+      name: Swipe right
+      description: TX Ultimate Swipe right
+      default: []
+      selector:
+        entity:
+          filter:
+            - integration: esphome
+            - domain: binary_sensor
+            #- device_class: None 
+
+    touchfield_1_action:
+      default: []
+      selector:
+        action: {}
+    touchfield_2_action:
+      default: []
+      selector:
+        action: {}
+    touchfield_3_action:
+      default: []
+      selector:
+        action: {}
+    long_press_action:
+      default:
+        - service: script.play_mood_music
+          data:
+            action: play_stop
+            rooms: '{{room}}'
+      selector:
+        action: {}
+    multi_touch_action:
+      default:
+        - parallel: 
+          - service: light.turn_off
+            target:
+              area_id: "{{room}}"
+            data: {}
+          - service: script.play_mood_music
+            data:
+              action: media_stop
+              rooms: "{{room}}"
+      selector:
+        action: {}
+    swipe_left_action:
+      default: []
+      selector:
+        action: {}
+    swipe_right_action:
+      default: []
+      selector:
+        action: {}
+# If motion is detected within the delay,
+# we restart the script.
+mode: parallel
+
+variables:
+  long_press: !input 'long_press'
+  room: '{{ area_id(long_press) }}'
+  
+trigger:
+  - id: touchfield_1
+    entity_id: !input touchfield_1
+    platform: state
+    from: ["off"]
+    to: ["on"]
+  - id: touchfield_2
+    platform: state
+    entity_id: !input touchfield_2
+    from: ["off"]
+    to: ["on"]
+  - id: touchfield_3
+    platform: state
+    entity_id: !input touchfield_3
+    from: ["off"]
+    to: ["on"]
+  - id: long_press
+    platform: state
+    entity_id: !input long_press
+    from: ["off"]
+    to: ["on"]
+  - id: multi_touch
+    platform: state
+    entity_id: !input multi_touch
+    from: ["off"]
+    to: ["on"]
+  - id: swipe_left
+    platform: state
+    entity_id: !input swipe_left
+    from: ["off"]
+    to: ["on"]    
+  - id: swipe_right
+    platform: state
+    entity_id: !input swipe_right
+    from: ["off"]
+    to: ["on"]
+    
+condition: []
+action:    
+  - choose:
+    - alias: touchfield_1
+      conditions:
+        - condition: trigger
+          id: touchfield_1
+      sequence: !input "touchfield_1_action"
+    - alias: touchfield_2
+      conditions:
+        - condition: trigger
+          id: touchfield_2
+      sequence: !input "touchfield_2_action"
+    - alias: touchfield_3
+      conditions:
+        - condition: trigger
+          id: touchfield_3
+      sequence: !input "touchfield_3_action"
+    - alias: long_press
+      conditions:
+        - condition: trigger
+          id: long_press
+      sequence: !input "long_press_action"
+    - alias: multi_touch
+      conditions:
+        - condition: trigger
+          id: multi_touch
+      sequence: !input "multi_touch_action"
+    - alias: swipe_left
+      conditions:
+        - condition: trigger
+          id: swipe_left
+      sequence: !input "swipe_left_action"
+    - alias: swipe_right
+      conditions:
+        - condition: trigger
+          id: swipe_right
+      sequence: !input "swipe_right_action"
+
+    default: []
+

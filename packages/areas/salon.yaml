@@ -211,7 +211,13 @@ automation:
           - condition: trigger
             id: button_4_single
           sequence:
-            - service: script.routine_rdc_media_player_off
+          - service: script.play_mood_music
+            data:
+              action: play_pause
+              rooms:
+                - Rdc
+              
+            target: {}
         - conditions:
           - condition: trigger
             id: button_5_single
@@ -232,7 +238,11 @@ automation:
                       - segments: [17,22]
                   target:
                     entity_id: vacuum.roborock_s7
-
+        - conditions:
+          - condition: trigger
+            id: button_6_single
+          sequence:
+            - service: script.lunchtime
             
 ################################################################################
 - id: 'salon_bouton_volume'

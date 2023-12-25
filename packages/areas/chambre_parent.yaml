@@ -464,27 +464,7 @@ automation:
                 entity_id:
                   - light.chambre_parent_coeur_ardent
                   - light.chambre_parent_coeur_ardent_ambiance
-################################################################################
-- id: 'chambre_parent_bouton_lumiere'
-  alias: Area - Chambre parent - Bouton Lumière
-  description: ''
-  use_blueprint:
-    path: antorfr/motion_light.yaml
-    input:
-      light_target:
-        entity_id: light.chambre
-      adaptive_lighting: switch.adaptive_lighting_chambre_parent
-      motion_sensor: binary_sensor.capteurs_mouvement_chambre_parents
-      no_motion_wait:
-        minutes: 15
-      no_motion_warning: 30  
-      only_turn_off: true      
-      toggle_trigger:
-        platform: state
-        entity_id: binary_sensor.parent_light_switch_touchfield_1
-        from: ["off"]
-        to: ["on"]
-        id: toggle
+
 ################################################################################  
 - id: chambre_parent_bed_light_auto_left
   alias: Area - Chambre parent - Lumière lit auto gauche
@@ -518,40 +498,56 @@ automation:
         color_name: red
         brightness_pct: 20
 ################################################################################
-- id: 'chambre_parent_bed_light_switch'
-  alias: Area - Chambre parent - Bouton
+- id: 'chambre_parent_lumiere_auto'
+  alias: Area - Chambre parent - Lumière auto
   description: ''
-  trigger:
-  - platform: state
-    entity_id: 
-      - binary_sensor.parent_light_switch_long_press
-    from: ["off"]
-    to: ["on"]
-    id: long_press
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: long_press
-      sequence:
-      - if: 
-          - condition: state
+  use_blueprint:
+    path: antorfr/motion_light.yaml
+    input:
+      light_target:
+        entity_id: light.chambre
+      adaptive_lighting: switch.adaptive_lighting_chambre_parent
+      motion_sensor: binary_sensor.capteurs_mouvement_chambre_parents
+      no_motion_wait:
+        minutes: 15
+      no_motion_warning: 30  
+      only_turn_off: true      
+      toggle_trigger:
+        platform: state
+        entity_id: binary_sensor.parent_light_switch_touchfield_1
+        from: ["off"]
+        to: ["on"]
+        id: toggle
+################################################################################
+- id: 'chambre_parent_bed_light_switch'
+  alias: Area - Chambre parent - Bouton entrée
+  description: ''
+  use_blueprint:
+    path: antorfr/tx_ultimate.yaml
+    input:
+      swipe_right: binary_sensor.parent_light_switch_swipe_right
+      touchfield_1: binary_sensor.parent_light_switch_touchfield_1
+      touchfield_2: binary_sensor.parent_light_switch_touchfield_2
+      long_press: binary_sensor.parent_light_switch_long_press
+      multi_touch: binary_sensor.parent_light_switch_multi_touch
+      swipe_left: binary_sensor.parent_light_switch_swipe_left
+      swipe_right_action:
+        - service: light.turn_on
+          data: 
+            color_name: red
+            brightness_pct: 30
+          target:
             entity_id:
-              - media_player.chambre_parent
-            state:
-              - playing
-        then:
-          - service: media_player.media_stop
+              - light.lit_parents_lit_parents_lumiere_gauche
+              - light.smart_parent_bed_lit_parents_lumire_droite
+        - delay: "00:00:15" 
+        - service: light.turn_off
+          data: {}
+          target:
             entity_id:
-              - media_player.chambre_parent
-        else:
-          - service: script.play_mood_music
-            data:
-              rooms:
-                - chambre_parent
-    default: []
-  mode: parallel
+              - light.lit_parents_lit_parents_lumiere_gauche
+              - light.smart_parent_bed_lit_parents_lumire_droite
+################################################################################
 
 homeassistant:
   customize:

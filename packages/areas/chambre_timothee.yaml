@@ -17,8 +17,8 @@ input_boolean:
 
 automation:
 ################################################################################
-- id: 'chambre_timothee_bouton_lumiere'
-  alias: Area - Chambre Timothée - Bouton Lumière
+- id: 'chambre_timothee_lumiere_auto'
+  alias: Area - Chambre Timothée - Lumière Auto
   description: ''
   use_blueprint:
     path: antorfr/motion_light.yaml
@@ -40,8 +40,8 @@ automation:
         to: ["on"]
         id: toggle
 ################################################################################
-- id: 'chambre_timothee_bouton_lumiere_lit'
-  alias: Area - Chambre Timothée - Bouton Lumière lit
+- id: 'chambre_timothee_lumiere_auto_lit'
+  alias: Area - Chambre Timothée - Lumière lit Auto
   description: ''
   use_blueprint:
     path: antorfr/motion_light.yaml
@@ -62,6 +62,44 @@ automation:
         from: ["off"]
         to: ["on"]
         id: toggle
+################################################################################
+- id: 'chambre_timothee_light_switch_bed'
+  alias: Area - Chambre Timothée - Bouton lit
+  description: ''
+  use_blueprint:
+    path: antorfr/tx_ultimate.yaml
+    input:
+      swipe_right: binary_sensor.timothee_bed_switch_swipe_right
+      touchfield_1: binary_sensor.timothee_bed_switch_touchfield_1
+      touchfield_2: binary_sensor.timothee_bed_switch_touchfield_2
+      long_press: binary_sensor.timothee_bed_switch_long_press
+      multi_touch: binary_sensor.timothee_bed_switch_multi_touch
+      swipe_left: binary_sensor.timothee_bed_switch_swipe_left
+
+################################################################################
+- id: 'chambre_timothee_light_switch_entrance'
+  alias: Area - Chambre Timothée - Bouton entrée
+  description: ''
+  use_blueprint:
+    path: antorfr/tx_ultimate.yaml
+    input:
+      swipe_right: binary_sensor.timothee_entrance_switch_swipe_right
+      touchfield_1: binary_sensor.timothee_entrance_switch_touchfield_1
+      touchfield_2: binary_sensor.timothee_entrance_switch_touchfield_2
+      touchfield_3: binary_sensor.timothee_entrance_switch_touchfield_3
+      long_press: binary_sensor.timothee_entrance_switch_long_press
+      multi_touch: binary_sensor.timothee_entrance_switch_multi_touch
+      swipe_left: binary_sensor.timothee_entrance_switch_swipe_left 
+      touchfield_3_action:
+        - service: light.toggle
+          target:
+            entity_id: light.led_matrix
+        - service: select.select_option
+          target:
+            entity_id: select.display_mode
+          data:
+            option: Clock
+
 ################################################################################
 - id: 'chambre_timothee_button_volet'
   alias: Area - Chambre Timothée - Bouton volets
