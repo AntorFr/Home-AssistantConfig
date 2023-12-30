@@ -39,7 +39,6 @@ group:
     all: true
     icon: mdi:router-network
     entities:
-      - device_tracker.legrand_home_controle
       - device_tracker.dream_machine
       - device_tracker.netatmo_thermostat
 

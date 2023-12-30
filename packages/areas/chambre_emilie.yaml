@@ -4,7 +4,7 @@ template:
       name: Chambre Émilie temperature 
       device_class: temperature
       unit_of_measurement: "°C"
-      state: "{{ state_attr('climate.netatmo_chambre_emilie', 'current_temperature')|float }}"
+      state: "{{ state_attr('climate.chambre_emilie', 'current_temperature')|float }}"
 
 input_boolean:
   curfew_emilie:

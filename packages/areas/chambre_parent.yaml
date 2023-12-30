@@ -21,7 +21,7 @@ light:
       - light.chambre
       - light.veilleuse_lit_parent
       - light.chambre_parent_coeur_ardent
-      - light.lit_parents_lit_parents_lumiere_gauche
+      - light.smart_bed_parent_lumi_re_gauche
 
 template:
   - binary_sensor:
@@ -473,7 +473,7 @@ automation:
     path: antorfr/motion_light.yaml
     input:
       light_target:
-        entity_id: light.lit_parents_lit_parents_lumiere_gauche
+        entity_id: light.smart_bed_parent_lumi_re_gauche
       motion_sensor: binary_sensor.lit_parents_mouvement_gauche
       no_motion_wait:
         seconds: 5
@@ -489,7 +489,7 @@ automation:
     path: antorfr/motion_light.yaml
     input:
       light_target:
-        entity_id: light.smart_parent_bed_lit_parents_lumire_droite
+        entity_id: light.smart_bed_parent_lumi_re_droite
       motion_sensor: binary_sensor.lit_parents_mouvement_droite
       no_motion_wait:
         seconds: 5
@@ -538,15 +538,15 @@ automation:
             brightness_pct: 30
           target:
             entity_id:
-              - light.lit_parents_lit_parents_lumiere_gauche
-              - light.smart_parent_bed_lit_parents_lumire_droite
+              - light.smart_bed_parent_lumi_re_gauche
+              - light.smart_bed_parent_lumi_re_droite
         - delay: "00:00:15" 
         - service: light.turn_off
           data: {}
           target:
             entity_id:
-              - light.lit_parents_lit_parents_lumiere_gauche
-              - light.smart_parent_bed_lit_parents_lumire_droite
+              - light.smart_bed_parent_lumi_re_gauche
+              - light.smart_bed_parent_lumi_re_droite
 ################################################################################
 
 homeassistant:

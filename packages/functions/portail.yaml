@@ -192,5 +192,5 @@ intent_script:
     speech:
       text: "Ok, je répond au livreur" #{{response.playlist}} 
     action:
-      - service: script.parcel_deliver
+      - service: script.parcel_delivery
 ################################################################################

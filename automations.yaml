@@ -17,47 +17,6 @@
     data:
       message: Roomba - Lancement auto
   mode: single
-- id: area_salon_bouton
-  alias: Area - Salon - Bouton
-  description: ''
-  use_blueprint:
-    path: Jarne_Roussard/aqara-opple-6-buttons-for-zha.yaml
-    input:
-      remote: 38e094538f2e11349ab8b2b623a978a3
-      button_top_left_single_press:
-      - service: script.sonos_rdc_ambiance_meditation
-      button_top_left_double_press:
-      - service: script.sonos_rdc_ambiance_piano
-      button_middle_left_single_press: []
-      button_middle_left_double_press: []
-      button_bottom_left_single_press:
-      - service: light.turn_on
-        target:
-          entity_id: light.salon_lumieres
-      button_bottom_right_single_press:
-      - service: light.turn_off
-        target:
-          entity_id: light.salon_lumieres
-      button_top_right_single_press:
-      - service: script.sonos_rdc_ambiance_pop
-      button_top_right_double_press:
-      - service: script.sonos_rdc_ambiance_matin
-- id: '1670768030905'
-  alias: Temp - VPN Notif
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.vpn_connection
-    from: 'off'
-    to: 'on'
-  condition: []
-  action:
-  - service: notify.mobile_app_intra_mob08
-    data:
-      message: VPN reconnecté
-      title: VPN reconnecté
-  mode: single
 - id: '1691696416271'
   alias: Automatic Backups
   description: Automatic Backups
@@ -70,30 +29,3 @@
           name: '{{ name }}'
           password: '{{ password }}'
           keep_days: '{{ keep_days }}'
-- id: '1693738236863'
-  description: ''
-  trigger: []
-  condition: []
-  action:
-  - service: tts.cloud_say
-    data:
-      entity_id: media_player.assistant_timothee
-      message: Super, faisons la fête !
-      cache: true
-  - service: light.turn_on
-    data:
-      effect: Color Wipe
-      brightness_pct: 100
-    target:
-      entity_id: light.timothee_bed_light_lumi_res_lit_timoth_e
-  - service: script.play_mood_music
-    data:
-      rooms:
-      - chambre_timothee
-      title: Dance Émilie
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 10
-      milliseconds: 0
-  mode: single

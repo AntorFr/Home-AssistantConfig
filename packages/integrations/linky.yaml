@@ -4,14 +4,14 @@ template:
       #availability: >
       #  {{ "true" if(state_attr("sensor.linky","TIC").PTEC is defined) else "false" }}
       state: >
-        {%-if(is_state('sensor.linky_priode_tarifaire',['HP','HC']))%}
-          {{ states('sensor.linky_priode_tarifaire') }}
+        {%-if(is_state('sensor.linky_p_riode_tarifaire',['HP','HC']))%}
+          {{ states('sensor.linky_p_riode_tarifaire') }}
         {%- else %}
           {{'HP' if(is_state('schedule.backup_hp_schedule','on')) else 'HC'}}
         {%- endif %}
       attributes:
         source: >
-          {%-if(is_state('sensor.linky_priode_tarifaire',['HP','HC']))%}
+          {%-if(is_state('sensor.linky_p_riode_tarifaire',['HP','HC']))%}
           linky
           {%- else %}
           backup_hc_schedule
