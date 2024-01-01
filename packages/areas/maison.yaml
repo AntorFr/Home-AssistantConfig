@@ -1,0 +1,67 @@
+input_select:
+  maison_ambiance: #input_select.maison_ambiance
+    name: "Ambiance maison"
+    options:
+      - Normal
+      - Noël
+      - Reveillon
+    icon: mdi:party-popper
+
+automation:
+- id: 'change_ambiance_maison'
+  alias: Area - Maison - Change ambiance maison
+  description: ''
+  mode: restart
+  trigger:
+    - platform: state
+      entity_id:
+        - input_select.maison_ambiance
+  condition: []
+  action:
+    - choose:
+        - conditions: 
+          - condition: template
+            value_template: "{{trigger.to_state.state == 'Normal'}}"
+          sequence:
+            - service: script.change_tx_ultimate_night_effect
+              data:
+                effect: None
+        - conditions: 
+          - condition: template
+            value_template: "{{trigger.to_state.state == 'Noël'}}"
+          sequence:
+            - service: script.change_tx_ultimate_night_effect
+              data:
+                effect: Christmas
+        - conditions: 
+          - condition: template
+            value_template: "{{trigger.to_state.state == 'Reveillon'}}"
+          sequence:
+            - service: script.change_tx_ultimate_night_effect
+              data:
+                effect: Stars
+          
+script:  
+################################################################################
+  change_tx_ultimate_night_effect:
+    alias: "Area - Maison - Change effet nuit"
+    icon: mdi:gesture-tap-button
+    mode: restart
+    fields:
+      effect:
+        name: Effet
+        required: True
+        default: None
+        selector:
+          select:
+            options:
+              - None
+              - Stars
+              - Christmas
+    sequence:
+      - service: select.select_option
+        target:
+          entity_id: >
+            {{states.select|map(attribute="entity_id")|select('match','.*nightlight_effect$')| list }}
+        data:
+          option: "{{effect}}"
