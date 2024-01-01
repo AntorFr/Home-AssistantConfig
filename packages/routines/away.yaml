@@ -99,6 +99,7 @@ script:
           - script.routine_away_all_power_device_off
           - script.routine_all_cover_close
           - script.routine_all_garage_door_close
+          - script.routine_away_settings
 ################################################################################
   routine_back_home:
     alias: Routine - Retour maison

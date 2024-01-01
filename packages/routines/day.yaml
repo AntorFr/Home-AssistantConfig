@@ -14,6 +14,12 @@ input_boolean:
   night_mode:
     name: Mode nuit
     icon: mdi:weather-night
+  night_mode_emilie: #input_boolean.night_mode_emilie
+    name: Mode nuit Émilie
+    icon: mdi:weather-night
+  night_mode_timothee: #input_boolean.night_mode_timothee
+    name: Mode nuit Timothée
+    icon: mdi:weather-night
     
 input_select:
   day_phase:
@@ -259,6 +265,13 @@ automation:
       entity_id: input_select.day_phase
     data:
       option:  "Soirée - enfants couché"
+
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: 
+        - input_boolean.night_mode_emilie
+        - input_boolean.night_mode_timothee
   - alias: "enable adaptative light in dinning room"
     service: switch.turn_on
     target:
@@ -344,12 +357,14 @@ automation:
         entity_id: binary_sensor.workday_sensor
         state: 'off' 
   action:
-  - alias: "Activate curfiew mode"
+  - alias: "Disable curfiew mode and night mode "
     service: input_boolean.turn_off
     target:
       entity_id: 
         - input_boolean.curfew_timothee
         - input_boolean.curfew_emilie
+        - input_boolean.night_mode_emilie
+        - input_boolean.night_mode_timothee
   - alias: "Fire evening routine event"
     event: routine_event
     event_data:
@@ -660,7 +675,8 @@ intent_script:
     - service: input_boolean.turn_off
       data: {}
       target:
-        entity_id: input_boolean.night_mode
+        entity_id: 
+          - input_boolean.night_mode
 ################################################################################
 
 ################################################################################

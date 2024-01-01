@@ -348,7 +348,6 @@ script:
           target:
             area_id: chambre_d_amis
 
-
 ################################################################################
   routine_all_garage_door_close:
     alias: Routine - Ferme toutes les garages
@@ -357,4 +356,16 @@ script:
       target:
         area_id: garage
 
-
+## Flag / Settings  ###
+################################################################################
+  routine_away_settings:
+    alias: Routine - Absence settings
+    sequence:
+    - alias: "Disable curfiew mode and night mode "
+      service: input_boolean.turn_off
+      target:
+        entity_id: 
+          - input_boolean.curfew_timothee
+          - input_boolean.curfew_emilie
+          - input_boolean.night_mode_emilie
+          - input_boolean.night_mode_timothee
