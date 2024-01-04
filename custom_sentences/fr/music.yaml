@@ -3,12 +3,30 @@ intents:
   MusicTurnOn:
     data:
       - sentences:
-          - "(joue|mets|lance|change) [(nous|moi)] [de] la musique [<dans>] <area>"
-          - "(joue|mets|lance|change) [(nous|moi)] [de] la musique"
+          - "(joue|mets|lance|change) [(nous|moi)] [de] la musique [<dans>] [<le>]{area}"
+          #- "(joue|mets|lance|change) [(nous|moi)] [de] la musique"
         response: default
+      - sentences:
+          - "(joue|mets|lance|change) [(nous|moi)] [de] la musique [<ici>]"
+        expansion_rules:
+          ici: "(dans la pièce)|(dans cette pièce)|(ici)"
+        response: default
+        requires_context:
+          area:
+            slot: true
+
+
   MusicTurnOff:
     data:
       - sentences:
-          - "(arrete|stop|eteint) la musique [<dans>] <area>"
-          - "(arrete|stop|eteint) la musique"
+          - "<eteins> la musique [<dans>] [<le>]{area}"
+          #- "<eteins> la musique <ici>"
         response: default
+      - sentences:
+          - "<eteins> la musique [<ici>]"
+        response: default
+        expansion_rules:
+            ici: "(dans la pièce)|(dans cette pièce)|(ici)"
+        requires_context:
+          area:
+            slot: true
