@@ -25,7 +25,7 @@ automation:
           sequence:
             - service: script.change_tx_ultimate_night_effect
               data:
-                effect: None
+                effect: "Default"
         - conditions: 
           - condition: template
             value_template: "{{trigger.to_state.state == 'Noël'}}"
@@ -55,7 +55,7 @@ script:
         selector:
           select:
             options:
-              - None
+              - Default
               - Stars
               - Christmas
     sequence:
