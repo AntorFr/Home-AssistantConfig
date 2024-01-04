@@ -6,3 +6,9 @@ intents:
           - "(joue|mets|lance|change) [(nous|moi)] [de] la musique [<dans>] <area>"
           - "(joue|mets|lance|change) [(nous|moi)] [de] la musique"
         response: default
+  MusicTurnOff:
+    data:
+      - sentences:
+          - "(arrete|stop|eteint) la musique [<dans>] <area>"
+          - "(arrete|stop|eteint) la musique"
+        response: default

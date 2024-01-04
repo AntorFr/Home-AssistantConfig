@@ -21,6 +21,31 @@ intent_script:
       - service: script.play_mood_music
         data:
           rooms: "{{zone}}"
+          action: play_media
+        response_variable: response
+################################################################################
+  MusicTurnOff:
+    async_action: false
+    speech:
+      text: "Ok, j'ai arreté la musique {{ ' dans ' if area|length > 0}}{{area}}" #{{response.playlist}} 
+    action:
+      - alias: "select zone"
+        variables:
+          zone: >
+            {% from 'room_functions.jinja' import area_identifiers %}
+            {%-if area is undefined -%}
+            RdC
+            {%-else -%}
+              {%-if area in area_identifiers(["salon","salle_a_manger"]) | from_json -%}
+                RdC
+              {%-else -%}
+                {{area}}
+              {%-endif -%}
+            {%-endif -%}
+      - service: script.play_mood_music
+        data:
+          rooms: "{{zone}}"
+          action: media_stop
         response_variable: response
 ################################################################################
 
