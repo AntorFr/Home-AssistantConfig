@@ -146,7 +146,7 @@ automation:
   description: "Chambre Timothée - Mode fête"
   trigger:
     - platform: tag
-      tag_id: 53-4F-E4-D7-60-00-01
+      tag_id: 53-10-D0-D6-60-00-01
   condition: []
   action:
     - service: tts.cloud_say
