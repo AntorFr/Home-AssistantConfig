@@ -52,18 +52,6 @@ automation:
           data:
             brightness_pct: 100
             effect: autoPlay
-        - service: light.turn_off
-          target:
-            entity_id: 
-              - light.cadre_lumineux_timothee_lune
-              - light.cadre_lumineux_timothee_etoiles
-        - service: light.turn_on
-          target:
-            entity_id: light.cadre_lumineux_timothee_soleil
-          data:
-            effect: None
-            brightness_pct: 100
-            rgb_color: [255,127,0]
     - alias: "Evening - Almost sleep time"
       conditions:
         - condition: trigger
@@ -75,27 +63,6 @@ automation:
           data:
             brightness_pct: 50
             effect: autoPlay
-        - service: light.turn_on
-          target:
-            entity_id: light.cadre_lumineux_timothee_soleil
-          data:
-            brightness_pct: 70
-            color_name: red
-            effect: None
-        - service: light.turn_on
-          target:
-            entity_id: light.cadre_lumineux_timothee_lune
-          data:
-            effect: twinkle
-            brightness_pct: 70
-            color_name: white
-        - service: light.turn_on
-          target:
-            entity_id: light.cadre_lumineux_timothee_etoiles
-          data:
-            effect: twinkle
-            brightness_pct: 70
-            color_name: white
         - choose:
             - conditions:
                 - condition: state
@@ -118,23 +85,6 @@ automation:
               - light.veilleuse_timothee
           data:
             brightness_pct: 10
-        - service: light.turn_off
-          target:
-            entity_id: light.cadre_lumineux_timothee_soleil
-        - service: light.turn_on
-          target:
-            entity_id: light.cadre_lumineux_timothee_lune
-          data:
-            brightness_pct: 25
-            color_name: white
-            effect: None
-        - service: light.turn_on
-          target:
-            entity_id: light.cadre_lumineux_timothee_etoiles
-          data:
-            effect: twinkle
-            brightness_pct: 25
-            color_name: white
     - alias: "Evening - Night (parent sleep)"
       conditions:
         - condition: trigger
@@ -147,40 +97,11 @@ automation:
             brightness_pct: 8
             effect: color
             rgb_color: [255,0,0]
-        - service: light.turn_off
-          target:
-            entity_id: light.cadre_lumineux_timothee_soleil
-        - service: light.turn_on
-          target:
-            entity_id: light.cadre_lumineux_timothee_lune
-          data:
-            brightness_pct: 15
-            color_name: white
-            effect: None
-        - service: light.turn_on
-          target:
-            entity_id: light.cadre_lumineux_timothee_etoiles
-          data:
-            brightness_pct: 15
-            effect: twinkle
-            color_name: white
     - alias: "Morning - Children morning"
       conditions:
         - condition: trigger
           id: children morning
-      sequence:
-        - service: light.turn_on
-          target:
-            entity_id: light.cadre_lumineux_timothee_soleil
-          data:
-            brightness_pct: 30
-            effect: None
-            color_name: white
-        - service: light.turn_off
-          target:
-            entity_id: 
-              - light.cadre_lumineux_timothee_lune
-              - light.cadre_lumineux_timothee_etoiles
+      sequence: []
 ###############################################
 - id: routine_emilie_clock
   alias: Routine - Horloge Emilie - Auto

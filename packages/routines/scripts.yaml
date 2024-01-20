@@ -188,13 +188,16 @@ script:
           - switch.salon_multiprise_canapee
           - switch.library_power_strip_switch_1
           #Buanderie
-          - switch.washing_machine_plug_prise_machine_laver
-          - switch.dryer_plug_prise_s_che_linge
+          #- switch.washing_machine_plug_prise_machine_laver
+          #- switch.dryer_plug_prise_s_che_linge
+
+          # Salle à manger
+          - switch.sonos_switch_dining_salle_manger_prise_sonos
 
           #Bureau
           - switch.bureau_prise_1
-          #- switch.bureau_prise_pc_1
-          #- switch.bureau_prise_pc_2
+          - switch.bureau_prise_pc_1
+          - switch.bureau_prise_pc_2
 
           - switch.office_entry_power_strip_switch_1
           - switch.office_entry_power_strip_switch_2
@@ -234,11 +237,14 @@ script:
           - switch.washing_machine_plug_prise_machine_laver
           - switch.dryer_plug_prise_s_che_linge
 
+          # Salle à manger
+          - switch.sonos_switch_dining_salle_manger_prise_sonos
+
           #Bureau
           - switch.bureau_prise_1
           - switch.bureau_prise_pc_1
           - switch.bureau_prise_pc_2
-
+          - switch.bureau_prise_pc_3 #nas
           - switch.office_entry_power_strip_switch_1
           - switch.office_entry_power_strip_switch_2
           - switch.office_entry_power_strip_switch_3

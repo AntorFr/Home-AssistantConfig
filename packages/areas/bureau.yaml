@@ -172,50 +172,88 @@ automation:
   description: ""
   mode: single
   trigger:
-    - platform: state
+    - id: presence
+      platform: state
       entity_id:
         - binary_sensor.capteurs_mouvement_bureau
       from: "off"
       to: "on"
       for:
-        minutes: 5
-      id: presence
-    - platform: state
+        minutes: 5 
+    - id: absence
+      platform: state
       entity_id:
         - binary_sensor.capteurs_mouvement_bureau
       from: "on"
       to: "off"
       for:
-        minutes: 5
-      id: absence
-    - platform: time
+        minutes: 5      
+    - id: morning
+      platform: time
       at: "08:30:00"
-      id: morning
-  condition:
-    - condition: or
-      conditions:
-        - condition: trigger
-          id:
-            - presence
-            - absence
-        - condition: and
-          conditions:
-            - condition: state
-              entity_id: person.sebastien
-              state: home
-            - condition: trigger
-              id:
-                - morning
-            - condition: state
-              entity_id: binary_sensor.workday_sensor
-              state: "on"
+    - id: aurore
+      platform: time
+      at: "04:30:00"
+      
+  condition: []
+
   action:
     - choose:
         - conditions:
             - condition: trigger
+              id: morning
+            - condition: state
+              entity_id: binary_sensor.workday_sensor
+              state: "on"
+            - condition: state
+              entity_id: person.sebastien
+              state: home
+            - condition: not
+              conditions:
+              - condition: state
+                entity_id: sensor.rte_tempo_prochaine_couleur
+                state: Rouge
+          sequence:
+            - service: climate.set_preset_mode
+              data:
+                preset_mode: Travail
+              target:
+                entity_id: climate.mobile_heater_plug_thermostat
+            - service: climate.turn_on
+              data: {}
+              target:
+                entity_id: climate.mobile_heater_plug_thermostat                
+        - conditions:
+            - condition: trigger
+              id: aurore
+            - condition: state
+              entity_id: binary_sensor.workday_sensor
+              state: "on"
+            - condition: state
+              entity_id: person.sebastien
+              state: home
+            - condition: state
+              entity_id: sensor.rte_tempo_prochaine_couleur
+              state: Rouge
+          sequence:
+            - service: climate.set_temperature
+              target:
+                entity_id: climate.mobile_heater_plug_thermostat
+              data:
+                temperature: 23
+            - service: climate.turn_on
+              data: {}
+              target:
+                entity_id: climate.mobile_heater_plug_thermostat
+        - conditions:
+            - condition: trigger
               id:
                 - presence
-                - morning
+            - condition: not
+              conditions:
+              - condition: state
+                entity_id: sensor.rte_tempo_prochaine_couleur
+                state: Rouge
           sequence:
             - if:
                 - condition: state

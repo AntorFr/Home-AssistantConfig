@@ -7,7 +7,7 @@ light:
       - light.plafond_timothee
       - light.veilleuse_timothee
       - light.timothee_bed_light_lumi_res_lit_timoth_e
-      - light.cadre_lumineux_timothee
+      - light.daynight_light_cadre_lumineux_timoth_e
 
 input_boolean:
   curfew_timothee:

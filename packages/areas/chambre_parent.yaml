@@ -6,14 +6,11 @@ binary_sensor:
     unique_id: chambre_parents_motion_sensors
     all: false
     entities:
-      - binary_sensor.chambre_parent_capteur_presence_lit_presence
-      - binary_sensor.presence_lit
-      - binary_sensor.lit_parents_mouvement_gauche
-      - binary_sensor.lit_parents_presence_gauche
-      - binary_sensor.lit_parents_mouvement_droite
-      - binary_sensor.smart_parent_bed_presence_droite
-
-
+      - binary_sensor.smart_bed_parent_mouvement_droite
+      - binary_sensor.smart_bed_parent_mouvement_gauche
+      - binary_sensor.smart_bed_parent_presence_droite
+      - binary_sensor.smart_bed_parent_presence_gauche
+      
 light:
   - platform: group
     name: Chambre parents lumieres
@@ -474,7 +471,9 @@ automation:
     input:
       light_target:
         entity_id: light.smart_bed_parent_lumi_re_gauche
-      motion_sensor: binary_sensor.lit_parents_mouvement_gauche
+      motion_sensor: 
+        - binary_sensor.smart_bed_parent_mouvement_gauche
+        - binary_sensor.smart_bed_parent_moving_target
       no_motion_wait:
         seconds: 5
       only_during_night: true
@@ -490,7 +489,9 @@ automation:
     input:
       light_target:
         entity_id: light.smart_bed_parent_lumi_re_droite
-      motion_sensor: binary_sensor.lit_parents_mouvement_droite
+      motion_sensor: 
+        - binary_sensor.smart_bed_parent_mouvement_droite
+        - binary_sensor.smart_bed_parent_moving_target
       no_motion_wait:
         seconds: 5
       only_during_night: true
