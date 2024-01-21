@@ -1,4 +1,3 @@
-
 binary_sensor:
   - platform: group
     #binary_sensor.capteurs_mouvement_bureau
@@ -28,6 +27,12 @@ sensor:
     duration: 00:05:00
     end: "{{now()}}"
 
+input_boolean:
+  auto_light_kill_switch_bureau:
+    name: Lumière mode manuel (bureau)
+    initial: false
+    icon: mdi:autorenew-off
+
 automation:
 ################################################################################
 - id: bureau_light_auto
@@ -44,9 +49,7 @@ automation:
         minutes: 10
       no_motion_warning: 30
       only_turn_off: true
-      light_sensor:
-      lux_cutoff:
-
+      kill_switch: input_boolean.auto_light_kill_switch_bureau
 ################################################################################
 - id: 'bureau_couloir_light_hallway'
   alias: Area - Bureau - Lumière couloir

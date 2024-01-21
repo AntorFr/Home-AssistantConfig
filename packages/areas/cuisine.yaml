@@ -43,6 +43,12 @@ sensor:
     duration: 00:5:00
     end: "{{now()}}"
 
+input_boolean:
+  auto_light_kill_switch_cuisine:
+    name: Lumière mode manuel (cuisine)
+    initial: false
+    icon: mdi:autorenew-off
+
 automation:
 ################################################################################
 - id: cuisine_light_auto
@@ -63,4 +69,5 @@ automation:
       light_sensor: sensor.cuisine_capteur_luminosite_illuminance_lux
       lux_cutoff: 60
       adaptive_lighting: switch.adaptive_lighting_cuisine
+      kill_switch: input_boolean.auto_light_kill_switch_cuisine
 ################################################################################

@@ -103,6 +103,12 @@ sensor:
     duration: 00:10:00
     end: "{{now()}}"
 
+input_boolean:
+  auto_light_kill_switch_jardin:
+    name: Lumière mode manuel (jardin)
+    initial: false
+    icon: mdi:autorenew-off
+
 automation:
 ################################################################################
 - id: 'jardin_xmas-light_auto'
@@ -201,6 +207,7 @@ automation:
         minutes: 2
       no_motion_warning: 0
       only_during_night: true
+      kill_switch: input_boolean.auto_light_kill_switch_jardin
 ################################################################################
 - id: jardin_front_light2_auto
   alias: Area - Jardin - Lumière parking auto
@@ -217,6 +224,7 @@ automation:
         minutes: 3
       no_motion_warning: 0
       only_during_night: true
+      kill_switch: input_boolean.auto_light_kill_switch_jardin
 ################################################################################
 - id: jardin_back_light_auto
   alias: Area - Jardin - Lumière arriere auto
@@ -232,6 +240,7 @@ automation:
         minutes: 10
       no_motion_warning: 0
       only_during_night: true
+      kill_switch: input_boolean.auto_light_kill_switch_jardin
 
 homeassistant:
   customize:

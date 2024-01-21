@@ -58,6 +58,7 @@ automation:
       no_motion_warning: 30
       light_sensor: sensor.salon_capteur_luminosite_illuminance_lux
       lux_cutoff: 60
+      lux_sun_cutoff: 100
       adaptive_lighting: switch.adaptive_lighting_salon
       only_during_night: false
       kill_switch: input_boolean.salon_lumiere_mode_tv
