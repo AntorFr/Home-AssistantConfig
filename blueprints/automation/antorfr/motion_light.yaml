@@ -39,7 +39,7 @@ blueprint:
     light_sensor:
       name: (OPTIONAL) Illuminance sensor
       description: This sensor will be used to determine the illumination.
-      default:
+      default: []
       selector:
         entity:
           filter:
@@ -48,7 +48,16 @@ blueprint:
     lux_cutoff:
       name: (OPTIONAL) Illuminance cutoff value
       description: minimum brightness that is triggering.
-      default: 
+      default: 30
+      selector:
+        number:
+          min: 0
+          max: 1000
+          unit_of_measurement: lux
+    lux_sun_cutoff:
+      name: (OPTIONAL) Illuminance Sun cutoff
+      description: If above, Sun is there and light can be turn off
+      default: 1000
       selector:
         number:
           min: 0
@@ -150,10 +159,12 @@ variables:
   no_motion_warning: !input 'no_motion_warning'
   light_sensor: !input 'light_sensor'
   lux_cutoff: !input 'lux_cutoff'
+  lux_sun_cutoff: !input 'lux_sun_cutoff'
   adaptive_lighting: !input 'adaptive_lighting'
   only_during_night: !input 'only_during_night'
   only_turn_off: !input 'only_turn_off'
   kill_switch_id: !input 'kill_switch'
+
 
   no_motion_wait_sec: '{{ ((no_motion_wait.hours or 0)*3600+(no_motion_wait.minutes or 0)*60+(no_motion_wait.seconds or 0))|int}}'
   warning_disable: '{{ (no_motion_warning==0) or (no_motion_warning>=no_motion_wait_sec)}}'
@@ -210,6 +221,19 @@ trigger:
     to: "off"
     for: !input 'no_motion_wait'
     id: "no_motion"
+  - platform: state
+    entity_id: !input motion_sensor
+    to: "off"
+    for: !input 'no_motion_wait'
+    id: "no_motion"
+  - platform: numeric_state
+    entity_id: !input light_sensor
+    below: !input 'lux_cutoff'
+    id: "lux_sensor_cutoff"
+  - platform: numeric_state
+    entity_id: !input light_sensor
+    above: !input 'lux_sun_cutoff'
+    id: "lux_sensor_sun"
   - !input turn_on_trigger
   - !input turn_off_trigger
   - !input toggle_trigger
@@ -272,6 +296,32 @@ condition:
                       (states(light_sensor)|int <= lux_cutoff) or
                       (expand(light_entities) | selectattr("state", "eq", "on") | list | count > 0)
                   }}
+          - alias: "Not any more enough light in the room"
+            condition: and
+            conditions:
+              - alias: "Not enough light"
+                condition: trigger
+                id: 'lux_sensor_cutoff'  
+              - alias: "turn on enabled"
+                condition: template
+                value_template: >
+                  {{ 
+                    not (turn_on_disable)
+                  }} 
+              - alias: "night only disable or sun is down"
+                condition: template
+                value_template: >
+                  {{ 
+                    (night_only_disable) or 
+                    (is_state("sun.sun","below_horizon"))
+                  }}     
+              - alias: "presence in the room" 
+                condition: template
+                value_template: >
+                  {{ expand(motion_sensor) | selectattr("state", "==", "on") | list | count > 0 }}            
+          - alias: "Too much light, Sun detected"
+            condition: trigger
+            id: 'lux_sensor_sun'            
           - alias: "light on for long time and all motion sensor(s) unavailable"
             condition: and
             conditions:  
@@ -283,10 +333,12 @@ condition:
 
 action:
 - choose:
-  - alias: "Motion detected" 
+  - alias: "Motion detected or not enough light" 
     conditions:
     - condition: trigger
-      id: motion
+      id: 
+        - motion
+        - lux_sensor_cutoff
     sequence:
     - choose:
       - conditions: '{{is_state(adaptive_lighting,"on")}}'
@@ -300,7 +352,14 @@ action:
           - service: light.turn_on
             target: !input 'light_target'
             data: !input 'turn_on_data'
-  
+  - alias: "Too much light (sun detected)"
+    conditions:
+    - condition: trigger
+      id: 
+        - lux_sensor_sun
+    sequence:
+      - service: light.turn_off
+        target: !input 'light_target'
   - alias: "Turn on pressed" 
     conditions:
     - condition: trigger
