@@ -21,15 +21,12 @@ notify:
 
 #web
 http:
-  #ssl_certificate: /letsencrypt/live/intra.sberard.fr/fullchain.pem
-  #ssl_key: /letsencrypt/live/intra.sberard.fr/privkey.pem
   use_x_forwarded_for: true
   trusted_proxies:
   - 192.168.10.0/23
   - 127.0.0.1
-  - 10.0.0.0/24
-  - 172.21.0.0/24
   - 10.42.0.0/16
+  - 172.16.0.0/16 
 
 recorder:
   purge_keep_days: 5

@@ -1,16 +1,16 @@
-influxdb:
-  api_version: 2
-  ssl: false
-  host: influxdb2
-  port: 80
-  token: !secret influxdb_token
-  organization: !secret influxdb_organization
-  bucket: !secret influxdb_bucket
-  tags:
-    source: HA
-  tags_attributes:
-    - friendly_name
-  ignore_attributes:
-    - icon
-    - access_token
-  default_measurement: units
+#influxdb:
+#  api_version: 2
+#  ssl: false
+#  host: influxdb2
+#  port: 80
+#  token: !secret influxdb_token
+#  organization: !secret influxdb_organization
+#  bucket: !secret influxdb_bucket
+#  tags:
+#    source: HA
+#  tags_attributes:
+#    - friendly_name
+#  ignore_attributes:
+#    - icon
+#    - access_token
+#  default_measurement: units
