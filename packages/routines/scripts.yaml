@@ -29,8 +29,8 @@ script:
         - chambre_d_amis
         entity_id:
         #jardin 
-        - light.jardin_lumiere_arriere
-        - light.lumiere_jardin_devant
+        - light.garden_light_back_lumi_re_arri_re_jardin
+        - light.garden_light_front_lumi_re_devant_jardin
         - light.garden_parking_light
         - light.jardin
 

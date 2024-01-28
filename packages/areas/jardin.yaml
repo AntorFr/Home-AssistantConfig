@@ -22,9 +22,9 @@ light:
     name: Jardin lumieres
     entities:
       - light.guirlandes_noel
-      - light.jardin_lumiere_arriere
+      - light.garden_light_back_lumi_re_arri_re_jardin
       - light.garden_parking_light
-      - light.lumiere_jardin_devant
+      - light.garden_light_front_lumi_re_devant_jardin
       - light.jardin
 
 binary_sensor:
@@ -199,7 +199,7 @@ automation:
     input:
       light_target:
         entity_id: 
-          - light.lumiere_jardin_devant
+          - light.garden_light_front_lumi_re_devant_jardin
           - light.garden_parking_light
       motion_sensor: 
         - binary_sensor.jardin_devant_presence
@@ -234,7 +234,7 @@ automation:
     input:
       light_target:
         entity_id: 
-          - light.jardin_lumiere_arriere
+          - light.garden_light_back_lumi_re_arri_re_jardin
       motion_sensor: binary_sensor.terasse_person_occupancy
       no_motion_wait:
         minutes: 10
