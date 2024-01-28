@@ -169,7 +169,7 @@ variables:
   no_motion_wait_sec: '{{ ((no_motion_wait.hours or 0)*3600+(no_motion_wait.minutes or 0)*60+(no_motion_wait.seconds or 0))|int}}'
   warning_disable: '{{ (no_motion_warning==0) or (no_motion_warning>=no_motion_wait_sec)}}'
   duration_before_warning: '{{ (no_motion_wait_sec - no_motion_warning) }}'
-  illinance_disable: '{{(light_sensor==none) or (lux_cutoff==none)}}'
+  illinance_disable: '{{(light_sensor==none) or (light_sensor==[]) or (lux_cutoff==none)}}'
   night_only_disable: "{{not only_during_night}}"
   turn_on_disable: '{{only_turn_off}}'
   light_entities: >
