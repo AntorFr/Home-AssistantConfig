@@ -92,7 +92,7 @@ automation:
           target:
             area_id: "{{room}}"
         - service: switch.turn_off
-          entity_id: witch.fire_tablet_screen
+          entity_id: switch.fire_tablet_screen
         - service: script.play_mood_music
           data:
             action: media_stop
@@ -118,7 +118,7 @@ automation:
             target:
               area_id: "{{room}}"
           - service: switch.turn_off
-            entity_id: witch.fire_tablet_screen
+            entity_id: switch.fire_tablet_screen
           - service: script.play_mood_music
             data:
               action: media_stop
@@ -143,7 +143,7 @@ automation:
             target:
               area_id: "{{room}}"
           - service: switch.turn_off
-            entity_id: witch.fire_tablet_screen
+            entity_id: switch.fire_tablet_screen
           - service: script.play_mood_music
             data:
               action: media_stop

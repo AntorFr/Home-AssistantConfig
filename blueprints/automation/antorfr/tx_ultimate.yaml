@@ -74,6 +74,25 @@ blueprint:
             - domain: binary_sensor
             #- device_class: None 
 
+    touchfield_1_controlled_entites:
+      name: Touchfield 1 controlled_entites
+      description: TX Ultimate Touchfield 1 controlled entities
+      default: []
+      selector:
+        entity:
+    touchfield_2_controlled_entites:
+      name: Touchfield 2 controlled_entites
+      description: TX Ultimate Touchfield 2 controlled entities
+      default: []
+      selector:
+        entity:
+    touchfield_3_controlled_entites:
+      name: Touchfield 3 controlled_entites
+      description: TX Ultimate Touchfield 3 controlled entities
+      default: []
+      selector:
+        entity:
+
     touchfield_1_action:
       default: []
       selector:
@@ -121,7 +140,16 @@ mode: parallel
 
 variables:
   long_press: !input 'long_press'
+
+  touchfield_1_controlled_entites: !input 'touchfield_1_controlled_entites'
+  touchfield_2_controlled_entites: !input 'touchfield_2_controlled_entites'
+  touchfield_3_controlled_entites: !input 'touchfield_3_controlled_entites'
+
   room: '{{ area_id(long_press) }}'
+
+  adaptive_lighting: >
+    {% from 'room_functions.jinja' import area_adaptive_lighting %}
+    {{area_adaptive_lighting(room)}}
   
 trigger:
   - id: touchfield_1
@@ -167,17 +195,104 @@ action:
       conditions:
         - condition: trigger
           id: touchfield_1
-      sequence: !input "touchfield_1_action"
+      sequence: 
+        - alias: "entities configures for touchfield 1"
+          if:
+            - condition: template
+              value_template: "{{touchfield_1_controlled_entites | count > 0 }}"
+          then:
+            - if:
+                - alias: "any light still on" 
+                  condition: template
+                  value_template: '{{ expand(touchfield_1_controlled_entites) | selectattr("state", "eq", "on") | list | count > 0 }}'
+              then:
+                - service: light.turn_off
+                  target:
+                    entity_id: !input 'touchfield_1_controlled_entites'
+              else:
+                - if:
+                    - alias: "adaptive_lighting active"
+                      condition: template
+                      value_template: '{{is_state(adaptive_lighting,"on")}}'
+                  then:
+                    - service: adaptive_lighting.apply
+                      data:
+                        entity_id: '{{adaptive_lighting}}' 
+                        lights: '{{touchfield_1_controlled_entites}}'
+                        turn_on_lights: true
+                  else:
+                      - service: light.turn_on
+                        target:
+                          entity_id: !input 'touchfield_1_controlled_entites'
+          else: !input "touchfield_1_action"
     - alias: touchfield_2
       conditions:
         - condition: trigger
           id: touchfield_2
-      sequence: !input "touchfield_2_action"
+      sequence: 
+        - alias: "entities configures for touchfield 2"
+          if:
+            - condition: template
+              value_template: "{{touchfield_2_controlled_entites | count > 0 }}"
+          then:
+            - if:
+                - alias: "any light still on" 
+                  condition: template
+                  value_template: '{{ expand(touchfield_2_controlled_entites) | selectattr("state", "eq", "on") | list | count > 0 }}'
+              then:
+                - service: light.turn_off
+                  target:
+                    entity_id: !input 'touchfield_2_controlled_entites'
+              else:
+                - if:
+                    - alias: "adaptive_lighting active"
+                      condition: template
+                      value_template: '{{is_state(adaptive_lighting,"on")}}'
+                  then:
+                    - service: adaptive_lighting.apply
+                      data:
+                        entity_id: '{{adaptive_lighting}}' 
+                        lights: '{{touchfield_2_controlled_entites}}'
+                        turn_on_lights: true
+                  else:
+                      - service: light.turn_on
+                        target:
+                          entity_id: !input 'touchfield_2_controlled_entites'
+          else: !input "touchfield_2_action"      
     - alias: touchfield_3
       conditions:
         - condition: trigger
           id: touchfield_3
-      sequence: !input "touchfield_3_action"
+      sequence: 
+        - alias: "entities configures for touchfield 3"
+          if:
+            - condition: template
+              value_template: "{{touchfield_3_controlled_entites | count > 0 }}"
+          then:
+            - if:
+                - alias: "any light still on" 
+                  condition: template
+                  value_template: '{{ expand(touchfield_3_controlled_entites) | selectattr("state", "eq", "on") | list | count > 0 }}'
+              then:
+                - service: light.turn_off
+                  target:
+                    entity_id: !input 'touchfield_3_controlled_entites'
+              else:
+                - if:
+                    - alias: "adaptive_lighting active"
+                      condition: template
+                      value_template: '{{is_state(adaptive_lighting,"on")}}'
+                  then:
+                    - service: adaptive_lighting.apply
+                      data:
+                        entity_id: '{{adaptive_lighting}}'
+                        lights: '{{touchfield_3_controlled_entites}}'
+                        turn_on_lights: true
+                  else:
+                      - service: light.turn_on
+                        target:
+                          entity_id: !input 'touchfield_3_controlled_entites'
+          else: !input "touchfield_3_action"         
     - alias: long_press
       conditions:
         - condition: trigger

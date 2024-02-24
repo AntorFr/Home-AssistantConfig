@@ -49,4 +49,22 @@
     {{ns.entites | to_json}}
 {%- endmacro -%}
 
+{%- macro area_adaptive_lighting(area) -%}
+    {{area_entities(area)
+    | select('in',integration_entities('adaptive_lighting'))
+    | reject('contains','sleep')
+    | reject('contains','color')
+    | reject('contains','brightness')
+    | first}}
+{%- endmacro -%}
+
+{%- macro area_adaptive_lighting_sleep(area) -%}
+    {{area_entities(area)
+    | select('in',integration_entities('adaptive_lighting'))
+    | select('contains','sleep')
+    | reject('contains','color')
+    | reject('contains','brightness')
+    | first}}
+{%- endmacro -%}
+
 

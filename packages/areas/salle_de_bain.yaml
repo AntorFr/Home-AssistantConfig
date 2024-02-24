@@ -5,6 +5,12 @@ light:
     entities:
       - light.salle_de_bain
 
+input_boolean:
+  auto_light_kill_switch_salle_de_bain:
+    name: Lumière mode manuel (salle de bain)
+    initial: false
+    icon: mdi:autorenew-off
+
 automation:
 ################################################################################
 - id: 'salle_de_bain_light'
@@ -16,10 +22,13 @@ automation:
       light_target:
         entity_id: light.salle_de_bain_lumieres
       adaptive_lighting: switch.adaptive_lighting_default   
-      motion_sensor: binary_sensor.anyone_home
-      only_turn_off: true   
+      motion_sensor: binary_sensor.bathroom_presence_sensor_occupancy
+      light_sensor: sensor.bathroom_presence_sensor_light_sensor
+      kill_switch: input_boolean.auto_light_salle_de_bain
+      lux_cutoff: 30
+      lux_sun_cutoff: 200 
       no_motion_wait:
-        minutes: 5
+        minutes: 1
       no_motion_warning: 30
       toggle_trigger:
         platform: state
@@ -28,6 +37,7 @@ automation:
         from: ["off"]
         to: ["on"]
         id: toggle
+
 ################################################################################
 - id: 'salle_de_bain_light_switch'
   alias: Area - Salle de bain - Bouton
@@ -42,3 +52,9 @@ automation:
       multi_touch: binary_sensor.bathroom_light_switch_multi_touch
       swipe_left: binary_sensor.bathroom_light_switch_swipe_left
 
+
+################################################################################
+homeassistant:
+  customize:
+   binary_sensor.bathroom_presence_sensor_occupancy:
+      room_main: occupancy

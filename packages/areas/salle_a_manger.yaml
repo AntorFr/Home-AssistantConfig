@@ -6,7 +6,6 @@ binary_sensor:
     all: false
     entities:
       - binary_sensor.salle_a_manger_capteur_mouvement_occupancy
-      - binary_sensor.salle_a_manger_presence_presence
       - binary_sensor.presence_sensor_dining_occupancy
 
 template:
@@ -15,7 +14,8 @@ template:
       name: Salle à manger temperature 
       device_class: temperature
       unit_of_measurement: "°C"
-      state: "{{ state_attr('climate.netatmo_salle_a_manger', 'current_temperature')|float }}"
+      availability: "{{states('climate.netatmo_salle_a_manger') != 'unknown'}}"
+      state: "{{ state_attr('climate.netatmo_salle_a_manger', 'current_temperature')|float | d(none) }}"
 
 sensor:
   - name: mouvement_salle_a_manger_5min
@@ -52,24 +52,12 @@ automation:
       lux_sun_cutoff: 80
       adaptive_lighting: switch.adaptive_lighting_salle_a_manger
       kill_switch: input_boolean.auto_light_salle_a_manger
-################################################################################
-- id: salle-a-manger_light_button
-  alias: Area - Salle à manger - bouton
-  description: ''
-  mode: single
-  trigger:
-    - platform: device
-      domain: tasmota
-      device_id: dda5bae70a918c994d724c42d0f35c55
-      type: button_short_press
-      subtype: switch_1
-      discovery_id: 24A160119D21_switch_1_TOGGLE
-  condition: []
-  action:
-    - service: light.toggle
-      data: {}
-      target:
-        area_id: salle_a_manger
+      toggle_trigger:
+        platform: state
+        entity_id: binary_sensor.garden_light_front_bouton
+        from: ["on","off"]
+        to: ["on","off"]
+        id: toggle
 ################################################################################
 
 homeassistant:

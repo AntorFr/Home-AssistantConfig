@@ -362,6 +362,25 @@ script:
       target:
         area_id: garage
 
+## Serrures / Verrou ###
+################################################################################
+  routine_all_lock_unlock:
+    alias: Routine - Déverouille les portes
+    sequence:
+    - service: lock.unlock
+      target:
+        entity_id: 
+        - lock.nuki_gateway_entrance_nuki_lock
+################################################################################
+  routine_all_lock_lock:
+    alias: Routine - Verouille les portes
+    sequence:
+    - service: lock.lock
+      target:
+        entity_id: 
+        - lock.nuki_gateway_entrance_nuki_lock
+
+
 ## Flag / Settings  ###
 ################################################################################
   routine_away_settings:

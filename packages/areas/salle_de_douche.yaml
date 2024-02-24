@@ -28,11 +28,9 @@ automation:
         platform: state
         entity_id: 
           - binary_sensor.dressing_light_switch_touchfield_1
-          - binary_sensor.shower_light_switch_touchfield_2
         from: ["off"]
         to: ["on"]
         id: toggle
-
 ################################################################################
 - id: 'salle_de_douche_light_switch_dressing'
   alias: Area - Salle de douche - Bouton dressing
@@ -46,6 +44,7 @@ automation:
       long_press: binary_sensor.dressing_light_switch_long_press
       multi_touch: binary_sensor.dressing_light_switch_multi_touch
       swipe_left: binary_sensor.dressing_light_switch_swipe_left
+
 ################################################################################
 - id: 'salle_de_douche_light_switch_shower'
   alias: Area - Salle de douche - Bouton douche
@@ -59,3 +58,6 @@ automation:
       long_press: binary_sensor.shower_light_switch_long_press
       multi_touch: binary_sensor.shower_light_switch_multi_touch
       swipe_left: binary_sensor.shower_light_switch_swipe_left
+      touchfield_2_controlled_entites:
+        - light.dressing_plafonnier
+        - light.salle_de_douche_plafonnier

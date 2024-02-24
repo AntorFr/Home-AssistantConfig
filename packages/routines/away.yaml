@@ -100,6 +100,7 @@ script:
           - script.routine_all_cover_close
           - script.routine_all_garage_door_close
           - script.routine_away_settings
+          - script.routine_all_lock_lock
 ################################################################################
   routine_back_home:
     alias: Routine - Retour maison
@@ -109,7 +110,9 @@ script:
         message: Bienvenue à la maison 
     - service: script.turn_on
       target:
-        entity_id: script.routine_all_power_device_on
+        entity_id: 
+          - script.routine_all_power_device_on
+          - script.routine_all_lock_unlock
     - alias: "If sun is up"
       choose:
       - conditions:

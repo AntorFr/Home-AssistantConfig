@@ -1,3 +1,17 @@
+homeassistant:
+  customize:
+   binary_sensor.capteurs_mouvement_cuisine:
+      room_main: occupancy
+
+binary_sensor:
+  - platform: group
+    name: "Capteurs mouvement cuisine"
+    device_class: occupancy
+    unique_id: cuisine_motion_sensors
+    all: false
+    entities:
+      - binary_sensor.kitchen_presence_sensor_occupancy
+
 light:
   - platform: group
     name: Cusine plafonier
@@ -23,16 +37,6 @@ template:
       device_class: temperature
       unit_of_measurement: "°C"
       state: "{{ state_attr('climate.cuisine', 'current_temperature')|float }}"
-  - binary_sensor:
-    - unique_id: cuisine presence
-      name: Cuisine presence
-      device_class: occupancy
-      state: "{{ is_state('binary_sensor.cuisine_capteur_mouvement_occupancy','on')}}"
-      delay_off:
-        minutes: 5
-      attributes:
-        room_main: "occupancy"
-      availability: "{{ has_value('binary_sensor.cuisine_capteur_mouvement_occupancy')}}"
 
 sensor:
   - name: mouvement_cuisine_5min
@@ -61,14 +65,16 @@ automation:
         entity_id: 
           - light.cusine_plafonier
           - light.cusine_spot
-      motion_sensor: binary_sensor.cuisine_capteur_mouvement_occupancy
+      motion_sensor: binary_sensor.capteurs_mouvement_cuisine
       no_motion_wait: 
         minutes: 10
       no_motion_warning: 30
       only_during_night: false
       light_sensor: sensor.cuisine_capteur_luminosite_illuminance_lux
       lux_cutoff: 60
-      lux_sun_cutoff: 100
+      lux_sun_cutoff: 250
       adaptive_lighting: switch.adaptive_lighting_cuisine
       kill_switch: input_boolean.auto_light_kill_switch_cuisine
 ################################################################################
+
+

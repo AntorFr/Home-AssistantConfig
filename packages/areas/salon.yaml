@@ -5,10 +5,10 @@ binary_sensor:
     unique_id: salon_motion_sensors
     all: false
     entities:
-      - binary_sensor.salon_person_occupancy
       - binary_sensor.salon_capteur_mouvement_occupancy
       - binary_sensor.salon_capteur_presence_presence
       - binary_sensor.bibliotheque_person_occupancy
+      - binary_sensor.livingroom_presence_sensor_presence
 
 light:
   - platform: group
@@ -57,8 +57,8 @@ automation:
         minutes: 10
       no_motion_warning: 30
       light_sensor: sensor.salon_capteur_luminosite_illuminance_lux
-      lux_cutoff: 60
-      lux_sun_cutoff: 100
+      lux_cutoff: 80
+      lux_sun_cutoff: 200
       adaptive_lighting: switch.adaptive_lighting_salon
       only_during_night: false
       kill_switch: input_boolean.salon_lumiere_mode_tv
@@ -300,6 +300,7 @@ automation:
           entity_id: media_player.salon
     default: []
 
+#########################################
 homeassistant:
   customize:
    binary_sensor.capteurs_mouvement_salon:

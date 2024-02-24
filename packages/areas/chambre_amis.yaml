@@ -4,4 +4,5 @@ template:
       name: Chambre Amis temperature 
       device_class: temperature
       unit_of_measurement: "°C"
-      state: "{{ state_attr('climate.netatmo_chambre_d_amis', 'current_temperature')|float }}"
+      availability: "{{states('climate.netatmo_chambre_d_amis') != 'unknown'}}"
+      state: "{{ state_attr('climate.netatmo_chambre_d_amis', 'current_temperature')|float | d(none) }}"

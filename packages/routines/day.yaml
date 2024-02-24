@@ -594,6 +594,7 @@ script:
           - script.routine_night_all_power_device_off
           - script.routine_night_all_cover_close
           - script.routine_all_garage_door_close
+          - script.routine_all_lock_lock
     - delay:
         seconds: 10
     - service: script.turn_on
@@ -621,6 +622,7 @@ script:
         entity_id: 
           - script.routine_all_light_mode_night_off
           - script.routine_morning_all_light_turn_on
+          - script.routine_all_lock_unlock
     - alias: "If sun is up"
       choose:
       - conditions:
