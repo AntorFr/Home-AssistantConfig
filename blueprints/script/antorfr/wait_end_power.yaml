@@ -1,0 +1,67 @@
+blueprint:
+  name: Turn off after end
+  domain: script
+  input:
+    energy_monitor:
+      name: Energy monitor 
+      description: energy monitor to know when device off.
+      selector:
+        entity:
+          multiple: false
+          filter:
+            - domain: sensor
+            - device_class: power
+
+    devices:
+      name: Switchs 
+      description: Switch(s) to turn off.
+      selector: 
+        entity:
+          multiple: true
+          filter:
+            - domain: switch
+    duration:
+      name: Duration
+      description: duration for which power is bellow threshold
+      selector:
+        duration:
+          enable_day: false
+      default: 
+        seconds: 1
+    threshold:
+      name: Power threshold
+      description: power under which device could be turn off
+      selector:
+        number:
+          min: 0
+          max: 5000
+          unit_of_measurement: W
+          mode: box
+
+#For entity_id from trigger does not support template... so should be defined upfront. 
+#fields:
+icon: mdi:clock-end
+mode: restart
+variables:
+  devices: !input devices
+  #energy_monitor: >
+  #  {%- if energy_monitor | count > 0 -%}
+  #  {%- else -%}
+  #    {%- from 'entity_functions.jinja' import entity_power_id -%}
+  #    {%- set first_device = (devices|first if devices is list else devices)-%}
+  #    {{entity_power_id(first_device)}}
+  #  {%- endif -%}
+sequence:
+  - if:
+      - alias: "any device still on" 
+        condition: template
+        value_template: '{{ expand(devices) | selectattr("state", "eq", "on") | list | count > 0 }}'
+    then:
+      - wait_for_trigger:
+        - platform: numeric_state
+          entity_id: !input energy_monitor
+          for: !input duration
+          below: !input threshold
+      - service: switch.turn_off
+        target:
+          entity_id: "{{devices}}"

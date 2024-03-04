@@ -1,0 +1,13 @@
+{%- macro entity_power(entity) -%}
+    {{expand(device_entities(device_id(entity)))
+        |selectattr('attributes.unit_of_measurement','defined')
+        |selectattr('attributes.unit_of_measurement', 'eq', 'W')
+        |map(attribute="state")|first}}
+{%- endmacro -%}
+
+{%- macro entity_power_id(entity) -%}
+    {{expand(device_entities(device_id(entity)))
+        |selectattr('attributes.unit_of_measurement','defined')
+        |selectattr('attributes.unit_of_measurement', 'eq', 'W')
+        |map(attribute="entity_id")|first}}
+{%- endmacro -%}

@@ -187,9 +187,6 @@ script:
           - switch.salon_prise_tv
           - switch.salon_multiprise_canapee
           - switch.library_power_strip_switch_1
-          #Buanderie
-          #- switch.washing_machine_plug_prise_machine_laver
-          #- switch.dryer_plug_prise_s_che_linge
 
           # Salle à manger
           - switch.sonos_switch_dining_salle_manger_prise_sonos
@@ -198,10 +195,7 @@ script:
           - switch.bureau_prise_1
           - switch.bureau_prise_pc_1
           - switch.bureau_prise_pc_2
-
-          - switch.office_entry_power_strip_switch_1
-          - switch.office_entry_power_strip_switch_2
-          - switch.office_entry_power_strip_switch_3
+          - switch.office_entry_power_strip_switch_2 #sonos
 
           #Chambre parent
           - switch.couverture_laurine
@@ -221,7 +215,14 @@ script:
 
           #Garage
           - switch.garage_prise_chargeurs
-
+    - service: script.turn_on
+      target:
+        entity_id:
+          #Bureau
+          - script.routine_turn_off_3dprinter
+          #Buanderie
+          - script.routine_turn_off_dryer
+          - script.routine_turn_off_washing_machine
 ################################################################################
   routine_all_power_device_on:
     alias: Routine - All power saving device on
@@ -255,6 +256,51 @@ script:
 
           #Chambre Emilie
           - switch.chambre_emilie_prise_bureau
+    - service: script.turn_off
+      target:
+        entity_id:
+          #Bureau
+          - script.routine_turn_off_3dprinter
+          #Buanderie
+          - script.routine_turn_off_dryer
+          - script.routine_turn_off_washing_machine
+
+################################################################################
+  routine_turn_off_3dprinter:  
+    alias: Routine - Attendre fin impression 3D
+    use_blueprint:
+      path: antorfr/wait_end_power.yaml
+      input:
+        energy_monitor: sensor.office_entry_power_strip_watt
+        devices:
+          - switch.office_entry_power_strip_switch_1
+          - switch.office_entry_power_strip_switch_3
+        duration:
+          minutes: 10
+        threshold: 75
+################################################################################
+  routine_turn_off_washing_machine:  
+    alias: Routine - Attendre fin machine à laver
+    use_blueprint:
+      path: antorfr/wait_end_power.yaml
+      input:
+        energy_monitor: sensor.washing_machine_plug_power
+        devices: switch.washing_machine_plug_prise_machine_laver
+        duration:
+          minutes: 15
+        threshold: 75
+################################################################################
+  routine_turn_off_dryer:  
+    alias: Routine - Attendre fin sèche linge
+    use_blueprint:
+      path: antorfr/wait_end_power.yaml
+      input:
+        energy_monitor: sensor.dryer_plug_power
+        devices: switch.dryer_plug_prise_s_che_linge
+        duration:
+          minutes: 10
+        threshold: 75
+################################################################################
 
 ## Volets / Portails  ###
 ################################################################################
