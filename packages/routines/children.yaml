@@ -73,7 +73,7 @@ automation:
                   target:
                     entity_id: light.plafond_timothee
                   data:
-                    brightness_pct: 10
+                    brightness_pct: 30
     - alias: "Evening - Children Sleep time"
       conditions:
         - condition: trigger

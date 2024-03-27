@@ -1,0 +1,32 @@
+{%- macro alert_list_on() -%}
+    {%- set target_list = expand(states.alert)|map(attribute="entity_id")|list %}
+    {{expand(states.alert)
+        |selectattr("state", "==", "on")
+        |map(attribute="entity_id")
+        |list| to_json }}
+{%- endmacro -%}
+
+{%- macro alert_list_icon() -%}
+    {%- if (alert_list_on()| from_json | count > 0) -%}
+    mdi:alert
+    {%- else -%}
+    mdi:check-circle
+    {%- endif -%}
+{%- endmacro -%}
+
+{%- macro alert_list_color() -%}
+    {%- if (alert_list_on()| from_json | count > 0) -%}
+    deep-orange
+    {%- else -%}
+    green
+    {%- endif -%}
+{%- endmacro -%}
+
+{% macro alert_list_text() %}
+    {%- set nb_alert = (alert_list_on()| from_json | count) -%}
+    {% if nb_alert > 0 %}
+        {{nb_alert}} alerte(s) : 
+    {% else %}
+        Tout va bien...
+    {% endif %}
+{% endmacro %}

@@ -27,6 +27,12 @@ template:
       device_class: occupancy
       state: "{{ is_state('input_boolean.withing_bed_presence_1', 'on') }}"
 
+input_boolean:
+  auto_light_kill_switch_chambre_parent:
+    name: Lumière mode manuel (chambre parent)
+    initial: false
+    icon: mdi:autorenew-off
+
 automation:
 ################################################################################
 - id: 'chambre_parent_button_seb'
@@ -422,6 +428,7 @@ automation:
         - binary_sensor.smart_bed_parent_moving_target
       no_motion_wait:
         seconds: 5
+      kill_switch: input_boolean.auto_light_kill_switch_chambre_parent
       only_during_night: true
       turn_on_data:
         color_name: red
@@ -440,6 +447,7 @@ automation:
         - binary_sensor.smart_bed_parent_moving_target
       no_motion_wait:
         seconds: 5
+      kill_switch: input_boolean.auto_light_kill_switch_chambre_parent
       only_during_night: true
       turn_on_data:
         color_name: red
@@ -457,7 +465,8 @@ automation:
       motion_sensor: binary_sensor.capteurs_mouvement_chambre_parents
       no_motion_wait:
         minutes: 15
-      no_motion_warning: 30  
+      no_motion_warning: 30
+      kill_switch: input_boolean.auto_light_kill_switch_chambre_parent
       only_turn_off: true      
       toggle_trigger:
         platform: state

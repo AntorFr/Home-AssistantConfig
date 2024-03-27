@@ -22,12 +22,12 @@ automation:
   trigger:
     - platform: state
       entity_id:
-        - media_player.xbox_salon
+        - media_player.xbox_salon_2
       to: "on"
       id: turned_on
     - platform: state
       entity_id:
-        - media_player.xbox_salon
+        - media_player.xbox_salon_2
       to: "off"
       id: turned_off
   condition: []

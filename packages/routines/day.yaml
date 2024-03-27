@@ -605,7 +605,7 @@ script:
   routine_matin:
     alias: Routine - Matin
     sequence:
-    - alias: "Fire aurore routine event"
+    - alias: "Fire morning routine event"
       event: routine_event
       event_data:
         type: morning
@@ -622,7 +622,7 @@ script:
         entity_id: 
           - script.routine_all_light_mode_night_off
           - script.routine_morning_all_light_turn_on
-          - script.routine_all_lock_unlock
+          #- script.routine_all_lock_unlock
     - alias: "If sun is up"
       choose:
       - conditions:

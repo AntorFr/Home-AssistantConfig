@@ -1,36 +1,5 @@
 ---
- ###
-binary_sensor:
-  - name: VPN connection #### VPN Gatway
-    platform: ping
-    host: 10.1.1.1
-  - name: odr01
-    platform: ping
-    host: odr01.intra.sberard.fr
-  - name: odr02
-    platform: ping
-    host: odr02.intra.sberard.fr
-  - name: odr03
-    platform: ping
-    host: odr03.intra.sberard.fr
-  - name: up01
-    platform: ping
-    host: up01.intra.sberard.fr
-  - name: up02
-    platform: ping
-    host: up02.intra.sberard.fr
-  - name: up03
-    platform: ping
-    host: up03.intra.sberard.fr
-  - name: nuc01
-    platform: ping
-    host: nuc01.intra.sberard.fr
-  - name: nuc02
-    platform: ping
-    host: nuc02.intra.sberard.fr
-  - name: nuc03
-    platform: ping
-    host: nuc03.intra.sberard.fr
+###
 
 ### Monitor system ###
 group:
