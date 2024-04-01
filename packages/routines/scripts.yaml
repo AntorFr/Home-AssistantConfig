@@ -39,7 +39,6 @@ script:
         - light.salon_led_buffet
         - light.plafonnier_entree
         - light.led_bibliotheque
-
 ################################################################################
   routine_night_all_light_turn_off:
     alias: Routine - All light off night
@@ -89,7 +88,6 @@ script:
         - service: light.turn_off
           target:
             entity_id: light.sapin
-
 ################################################################################
   routine_morning_all_light_turn_on:
     alias: Routine - All light on morning
@@ -118,7 +116,6 @@ script:
         - switch.adaptive_lighting_sleep_mode_couloir_etage
         - switch.adaptive_lighting_sleep_mode_salle_de_douche
         - switch.adaptive_lighting_sleep_mode_chambre_parent
-
 ################################################################################
   routine_all_light_mode_night_off:
     alias: Routine - Lumières mode jour
@@ -152,8 +149,7 @@ script:
         - salle_a_manger
         - chambre_parent
         entity_id: 
-        - media_player.salon
-    
+        - media_player.salon   
 ################################################################################
   routine_rdc_media_player_off:
     alias: Routine - All Media player RdC off
@@ -264,7 +260,6 @@ script:
           #Buanderie
           - script.routine_turn_off_dryer
           - script.routine_turn_off_washing_machine
-
 ################################################################################
   routine_turn_off_3dprinter:  
     alias: Routine - Attendre fin impression 3D
@@ -319,7 +314,6 @@ script:
         - chambre_d_amis
         entity_id:
         - cover.volets_rdc
-
 ################################################################################
   routine_morning_cover_open:
     alias: Routine - Ouvre les volets le matin
@@ -341,7 +335,6 @@ script:
         - service: cover.open_cover
           target:
             area_id: chambre_d_amis
-
 ################################################################################
   routine_all_cover_close:
     alias: Routine - Ferme tous les volets
@@ -358,7 +351,6 @@ script:
         - chambre_d_amis
         entity_id:
         - cover.volets_rdc
-
 ################################################################################
   routine_children_cover_workday:
     alias: Routine - Ferme tous les volets dans enfants en semaine
@@ -374,7 +366,6 @@ script:
             area_id:
             - chambre_timothee
             - chambre_emilie
-
 ################################################################################
   routine_night_all_cover_close:
     alias: Routine - Ferme tous les volets (nuit)
@@ -399,7 +390,6 @@ script:
         - service: cover.close_cover
           target:
             area_id: chambre_d_amis
-
 ################################################################################
   routine_all_garage_door_close:
     alias: Routine - Ferme toutes les garages
@@ -426,9 +416,68 @@ script:
         entity_id: 
         - lock.nuki_gateway_entrance_nuki_lock
 
+## Thermostat / Chauffage ###
+################################################################################
+  routine_climate_home:
+    alias: Routine - Thermostat presence
+    sequence:
+    - service: climate.set_preset_mode
+      data:
+        preset_mode: Schedule
+      target:
+        entity_id: climate.entree
+################################################################################
+  routine_climate_away:
+    alias: Routine - Thermostat absence
+    sequence:
+    - service: climate.set_preset_mode
+      data:
+        preset_mode: away
+      target:
+        entity_id: climate.entree
+    - service: climate.turn_off
+      data: {}
+      target:
+        entity_id: climate.mobile_heater_plug_thermostat    
+################################################################################
+  routine_climate_long_absence:
+    alias: Routine - Thermostat longue absence
+    sequence:
+    - service: climate.set_preset_mode
+      data:
+        preset_mode: Frost Guard
+      target:
+        entity_id: climate.entree
 
 ## Flag / Settings  ###
 ################################################################################
+  routine_reset_lightning_settings:
+    alias: Routine - Reset parametres éclairage
+    sequence:
+    - alias: "Disable light_kill_switch"
+      service: input_boolean.turn_off
+      target:
+        entity_id: 
+          - input_boolean.salon_lumiere_mode_tv
+          - input_boolean.auto_light_kill_switch_salle_a_manger
+          - input_boolean.auto_light_kill_switch_bureau
+          - input_boolean.auto_light_kill_switch_cuisine
+          - input_boolean.auto_light_kill_switch_jardin
+    - alias: "Enable Adaptive Lighting"
+      service: input_boolean.turn_on
+      target:
+        entity_id: 
+          - switch.adaptive_lighting_chambre_emilie
+          - switch.adaptive_lighting_chambre_parent
+          - switch.adaptive_lighting_chambre_timothee
+          - switch.adaptive_lighting_couloir_etage
+          - switch.adaptive_lighting_cuisine
+          - switch.adaptive_lighting_default
+          - switch.adaptive_lighting_entree
+          - switch.adaptive_lighting_salle_a_manger
+          - switch.adaptive_lighting_salle_de_douche
+          - switch.adaptive_lighting_salon
+ ################################################################################
   routine_away_settings:
     alias: Routine - Absence settings
     sequence:

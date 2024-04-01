@@ -109,7 +109,6 @@ automation:
       type: "{{ day_phase[trigger.to_state.state]}}"
 
   mode: single
-
 ################################################################################
 - id: 'routine_evening'
   alias: Routine - Day - Soirée
@@ -156,7 +155,6 @@ automation:
     target:
       entity_id: switch.adaptive_lighting_salle_a_manger
   mode: single
-
 ################################################################################
 - id: 'routine_after-noon'
   alias: Routine - Day - Après-midi
@@ -223,7 +221,6 @@ automation:
   - service: script.turn_on
     target:
       entity_id: script.routine_children_cover_workday
-
 ################################################################################
 - id: 'routine_children_night'
   alias: Routine - Day - Enfants nuit
@@ -279,7 +276,6 @@ automation:
   - service: switch.turn_on
     target:
       entity_id: switch.adaptive_lighting_sleep_mode_couloir_etage
-
 ################################################################################
 - id: 'routine_children_curfew'
   alias: Routine - Day - Enfants couvre-feu
@@ -292,6 +288,9 @@ automation:
     at: input_datetime.children_curfew_we
     id: weekend
   condition:
+  - condition: state
+    entity_id: input_boolean.away_mode
+    state: 'off'
   - condition: or
     conditions:
     - condition: and
@@ -324,7 +323,6 @@ automation:
       entity_id: 
         - input_boolean.curfew_timothee
         - input_boolean.curfew_emilie
-
 ################################################################################
 - id: 'routine_children_morning'
   alias: Routine - Day - Children morning
@@ -374,8 +372,6 @@ automation:
       entity_id: input_select.day_phase
     data:
       option: "Matin - reveil enfants"
-
-
 ################################################################################
 - id: 'routine_detect_morning'
   alias: Routine - Day - Detect Matin
@@ -427,7 +423,6 @@ automation:
     target:
       entity_id: input_boolean.night_mode
   mode: single
-
 ################################################################################
 - id: 'routine_detect_night'
   alias: Routine - Day - Detect Nuit
@@ -458,7 +453,6 @@ automation:
     target:
       entity_id: input_boolean.night_mode
   mode: single
-
 ################################################################################
 - id: 'routine_detect_aurore'
   alias: Routine - Day - Detect Aurore
@@ -483,7 +477,6 @@ automation:
   action:
   - service: script.routine_aurore
   mode: single
-
 ################################################################################
 - id: 'routine_night'
   alias: Routine - Day - Nuit
@@ -497,7 +490,6 @@ automation:
     - service: script.turn_on
       target:
         entity_id: script.routine_sleep_mode
-
 ################################################################################
 - id: 'routine_morning'
   alias: Routine - Day - Matin
@@ -511,7 +503,6 @@ automation:
     - service: script.turn_on
       target:
         entity_id: script.routine_matin
-
 ################################################################################
 - id: 'routine_sunset'
   alias: Routine - Day - Sunset (+15min)
@@ -532,7 +523,6 @@ automation:
     - service: script.turn_on
       target:
         entity_id: script.routine_night_all_cover_close
-
 ################################################################################
 - id: 'routine_sunrise'
   alias: Routine - Day - sunrise (-30 min)
@@ -565,7 +555,6 @@ automation:
     - service: script.turn_on
       target:
         entity_id: script.routine_morning_cover_open
-
 ################################################################################
 script:
 ################################################################################
@@ -595,6 +584,7 @@ script:
           - script.routine_night_all_cover_close
           - script.routine_all_garage_door_close
           - script.routine_all_lock_lock
+          - script.routine_reset_lightning_settings
     - delay:
         seconds: 10
     - service: script.turn_on
@@ -655,7 +645,6 @@ script:
         entity_id: 
           - script.routine_all_light_mode_night_off
 ################################################################################
-
 
 intent_script:
 ###############################################################################

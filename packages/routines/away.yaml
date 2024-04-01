@@ -3,7 +3,15 @@ input_boolean:
   away_mode:
     name: Mode absence
     icon: mdi:home-export-outline
+  long_absence_mode:
+    name: Absence longue
+    icon: mdi:beach
 
+input_datetime:
+  long_absence_return_date:
+    name: Date retour
+    has_date: true
+    has_time: false
 
 automation:
 ################################################################################
@@ -28,7 +36,6 @@ automation:
       data: {}
       target:
         entity_id: input_boolean.away_mode
-
 ################################################################################
 - id: 'routine_detect_home'
   alias: Routine - Away - Detect Retour
@@ -46,7 +53,6 @@ automation:
       data: {}
       target:
         entity_id: input_boolean.away_mode
-
 ################################################################################
 - id: 'routine_away'
   alias: Routine - Away - Absence
@@ -64,24 +70,91 @@ automation:
       event_data:
         type: away
 ################################################################################
+- id: 'routine_long_absence'
+  alias: Routine - Away - Absence longue
+  description: ''
+  trigger:
+    - platform: state
+      entity_id: input_boolean.away_mode
+      from: "off"
+      to: 'on'
+      for:
+        hours: 24
+    - platform: state
+      entity_id: input_boolean.long_absence_mode
+      from: "off"
+      to: 'on'
+      
+  condition: []
+  action:
+    - service: input_boolean.turn_on
+      target:
+        entity_id: 
+          - input_boolean.long_absence_mode
+          - input_boolean.away_mode
+    - service: script.routine_long_absence
+      data: {}
+    - alias: "Fire long absence routine"
+      event: routine_event
+      event_data:
+        type: long_absence
+################################################################################
+- id: 'routine_prepare_home'
+  alias: Routine - Away - Prepare le retour
+  description: ''
+  trigger:
+    - platform: time
+      at: input_datetime.long_absence_return_date
+      id: date
+    - platform: state
+      entity_id: input_boolean.long_absence_mode
+      from: "on"
+      to: 'off'
+      id: button
+  condition: 
+    - condition: state
+      entity_id: input_boolean.away_mode
+      state: 'on'
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: input_boolean.long_absence_mode
+          state: 'on'
+        - condition: trigger
+          id: 'button'
+  action:
+    - service: input_boolean.turn_off
+      target:
+        entity_id: 
+          - input_boolean.long_absence_mode
+    - service: script.routine_prepare_home
+      data: {}
+    - alias: "Fire back home routine"
+      event: routine_event
+      event_data:
+        type: prepare_home
+################################################################################
 - id: 'routine_home'
   alias: Routine - Away - Retour
   description: ''
   trigger:
     - platform: state
       entity_id: input_boolean.away_mode
+      from: 'on'
       to: 'off'
   condition: []
   action:
+    - service: input_boolean.turn_off
+      target:
+        entity_id: 
+          - input_boolean.long_absence_mode
+          - input_boolean.away_mode
     - service: script.routine_back_home
       data: {}
     - alias: "Fire back home routine"
       event: routine_event
       event_data:
         type: home
-################################################################################
-
-
 
 script:
 ################################################################################
@@ -99,8 +172,10 @@ script:
           - script.routine_away_all_power_device_off
           - script.routine_all_cover_close
           - script.routine_all_garage_door_close
-          - script.routine_away_settings
           - script.routine_all_lock_lock
+          - script.routine_climate_away
+          - script.routine_away_settings
+          - script.routine_reset_lightning_settings
 ################################################################################
   routine_back_home:
     alias: Routine - Retour maison
@@ -113,6 +188,7 @@ script:
         entity_id: 
           - script.routine_all_power_device_on
           - script.routine_all_lock_unlock
+          - script.routine_climate_home
     - alias: "If sun is up"
       choose:
       - conditions:
@@ -123,7 +199,27 @@ script:
           - service: script.turn_on
             target:
               entity_id: script.routine_all_cover_open
-
-
+################################################################################
+  routine_long_absence:
+    alias: Routine - Absence longue
+    sequence:
+    - service: notify.mobile_seb
+      data:
+        message: Mode absence longue actif
+    - service: script.turn_on
+      target:
+        entity_id: 
+          - script.routine_climate_long_absence
+################################################################################
+  routine_prepare_home:
+    alias: Routine - prepare retour
+    sequence:
+    - service: notify.mobile_seb
+      data:
+        message: Je prépare la maison 
+    - service: script.turn_on
+      target:
+        entity_id: 
+          - script.routine_climate_home
 
       
