@@ -37,7 +37,7 @@ binary_sensor:
       - binary_sensor.entree_person_occupancy
       - binary_sensor.entrance_driveway_car_occupancy
       - binary_sensor.camera_entree_person
-      - binary_sensor.portail_front_car_occupancy
+      - binary_sensor.sonette_front_car_occupancy
       - binary_sensor.portail_just_open
   - platform: group
     name: "Jardin parking presence"

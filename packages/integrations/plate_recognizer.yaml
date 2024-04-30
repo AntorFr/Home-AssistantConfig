@@ -18,7 +18,7 @@ image_processing:
     #server: http://platerec:8080/v1/plate-reader/
 
     source:
-      - entity_id: camera.portail_2
+      - entity_id: camera.sonette
       - entity_id: camera.platerecognizer_test
       - entity_id: camera.g4_doorbell_high
 
@@ -30,7 +30,7 @@ template:
           seconds: 30
         state: >
           {%- set ns = namespace(detected_plates=[]) %}
-          {% set watched_plates = state_attr('image_processing.platerecognizer_portail_2', 'watched_plates')%}
+          {% set watched_plates = state_attr('image_processing.platerecognizer_sonette', 'watched_plates')%}
           {%- if watched_plates is not none %}
             {%- for plate,status in watched_plates.items()%}
               {%- if status %}
@@ -43,7 +43,7 @@ template:
         attributes:
           detected_plates: >
             {%- set ns = namespace(detected_plates=[]) %}
-            {% set watched_plates = state_attr('image_processing.platerecognizer_portail_2', 'watched_plates')%}
+            {% set watched_plates = state_attr('image_processing.platerecognizer_sonette', 'watched_plates')%}
             {%- if watched_plates is not none %}
               {%- for plate,status in watched_plates.items()%}
                 {%- if status %}
@@ -60,7 +60,7 @@ automation:
   description: Lecture des plaques des voitures au portail
   trigger:
     - platform: state
-      entity_id: binary_sensor.portail_front_car_occupancy
+      entity_id: binary_sensor.sonette_front_car_occupancy
       to: "on"
   condition: 
     condition: state
@@ -71,7 +71,7 @@ automation:
       repeat:
         while:
           - condition: state
-            entity_id: binary_sensor.portail_front_car_occupancy
+            entity_id: binary_sensor.sonette_front_car_occupancy
             state: "on"
           - condition: state
             entity_id: cover.portail_2
@@ -86,7 +86,7 @@ automation:
           - service: image_processing.scan
             data: {}
             target:
-              entity_id: image_processing.platerecognizer_portail_2
+              entity_id: image_processing.platerecognizer_sonette
           - delay:
               milliseconds: 1000 #1500
   mode: single
@@ -100,10 +100,10 @@ automation:
       to: "closed"
   condition:
     condition: template
-    value_template: "{{ states('image_processing.platerecognizer_portail_2')|int(0)>0 }}"
+    value_template: "{{ states('image_processing.platerecognizer_sonette')|int(0)>0 }}"
   action:
     - service: image_processing.scan
       data: {}
       target:
-        entity_id: image_processing.platerecognizer_portail_2
+        entity_id: image_processing.platerecognizer_sonette
   mode: single

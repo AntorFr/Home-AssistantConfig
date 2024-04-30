@@ -6,13 +6,18 @@ binary_sensor:
         friendly_name: Etat Robot tondeuse
         device_class: problem
         value_template: >
-            {{ is_state('vacuum.automower_r_450x_gardenbot','error')}}
+            {{ is_state('lawn_mower.gardenbot',['error','unavailable'])}}
           
 alert:
   automower:
     name: "Robot tondeuse en erreur"
     message: >
+      {%- set mower_id = 'lawn_mower.gardenbot' -%}
+      {%- if is_state(mower_id,'error') -%}
       "Robot tondeuse bloqué"
+      {%- elif is_state(mower_id,'unavailable') -%}
+      "Robot tondeuse indisponible"
+      {%- endif -%}
     done_message: >
       "Robot tondeuse de nouveau ok"
     entity_id: binary_sensor.automower_error

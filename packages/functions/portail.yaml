@@ -6,7 +6,7 @@ binary_sensor:
     #icon: mdi:car-off
     entities:
       - binary_sensor.entrance_gate_driveway_car_occupancy
-      - binary_sensor.portail_front_car_occupancy
+      - binary_sensor.sonette_front_car_occupancy
 
 automation:
 ################################################################################
