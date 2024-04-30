@@ -186,6 +186,20 @@ script:
           voice: MauriceNeural
         entity_id: media_player.sonette_portail_speaker
         message: "{{message_audio}}"
+    - wait_for_trigger:
+        - platform: state
+          entity_id:
+            - cover.portail_2
+          to: closed
+      continue_on_timeout: true
+      timeout:
+        hours: 1
+    - service: select.select_option
+      metadata: {}
+      data:
+        option: Default Message (WELCOME)
+      target:
+        entity_id: select.sonette_portail_doorbell_text
       
 ################################################################################
 
