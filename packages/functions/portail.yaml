@@ -7,6 +7,7 @@ binary_sensor:
     entities:
       - binary_sensor.entrance_gate_driveway_car_occupancy
       - binary_sensor.sonette_front_car_occupancy
+      - binary_sensor.portail_car_occupancy
 
 automation:
 ################################################################################
@@ -46,6 +47,9 @@ automation:
   trigger:
     - platform: state
       entity_id: binary_sensor.entrance_gate_driveway_car_occupancy
+      to: "on"
+    - platform: state
+      entity_id: binary_sensor.portail_car_occupancy
       to: "on"
     - platform: state
       entity_id: binary_sensor.entrance_gate_plate_detected
@@ -101,7 +105,7 @@ automation:
               - media_player.bureau
               - media_player.garage
             #media_content_id: "media-source://media_source/sounds/bb8_sound.mp3" > sonos doesn't find local url anymore (home.intra.sberard.fr)
-            media_content_id: "https://home.intra.sberard.fr/http-sounds/bb8_sound.mp3"
+            media_content_id: "https://home.berard.me/http-sounds/bb8_sound.mp3"
   - service: notify.all_mobile
     data:
       message: "Quelqu'un sonne au portail"
