@@ -4,6 +4,7 @@ binary_sensor:
     entities:
       - binary_sensor.capteur_fumee_couloir
       - binary_sensor.capteur_fumee_salon
+      - binary_sensor.smoke_sensor_garage3_smoke
     device_class: smoke
 
 alarm_control_panel:
