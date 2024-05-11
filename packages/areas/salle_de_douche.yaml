@@ -5,8 +5,8 @@ light:
     entities:
       - light.dressing_plafonnier
       - light.salle_de_douche_plafonnier
+      - light.shower_light_lumi_re_douche
       - light.shower_light_switch_l2
-      - light.shower_light_switch_l1
 
 automation:
 ################################################################################
@@ -58,6 +58,10 @@ automation:
       long_press: binary_sensor.shower_light_switch_long_press
       multi_touch: binary_sensor.shower_light_switch_multi_touch
       swipe_left: binary_sensor.shower_light_switch_swipe_left
+      touchfield_1_controlled_entites:
+        - light.shower_light_lumi_re_douche
       touchfield_2_controlled_entites:
         - light.dressing_plafonnier
         - light.salle_de_douche_plafonnier
+
+        

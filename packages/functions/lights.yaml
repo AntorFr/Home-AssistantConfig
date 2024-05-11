@@ -54,6 +54,7 @@ adaptive_lighting:
     lights:
       - light.dressing_plafonnier
       - light.salle_de_douche_plafonnier
+      - light.shower_light_lumi_re_douche
     take_over_control: true
 
   - name: Chambre parent
