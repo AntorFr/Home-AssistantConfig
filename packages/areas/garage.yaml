@@ -32,7 +32,24 @@ sensor:
     entity_ids:
       - sensor.garage_door_2_pressure
       - sensor.garage_door_3_pressure
-  
+
+template:
+  - binary_sensor:
+      - name: "Porte Garage 2 ouverte"
+        device_class: garage_door
+        unique_id: "garage2_door_virtual_sensor"
+        state: >
+          {{not is_state('cover.garage_2',['closed','unavailable'])}}
+
+
+binary_sensor:
+  - platform: group
+    name: "Capteurs mouvement garage 2"
+    device_class: occupancy
+    unique_id: garage2_motion_sensors
+    all: false
+    entities:
+      - binary_sensor.porte_garage_2_ouverte
 
 
 automation:
@@ -76,4 +93,18 @@ automation:
   - service: cover.toggle
     target:
       entity_id: cover.garage_1
+################################################################################
+- id: garage2_light_auto
+  alias: Area - Garage 2 - Lumière auto
+  description: ''
+  use_blueprint:
+    path: antorfr/motion_light.yaml
+    input:
+      light_target:
+        entity_id: 
+          - light.plafonnier_garage_2
+      motion_sensor: binary_sensor.capteurs_mouvement_garage_2
+      no_motion_wait: 
+        minutes: 2
+      only_during_night: true
 ################################################################################
