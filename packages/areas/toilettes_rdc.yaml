@@ -1,7 +1,17 @@
+binary_sensor:
+  - platform: group
+    name: "Capteurs mouvement toilettes RdC"
+    device_class: occupancy
+    unique_id: toilettes_rdc_motion_sensors
+    all: false
+    entities:
+      - binary_sensor.toilettes_rdc_capteur_de_mouvement_occupancy
+      - binary_sensor.sbmo_003z_a29f_motion
+
 sensor:
   - name: mouvement_wc_rdc_5min
     platform: history_stats
-    entity_id: binary_sensor.toilettes_rdc_capteur_de_mouvement_occupancy
+    entity_id: binary_sensor.capteurs_mouvement_toilettes_rdc
     state: "on"
     type: time
     duration: 00:05:00
@@ -17,7 +27,7 @@ automation:
     input:
       light_target:
         entity_id: light.toilettes_rdc
-      motion_sensor: binary_sensor.toilettes_rdc_capteur_de_mouvement_occupancy
+      motion_sensor: binary_sensor.capteurs_mouvement_toilettes_rdc
       no_motion_wait:
         minutes: 3
       no_motion_warning: 30
@@ -30,3 +40,9 @@ automation:
         to: ["on","off"]
         id: toggle
 ################################################################################
+
+#########################################
+homeassistant:
+  customize:
+   binary_sensor.capteurs_mouvement_toilettes_rdc:
+      room_main: occupancy
