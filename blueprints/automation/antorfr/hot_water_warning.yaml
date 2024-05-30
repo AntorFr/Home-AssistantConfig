@@ -1,0 +1,74 @@
+blueprint:
+  name: Hot water warning
+  description: Turn on a light in blue if water tank bellow treshold
+  domain: automation
+  input:
+    light_target:
+      name: Target light
+      description: The light to turn blue
+      selector:
+        entity:
+          filter:
+            - domain: light
+            #- supported_features:
+            #    - light.ColorMode.RGB
+            #    - light.ColorMode.RGBW
+            #    - light.ColorMode.RGBWW 
+    tank_temperature:
+      name: Tank temperature sensor
+      description: Tank temperature sensor
+      selector:
+        entity:
+          filter:
+            - domain: water_heater
+    temp_treshold:
+      name: Temperature treshold ('°C')
+      description: Time to leave the light on after last motion is detected.
+      selector:
+        number:
+          min: 0
+          max: 55
+          unit_of_measurement: '°C'
+      default:
+        minutes: 20 
+
+mode: restart
+max_exceeded: silent
+
+trigger:
+  - platform: state
+    entity_id: !input light_target
+    to: "on"
+    id: lamp_turn_on
+  - platform: numeric_state
+    entity_id: !input tank_temperature
+    attribute: current_temperature
+    below: !input temp_treshold
+    id: temp_bellow
+condition:
+  - condition: or
+    conditions:
+      - condition: and
+        conditions:
+          - condition: trigger
+            id:
+              - lamp_turn_on
+          - condition: numeric_state
+            entity_id: !input tank_temperature
+            attribute: current_temperature
+            below: !input temp_treshold
+      - condition: and
+        conditions:
+          - condition: trigger
+            id:
+              - temp_bellow
+          - condition: state
+            entity_id: !input light_target
+            state: "on"
+action:
+  - service: light.turn_on
+    metadata: {}
+    data:
+      color_name: blue
+    target:
+      entity_id: !input light_target

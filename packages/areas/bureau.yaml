@@ -288,6 +288,70 @@ automation:
               target:
                 entity_id: climate.mobile_heater_plug_thermostat
 ################################################################################
+- id: iron_auto_filter
+  alias: Area - Bureau - Fer à souder auto
+  description: ""
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.capteurs_mouvement_bureau
+      from: "on"
+      to: "off"
+      for:
+        hours: 0
+        minutes: 5
+        seconds: 0
+      id: away
+    - platform: numeric_state
+      entity_id:
+        - sensor.office_solder_iron_switch_power
+      above: 10
+      id: iron_in_use
+    - platform: numeric_state
+      entity_id:
+        - sensor.office_solder_iron_switch_power
+      for:
+        hours: 0
+        minutes: 0
+        seconds: 10
+      below: 5
+      id: iron_not_in_use
+  condition: []
+  action:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id:
+                - away
+          sequence:
+            - service: switch.turn_off
+              metadata: {}
+              data: {}
+              target:
+                entity_id:
+                  - switch.office_solder_iron_switch_fer_souder
+                  - switch.office_solder_fume_filtre_fum_e_soudure
+        - conditions:
+            - condition: trigger
+              id:
+                - iron_in_use
+          sequence:
+            - service: switch.turn_on
+              metadata: {}
+              data: {}
+              target:
+                entity_id: switch.office_solder_fume_filtre_fum_e_soudure
+        - conditions:
+            - condition: trigger
+              id:
+                - iron_not_in_use
+          sequence:
+            - service: switch.turn_off
+              metadata: {}
+              data: {}
+              target:
+                entity_id: switch.office_solder_fume_filtre_fum_e_soudure
 
 
 

@@ -1,0 +1,7 @@
+template:
+  - binary_sensor:
+      - name: "idasen ble desk connection"
+        device_class: connectivity
+        unique_id: "idasen_ble_connected"
+        state: >
+          {{not is_state('cover.desk_6897','unavailable')}}

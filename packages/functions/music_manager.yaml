@@ -494,6 +494,7 @@ input_select:
         - Star Wars (epic)
         - Sea Song
         - Champs Marin
+        - Sport Motivation 2024
       ## Laurine ##
         - Sleepy Ghibli
         - Harry Potter
@@ -532,6 +533,12 @@ homeassistant:
           content_type: playlist
           style: ['chill']
           public: ['Sebastien', 'Laurine', 'Famille']
+          tags: []
+        - title: Sport Motivation 2024
+          content_id: spotify:playlist:6rkZzuLbq5LbbFl3u0nTxf
+          content_type: playlist
+          style: ['motivation']
+          public: ['Sebastien', 'Famille']
           tags: []
         - title: Chilled Classical
           content_id: spotify:playlist:37i9dQZF1DWUvHZA1zLcjW

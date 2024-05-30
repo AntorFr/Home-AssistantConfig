@@ -63,5 +63,14 @@ automation:
       touchfield_2_controlled_entites:
         - light.dressing_plafonnier
         - light.salle_de_douche_plafonnier
+################################################################################
+- id: 'salle_de_douche_cold_shower_warning'
+  alias: "Area - Salle de douche - Alarme douche froide"
+  description: ''
+  use_blueprint:
+    path: antorfr/hot_water_warning.yaml
+    input:
+      light_target: light.shower_light_lumi_re_douche
+      tank_temperature: water_heater.pac_tank
+      temp_treshold: 25
 
-        
