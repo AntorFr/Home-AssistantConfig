@@ -43,11 +43,14 @@ adaptive_lighting:
   - name: Chambre Emilie
     lights:
       - light.chambre_emilie_plafonnier
+    max_sunset_time: "21:00:00"
     take_over_control: true
 
   - name: Chambre Timothée
     lights:
       - light.plafond_timothee
+    max_sunset_time: "21:00:00"
+
     take_over_control: true
     
   - name: Salle de douche
