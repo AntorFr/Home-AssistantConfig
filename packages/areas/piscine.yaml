@@ -135,6 +135,9 @@ alert:
     notifiers:
       - notify
 
+
+
+
 automation:
 ################################################################################
 - id: 'Swimingpool_light_auto'
@@ -189,6 +192,16 @@ automation:
   trigger:
     - platform: state
       entity_id: sensor.template_teleinfo_periode_tarifaire
+    - platform: numeric_state
+      entity_id:
+        - sensor.piscine_capteur_porte_temperature
+      above: 36
+      id: heat_start
+    - platform: numeric_state
+      entity_id:
+        - sensor.piscine_capteur_porte_temperature
+      below: 36
+      id: heat_stop
   condition:
     - condition: state
       entity_id: input_boolean.piscine_en_hivernage 
@@ -196,9 +209,23 @@ automation:
   action:
   - choose:
     - conditions:
-      - condition: state
-        entity_id: sensor.template_teleinfo_periode_tarifaire
-        state: HC
+      - alias: "Heure creuse ou temperature piscine trop chaude"
+        condition: or
+        conditions:
+          - condition: state
+            entity_id: sensor.template_teleinfo_periode_tarifaire
+            state: HC
+          - alias: "Temperature trop chaude et Tempo non rouge"
+            condition: and
+            conditions:
+              - condition: trigger
+                id:
+                  - hot
+              - condition: not
+                conditions:
+                  - condition: state
+                    entity_id: sensor.linky_couleur_actuelle
+                    state: rouge
       sequence:
         - service: switch.turn_on
           target:
