@@ -352,6 +352,28 @@ automation:
               data: {}
               target:
                 entity_id: switch.office_solder_fume_filtre_fum_e_soudure
+################################################################################
+- id: reconnect_ble_desk
+  alias: Area - Bureau - Reconnecter bureau Idasen BLE
+  description: ""
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.capteurs_mouvement_bureau
+      to: "on"
+  condition: []
+  action:
+    - if:
+        - condition: state
+          entity_id: binary_sensor.idasen_ble_desk_connection
+          state: "off"
+      then:
+        - service: button.press
+          metadata: {}
+          data: {}
+          target:
+            entity_id: button.desk_6897_connect
 
 
 
