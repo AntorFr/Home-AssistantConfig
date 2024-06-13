@@ -4,7 +4,7 @@ ios:
       background_color: "#000000"
       label:
         text: "Je rentre"
-        color: "#ff0000"
+        color: "#ffffff"
       icon:
         icon: home-import-outline
         color: "#ffffff"
