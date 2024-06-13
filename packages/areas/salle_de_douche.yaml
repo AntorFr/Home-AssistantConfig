@@ -1,3 +1,18 @@
+homeassistant:
+  customize:
+   binary_sensor.capteurs_mouvement_salle_de_bain:
+      room_main: occupancy
+
+binary_sensor:
+  - platform: group
+    name: "Capteurs mouvement salle de bain"
+    device_class: occupancy
+    unique_id: salle_de_douche_motion_sensors
+    all: false
+    entities:
+      - binary_sensor.presence_sensor_shower_occupancy
+
+
 light:
   - platform: group
     name: Salle de douche lumieres
@@ -7,6 +22,12 @@ light:
       - light.salle_de_douche_plafonnier
       - light.shower_light_lumi_re_douche
       - light.shower_light_switch_l2
+
+input_boolean:
+  auto_light_kill_switch_salle_de_douche:
+    name: Lumière mode manuel (salle de douche)
+    initial: false
+    icon: mdi:autorenew-off
 
 automation:
 ################################################################################
@@ -19,11 +40,16 @@ automation:
       light_target:
         entity_id: light.salle_de_douche_lumieres
       adaptive_lighting: switch.adaptive_lighting_salle_de_douche
-      motion_sensor: binary_sensor.anyone_home
-      only_turn_off: true   
+      motion_sensor: binary_sensor.capteurs_mouvement_salle_de_bain
+      only_turn_off: false   
       no_motion_wait:
-        minutes: 5
+        minutes: 10
       no_motion_warning: 30
+      only_during_night: false
+      light_sensor: sensor.presence_sensor_shower_light_sensor
+      lux_cutoff: 60
+      lux_sun_cutoff: 250
+      kill_switch: input_boolean.auto_light_kill_switch_salle_de_douche
       toggle_trigger:
         platform: state
         entity_id: 
@@ -31,6 +57,7 @@ automation:
         from: ["off"]
         to: ["on"]
         id: toggle
+
 ################################################################################
 - id: 'salle_de_douche_light_switch_dressing'
   alias: Area - Salle de douche - Bouton dressing
