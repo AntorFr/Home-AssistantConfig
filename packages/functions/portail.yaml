@@ -62,6 +62,11 @@ automation:
       entity_id: person.laurine
       zone: zone.home
       event: enter
+    - alias: "ios action Je rentre"
+      platform: event
+      event_type: ios.action_fired
+      event_data:
+        actionName: "Retour Maison"
   condition: 
     condition: state
     entity_id: cover.portail_2

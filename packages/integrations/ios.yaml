@@ -1,0 +1,12 @@
+ios:
+  actions:
+    - name: Retour Maison
+      background_color: "#000000"
+      label:
+        text: "Je rentre"
+        color: "#ff0000"
+      icon:
+        icon: home-import-outline
+        color: "#ffffff"
+      show_in_carplay: true
+      show_in_watch: true
