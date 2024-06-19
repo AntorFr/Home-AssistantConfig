@@ -14,6 +14,16 @@
     {{ (area_ids + (area_ids| map("area_name") |list)) | to_json}}
 {%- endmacro -%}
 
+{%- macro area_ids(area_list) -%}
+    {%- if area_list is string -%}
+        {%- set area_list = [area_list] -%}
+    {%- endif -%}
+
+    {%- set area_ids = area_list|select("in",areas())|list -%}
+
+    {{ (area_ids + (area_list| map("area_id") | unique |list)) | to_json}}
+{%- endmacro -%}
+
 
 {%- macro area_entity_id(area, filter) -%}
     {{area_entities(area)| select('is_state_attr','room_main',filter) | first | d(none) }}

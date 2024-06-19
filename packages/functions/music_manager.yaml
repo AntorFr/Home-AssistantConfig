@@ -214,7 +214,7 @@ script:
     sequence:
       - variables:
           rooms: >
-            {% from 'room_functions.jinja' import all_area_identifiers %}
+            {% from 'room_functions.jinja' import all_area_identifiers, area_ids %}
 
             {%- set ns = namespace(zone=[]) %}
 
@@ -230,10 +230,11 @@ script:
               {%- endif -%}
             {%- endfor -%}
 
-            {%- set rooms =  (ns.zone + rooms)
+            {%- set rooms =  area_ids(
+                              (ns.zone + rooms)
                               | unique
                               | select ("in",all_area_identifiers()|from_json) 
-                              |list -%}
+                              |list) -%}
 
             {{rooms}}
           media_players: > 
