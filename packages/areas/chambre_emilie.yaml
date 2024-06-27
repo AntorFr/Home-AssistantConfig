@@ -55,7 +55,12 @@ automation:
       touchfield_1_action:
         - service: light.toggle
           target:
-            entity_id: light.horloge_emilie
+            entity_id: light.emilie_clock_led_matrix
+        - service: select.select_option
+          target:
+            entity_id: select.emilie_clock_display_mode
+          data:
+            option: Clock
       touchfield_2_action:
         - service: switch.toggle
           target:

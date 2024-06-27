@@ -162,9 +162,9 @@ automation:
         - service: light.turn_on
           data:
             brightness_pct: 100
-            effect: rainbowClock
+            color: orange
           target:
-            entity_id: light.horloge_emilie
+            entity_id: light.emilie_clock_led_matrix
     - alias: "Evening - Almost sleep time"
       conditions:
         - condition: trigger
@@ -173,10 +173,9 @@ automation:
         - service: light.turn_on
           data:
             brightness_pct: 50
-            effect: clock
             color_name: red
           target:
-            entity_id: light.horloge_emilie
+            entity_id: light.emilie_clock_led_matrix
         - choose:
             - conditions:
                 - condition: state
@@ -196,10 +195,9 @@ automation:
         - service: light.turn_on
           data:
             brightness_pct: 10
-            effect: clock
             color_name: red
           target:
-            entity_id: light.horloge_emilie
+            entity_id: light.emilie_clock_led_matrix
     - alias: "Evening - Night (parent sleep)"
       conditions:
         - condition: trigger
@@ -207,7 +205,7 @@ automation:
       sequence:
         - service: light.turn_off
           target:
-            entity_id: light.horloge_emilie
+            entity_id: light.emilie_clock_led_matrix
     - alias: "Morning - Children morning"
       conditions:
         - condition: trigger
@@ -219,9 +217,9 @@ automation:
         - service: light.turn_on
           data:
             brightness_pct: 100
-            effect: rainbowClock
+            color: white
           target:
-            entity_id: light.horloge_emilie
+            entity_id: light.emilie_clock_led_matrix
 ###############################################
 - id: routine_children_bus_time_warning
   alias: Routine - enfants - rappel départ école
