@@ -242,9 +242,9 @@ script:
           - switch.bureau_prise_pc_1
           - switch.bureau_prise_pc_2
           - switch.bureau_prise_pc_3 #nas
-          - switch.office_entry_power_strip_switch_1
+          #- switch.office_entry_power_strip_switch_1 #Imp3d MK3
           - switch.office_entry_power_strip_switch_2
-          - switch.office_entry_power_strip_switch_3
+          #- switch.office_entry_power_strip_switch_3 #Imp3d MK4
 
           #Chambre parent
           - switch.parent_bed_power_strip_switch_2
@@ -407,6 +407,7 @@ script:
       target:
         entity_id: 
         - lock.nuki_gateway_entrance_nuki_lock
+        - lock.nuki_gateway_kitchen_nuki_lock
 ################################################################################
   routine_all_lock_lock:
     alias: Routine - Verouille les portes
@@ -415,6 +416,7 @@ script:
       target:
         entity_id: 
         - lock.nuki_gateway_entrance_nuki_lock
+        - lock.nuki_gateway_kitchen_nuki_lock
 
 ## Thermostat / Chauffage ###
 ################################################################################

@@ -1,4 +1,5 @@
 language: "fr"
+#Existing intent https://github.com/home-assistant/intents/blob/main/sentences/fr/_common.yaml
 intents:
   MusicTurnOn:
     data:
@@ -20,13 +21,17 @@ intents:
     data:
       - sentences:
           - "<eteins> la musique [<dans>] [<le>]{area}"
+          - "(éteint|eteint|éteins|eteins|éteindre|eteindre|désactive|désactiver|stoppe|stopper|arrête|arrêter|coupe|couper) la musique [<dans>] [<le>]{area}"
           #- "<eteins> la musique <ici>"
         response: default
       - sentences:
           - "<eteins> la musique [<ici>]"
+          - "(éteint|eteint|éteins|eteins|éteindre|eteindre|désactive|désactiver|stoppe|stopper|arrête|arrêter|coupe|couper) la musique [<ici>]"
         response: default
         expansion_rules:
             ici: "(dans la pièce)|(dans cette pièce)|(ici)"
+            eteins: "(éteint|eteint|éteins|eteins|éteindre|eteindre|désactive|désactiver|stoppe|stopper|arrête|arrêter|coupe|couper|<eteins_dirty>)"
+            eteins_dirty: "(étant|étends|étend|étendre|état|et tant|et teins|et teint|et teints|et t'as|été|étais|était)"
         requires_context:
           area:
             slot: true

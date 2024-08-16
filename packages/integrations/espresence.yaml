@@ -9,8 +9,8 @@ sensor:
   - platform: mqtt_room
     name: "iPhone Seb"
     unique_id: "espresence_iphone_seb"
-    device_id: "intra_mob08"
-    state_topic: "espresense/devices/intra_mob08"
+    device_id: "iphone_seb"
+    state_topic: "espresense/devices/iphone_seb"
     timeout: 10
     away_timeout: 120
   - platform: mqtt_room

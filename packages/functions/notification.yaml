@@ -186,6 +186,7 @@ script:
         option:
           voice: EloiseNeural
         announce: true
+        volume_level: 0.40
       target:
         entity_id: "{{media_player}}"
 ###############################################
@@ -260,7 +261,7 @@ script:
         cache: true
         #gender: male
         announce: true
-        volume_level: 0.30
+        volume_level: 0.40
       target:
         entity_id: "{{media_players}}"
           

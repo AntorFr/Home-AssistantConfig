@@ -1,16 +1,6 @@
 ---
 ### Monitor system ###
 
-sensor:
-  - platform: systemmonitor
-    resources:
-      - type: disk_use_percent
-        arg: /config
-      - type: memory_free
-      - type: load_1m
-      - type: load_5m
-      - type: load_15m
-
 automation:
 ################################################################################
 - id: system_notification_new_device

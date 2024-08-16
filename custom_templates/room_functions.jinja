@@ -21,7 +21,7 @@
 
     {%- set area_ids = area_list|select("in",areas())|list -%}
 
-    {{ (area_ids + (area_list| map("area_id") | unique |list)) | to_json}}
+    {{ (area_ids + (area_list| map("area_id") | reject('none') |  unique |list)) | to_json}}
 {%- endmacro -%}
 
 
