@@ -1,3 +1,27 @@
+sql:
+  - name: Music Library
+    unique_id: music_library
+    db_url: !secret budibase_db 
+    query: >
+      SELECT
+        count(*) as count,
+        json_agg(music_inventory) as inventory,
+        json_agg(title) as list
+      FROM
+        music_inventory;
+    column: "count"
+
+template:
+ - select:
+    - name: "Playlist"
+      unique_id: playlist
+      state: " "
+      select_option: []
+      options: >
+        {{ [" "] + state_attr('sensor.music_library', 'list') }}
+      optimistic: true
+      icon: mdi:playlist-music
+
 intent_script:
 ###############################################################################
   MusicTurnOn:
@@ -84,11 +108,11 @@ script:
           text:
       
     variables:
-      playlists: "{{state_attr('input_select.playlist','playlists') |to_json(ensure_ascii=True)}}"
-      input_playlist: "{{states('input_select.playlist')}}"
+      playlists: "{{state_attr('sensor.music_library', 'inventory')  |to_json(ensure_ascii=True)}}"
+      input_playlist: "{{states('select.playlist')}}"
       reset_playlist: >
         {%- if ((title is not defined) or (title is none)  or (title == '')) 
-            and (not is_state('input_select.playlist', ' ')) -%}
+            and (not is_state('select.playlist', ' ')) -%}
           True
         {%- else -%}
           False
@@ -132,11 +156,11 @@ script:
           - condition: template
             value_template: "{{reset_playlist}}"
         then:
-          - service: input_select.select_option
+          - service: select.select_option
             data:
               option: " "
             target:
-              entity_id: input_select.playlist 
+              entity_id: select.playlist 
       - if:
           - condition: template
             value_template: "{{ random_playlist is not mapping  }}"
@@ -660,8 +684,8 @@ homeassistant:
         - title: Magic system
           content_id: spotify:playlist:7aUx9jE0vqYsLFAUIZvkkz
           content_type: playlist
-          style: ['motivation','Timothee']
-          public: ['Emilie']
+          style: ['motivation']
+          public: ['Emilie','Timothee']
           tags: ['00-E4-4D-3D']
         - title: Petit loup
           content_id: spotify:album:3b5RlFQSq0ivPNktaRYa9c
