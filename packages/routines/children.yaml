@@ -66,12 +66,12 @@ automation:
         - choose:
             - conditions:
                 - condition: state
-                  entity_id: light.plafond_timothee
+                  entity_id: light.ceiling_light_timothee_plafonnier_timoth_e
                   state: "on"
               sequence:
                 - service: light.turn_on
                   target:
-                    entity_id: light.plafond_timothee
+                    entity_id: light.ceiling_light_timothee_plafonnier_timoth_e
                   data:
                     brightness_pct: 30
     - alias: "Evening - Children Sleep time"
