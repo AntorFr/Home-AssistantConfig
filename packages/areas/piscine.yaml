@@ -48,6 +48,15 @@ binary_sensor:
       - binary_sensor.indoor_pool_person_occupancy
 
 
+template:
+  - binary_sensor:
+    - unique_id: water_low_level_pool_problem
+      name: Niveau d'eau piscine bas
+      device_class: problem
+      availability: "{{states('sensor.pool_water_sensor_niveau_d_eau') != 'unknown'}}"
+      state: "{{ (states('sensor.pool_water_sensor_niveau_d_eau')|int < 17400 )| d(false)  }}"
+
+
 alert:
   swiming_pool:
     name: "Porte Piscine non sécurisée"
@@ -135,8 +144,17 @@ alert:
     notifiers:
       - notify
 
-
-
+  pool_low_level:
+    name: "Alerte niveau d'eau piscine"    
+    message: "Niveau piscine trop bas."
+    done_message: "Niveau d'eau piscine de nouveau correcte."
+    entity_id: binary_sensor.niveau_d_eau_piscine_bas
+    state: "on"   # Optional, 'on' is the default value
+    repeat: 1440
+    can_acknowledge: true  # Optional, default is true
+    skip_first: false  # Optional, false is the default
+    notifiers:
+      - notify
 
 automation:
 ################################################################################
@@ -338,10 +356,49 @@ automation:
       domain: switch
   mode: single
 ################################################################################
+
+- id: 'Swimingpool_auto_stop_filling'
+  alias: Area - Piscine - Arret automatique remplissage
+  description: ""
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - switch.vanne_piscine
+      to: "on"
+      for:
+        hours: 2
+        minutes: 0
+        seconds: 0
+    - platform: numeric_state
+      entity_id:
+        - sensor.pool_water_sensor_niveau_d_eau
+      for:
+        hours: 0
+        minutes: 30
+        seconds: 0
+      above: 19100
+  condition:
+    - condition: state
+      entity_id: switch.vanne_piscine
+      state: "on"
+    - condition: numeric_state
+      entity_id: sensor.pool_water_sensor_niveau_d_eau
+      above: 19000
+  action:
+    - action: switch.turn_off
+      target:
+        entity_id: switch.vanne_piscine
+      data: {}
+    - action: notify.all_mobile
+      metadata: {}
+      data:
+        message: Arrosage piscine coupée.
+################################################################################
+
 homeassistant:
   customize:
     automation.area_piscine_filtration_automatique_hp_hc:
       icon: mdi:air-filter
     binary_sensor.piscine_capteurs_presence:
       room_main: occupancy
-
