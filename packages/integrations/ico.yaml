@@ -34,7 +34,7 @@ binary_sensor:
         device_class: problem
         friendly_name: ico battery problem
         value_template: >
-          {{ (states('sensor.plouf_battery') | float) < 15 }}
+          {{ (states('sensor.plouf_batterie') | float) < 15 }}
 
 alert:
   ico_disconnected_alert:
@@ -53,7 +53,7 @@ alert:
   ico_battery_alert:
     name: "Alerte Ico pile faible"
     message: >
-      "niveau de pile Ico faible {{ states('sensor.plouf_battery') }}"
+      "niveau de pile Ico faible {{ states('sensor.plouf_batterie') }}"
     done_message: >
       "Ico à de nouveau des piles"
     entity_id: binary_sensor.ico_battery
