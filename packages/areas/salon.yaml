@@ -42,6 +42,118 @@ sensor:
     duration: 00:05:00
     end: "{{now()}}"
 
+
+script:
+  light_scene_salon:
+    alias: Ambiance salon
+    fields:
+      scene:
+        selector:
+          select:
+            options: 
+              - "Mystic Sky"
+              - "Tokyo 2"
+              - "Fairfax"
+              - "Aurore boréale"
+              - Standard
+        name: Scene
+        required: true
+        default: Standard
+    description: ""
+    icon: mdi:lamps
+    sequence:
+      - choose:
+          - alias: Mystic Sky
+            conditions:
+              - condition: template
+                value_template: "{{scene == 'Mystic Sky'}}"
+            sequence:
+              - action: switch.turn_off
+                target:
+                  entity_id: switch.adaptive_lighting_salon
+              - action: hue.activate_scene
+                target:
+                  entity_id: scene.salon_mystic_sky
+                data:
+                  dynamic: true
+                  brightness: 255
+              - action: select.select_option
+                metadata: {}
+                data:
+                  option: Mystic sky
+                target:
+                  entity_id: select.led_bibliotheque_prereglage
+          - alias: Tokyo 2
+            conditions:
+              - condition: template
+                value_template: "{{scene == 'Tokyo 2'}}"
+            sequence:
+              - action: switch.turn_off
+                target:
+                  entity_id: switch.adaptive_lighting_salon
+              - action: hue.activate_scene
+                target:
+                  entity_id: scene.salon_tokyo_2
+                data:
+                  brightness: 255
+              - action: select.select_option
+                metadata: {}
+                data:
+                  option: Tokyo 2
+                target:
+                  entity_id: select.led_bibliotheque_prereglage
+          - alias: Fairfax
+            conditions:
+              - condition: template
+                value_template: "{{scene == 'Fairfax'}}"
+            sequence:
+              - action: switch.turn_off
+                target:
+                  entity_id: switch.adaptive_lighting_salon
+              - action: hue.activate_scene
+                target:
+                  entity_id: scene.salon_fairfax
+                data:
+                  brightness: 255
+              - action: select.select_option
+                metadata: {}
+                data:
+                  option: Fairfax
+                target:
+                  entity_id: select.led_bibliotheque_prereglage
+          - alias: Aurore boréale
+            conditions:
+              - condition: template
+                value_template: "{{scene == 'Aurore boréale'}}"
+            sequence:
+              - action: switch.turn_off
+                target:
+                  entity_id: switch.adaptive_lighting_salon
+              - action: hue.activate_scene
+                target:
+                  entity_id: scene.salon_aurore_boreale
+                data:
+                  brightness: 255
+              - action: select.select_option
+                metadata: {}
+                data:
+                  option: Aurore boréale
+                target:
+                  entity_id: select.led_bibliotheque_prereglage
+        default:
+          - action: switch.turn_on
+            target:
+              entity_id: switch.adaptive_lighting_salon
+          - action: select.select_option
+            metadata: {}
+            data:
+              option: Solid
+            target:
+              entity_id: select.led_bibliotheque_prereglage                 
+          - action: light.turn_on
+            target:
+              entity_id: light.salon_lumieres 
+
 automation:
 ################################################################################
 - id: 'salon_light_auto'
@@ -300,8 +412,12 @@ automation:
           entity_id: media_player.salon
     default: []
 
+
+
+
 #########################################
 homeassistant:
   customize:
    binary_sensor.capteurs_mouvement_salon:
       room_main: occupancy
+

@@ -2,6 +2,7 @@ adaptive_lighting:
   - name: Salon
     lights:
       - light.salon
+      - light.led_bibliotheque
     take_over_control: true
     adapt_only_on_bare_turn_on: true
 
@@ -48,7 +49,7 @@ adaptive_lighting:
 
   - name: Chambre Timothée
     lights:
-      - light.plafond_timothee
+      - light.ceiling_light_timothee_plafonnier_timoth_e
     max_sunset_time: "21:00:00"
 
     take_over_control: true
