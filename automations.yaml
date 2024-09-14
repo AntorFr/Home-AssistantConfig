@@ -29,3 +29,28 @@
           name: '{{ name }}'
           password: '{{ password }}'
           keep_days: '{{ keep_days }}'
+- id: '1725884405348'
+  alias: NSPanel Config
+  description: ''
+  use_blueprint:
+    path: Blackymas/nspanel_blueprint.yaml
+    input:
+      nspanel_name: 6f2b4d45bf3e9b33b82df452528798ad
+      language: fr
+      date_format: '%A, %d/%m'
+      timezone: Europe/Paris (CET-1CEST,M3.5.0,M10.5.0/3)
+      decimal_separator: ','
+      weather_entity: weather.petit_mars
+      home_custom_button01: input_boolean.night_mode
+      home_custom_button01_icon: mdi:weather-night
+      home_custom_button01_name: Mode nuit
+      home_custom_button02: input_boolean.away_mode
+      home_custom_button02_icon: mdi:home-export-outline
+      home_custom_button02_name: Mode absence
+      entity01: input_boolean.away_mode
+      entity01_name: Mobe absence
+      entity01_icon: mdi:home-import-outline
+      entity01_confirm: true
+      entity02: input_boolean.night_mode
+      entity02_name: Mode nuit
+      entity02_icon: mdi:weather-night
