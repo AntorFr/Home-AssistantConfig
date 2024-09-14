@@ -200,11 +200,15 @@ variables:
     {{ns.light_entities}}
 
   kill_switch_active: >
-    {% if kill_switch_id is none %}
+    {%- if kill_switch_id is none -%}
       False
-    {%else%}
+    {%- elif kill_switch_id is string -%}
       {{is_state(kill_switch_id, "on")}}
-    {%endif%}
+    {%- elif kill_switch_id is list -%} 
+      {{(expand(kill_switch_id) | selectattr("state", "eq", "on") | list | count > 0)}}
+    {%- else -%}
+      False
+    {%-endif -%}
 
 
 trigger:

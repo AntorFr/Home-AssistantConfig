@@ -1,6 +1,16 @@
 
 binary_sensor:
   - platform: group
+    name: "Presence lit chambre parents"
+    device_class: occupancy
+    unique_id: chambre_parents_bed_sensors
+    all: false
+    entities:
+      - binary_sensor.smart_bed_parent_presence_droite
+      - binary_sensor.smart_bed_parent_presence_gauche
+      - binary_sensor.presence_lit
+
+  - platform: group
     name: "Capteurs mouvement chambre parents"
     device_class: occupancy
     unique_id: chambre_parents_motion_sensors
@@ -10,6 +20,7 @@ binary_sensor:
       - binary_sensor.smart_bed_parent_mouvement_gauche
       - binary_sensor.smart_bed_parent_presence_droite
       - binary_sensor.smart_bed_parent_presence_gauche
+      - binary_sensor.smart_bed_parent_moving_target
       
 light:
   - platform: group
@@ -462,12 +473,18 @@ automation:
       light_target:
         entity_id: light.chambre
       adaptive_lighting: switch.adaptive_lighting_chambre_parent
-      motion_sensor: binary_sensor.capteurs_mouvement_chambre_parents
+      motion_sensor: 
+        - binary_sensor.smart_bed_parent_mouvement_droite
+        - binary_sensor.smart_bed_parent_mouvement_gauche
+        - binary_sensor.smart_bed_parent_moving_target
       no_motion_wait:
         minutes: 15
       no_motion_warning: 30
-      kill_switch: input_boolean.auto_light_kill_switch_chambre_parent
-      only_turn_off: true      
+      kill_switch: 
+        - input_boolean.auto_light_kill_switch_chambre_parent
+        - binary_sensor.presence_lit_chambre_parents
+        - input_boolean.night_mode
+      only_turn_off: false      
       toggle_trigger:
         platform: state
         entity_id: binary_sensor.parent_light_switch_touchfield_1
