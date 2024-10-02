@@ -1,12 +1,42 @@
 ios:
   actions:
     - name: Retour Maison
-      background_color: "#000000"
+      background_color: "#C3BDCC" #"#E9E2F4"
       label:
         text: "Je rentre"
-        color: "#ffffff"
+        color: "#800080"
       icon:
         icon: home-import-outline
-        color: "#ffffff"
+        color: "#800080"
       show_in_carplay: true
+      show_in_watch: true
+    - name: Depart Maison
+      background_color: "#B8CBC8" #"#D5EBE7"
+      label:
+        text: "Je sors"
+        color: "#008080"
+      icon:
+        icon: home-export-outline
+        color: "#008080"
+      show_in_carplay: true
+      show_in_watch: true
+    - name: Wake-up
+      background_color: "#BFBCA5" #"#FFFBDC"
+      label:
+        text: "Je me leve"
+        color: "#FFFF00"
+      icon:
+        icon: white-balance-sunny
+        color: "#FFFF00"
+      show_in_carplay: false
+      show_in_watch: true
+    - name: Sleep
+      background_color: "#CEACB5" #"#FED5E0"
+      label:
+        text: "Je me couche"
+        color: "#FFC0CB"
+      icon:
+        icon: weather-night
+        color: "#FFC0CB"
+      show_in_carplay: false
       show_in_watch: true

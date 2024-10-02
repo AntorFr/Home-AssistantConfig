@@ -24,6 +24,11 @@ automation:
       to: 'off'
       for:
         minutes: 10
+    - alias: "ios action Je sors"
+      platform: event
+      event_type: ios.action_fired
+      event_data:
+        actionName: "Depart Maison"
   condition:
     - condition: state
       entity_id: input_boolean.away_mode
@@ -44,6 +49,11 @@ automation:
     - platform: state
       entity_id: binary_sensor.anyone_home
       to: 'on'
+    - alias: "ios action Je rentre"
+      platform: event
+      event_type: ios.action_fired
+      event_data:
+        actionName: "Retour Maison"
   condition: 
     - condition: state
       entity_id: input_boolean.away_mode

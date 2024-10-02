@@ -484,7 +484,8 @@ automation:
         - input_boolean.auto_light_kill_switch_chambre_parent
         - binary_sensor.presence_lit_chambre_parents
         - input_boolean.night_mode
-      only_turn_off: false      
+      only_turn_off: false
+      only_during_night: true      
       toggle_trigger:
         platform: state
         entity_id: binary_sensor.parent_light_switch_touchfield_1

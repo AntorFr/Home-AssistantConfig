@@ -40,6 +40,7 @@ binary_sensor:
       - binary_sensor.portail_just_open
       - binary_sensor.portail_person_occupancy
       - binary_sensor.portail_car_occupancy
+      
   - platform: group
     name: "Jardin parking presence"
     unique_id: jardin_parking_presence

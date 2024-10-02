@@ -1,3 +1,11 @@
+light:
+  - platform: group
+    name: buanderie lumieres
+    unique_id: buanderie_lumieres
+    entities:
+      - light.laundry_ceiling_light_plafonnier_buanderie
+
+
 automation:
 ################################################################################
 - id: 'buanderie_mashingmachine_end'
@@ -17,5 +25,25 @@ automation:
   mode: restart
 
 ################################################################################
-
+- id: 'buanderie_lumiere_auto'
+  alias: Area - Buanderie - Lumière Auto
+  description: ''
+  use_blueprint:
+    path: antorfr/motion_light.yaml
+    input:
+      light_target:
+        entity_id: light.laundry_ceiling_light_plafonnier_buanderie
+      adaptive_lighting: switch.adaptive_lighting_default
+      motion_sensor: binary_sensor.anyone_home
+      no_motion_wait:
+        minutes: 15
+      no_motion_warning: 30  
+      only_turn_off: true      
+      toggle_trigger:
+        platform: state
+        entity_id: 
+          - binary_sensor.laundry_switch_touchfield_1
+        from: ["off"]
+        to: ["on"]
+        id: toggle
 

@@ -387,6 +387,12 @@ automation:
     entity_id: binary_sensor.maison_rdc_presence
     to: 'on'
     id: motion
+  - alias: "ios action Wake-up"
+    platform: event
+    event_type: ios.action_fired
+    event_data:
+      actionName: "Wake-up"
+    id: button
   condition:
       - condition: and
         conditions:
@@ -402,7 +408,9 @@ automation:
           - condition: or
             conditions:
               - condition: trigger
-                id: motion
+                id: 
+                  - motion
+                  - button
               - condition: and
                 conditions:
                 - condition: trigger
@@ -435,6 +443,12 @@ automation:
     from: 'on'
     to: 'off'
     for: 02:00:00
+  - alias: "ios action Sleep"
+    platform: event
+    event_type: ios.action_fired
+    event_data:
+      actionName: "Sleep"
+    id: button
   condition:
       - condition: and
         conditions:

@@ -27,6 +27,7 @@ script:
         - mezzanine
         - salle_de_douche
         - chambre_d_amis
+        - buanderie
         entity_id:
         #jardin 
         - light.garden_light_back_lumi_re_arri_re_jardin
@@ -64,6 +65,7 @@ script:
         - garage
         - mezzanine
         - salle_de_douche
+        - buanderie
         entity_id:
         - light.salon
         - light.led_bibliotheque
@@ -172,6 +174,28 @@ script:
         entity_id:
         - switch.couverture_laurine
         - switch.couverture_seb
+
+        #Bureau
+        - switch.bureau_prise_1
+        - switch.bureau_prise_pc_1
+        - switch.bureau_prise_pc_2
+
+        #Salon
+        - switch.salon_prise_tv
+        - switch.salon_multiprise_canapee
+
+        # Salle à manger
+        - switch.sonos_switch_dining_salle_manger_prise_sonos
+
+        #Garage
+        - switch.garage_prise_chargeurs
+
+    - service: script.turn_on
+      target:
+        entity_id:
+          #Bureau
+          - script.routine_turn_off_3dprinter
+
 ################################################################################
   routine_away_all_power_device_off:
     alias: Routine - All power saving device off (absence)
