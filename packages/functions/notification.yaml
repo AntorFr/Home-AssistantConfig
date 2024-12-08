@@ -93,12 +93,12 @@ script:
           value_template: >
             {% from 'room_functions.jinja' import area_entity_id %}
             {{is_state(area_entity_id(room,"occupancy"),'on')
-              and (area_entity_id(room,'tts') | string != 'None') }}
+              and (area_entity_id(room,'area_tts') | string != 'None') }}
       then: 
         - variables:
             media_player: >
               {% from 'room_functions.jinja' import area_entity_id %}
-              {{area_entity_id(room,'tts')}}
+              {{area_entity_id(room,'area_tts')}}
         - service: "{{tts_service}}"
           data:
             message: "{{message}}"

@@ -1,0 +1,10 @@
+sensor:
+  - platform: integration
+    source: sensor.vanne_piscine_flow
+    name: Piscine consomation eau
+    unique_id: water_pool_consumtion
+    #unit_prefix: m³
+    unit_time: h
+    round: 2
+    method: left
+    #unit: m³

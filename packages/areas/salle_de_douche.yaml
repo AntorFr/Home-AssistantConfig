@@ -48,7 +48,7 @@ automation:
       only_during_night: false
       light_sensor: sensor.presence_sensor_shower_light_sensor
       lux_cutoff: 60
-      lux_sun_cutoff: 250
+      lux_sun_cutoff: 280
       kill_switch: input_boolean.auto_light_kill_switch_salle_de_douche
       toggle_trigger:
         platform: state

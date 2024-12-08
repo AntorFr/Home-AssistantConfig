@@ -1,7 +1,7 @@
 sensor:
   - name: mouvement_wc_floor_5min
     platform: history_stats
-    entity_id: binary_sensor.toilettes_etage_capteur_de_mouvement_occupancy
+    entity_id: binary_sensor.blumotion_toilettes_etage_motion
     state: "on"
     type: time
     duration: 00:05:00
@@ -17,7 +17,7 @@ automation:
     input:
       light_target:
         entity_id: light.toilette_etage
-      motion_sensor: binary_sensor.toilettes_etage_capteur_de_mouvement_occupancy
+      motion_sensor: binary_sensor.blumotion_toilettes_etage_motion
       no_motion_wait:
         minutes: 3
       no_motion_warning: 30

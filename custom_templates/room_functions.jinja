@@ -25,12 +25,12 @@
 {%- endmacro -%}
 
 
-{%- macro area_entity_id(area, filter) -%}
-    {{area_entities(area)| select('is_state_attr','room_main',filter) | first | d(none) }}
+{%- macro area_entity_id(area, label) -%}
+    {{area_entities(area)| select('in', label_entities(label)) | first | d(none) }}
 {%- endmacro -%}
 
-{%- macro area_entity_room_color(area,filter) -%}
-    {%- set entity_id = area_entity_id(area,filter) -%}
+{%- macro area_entity_room_color(area,label) -%}
+    {%- set entity_id = area_entity_id(area,label) -%}
     {%- if states(entity_id) == "unknown" -%}
         {{'light-blue'}}
     {%- elif is_state(entity_id, 'on') -%}

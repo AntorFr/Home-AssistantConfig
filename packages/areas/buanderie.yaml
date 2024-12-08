@@ -34,11 +34,15 @@ automation:
       light_target:
         entity_id: light.laundry_ceiling_light_plafonnier_buanderie
       adaptive_lighting: switch.adaptive_lighting_default
-      motion_sensor: binary_sensor.anyone_home
+      motion_sensor: binary_sensor.blumotion_buanderie_motion
       no_motion_wait:
         minutes: 15
-      no_motion_warning: 30  
-      only_turn_off: true      
+      no_motion_warning: 30 
+      only_during_night: false
+      light_sensor: sensor.blumotion_buanderie_illuminance
+      lux_cutoff: 60
+      lux_sun_cutoff: 250 
+      only_turn_off: false    
       toggle_trigger:
         platform: state
         entity_id: 

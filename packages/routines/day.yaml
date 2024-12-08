@@ -626,6 +626,7 @@ script:
         entity_id: 
           - script.routine_all_light_mode_night_off
           - script.routine_morning_all_light_turn_on
+          - script.routine_all_power_device_on
           #- script.routine_all_lock_unlock
     - alias: "If sun is up"
       choose:
