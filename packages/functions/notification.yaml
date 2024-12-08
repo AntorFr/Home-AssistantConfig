@@ -92,7 +92,7 @@ script:
         - condition: template
           value_template: >
             {% from 'room_functions.jinja' import area_entity_id %}
-            {{is_state(area_entity_id(room,"occupancy"),'on')
+            {{is_state(area_entity_id(room,"area_occupancy"),'on')
               and (area_entity_id(room,'area_tts') | string != 'None') }}
       then: 
         - variables:
