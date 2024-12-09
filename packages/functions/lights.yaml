@@ -5,11 +5,23 @@ adaptive_lighting:
       - light.led_bibliotheque
     take_over_control: true
     adapt_only_on_bare_turn_on: true
+    min_brightness: 20
+    min_sunset_time: "19:00:00"
 
   - name: Salle a manger
     lights:
       - light.salle_a_manger
     take_over_control: true
+    min_brightness: 35
+    min_sunset_time: "19:00:00"
+
+  - name: Cuisine
+    lights:
+      - light.cusine_plafonier
+      - light.cusine_spot
+    take_over_control: false
+    min_brightness: 35
+    min_sunset_time: "19:00:00"
 
   - name: Couloir etage
     lights:
@@ -34,12 +46,6 @@ adaptive_lighting:
       - light.entree_spots
       - light.entree_vestibule
     take_over_control: true
-
-  - name: Cuisine
-    lights:
-      - light.cusine_plafonier
-      - light.cusine_spot
-    take_over_control: false
     
   - name: Chambre Emilie
     lights:
