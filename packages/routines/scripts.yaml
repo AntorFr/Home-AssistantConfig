@@ -449,7 +449,7 @@ script:
     sequence:
     - service: climate.set_preset_mode
       data:
-        preset_mode: Schedule
+        preset_mode: schedule
       target:
         entity_id: climate.entree
 ################################################################################
