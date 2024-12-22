@@ -199,15 +199,15 @@ automation:
       - condition: trigger
         id: week
       - condition: state
-        entity_id: binary_sensor.workday_tomorrow
-        state: 'on'
+        entity_id: binary_sensor.vacances_scolaires_demain
+        state: 'off'
     - condition: and
       conditions:
       - condition: trigger
         id: weekend
       - condition: state
-        entity_id: binary_sensor.workday_tomorrow
-        state: 'off' 
+        entity_id: binary_sensor.vacances_scolaires_demain
+        state: 'on' 
   action:
   - alias: "Fire evening routine event"
     event: routine_event
@@ -243,15 +243,15 @@ automation:
       - condition: trigger
         id: week
       - condition: state
-        entity_id: binary_sensor.workday_tomorrow
-        state: 'on'
+        entity_id: binary_sensor.vacances_scolaires_demain
+        state: 'off'
     - condition: and
       conditions:
       - condition: trigger
         id: weekend
       - condition: state
-        entity_id: binary_sensor.workday_tomorrow
-        state: 'off' 
+        entity_id: binary_sensor.vacances_scolaires_demain
+        state: 'on' 
   action:
   - alias: "Fire children night routine event"
     event: routine_event
@@ -298,15 +298,15 @@ automation:
       - condition: trigger
         id: week
       - condition: state
-        entity_id: binary_sensor.workday_tomorrow
-        state: 'on'
+        entity_id: binary_sensor.vacances_scolaires_demain
+        state: 'off'
     - condition: and
       conditions:
       - condition: trigger
         id: weekend
       - condition: state
-        entity_id: binary_sensor.workday_tomorrow
-        state: 'off' 
+        entity_id: binary_sensor.vacances_scolaires_demain
+        state: 'on' 
   action:
   - alias: "Fire children night routine event"
     event: routine_event
@@ -345,15 +345,15 @@ automation:
       - condition: trigger
         id: week
       - condition: state
-        entity_id: binary_sensor.workday_sensor
-        state: 'on'
+        entity_id: binary_sensor.vacances_scolaires_aujourdhui
+        state: 'off'
     - condition: and
       conditions:
       - condition: trigger
         id: weekend
       - condition: state
-        entity_id: binary_sensor.workday_sensor
-        state: 'off' 
+        entity_id: binary_sensor.vacances_scolaires_aujourdhui
+        state: 'on' 
   action:
   - alias: "Disable curfiew mode and night mode "
     service: input_boolean.turn_off

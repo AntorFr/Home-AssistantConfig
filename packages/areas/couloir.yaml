@@ -4,7 +4,7 @@ group:
     all: false
     entities:
       - binary_sensor.camera_couloir
-      - binary_sensor.couloir_etage_capteur_mouvement_occupancy
+      - binary_sensor.blumotion_couloir_etage_motion
 
 sensor:
   - name: mouvement_couloir_5min

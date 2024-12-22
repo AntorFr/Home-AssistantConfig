@@ -16,10 +16,8 @@ mqtt:
       unit_of_measurement: "W"
       device_class: "power"
       value_template: >
-        {% if states('sensor.ace_1500_solar_input_power') not in ['unknown'] %} # Must be adapted to your entity name if necessary
-          {{ int(value_json.solarInputPower, 0) }}
-        {% else %}
-          {{ int(0) }}
+        {% if (value_json.electricLevel | is_defined) or (value_json.solarInputPower | is_defined) %}
+          {{value_json.solarInputPower | d(0) | int }}
         {% endif %}
       state_class: "measurement"
       device: 
@@ -34,10 +32,8 @@ mqtt:
       unit_of_measurement: "W"
       device_class: "power"
       value_template: >
-        {% if states('sensor.ace_1500_pack_input_power') not in ['unknown'] %} # Must be adapted to your entity name if necessary
-          {{ int(value_json.packInputPower, 0) }}
-        {% else %}
-          {{ int(0) }}
+        {% if (value_json.electricLevel | is_defined) or (value_json.packInputPower | is_defined) %}
+          {{value_json.packInputPower | d(0) | int }}
         {% endif %}
       state_class: "measurement"
       device: 
@@ -52,10 +48,8 @@ mqtt:
       unit_of_measurement: "W"
       device_class: "power"
       value_template: >
-        {% if states('sensor.ace_1500_output_pack_power') not in ['unknown'] %} # Must be adapted to your entity name if necessary
-          {{ int(value_json.outputPackPower, 0) }}
-        {% else %}
-          {{ int(0) }}
+        {% if (value_json.electricLevel | is_defined) or (value_json.outputPackPower | is_defined)%}
+          {{value_json.outputPackPower | d(0) | int }}
         {% endif %}
       state_class: "measurement"
       device: 
@@ -137,6 +131,15 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
+
+    - name: "Pack State Description"
+      unique_id: "C7WUFfnApackState"
+      state_topic: "4bM5kNAf/C7WUFfnA/state"
+      value_template: >
+        {% set status = {1:"Charging",2:"Decharging",3:'UPS'} %}
+        {% if (value_json.packState | is_defined)%}
+          {{status[value_json.packState| int]|d(value_json.packState) }}
+        {% endif %}  
 
     - name: "Pack Num"
       unique_id: "C7WUFfnApackNum"
@@ -336,11 +339,9 @@ mqtt:
     - name: "Grid Input Power"
       unique_id: "C7WUFfnAgridInputPower"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
-      value_template: >
-        {% if states('sensor.ace_1500_grid_input_power') not in ['unknown'] %}
-          {{ int(value_json.gridInputPower, 0) }}
-        {% else %}
-          {{ int(0) }}
+      value_template: > 
+        {% if (value_json.electricLevel | is_defined) or (value_json.gridInputPower | is_defined) %}
+          {{value_json.gridInputPower | d(0) | int }}
         {% endif %}
       unit_of_measurement: "W"
       device_class: "power"
@@ -354,12 +355,10 @@ mqtt:
     - name: "AC Output Power"
       unique_id: "C7WUFfnAacOutputPower"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
-      value_template: >
-         {% if states('sensor.ace_1500_ac_output_power') not in ['unknown'] %}
-           {{ int(value_json.acOutputPower, 0) }}
-         {% else %}
-           {{ int(0) }}
-         {% endif %}
+      value_template: > 
+        {% if (value_json.acOutputPower | is_defined) %}
+          {{value_json.acOutputPower | d(0) | int }}
+        {% endif %}
       unit_of_measurement: "W"
       device_class: "power"
       state_class: "measurement"
@@ -372,12 +371,7 @@ mqtt:
     - name: "DC Output Power"
       unique_id: "C7WUFfnAdcOutputPower"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
-      value_template: >
-         {% if states('sensor.ace_1500_dc_output_power') not in ['unknown'] %}
-           {{ int(value_json.dcOutputPower, 0) }}
-         {% else %}
-           {{ int(0) }}
-         {% endif %}
+      value_template: "{{ value_json.OutputPower | int }}"
       unit_of_measurement: "W"
       device_class: "power"
       state_class: "measurement"
@@ -387,7 +381,11 @@ mqtt:
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
 
-
+      device: 
+        name: "Ace 1500"
+        identifiers: "FE1HTMCFM260498"
+        manufacturer: "Zendure"
+        model: "Ace 1500 Controller"
   switch:
     - unique_id: "C7WUFfnAmasterSwitch"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -470,3 +468,39 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
+
+
+automation:
+###############################################
+- id: Zendur_batterie_low
+  alias: Integration - Zendure - Low Batterie
+  description: ""
+  mode: single
+  triggers:
+    - trigger: numeric_state
+      entity_id:
+        - sensor.electriclevel
+      below: 20
+      id: bellow20
+    - trigger: numeric_state
+      entity_id:
+        - sensor.electriclevel
+      below: 10
+      id: bellow10
+  conditions: []
+  actions:
+    - if:
+        - condition: state
+          entity_id: switch.power_plug_ups_garage_prise_onduleur_garage
+          state: "off"
+      then:
+        - action: switch.turn_on
+          metadata: {}
+          data: {}
+          target:
+            entity_id: switch.power_plug_ups_garage_prise_onduleur_garage
+      else:
+        - action: notify.all_mobile
+          metadata: {}
+          data:
+            message: Niveau batterie garage faible ({{states('sensor.electriclevel')}}%)

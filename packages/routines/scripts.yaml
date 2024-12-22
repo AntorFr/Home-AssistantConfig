@@ -172,23 +172,11 @@ script:
     - service: switch.turn_off
       target:
         entity_id:
-        - switch.couverture_laurine
-        - switch.couverture_seb
+          - switch.couverture_laurine
+          - switch.couverture_seb
 
-        #Bureau
-        - switch.bureau_prise_1
-        - switch.bureau_prise_pc_1
-        - switch.bureau_prise_pc_2
-
-        #Salon
-        - switch.salon_prise_tv
-        - switch.salon_multiprise_canapee
-
-        # Salle à manger
-        - switch.sonos_switch_dining_salle_manger_prise_sonos
-
-        #Garage
-        - switch.garage_prise_chargeurs
+        label_id: 
+          - night_power_off
 
     - service: script.turn_on
       target:
@@ -203,38 +191,19 @@ script:
     - service: switch.turn_off
       target:
         entity_id:
-          #Salon
-          - switch.salon_prise_tv
-          - switch.salon_multiprise_canapee
-          - switch.library_power_strip_switch_1
-
-          # Salle à manger
-          - switch.sonos_switch_dining_salle_manger_prise_sonos
-
-          #Bureau
-          - switch.bureau_prise_1
-          - switch.bureau_prise_pc_1
-          - switch.bureau_prise_pc_2
-          - switch.office_entry_power_strip_switch_2 #sonos
-
           #Chambre parent
           - switch.couverture_laurine
           - switch.couverture_seb
-          - switch.parent_bed_power_strip_switch_2
-          - switch.parent_bed_power_strip_switch_1
-
-          #Chambre Emilie
-          - switch.chambre_emilie_prise_bureau
 
           #Piscine
           - switch.piscine_chauffe_eau
 
-          #chambre parent
-          - switch.parent_bed_power_strip_switch_2
-          - switch.parent_bed_power_strip_switch_1
 
-          #Garage
-          - switch.garage_prise_chargeurs
+
+        label_id: 
+          - night_power_off
+          - away_power_off
+
     - service: script.turn_on
       target:
         entity_id:
@@ -250,32 +219,15 @@ script:
     - service: switch.turn_on
       target:
         entity_id:
-          #Salon
-          - switch.salon_prise_tv
-          - switch.salon_multiprise_canapee
-          - switch.library_power_strip_switch_1
+
           #Buanderie
           - switch.washing_machine_plug_prise_machine_laver
           - switch.dryer_plug_prise_s_che_linge
 
-          # Salle à manger
-          - switch.sonos_switch_dining_salle_manger_prise_sonos
-
-          #Bureau
-          - switch.bureau_prise_1
-          - switch.bureau_prise_pc_1
-          - switch.bureau_prise_pc_2
-          - switch.bureau_prise_pc_3 #nas
-          #- switch.office_entry_power_strip_switch_1 #Imp3d MK3
-          - switch.office_entry_power_strip_switch_2
-          #- switch.office_entry_power_strip_switch_3 #Imp3d MK4
-
-          #Chambre parent
-          - switch.parent_bed_power_strip_switch_2
-          - switch.parent_bed_power_strip_switch_1
-
-          #Chambre Emilie
-          - switch.chambre_emilie_prise_bureau
+        label_id: 
+          - night_power_off
+          - away_power_off
+          
     - service: script.turn_off
       target:
         entity_id:
@@ -382,8 +334,8 @@ script:
     - choose:
       - conditions:
         - condition: state
-          entity_id: binary_sensor.workday_tomorrow
-          state: 'on'
+          entity_id: binary_sensor.vacances_scolaires_demain
+          state: 'off'
         sequence:
         - service: cover.close_cover
           target:

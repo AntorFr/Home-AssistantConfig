@@ -211,8 +211,8 @@ automation:
         - condition: trigger
           id: children morning
         - condition: state
-          entity_id: binary_sensor.workday_sensor
-          state: 'on'
+          entity_id: binary_sensor.vacances_scolaires_aujourdhui
+          state: 'off'
       sequence:
         - service: light.turn_on
           data:

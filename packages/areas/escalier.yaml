@@ -5,9 +5,9 @@ binary_sensor:
     unique_id: escaliers_motion_sensors
     all: false
     entities:
-      - binary_sensor.escalier_capteur_mouvement_occupancy
       - binary_sensor.couloir_etage_capteur_mouvement_occupancy
       - binary_sensor.blumotion_escalier_haut_motion
+      - binary_sensor.blumotion_escalier_bas_motion
       - binary_sensor.couloir_person_occupancy
 
 sensor:

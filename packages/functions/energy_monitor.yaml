@@ -172,6 +172,7 @@ script:
           entity_id:
             - switch.cuisine_prise_cave_a_vins
             - switch.garage_prise_cave_a_vins
+            - switch.power_plug_ups_garage_prise_onduleur_garage
       - service: water_heater.set_temperature
         target:
           entity_id: water_heater.pac_tank
@@ -203,6 +204,7 @@ script:
           entity_id:
             - switch.cuisine_prise_cave_a_vins
             - switch.garage_prise_cave_a_vins  
+            - switch.power_plug_ups_garage_prise_onduleur_garage
       - service: select.select_option
         data:
           option: Normal
