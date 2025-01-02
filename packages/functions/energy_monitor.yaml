@@ -139,24 +139,33 @@ script:
           option: "Tempo rouge"
         target:
           entity_id: select.petit_mars
-      - service: water_heater.set_temperature
-        target:
-          entity_id: water_heater.pac_tank
-        data:
-          temperature: 60
       - service: script.turn_on
         target:
           entity_id: script.routine_all_power_device_on
       - service: switch.turn_on
         target:
-          entity_id:
-            - switch.cuisine_prise_cave_a_vins
-            - switch.garage_prise_cave_a_vins
-      - service: climate.turn_on
-        data: {}
-        target:
-          entity_id: 
-            - climate.pac_maison
+          label_id: 
+            - red_power_off
+      - repeat:
+          until: "{{ is_state_attr('water_heater.pac_tank','temperature', 65) and repeat.index < 10}}"
+          sequence:
+            - service: water_heater.set_temperature
+              target:
+                entity_id: water_heater.pac_tank
+              data:
+                temperature: 65
+            - delay:
+                seconds: 60
+      - repeat:
+          until: "{{ is_state('climate.pac_maison','heat') and repeat.index < 10}}"
+          sequence:
+            - service: climate.turn_on
+              data: {}
+              target:
+                entity_id: 
+                  - climate.pac_maison
+            - delay:
+                seconds: 60
 ###############################################  
   energy_tempo_red_hp:
     alias: Energie - Tempo rouge HP
@@ -169,26 +178,39 @@ script:
           entity_id: script.routine_away_all_power_device_off
       - service: switch.turn_off
         target:
-          entity_id:
-            - switch.cuisine_prise_cave_a_vins
-            - switch.garage_prise_cave_a_vins
-            - switch.power_plug_ups_garage_prise_onduleur_garage
-      - service: water_heater.set_temperature
-        target:
-          entity_id: water_heater.pac_tank
-        data:
-          temperature: 35                 
+          label_id: 
+            - red_power_off
       - service: climate.turn_off
         data: {}
         target:
           entity_id: 
             - climate.mobile_heater_plug_thermostat
-            - climate.pac_maison
       - service: select.select_option
         data:
           option: "Tempo rouge"
         target:
-          entity_id: select.petit_mars  
+          entity_id: select.petit_mars
+      - repeat:
+          until: "{{ is_state_attr('water_heater.pac_tank','temperature', 35) and repeat.index < 10}}"
+          sequence:
+            - service: water_heater.set_temperature
+              target:
+                entity_id: water_heater.pac_tank
+              data:
+                temperature: 35
+            - delay:
+                seconds: 60               
+      - repeat:
+          until: "{{ is_state('climate.pac_maison','off') and repeat.index < 10}}"
+          sequence:
+            - service: climate.turn_off
+              data: {}
+              target:
+                entity_id: 
+                  - climate.pac_maison
+            - delay:
+                seconds: 60
+  
 ###############################################  
   energy_tempo_red_end:  
     alias: Energie - Tempo rouge fin
@@ -201,10 +223,8 @@ script:
           entity_id: script.routine_all_power_device_on
       - service: switch.turn_on
         target:
-          entity_id:
-            - switch.cuisine_prise_cave_a_vins
-            - switch.garage_prise_cave_a_vins  
-            - switch.power_plug_ups_garage_prise_onduleur_garage
+          label_id: 
+            - red_power_off
       - service: select.select_option
         data:
           option: Normal
@@ -215,9 +235,24 @@ script:
           entity_id: water_heater.pac_tank
         data:
           temperature: 53
-      - service: climate.turn_on
-        data: {}
-        target:
-          entity_id: 
-            - climate.pac_maison         
+      - repeat:
+          until: "{{ is_state_attr('water_heater.pac_tank','temperature', 53) and repeat.index < 10}}"
+          sequence:
+            - service: water_heater.set_temperature
+              target:
+                entity_id: water_heater.pac_tank
+              data:
+                temperature: 53
+            - delay:
+                seconds: 60
+      - repeat:
+          until: "{{ is_state('climate.pac_maison','heat') and repeat.index < 10}}"
+          sequence:
+            - service: climate.turn_on
+              data: {}
+              target:
+                entity_id: 
+                  - climate.pac_maison
+            - delay:
+                seconds: 60       
 ###############################################  

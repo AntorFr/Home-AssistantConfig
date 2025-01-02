@@ -9,7 +9,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Solar Input Power"
       unique_id: "C7WUFfnAsolarInputPower"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -25,7 +24,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Pack Input Power"
       unique_id: "C7WUFfnApackInputPower"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -41,7 +39,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Output Pack Power"
       unique_id: "C7WUFfnAoutputPackPower"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -57,7 +54,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Output Home Power"
       unique_id: "C7WUFfnAoutputHomePower"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -75,7 +71,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Output Limit"
       unique_id: "C7WUFfnAoutputLimit"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -86,7 +81,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Input Limit"
       unique_id: "C7WUFfnAinputLimit"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -97,7 +91,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Remain Out Time"
       unique_id: "C7WUFfnAremainOutTime"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -109,7 +102,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Remain Input Time"
       unique_id: "C7WUFfnAremainInputTime"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -121,7 +113,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Pack State"
       unique_id: "C7WUFfnApackState"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -131,7 +122,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Pack State Description"
       unique_id: "C7WUFfnApackState"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -140,7 +130,6 @@ mqtt:
         {% if (value_json.packState | is_defined)%}
           {{status[value_json.packState| int]|d(value_json.packState) }}
         {% endif %}  
-
     - name: "Pack Num"
       unique_id: "C7WUFfnApackNum"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -150,7 +139,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Electric Level"
       unique_id: "C7WUFfnAelectricLevel"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -162,7 +150,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "SOC Set"
       unique_id: "C7WUFfnAsocSet"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -173,7 +160,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Pass Mode"
       unique_id: "C7WUFfnApassMode"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -183,7 +169,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Batterie 1 maxTemp"
       unique_id: "C7WUFfnABatterie_1_maxTemp"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -202,7 +187,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Batterie 1 maxVol"
       unique_id: "C7WUFfnABatterie_1_maxVol"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -221,7 +205,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Batterie 1 minVol"
       unique_id: "C7WUFfnABatterie_1_minVol"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -240,7 +223,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Batterie 1 socLevel"
       unique_id: "C7WUFfnABatterie_1_socLevel"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -259,7 +241,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Batterie 2 maxTemp"
       unique_id: "C7WUFfnABatterie_2_maxTemp"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -278,7 +259,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Batterie 2 maxVol"
       unique_id: "C7WUFfnABatterie_2_maxVol"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -297,7 +277,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Batterie 2 minVol"
       unique_id: "C7WUFfnABatterie_2_minVol"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -316,7 +295,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Batterie 2 socLevel"
       unique_id: "C7WUFfnABatterie_2_socLevel"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -335,7 +313,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "Grid Input Power"
       unique_id: "C7WUFfnAgridInputPower"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -350,8 +327,7 @@ mqtt:
         name: "Ace 1500"
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
-        model: "Ace 1500 Controller"
-    
+        model: "Ace 1500 Controller"    
     - name: "AC Output Power"
       unique_id: "C7WUFfnAacOutputPower"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -367,7 +343,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     - name: "DC Output Power"
       unique_id: "C7WUFfnAdcOutputPower"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
@@ -387,11 +362,11 @@ mqtt:
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
   switch:
-    - unique_id: "C7WUFfnAmasterSwitch"
+    - name: "Master Switch"
+      unique_id: "C7WUFfnAmasterSwitch"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
       state_off: false
       command_topic: "4bM5kNAf/C7WUFfnA/masterSwitch/set"
-      name: "Master Switch"
       device_class: "switch"
       value_template: "{{ value_json.masterSwitch | default('') }}"
       payload_on: true
@@ -402,12 +377,11 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
-    - unique_id: "C7WUFfnAbuzzerSwitch"
+    - name: "Buzzer Switch"
+      unique_id: "C7WUFfnAbuzzerSwitch"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
       state_off: false
       command_topic: "4bM5kNAf/C7WUFfnA/buzzerSwitch/set"
-      name: "Buzzer Switch"
       device_class: "switch"
       value_template: "{{ value_json.buzzerSwitch | default('') }}"
       payload_on: true
@@ -418,12 +392,11 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
-    - unique_id: "C7WUFfnAautoRevover"
+    - name: "Auto Recover"
+      unique_id: "C7WUFfnAautoRevover"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
       state_off: false
       command_topic: "4bM5kNAf/C7WUFfnA/autoRevover/set"
-      name: "Auto Recover"
       device_class: "switch"
       value_template: "{{ value_json.autoRevover | default('') }}"
       payload_on: true
@@ -434,41 +407,53 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
     # To be added to the other switches
-    - unique_id: "C7WUFfnAacSwitch"
+    - name: "AC Switch"
+      unique_id: "C7WUFfnAacSwitch"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
-      state_off: false
+      state_off: 0
       command_topic: "4bM5kNAf/C7WUFfnA/acSwitch/set"
-      name: "AC Switch"
       device_class: "switch"
       value_template: "{{ value_json.acSwitch | default('') }}"
       payload_on: true
       payload_off: false
-      state_on: true
+      state_on: 1
       device: 
         name: "Ace 1500"
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
-    # Ace 1500 only
-    - unique_id: "C7WUFfnAdcSwitch"
+    - name: "DC Switch"
+      unique_id: "C7WUFfnAdcSwitch"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
-      state_off: false
+      state_off: 0
       command_topic: "4bM5kNAf/C7WUFfnA/dcSwitch/set"
-      name: "DC Switch"
       device_class: "switch"
       value_template: "{{ value_json.dcSwitch | default('') }}"
-      payload_on: true
-      payload_off: false
-      state_on: true
+      payload_on: 1
+      payload_off: 0
+      state_on: 1
       device: 
         name: "Ace 1500"
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
+  number:
+    - name: "Input Limit"
+      unique_id: "C7WUFfnAinputLimit"
+      state_topic: "4bM5kNAf/C7WUFfnA/state"
+      value_template: "{{ value_json.inputLimit | int }}"
+      unit_of_measurement: "W"
+      command_topic: "4bM5kNAf/C7WUFfnA/inputLimit/set"
+      device_class: power
+      entity_category: config
+      min: 0
+      max: 900
+      device: 
+        name: "Ace 1500"
+        identifiers: "FE1HTMCFM260498"
+        manufacturer: "Zendure"
+        model: "Ace 1500 Controller"
 
 automation:
 ###############################################
@@ -504,3 +489,5 @@ automation:
           metadata: {}
           data:
             message: Niveau batterie garage faible ({{states('sensor.electriclevel')}}%)
+
+

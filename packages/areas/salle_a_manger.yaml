@@ -84,7 +84,7 @@ automation:
         entity_id: light.salle_a_manger
       motion_sensor: binary_sensor.salle_a_manger_capteurs_mouvement
       no_motion_wait:
-        minutes: 40
+        minutes: 20
       no_motion_warning: 30
       only_during_night: false
       light_sensor: sensor.presence_sensor_dining_light_sensor

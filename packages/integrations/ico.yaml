@@ -11,25 +11,39 @@ binary_sensor:
         device_class: problem
         friendly_name: Ico Ph problem
         value_template: >
-          {{ (states('sensor.plouf_ph') | float) < 7.0 or (states('sensor.plouf_ph') | float) > 7.5 }}
+          {{- 
+            ((states('sensor.plouf_ph') | float) < 7.0 
+            or (states('sensor.plouf_ph') | float) > 7.5)
+            and not is_state('input_boolean.piscine_en_hivernage',['on'])
+          -}}
       ico_temperature:
         device_class: problem
         friendly_name: Ico temperature problem
         value_template: >
-          {{ (states('sensor.plouf_temperature') | float) < 26 or (states('sensor.plouf_temperature') | float) > 34 }}
+          {{- 
+            ((states('sensor.plouf_temperature') | float) < 26 
+            or (states('sensor.plouf_temperature') | float) > 34)
+            and not is_state('input_boolean.piscine_en_hivernage',['on'])
+          -}}
       ico_redox:
         device_class: problem
         friendly_name: ico redox problem
         value_template: >
-          {{ 
-            (states('sensor.plouf_oxydo_reduction_potential') | float) < state_attr('sensor.plouf_oxydo_reduction_potential','treshold_low')
-            or (states('sensor.plouf_oxydo_reduction_potential') | float) > state_attr('sensor.plouf_oxydo_reduction_potential','treshold_high')
-          }}
+          {{- 
+            ((states('sensor.plouf_oxydo_reduction_potential') | float) < state_attr('sensor.plouf_oxydo_reduction_potential','treshold_low')
+            or (states('sensor.plouf_oxydo_reduction_potential') | float) > state_attr('sensor.plouf_oxydo_reduction_potential','treshold_high'))
+            and not is_state('input_boolean.piscine_en_hivernage',['on'])
+          -}}
       ico_salt:
         device_class: problem
         friendly_name: ico salt problem
         value_template: >
-          {{ (states('sensor.plouf_salt') | float) < 3000 or (states('sensor.plouf_salt') | float) > 5000 }}
+          {{- 
+            ((states('sensor.plouf_salt') | float) < 3000 
+            or (states('sensor.plouf_salt') | float) > 5000)
+            and not is_state('input_boolean.piscine_en_hivernage',['on'])
+          -}}
+
       ico_battery:
         device_class: problem
         friendly_name: ico battery problem
