@@ -1,0 +1,183 @@
+script: 
+  unlock_retry:
+    alias: Function - Unlock door with retry
+    mode: parallel
+    fields:
+      lock:
+        selector:
+          entity:
+            multiple: false
+            filter:
+              - domain: lock
+      delay:
+        name: delais
+        description: temps entre 2 essais
+        selector:
+          duration:
+            enable_day: false
+        default: 
+          minutes: 1
+      max_retry:
+        name: Nombre d'essais maximum
+        default: 10
+        selector:
+          number:
+            min: 0
+            max: 100
+            mode: box
+    variables:
+      delay: >
+        {{delay if delay is defined 
+          else {'seconds':0,'minutes':1,'hours':0} 
+        }}
+      max_retry: "{{max_retry if max_retry is defined else 10}}"    
+    sequence:
+      - repeat:
+          while: "{{ not is_state(lock,'unlocked') and repeat.index < max_retry}}"
+          sequence:
+            - service: lock.unlock
+              target:
+                entity_id: "{{lock}}"
+            - delay: 
+                seconds: "{{delay.seconds}}"
+                minutes: "{{delay.minutes}}"
+                hours: "{{delay.hours}}"
+  unlock_many_retry:
+    alias: Function - Unlock several door with retry
+    mode: parallel
+    fields:
+      locks:
+        selector:
+          entity:
+            multiple: true
+            filter:
+              - domain: lock
+      delay:
+        name: delais
+        description: temps entre 2 essais
+        selector:
+          duration:
+            enable_day: false
+        default: 
+          minutes: 1
+      max_retry:
+        name: Nombre d'essais maximum
+        default: 10
+        selector:
+          number:
+            min: 0
+            max: 100
+            mode: box  
+    variables:
+      delay: >
+        {{delay if delay is defined
+          else {'seconds':0,'minutes':1,'hours':0} 
+        }}
+      max_retry: "{{max_retry if max_retry is defined else 10}}"
+    sequence:
+      - repeat:
+          for_each: "{{[locks] if locks is string else locks}}"
+          sequence:
+            - action: script.turn_on
+              target:
+                entity_id: script.unlock_retry
+              data:
+                variables:
+                  lock: "{{ repeat.item }}"
+                  delay:
+                    seconds: "{{delay.seconds}}"
+                    minutes: "{{delay.minutes}}"
+                    hours: "{{delay.hours}}"
+                  max_retry: "{{max_retry}}"
+  lock_retry:
+    alias: Function - Lock door with retry
+    mode: parallel
+    fields:
+      lock:
+        selector:
+          entity:
+            multiple: false
+            filter:
+              - domain: lock
+      delay:
+        name: delais
+        description: temps entre 2 essais
+        selector:
+          duration:
+            enable_day: false
+        default: 
+          minutes: 1
+      max_retry:
+        name: Nombre d'essais maximum
+        default: 10
+        selector:
+          number:
+            min: 0
+            max: 100
+            mode: box
+    variables:
+      delay: >
+        {{delay if delay is defined
+          else {'seconds':0,'minutes':1,'hours':0} 
+        }}
+      max_retry: "{{max_retry if max_retry is defined else 10}}"    
+    sequence:
+      - repeat:
+          while: "{{ not is_state(lock,'locked') and repeat.index < max_retry}}"
+          sequence:
+            - service: lock.lock
+              target:
+                entity_id: "{{lock}}"
+            - delay: 
+                seconds: "{{delay.seconds}}"
+                minutes: "{{delay.minutes}}"
+                hours: "{{delay.hours}}"
+  lock_many_retry:
+    alias: Function - Lock several door with retry
+    mode: parallel
+    fields:
+      locks:
+        selector:
+          entity:
+            multiple: true
+            filter:
+              - domain: lock
+      delay:
+        name: delais
+        description: temps entre 2 essais
+        selector:
+          duration:
+            enable_day: false
+        default: 
+          minutes: 1
+      max_retry:
+        name: Nombre d'essais maximum
+        default: 10
+        selector:
+          number:
+            min: 0
+            max: 100
+            mode: box
+    variables:
+      delay: >
+        {{delay if delay is defined
+          else {'seconds':00,'minutes':1,'hours':0} 
+        }}
+      max_retry: "{{max_retry if max_retry is defined else 10}}"       
+    sequence:
+      - repeat:
+          for_each: "{{[locks] if locks is string else locks}}"
+          sequence:
+            - action: script.turn_on
+              target:
+                entity_id: script.lock_retry
+              data:
+                variables:
+                  lock: "{{ repeat.item }}"
+                  delay:
+                    seconds: "{{delay.seconds}}"
+                    minutes: "{{delay.minutes}}"
+                    hours: "{{delay.hours}}"
+                  max_retry: "{{max_retry}}"
+
+

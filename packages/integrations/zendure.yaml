@@ -84,7 +84,10 @@ mqtt:
     - name: "Input Limit"
       unique_id: "C7WUFfnAinputLimit"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
-      value_template: "{{ value_json.inputLimit | int }}"
+      value_template: >
+        {%- if (value_json.inputLimit | is_defined) %}
+          {{value_json.inputLimit | int }}
+        {%- endif %}
       unit_of_measurement: "W"
       device: 
         name: "Ace 1500"
@@ -442,7 +445,10 @@ mqtt:
     - name: "Input Limit"
       unique_id: "C7WUFfnAinputLimit"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
-      value_template: "{{ value_json.inputLimit | int }}"
+      value_template: >
+        {%- if (value_json.inputLimit | is_defined) %}
+          {{value_json.inputLimit | int }}
+        {%- endif %}
       unit_of_measurement: "W"
       command_topic: "4bM5kNAf/C7WUFfnA/inputLimit/set"
       device_class: power

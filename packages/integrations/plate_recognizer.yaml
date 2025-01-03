@@ -1,8 +1,3 @@
-camera:
-  - platform: local_file
-    name: platerecognizer_test
-    file_path: /media/platerecognizer/samples/Portail_10.jpg
-
 image_processing:
   - platform: platerecognizer
     api_token: !secret platerecognizer_token
