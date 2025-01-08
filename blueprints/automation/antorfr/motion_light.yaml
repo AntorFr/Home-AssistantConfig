@@ -165,12 +165,27 @@ variables:
   only_turn_off: !input 'only_turn_off'
   kill_switch_id: !input 'kill_switch'
 
-
   no_motion_wait_sec: '{{ ((no_motion_wait.hours or 0)*3600+(no_motion_wait.minutes or 0)*60+(no_motion_wait.seconds or 0))|int}}'
   warning_disable: '{{ (no_motion_warning==0) or (no_motion_warning>=no_motion_wait_sec)}}'
   duration_before_warning: '{{ (no_motion_wait_sec - no_motion_warning) }}'
-  illinance_disable: '{{(light_sensor==none) or (light_sensor==[]) or (lux_cutoff==none)}}'
-  night_only_disable: "{{not only_during_night}}"
+  illinance_disable: >
+    {{-
+      light_sensor==none
+      or light_sensor==""
+      or light_sensor==[]
+      or states(light_sensor) =="unknown"
+      or lux_cutoff==none
+    -}}
+  night_only_disable: >
+    {{- not (
+        only_during_night 
+        or ( 
+          light_sensor is string
+          and light_sensor != ''
+          and states(light_sensor) =="unknown"
+        )
+       )
+    -}}
   turn_on_disable: '{{only_turn_off}}'
   light_entities: >
     {%- set ns = namespace(light_entities=[]) %}
