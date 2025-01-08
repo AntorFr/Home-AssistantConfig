@@ -15,7 +15,6 @@ binary_sensor:
 input_boolean:
   mower_in_revision:
     name: Robot tondeuse en revision
-    initial: false
     icon: mdi:car-wrench
 
 alert:

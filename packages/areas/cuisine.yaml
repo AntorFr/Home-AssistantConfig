@@ -70,7 +70,7 @@ automation:
         minutes: 10
       no_motion_warning: 30
       only_during_night: false
-      light_sensor: sensor.cuisine_capteur_luminosite_illuminance_lux
+      light_sensor: sensor.cuisine_capteur_luminosite_illuminance
       lux_cutoff: 60
       lux_sun_cutoff: 250
       adaptive_lighting: switch.adaptive_lighting_cuisine

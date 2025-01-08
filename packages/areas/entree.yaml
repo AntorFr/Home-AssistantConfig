@@ -66,28 +66,15 @@ automation:
       no_motion_wait:
         minutes: 3
       no_motion_warning: 30
-      light_sensor: sensor.entree_capteur_luminosite_illuminance_lux
+      light_sensor: sensor.entree_capteur_luminosite_illuminance
       lux_cutoff: 60
       adaptive_lighting: switch.adaptive_lighting_entree
       only_during_night: false
+      toggle_trigger:
+        trigger: event
+        id: toggle
+        event_type: shelly.click
+        event_data:
+          device: shellypro1pm-fce8c0d952c4
+          click_type: single_push
 ################################################################################
-
-################################################################################
-- id: 'entree_light_button'
-  alias: Area - Entrée - Lumière bouton
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: switch.telerupteur_lumiere_l2
-    from: ["on", "off"]
-    to: ["on","off"]
-  condition: []
-  action:
-  - service: light.toggle
-    data: {}
-    target:
-      entity_id: light.entree_spots
-  - delay:
-      seconds: 1
-  mode: single
-  ################################################################################

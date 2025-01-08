@@ -37,46 +37,11 @@ automation:
       no_motion_warning: 30
       only_during_night: false
       adaptive_lighting: switch.adaptive_lighting_couloir_etage
+      toggle_trigger:
+        trigger: event
+        id: toggle
+        event_type: shelly.click
+        event_data:
+          device: shellypro1pm-fce8c0d95370
+          click_type: single_push
 ################################################################################
-- id: escalier_light_button
-  alias: Area - Escalier - Lumière bouton
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: switch.telerupteur_lumiere_l1
-    from: ["on", "off"]
-    to: ["on","off"]
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: light.couloir_etage
-          state: 'on'
-        - condition: state
-          entity_id: light.escaliers
-          state: 'on' 
-      sequence:  
-      - service: light.turn_off
-        data: {}
-        target:
-          entity_id: 
-          - light.escaliers
-          - light.couloir_etage
-    default:
-    - service: light.turn_on
-      target: 
-        entity_id:
-          - light.escaliers
-          - light.couloir_etage
-  - delay:
-      seconds: 1
-  mode: single
-  ################################################################################
-
-homeassistant:
-  customize:
-   binary_sensor.escalier_capteurs_mouvement:
-      room_main: occupancy
