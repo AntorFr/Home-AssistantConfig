@@ -39,13 +39,13 @@ template:
         state: |-
           {% set aujourdhui = now().strftime('%Y-%m-%d')%}
           {{ aujourdhui >= state_attr('sensor.vacances_scolaires', 'start_date') 
-             or aujourdhui <= state_attr('sensor.vacances_scolaires', 'end_date')
+             and aujourdhui <= state_attr('sensor.vacances_scolaires', 'end_date')
              or is_state('binary_sensor.workday_sensor','off') }}
   - binary_sensor:
       - name: vacances_scolaires_demain
         unique_id: binary_sensor.vacances_scolaires_demain
         state: |-
-          {% set demain = (as_timestamp(now()) + (24*3600)) | timestamp_custom('%Y-%m-%d', True) %}
+          {% set demain = (now() + timedelta(days=1)).strftime('%Y-%m-%d') %}
           {{ demain >= state_attr('sensor.vacances_scolaires', 'start_date') 
-             or demain <= state_attr('sensor.vacances_scolaires', 'end_date')
+             and demain <= state_attr('sensor.vacances_scolaires', 'end_date')
              or is_state('binary_sensor.workday_tomorrow','off') }}
