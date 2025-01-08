@@ -1,26 +1,3 @@
-template:
-  - trigger:
-      platform: time_pattern
-      minutes: /30
-    action:
-    - service: calendar.list_events
-      target:
-        entity_id: calendar.rte_tempo_calendrier
-      data:
-        start_date_time: "{{ (now() + timedelta(days=1)).strftime('%Y-%m-%d 00:00:00') }}"
-        duration:
-          hours: 24
-          minutes: 0
-          seconds: 0
-      response_variable: rte_next_day
-    sensor:
-    - name: Tempo - Couleur demain
-      unique_id: rte_next_day
-      state: "{{ (rte_next_day.events| first).summary if (rte_next_day.events | count) > 0  }}"
-      attributes:
-        description: "{{ rte_next_day.events| first).description if (rte_next_day.events | count) > 0 }}"
-      icon: mdi:calendar
-
 script:
 ###############################################
   on_off_tempo:
