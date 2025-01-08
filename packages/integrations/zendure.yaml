@@ -126,7 +126,7 @@ mqtt:
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
     - name: "Pack State Description"
-      unique_id: "C7WUFfnApackState"
+      unique_id: "C7WUFfnApackStateDescription"
       state_topic: "4bM5kNAf/C7WUFfnA/state"
       value_template: >
         {% set status = {1:"Charging",2:"Decharging",3:'UPS'} %}
