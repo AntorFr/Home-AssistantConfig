@@ -1,0 +1,21 @@
+{%- macro monitored_batteries_entity_ids() -%}
+    {%- set ns = namespace(entities=[]) %}
+    {%- for device in label_devices("battery_monitored") %}
+    {%- set battery_entities = expand(device_entities(device))
+        | selectattr('domain', 'eq', 'sensor')
+        | rejectattr('attributes.device_class', 'undefined')
+        | selectattr('attributes.device_class', '==', 'battery')
+        | map(attribute="entity_id")
+        | list
+    -%}
+    {%- set ns.entities = (ns.entities+battery_entities)|unique|list -%}
+    {%- endfor %}
+
+    {%- set battery_entites = (ns.entities + label_entities("battery_monitored"))| unique| list %}
+    {{battery_entites | to_json}}
+{%- endmacro -%}
+
+{%- macro monitored_batteries_bellow_level(battery_entites,level) -%}
+    {%- set battery_state_entites = battery_entites | map('states') | map('float', 0) | list %}
+    {{ zip(battery_entites, battery_state_entites) | selectattr(1, '<=', level) | map(attribute=0) | list | to_json }}
+{%- endmacro -%}
