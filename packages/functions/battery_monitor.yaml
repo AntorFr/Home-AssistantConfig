@@ -1,0 +1,87 @@
+input_number:
+  battery_alerte_level:
+    name: Niveau d'alerte batterie
+    min: 1
+    max: 100
+    step: 1
+    unit_of_measurement: '%'
+    mode: box
+    icon: mdi:battery-alert
+
+template:
+  - sensor:
+      - unique_id: number_battery_under_level
+        name: Nombre batteries faibles
+        icon: mdi:battery-alert
+        state: |-
+          {% from 'battery_functions.jinja' import monitored_batteries_entity_ids, monitored_batteries_bellow_level %}
+
+          {%- set battery_entites = monitored_batteries_entity_ids()| from_json %}
+          {%- set battery_alert_level = states("input_number.battery_alerte_level") | float | d(20.0) %}
+          {{ monitored_batteries_bellow_level(battery_entites,battery_alert_level)
+              |from_json
+              |count }}
+        attributes:
+          entities_ids: |-
+            {% from 'battery_functions.jinja' import monitored_batteries_entity_ids, monitored_batteries_bellow_level %}
+
+            {%- set battery_entites = monitored_batteries_entity_ids()| from_json %}
+            {%- set battery_alert_level = states("input_number.battery_alerte_level") | float | d(20.0) %}
+            {{ monitored_batteries_bellow_level(battery_entites,battery_alert_level)
+                |from_json }}
+          battery_alert_level: |-
+            {% from 'battery_functions.jinja' import monitored_batteries_entity_ids, monitored_batteries_bellow_level %}
+            {%- set battery_alert_level = states("input_number.battery_alerte_level") | float | d(20.0) %}
+            {{battery_alert_level}}
+          alert: >
+            {% from 'battery_functions.jinja' import monitored_batteries_entity_ids, monitored_batteries_bellow_level %}
+            {%- set battery_entites = monitored_batteries_entity_ids()| from_json %}
+            {%- set battery_alert_level = states("input_number.battery_alerte_level") | float | d(20.0) %}
+            {%- set nb_alert_battery = monitored_batteries_bellow_level(battery_entites,battery_alert_level) |from_json |count | int %}
+            {% if nb_alert_battery == 0 %}
+              {{"Toutes la batteries ont un niveau normales"}}
+            {%else %}
+              {{nb_alert_battery}} batterie{{'s' if nb_alert_battery>1 }} faible{{'s' if nb_alert_battery>1 }} :
+              {%- for entity in state_attr('sensor.nombre_batteries_faibles','entities_ids') %}
+              {{" * "+ state_attr(entity,'friendly_name') + " - ("+ states(entity)+"%)" }}
+              {%- endfor %}
+            {%endif %}
+
+
+
+    binary_sensor:
+      - unique_id: battery_under_level
+        name: Batteries faibles
+        icon: mdi:battery-alert
+        state: >
+          {% from 'battery_functions.jinja' import monitored_batteries_entity_ids, monitored_batteries_bellow_level %}
+
+          {%- set battery_entites = monitored_batteries_entity_ids()| from_json %}
+          {%- set battery_alert_level = states("input_number.battery_alerte_level") | float | d(20.0) %}
+          {{ (monitored_batteries_bellow_level(battery_entites,battery_alert_level)
+              |from_json
+              |count)
+              >= 1}}
+
+alert:
+  low_battery_alert:
+    name: "Alerte batterie(s) faible(s)"
+    message: >
+      {%- set nb_alert_battery = states('sensor.nombre_batteries_faibles') | int %}
+      {{nb_alert_battery}} batterie{{'s' if nb_alert_battery>1 }} faible{{'s' if nb_alert_battery>1 }} :
+      {%- for entity in state_attr('sensor.nombre_batteries_faibles','entities_ids') %}
+      {{" * "+ state_attr(entity,'friendly_name') + " - ("+ states(entity)+"%)" }}
+      {%- endfor %}
+    done_message: >
+      "Toutes la batteries sont de nouveau normales"
+    entity_id: binary_sensor.batteries_faibles
+    state: "on"   # Optional, 'on' is the default value
+    repeat: 1440
+    can_acknowledge: true  # Optional, default is true
+    skip_first: false  # Optional, false is the default
+    notifiers:
+      - notify
+
+
+
+
