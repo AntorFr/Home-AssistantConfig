@@ -174,18 +174,53 @@ script:
     - service: notify.mobile_seb
       data:
         message: Au revoir
-    - service: script.turn_on
-      target:
-        entity_id: 
-          - script.routine_all_light_turn_off
-          - script.routine_all_media_player_off
-          - script.routine_away_all_power_device_off
-          - script.routine_all_cover_close
-          - script.routine_all_garage_door_close
-          - script.routine_all_lock_lock
-          - script.routine_climate_away
-          - script.routine_away_settings
-          - script.routine_reset_lightning_settings
+    - parallel: 
+      - service: script.turn_on
+        continue_on_error: true
+        target:
+          entity_id: 
+            - script.routine_all_light_turn_off
+      - service: script.turn_on
+        continue_on_error: true
+        target:
+          entity_id: 
+            - script.routine_all_media_player_off
+      - service: script.turn_on
+        continue_on_error: true
+        target:
+          entity_id: 
+            - script.routine_away_all_power_device_off
+      - service: script.turn_on
+        continue_on_error: true
+        target:
+          entity_id: 
+            - script.routine_all_cover_close
+      - service: script.turn_on
+        continue_on_error: true
+        target:
+          entity_id: 
+            - script.routine_all_garage_door_close
+      - service: script.turn_on
+        continue_on_error: true
+        target:
+          entity_id: 
+            - script.routine_all_lock_lock
+      - service: script.turn_on
+        continue_on_error: true
+        target:
+          entity_id: 
+            - script.routine_climate_away
+      - service: script.turn_on
+        continue_on_error: true
+        target:
+          entity_id: 
+            - script.routine_away_settings
+      - service: script.turn_on
+        continue_on_error: true
+        target:
+          entity_id: 
+            - script.routine_reset_lightning_settings
+
 ################################################################################
   routine_back_home:
     alias: Routine - Retour maison
@@ -193,12 +228,22 @@ script:
     - service: notify.mobile_seb
       data:
         message: Bienvenue à la maison 
-    - service: script.turn_on
-      target:
-        entity_id: 
-          - script.routine_all_power_device_on
-          - script.routine_all_lock_unlock
-          - script.routine_climate_home
+    - parallel: 
+      - service: script.turn_on
+        continue_on_error: true
+        target:
+          entity_id: 
+            - script.routine_all_power_device_on
+      - service: script.turn_on
+        continue_on_error: true
+        target:
+          entity_id: 
+            - script.routine_all_lock_unlock
+      - service: script.turn_on
+        continue_on_error: true
+        target:
+          entity_id: 
+            - script.routine_climate_home
     - alias: "If sun is up"
       choose:
       - conditions:
@@ -207,6 +252,7 @@ script:
           state: "above_horizon"
         sequence:
           - service: script.turn_on
+            continue_on_error: true
             target:
               entity_id: script.routine_all_cover_open
 ################################################################################
