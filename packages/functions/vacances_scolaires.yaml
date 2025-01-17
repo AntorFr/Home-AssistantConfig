@@ -41,7 +41,21 @@ template:
           {{ aujourdhui >= state_attr('sensor.vacances_scolaires', 'start_date') 
              and aujourdhui <= state_attr('sensor.vacances_scolaires', 'end_date')
              or is_state('binary_sensor.workday_sensor','off') }}
-  - binary_sensor:
+        attributes:
+          vacances: |-
+            {% set aujourdhui = now().strftime('%Y-%m-%d')%}
+            {{ aujourdhui >= state_attr('sensor.vacances_scolaires', 'start_date') 
+             and aujourdhui <= state_attr('sensor.vacances_scolaires', 'end_date') }}
+          dayoff: >
+            {{- is_state('binary_sensor.workday_sensor','off') -}}
+      - name: school_holliday_active
+        #use only to disply holliday title on home page, can be removed when dashboard will add display on attribute.
+        unique_id: binary_sensor.school_holliday_active
+        state: |-
+          {% set aujourdhui = now().strftime('%Y-%m-%d')%}
+          {{ aujourdhui >= state_attr('sensor.vacances_scolaires', 'start_date') 
+             and aujourdhui <= state_attr('sensor.vacances_scolaires', 'end_date')
+          }}
       - name: vacances_scolaires_demain
         unique_id: binary_sensor.vacances_scolaires_demain
         state: |-
@@ -49,3 +63,10 @@ template:
           {{ demain >= state_attr('sensor.vacances_scolaires', 'start_date') 
              and demain <= state_attr('sensor.vacances_scolaires', 'end_date')
              or is_state('binary_sensor.workday_tomorrow','off') }}
+        attributes:
+          vacances: |-
+            {% set demain = (now() + timedelta(days=1)).strftime('%Y-%m-%d') %}
+            {{ demain >= state_attr('sensor.vacances_scolaires', 'start_date') 
+             and demain <= state_attr('sensor.vacances_scolaires', 'end_date') }}
+          dayoff: >
+            {{- is_state('binary_sensor.workday_sensor','off') -}}
