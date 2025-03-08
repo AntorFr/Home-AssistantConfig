@@ -54,6 +54,17 @@ automation:
 
 
 ################################################################################
+- id: 'salle_de_bain_cold_bath_warning'
+  alias: "Area - Salle de bain - Alarme bain froid"
+  description: ''
+  use_blueprint:
+    path: antorfr/hot_water_warning.yaml
+    input:
+      light_target: light.hue_color_lamp_2
+      tank_temperature: water_heater.pac_tank
+      temp_treshold: 40
+
+################################################################################
 homeassistant:
   customize:
    binary_sensor.bathroom_presence_sensor_occupancy:

@@ -11,3 +11,5 @@ template:
         state: "{{ '%+.1f'|format(state_attr('climate.pac_maison','current_temperature')) }}"
         state_class: "measurement"
         device_class: "temperature"
+
+

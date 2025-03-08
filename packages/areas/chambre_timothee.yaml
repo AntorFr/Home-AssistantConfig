@@ -75,7 +75,14 @@ automation:
       long_press: binary_sensor.timothee_bed_switch_long_press
       multi_touch: binary_sensor.timothee_bed_switch_multi_touch
       swipe_left: binary_sensor.timothee_bed_switch_swipe_left
-
+      swipe_right_action:
+        - action: cover.toggle
+          target:
+            area_id: chambre_timothee
+      swipe_left_action:
+        - action: cover.toggle
+          target:
+            area_id: chambre_timothee
 ################################################################################
 - id: 'chambre_timothee_light_switch_entrance'
   alias: Area - Chambre Timothée - Bouton entrée
@@ -99,7 +106,14 @@ automation:
             entity_id: select.display_mode
           data:
             option: Clock
-
+      swipe_right_action:
+        - action: cover.toggle
+          target:
+            area_id: chambre_timothee
+      swipe_left_action:
+        - action: cover.toggle
+          target:
+            area_id: chambre_timothee
 ################################################################################
 - id: 'chambre_timothee_button_volet'
   alias: Area - Chambre Timothée - Bouton volets

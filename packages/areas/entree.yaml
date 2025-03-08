@@ -12,22 +12,20 @@ light:
       - light.hue_ambiance_spot_8
       - light.hue_ambiance_spot_9
 
-template:
-  - binary_sensor:
-    - unique_id: entree presence
-      name: Entrée presence
-      device_class: occupancy
-      state: "{{ is_state('binary_sensor.blumotion_entree_motion','on')}}"
-      delay_off:
-        minutes: 2
-      attributes:
-        room_main: "occupancy"
-      availability: "{{ has_value('binary_sensor.blumotion_entree_motion')}}"
+binary_sensor:
+  - platform: group
+    name: "Capteurs mouvement entrée"
+    device_class: occupancy
+    unique_id: entree_motion_sensors
+    all: false
+    entities:
+      - binary_sensor.blumotion_entree_couloir_motion
+      - binary_sensor.blumotion_entree_motion
 
 sensor:
   - name: mouvement_entree_5min
     platform: history_stats
-    entity_id: binary_sensor.blumotion_entree_motion
+    entity_id: binary_sensor.capteurs_mouvement_entree
     state: "on"
     type: time
     duration: 00:05:00
@@ -62,7 +60,7 @@ automation:
     input:
       light_target:
         entity_id: light.entree_spots
-      motion_sensor: binary_sensor.blumotion_entree_motion
+      motion_sensor: binary_sensor.capteurs_mouvement_entree
       no_motion_wait:
         minutes: 3
       no_motion_warning: 30

@@ -1,0 +1,42 @@
+script:
+################################################################################
+  heating_hot_water_forced:
+    alias: Heating - Eau chaude chauffe forcée
+    icon: mdi:water-boiler-alert
+    sequence:
+      - action: water_heater.set_temperature
+        metadata: {}
+        data:
+          temperature: 65
+        target:
+          entity_id: water_heater.pac_tank
+      - action: switch.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: switch.pac_force_dhw
+      - action: select.select_option
+        metadata: {}
+        data:
+          option: on-90m
+        target:
+          entity_id: select.pac_powerful
+      - delay:
+          hours: 0
+          minutes: 1
+          seconds: 0
+          milliseconds: 0
+      - wait_template: "{{ state_attr('water_heater.pac_tank','current_temperature')> 50 }}"
+        continue_on_timeout: true
+        timeout: "90:00:00"
+      - action: switch.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: switch.pac_force_dhw
+      - action: water_heater.set_temperature
+        metadata: {}
+        data:
+          temperature: 55
+        target:
+          entity_id: water_heater.pac_tank

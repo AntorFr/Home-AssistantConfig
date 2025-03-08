@@ -17,18 +17,6 @@
     data:
       message: Roomba - Lancement auto
   mode: single
-- id: '1691696416271'
-  alias: Automatic Backups
-  description: Automatic Backups
-  use_blueprint:
-    path: jcwillox/automatic_backups.yaml
-    input:
-      backup_action:
-      - service: auto_backup.backup
-        data:
-          name: '{{ name }}'
-          password: '{{ password }}'
-          keep_days: '{{ keep_days }}'
 - id: '1725884405348'
   alias: NSPanel Config
   description: ''

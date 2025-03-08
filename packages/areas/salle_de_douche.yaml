@@ -99,5 +99,5 @@ automation:
     input:
       light_target: light.shower_light_lumi_re_douche
       tank_temperature: water_heater.pac_tank
-      temp_treshold: 25
+      temp_treshold: 35
 

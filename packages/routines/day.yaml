@@ -71,12 +71,20 @@ input_datetime:
   children_night_time_we:
     name: Soirée (we) - enfants couché
     has_time: true
-  children_curfew:
-    name: Soirée - enfants couvre-feu
+  children_curfew_emilie:
+    name: Soirée - Emilie couvre-feu
     has_time: true
     icon: bha:night-light
-  children_curfew_we:
-    name: Soirée (we) - enfants couvre-feu
+  children_curfew_timothee:
+    name: Soirée - Timothée couvre-feu
+    has_time: true
+    icon: bha:night-light
+  children_curfew_we_emilie:
+    name: Soirée (we) - Émilie couvre-feu
+    has_time: true
+    icon: bha:night-light
+  children_curfew_we_timothee:
+    name: Soirée (we) - Timothée couvre-feu
     has_time: true
     icon: bha:night-light
 ################################################################################
@@ -277,15 +285,15 @@ automation:
     target:
       entity_id: switch.adaptive_lighting_sleep_mode_couloir_etage
 ################################################################################
-- id: 'routine_children_curfew'
-  alias: Routine - Day - Enfants couvre-feu
+- id: 'routine_emilie_curfew'
+  alias: Routine - Day - Émilie couvre-feu
   description: ''
   trigger:
   - platform: time
-    at: input_datetime.children_curfew
+    at: input_datetime.children_curfew_emilie
     id: week
   - platform: time
-    at: input_datetime.children_curfew_we
+    at: input_datetime.children_curfew_we_emilie
     id: weekend
   condition:
   - condition: state
@@ -311,7 +319,54 @@ automation:
   - alias: "Fire children night routine event"
     event: routine_event
     event_data:
-      type: children curfew
+      type: emilie curfew
+  #- service: input_select.select_option  
+  #  target:
+  #    entity_id: input_select.day_phase
+  #  data:
+  #    option:  "Soirée - enfants couché"
+  - alias: "Activate curfiew mode"
+    service: input_boolean.turn_on
+    target:
+      entity_id: 
+        #- input_boolean.curfew_timothee
+        - input_boolean.curfew_emilie
+################################################################################
+- id: 'routine_timothee_curfew'
+  alias: Routine - Day - Timothée couvre-feu
+  description: ''
+  trigger:
+  - platform: time
+    at: input_datetime.children_curfew_timothee
+    id: week
+  - platform: time
+    at: input_datetime.children_curfew_we_timothee
+    id: weekend
+  condition:
+  - condition: state
+    entity_id: input_boolean.away_mode
+    state: 'off'
+  - condition: or
+    conditions:
+    - condition: and
+      conditions:
+      - condition: trigger
+        id: week
+      - condition: state
+        entity_id: binary_sensor.vacances_scolaires_demain
+        state: 'off'
+    - condition: and
+      conditions:
+      - condition: trigger
+        id: weekend
+      - condition: state
+        entity_id: binary_sensor.vacances_scolaires_demain
+        state: 'on' 
+  action:
+  - alias: "Fire children night routine event"
+    event: routine_event
+    event_data:
+      type: timothee curfew
   #- service: input_select.select_option  
   #  target:
   #    entity_id: input_select.day_phase
@@ -322,7 +377,7 @@ automation:
     target:
       entity_id: 
         - input_boolean.curfew_timothee
-        - input_boolean.curfew_emilie
+        #- input_boolean.curfew_emilie
 ################################################################################
 - id: 'routine_children_morning'
   alias: Routine - Day - Children morning
