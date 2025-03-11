@@ -91,7 +91,11 @@ automation:
     - platform: state
       entity_id: binary_sensor.sonette_portail_doorbell
       to: 'on'
-
+      id: entree
+    - platform: state
+      entity_id: binary_sensor.sonnette_portail_doorbell
+      to: 'on'
+      id: portail
   action:
   - choose:
     - alias: "Si a la maison"

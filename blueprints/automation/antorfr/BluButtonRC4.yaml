@@ -1,0 +1,215 @@
+blueprint:
+  name: Shelly BLU RC-4  
+  description: Automatisez des actions en utilisant les 4 boutons du Shelly BLU RC-4 avec différents types de pression.
+  domain: automation
+
+  input:
+    button_device:
+      name: Shelly BLU RC-4
+      description: Sélectionnez la télécommande Shelly BLU RC-4.
+      selector:
+        device:
+          integration: bthome
+          multiple: false
+
+    button_1_short:
+      name: Action de pression courte du Bouton 1
+      description: Action lorsque le bouton 1 est pressé brièvement.
+      default: []
+      selector:
+        action: {}
+
+    button_1_double:
+      name: Action de double pression du Bouton 1
+      description: Action lorsque le bouton 1 est pressé deux fois.
+      default: []
+      selector:
+        action: {}
+
+    button_1_triple:
+      name: Action de triple pression du Bouton 1
+      description: Action lorsque le bouton 1 est pressé trois fois.
+      default: []
+      selector:
+        action: {}
+
+    button_1_long:
+      name: Action de pression longue du Bouton 1
+      description: Action lorsque le bouton 1 est pressé longuement.
+      default: []
+      selector:
+        action: {}
+
+    button_2_short:
+      name: Action de pression courte du Bouton 2
+      description: Action lorsque le bouton 2 est pressé brièvement.
+      default: []
+      selector:
+        action: {}
+
+    button_2_double:
+      name: Action de double pression du Bouton 2
+      description: Action lorsque le bouton 2 est pressé deux fois.
+      default: []
+      selector:
+        action: {}
+
+    button_2_triple:
+      name: Action de triple pression du Bouton 2
+      description: Action lorsque le bouton 1 est pressé trois fois.
+      default: []
+      selector:
+        action: {}
+
+    button_2_long:
+      name: Action de pression longue du Bouton 2
+      description: Action lorsque le bouton 2 est pressé longuement.
+      default: []
+      selector:
+        action: {}
+
+    button_3_short:
+      name: Action de pression courte du Bouton 3
+      description: Action lorsque le bouton 3 est pressé brièvement.
+      default: []
+      selector:
+        action: {}
+
+    button_3_double:
+      name: Action de double pression du Bouton 3
+      description: Action lorsque le bouton 3 est pressé deux fois.
+      default: []
+      selector:
+        action: {}
+
+    button_3_triple:
+      name: Action de triple pression du Bouton 3
+      description: Action lorsque le bouton 1 est pressé trois fois.
+      default: []
+      selector:
+        action: {}
+
+    button_3_long:
+      name: Action de pression longue du Bouton 3
+      description: Action lorsque le bouton 3 est pressé longuement.
+      default: []
+      selector:
+        action: {}
+
+    button_4_short:
+      name: Action de pression courte du Bouton 4
+      description: Action lorsque le bouton 4 est pressé brièvement.
+      default: []
+      selector:
+        action: {}
+
+    button_4_double:
+      name: Action de double pression du Bouton 4
+      description: Action lorsque le bouton 4 est pressé deux fois.
+      default: []
+      selector:
+        action: {}
+
+    button_4_triple:
+      name: Action de triple pression du Bouton 4
+      description: Action lorsque le bouton 4 est pressé trois fois.
+      default: []
+      selector:
+        action: {}
+
+    button_4_long:
+      name: Action de pression longue du Bouton 4
+      description: Action lorsque le bouton 4 est pressé longuement.
+      default: []
+      selector:
+        action: {}
+
+mode: restart    
+trigger:
+  - platform: event
+    event_type: bthome_ble_event
+    event_data:
+      device_id: !input button_device
+action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.event_class == ''button_1'' and trigger.event.data.event_type
+          == ''press'' }}'
+      sequence: !input button_1_short
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.event_class == ''button_1'' and trigger.event.data.event_type
+          == ''long_press'' }}'
+      sequence: !input button_1_long
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.event_class == ''button_1'' and trigger.event.data.event_type
+          == ''double_press'' }}'
+      sequence: !input button_1_double
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.event_class == ''button_2'' and trigger.event.data.event_type
+          == ''press'' }}'
+      sequence: !input button_2_short
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.event_class == ''button_2'' and trigger.event.data.event_type
+          == ''long_press'' }}'
+      sequence: !input button_2_long
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.event_class == ''button_2'' and trigger.event.data.event_type
+          == ''double_press'' }}'
+      sequence: !input button_2_double
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.event_class == ''button_3'' and trigger.event.data.event_type
+          == ''press'' }}'
+      sequence: !input button_3_short
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.event_class == ''button_3'' and trigger.event.data.event_type
+          == ''long_press'' }}'
+      sequence: !input button_3_long
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.event_class == ''button_3'' and trigger.event.data.event_type
+          == ''double_press'' }}'
+      sequence: !input button_3_double
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.event_class == ''button_4'' and trigger.event.data.event_type
+          == ''press'' }}'
+      sequence: !input button_4_short
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.event_class == ''button_4'' and trigger.event.data.event_type
+          == ''long_press'' }}'
+      sequence: !input button_4_long
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.event_class == ''button_4'' and trigger.event.data.event_type
+          == ''double_press'' }}'
+      sequence: !input button_4_double
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.event_class == ''button_4'' and trigger.event.data.event_type
+          == ''triple_press'' }}'
+      sequence: !input button_4_triple
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.event_class == ''button_3'' and trigger.event.data.event_type
+          == ''triple_press'' }}'
+      sequence: !input button_3_triple
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.event_class == ''button_2'' and trigger.event.data.event_type
+          == ''triple_press'' }}'
+      sequence: !input button_2_triple
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.event_class == ''button_1'' and trigger.event.data.event_type
+          == ''triple_press'' }}'
+      sequence: !input button_1_triple
+

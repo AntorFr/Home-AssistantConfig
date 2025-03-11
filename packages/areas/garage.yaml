@@ -108,3 +108,55 @@ automation:
         minutes: 2
       only_during_night: true
 ################################################################################
+- id: garage1_bouton_portails
+  alias: Area - Garage 1 - Bonton portails
+  description: ""
+  use_blueprint:
+    path: antorfr/BluButtonRC4.yaml
+    input:
+      button_device: 5e6c3880bf5ab2208c161690e22e6953
+      button_1_short:
+        - if:
+            - condition: state
+              entity_id: alarm_control_panel.alarme_maison
+              state: disarmed
+          then:
+            - action: cover.toggle
+              metadata: {}
+              data: {}
+              target:
+                entity_id: cover.portail_2
+      button_2_short:
+        - if:
+            - condition: state
+              entity_id: alarm_control_panel.alarme_maison
+              state: disarmed
+          then:
+            - action: cover.toggle
+              metadata: {}
+              data: {}
+              target:
+                entity_id: cover.garage_1
+      button_3_short:
+        - if:
+            - condition: state
+              entity_id: alarm_control_panel.alarme_maison
+              state: disarmed
+          then:
+            - action: cover.toggle
+              metadata: {}
+              data: {}
+              target:
+                entity_id: cover.garage_2
+      button_4_short:
+        - if:
+            - condition: state
+              entity_id: alarm_control_panel.alarme_maison
+              state: disarmed
+          then:
+            - action: cover.toggle
+              metadata: {}
+              data: {}
+              target:
+                entity_id: cover.garage_3
+################################################################################

@@ -16,59 +16,36 @@ automation:
 - id: 'chambre_emilie_button_lit'
   alias: Area - Chambre Émilie - Bouton lit
   description: ''
-  mode: restart
-  trigger:
-    - device_id: c6d010664c0f83b44711aa515d987fe0
-      domain: bthome
-      type: button_1
-      subtype: press
-      trigger: device
-      id: button_1_press
-    - device_id: c6d010664c0f83b44711aa515d987fe0
-      domain: bthome
-      type: button_3
-      subtype: press
-      trigger: device
-      id: button_3_press
-    - device_id: c6d010664c0f83b44711aa515d987fe0
-      domain: bthome
-      type: button_2
-      subtype: press
-      trigger: device
-      id: button_2_press
-  condition: []
-  action:
-    - choose:
-      - conditions:
-          - condition: trigger
-            id:
-              - button_1_press
-        sequence: 
-          - action: light.toggle
-            data: {}
-            target:
-              entity_id: light.chambre_emilie_plafonnier
-      - conditions:
-          - condition: trigger
-            id:
-              - button_3_press
-        sequence: 
-          - action: cover.toggle
-            target:
-              area_id: chambre_emilie
-      - conditions:
-          - condition: trigger
-            id:
-              - button_2_press
-        sequence: 
-          - service: light.toggle
-            target:
-              entity_id: light.emilie_clock_led_matrix
-          - service: select.select_option
-            target:
-              entity_id: select.emilie_clock_display_mode
-            data:
-              option: Clock
+  use_blueprint:
+    path: antorfr/BluButtonRC4.yaml
+    input:
+      button_device: c6d010664c0f83b44711aa515d987fe0
+      button_1_short:
+        - action: light.toggle
+          data: {}
+          target:
+            entity_id: light.chambre_emilie_plafonnier
+      button_3_short:
+        - action: cover.toggle
+          target:
+            area_id: chambre_emilie
+          data: {}
+      button_2_short:
+        - action: select.select_option
+          target:
+            entity_id: select.emilie_clock_display_mode
+          data:
+            option: Clock
+        - action: light.toggle
+          target:
+            entity_id: light.emilie_clock_led_matrix
+          data: {}
+      button_4_short:
+        - action: media_player.media_play_pause
+          metadata: {}
+          data: {}
+          target:
+            entity_id: media_player.emilie
 ################################################################################
 - id: 'chambre_emilie_music_curfew'
   alias: Area - Chambre Émilie - couvre-feu musique
