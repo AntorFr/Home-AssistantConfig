@@ -457,7 +457,41 @@ automation:
         entity_id: "{{ media_player_entity_id }}"
     - delay: 2 # timeout before we allow processing next scan
 
- ################################################################################         
+################################################################################
+- id: handle_tag_scan_new
+  alias: "Function - Music manager - Handle Tag Scan 2"
+  mode: single
+  # Hide warnings when triggered while in delay.
+  max_exceeded: silent
+  variables:
+    # Map scanner device ID to media player entity ID
+    media_players:
+      fa37e0c36e836c9a3fa47145157df38f: media_player.emilie_5
+      7b6a7b292afbcb0ad93f19416ce95b43: media_player.timothee_3
+
+    tags:
+      53-EF-D6-D7-60-00-01: "Harry Potter à l'École des Sorciers"
+        
+  trigger:
+    platform: event
+    event_type: tag_scanned
+  condition:
+    # Test that we support this device and tag
+    - "{{ trigger.event.data.tag_id in tags }}"
+    - "{{ trigger.event.data.device_id in media_players }}"
+  action:
+    - variables:
+        media_player_entity_id: "{{ media_players[trigger.event.data.device_id] }}"
+        media_content_id: "{{ tags[trigger.event.data.tag_id] }}"
+    - service: music_assistant.play_media
+      target:
+        entity_id: "{{ media_player_entity_id }}"
+      data:
+        media_id: "{{ media_content_id }}"
+        enqueue: replace
+    - delay: 2 # timeout before we allow processing next scan
+
+ ################################################################################          
 - id: adapte_volume_salon 
   alias: "Function - Music manager - Adapte volume Salon"
   description: ""

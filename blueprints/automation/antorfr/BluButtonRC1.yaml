@@ -1,0 +1,71 @@
+blueprint:
+  name: Shelly BLU RC-1 
+  description: Automatisez des actions en utilisant le bouton du Shelly BLU RC-1 avec différents types de pression.
+  domain: automation
+
+  input:
+    button_device:
+      name: Shelly BLU RC-1
+      description: Sélectionnez la télécommande Shelly BLU RC-1.
+      selector:
+        device:
+          integration: bthome
+          multiple: false
+
+    button_short:
+      name: Action de pression courte du Bouton
+      description: Action lorsque le bouton est pressé brièvement.
+      default: []
+      selector:
+        action: {}
+
+    button_double:
+      name: Action de double pression du Bouton
+      description: Action lorsque le bouton est pressé deux fois.
+      default: []
+      selector:
+        action: {}
+
+    button_triple:
+      name: Action de triple pression du Bouton
+      description: Action lorsque le bouton est pressé trois fois.
+      default: []
+      selector:
+        action: {}
+
+    button_long:
+      name: Action de pression longue du Bouton
+      description: Action lorsque le bouton est pressé longuement.
+      default: []
+      selector:
+        action: {}
+
+mode: restart    
+trigger:
+  - platform: event
+    event_type: bthome_ble_event
+    event_data:
+      device_id: !input button_device
+action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.event_class == ''button'' and trigger.event.data.event_type
+          == ''press'' }}'
+      sequence: !input button_short
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.event_class == ''button'' and trigger.event.data.event_type
+          == ''long_press'' }}'
+      sequence: !input button_long
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.event_class == ''button'' and trigger.event.data.event_type
+          == ''double_press'' }}'
+      sequence: !input button_double
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.event_class == ''button'' and trigger.event.data.event_type
+          == ''triple_press'' }}'
+      sequence: !input button_triple
+
