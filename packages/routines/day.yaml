@@ -458,7 +458,7 @@ automation:
             entity_id: input_boolean.night_mode
             state: 'on'
           - condition: time
-            after: '06:30:00'
+            after: '07:30:00'
             before: '18:00:00'
           - condition: or
             conditions:
