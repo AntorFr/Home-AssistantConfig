@@ -1,0 +1,31 @@
+{%- macro trash_status(sensor,calendar,message) -%}
+  {%- set poubelle_sortie = true if is_state(sensor, 'off') else false %}
+  {%- set poubelle_a_sortir = true if (is_state(calendar, 'on') 
+      and state_attr(calendar, 'message')[:1] == message) else false  %}
+
+  {%- if poubelle_sortie != poubelle_a_sortir  -%}
+    {{true}}
+  {%- else -%}  
+    {{false}}
+  {%- endif -%}
+{%- endmacro -%}
+
+{%- macro trash_message(sensor,calendar,message,poubelle_name) -%}
+  {%- set poubelle_sortie = true if is_state(sensor, 'off') else false %}
+  {%- set poubelle_a_sortir = true if (is_state(calendar, 'on') 
+      and state_attr(calendar, 'message')[:1] == message) else false  %}
+
+  {%- if poubelle_sortie != poubelle_a_sortir  %}
+    {%- if poubelle_sortie == true and poubelle_a_sortir == false  %}
+        {{ "Rentrer la poubelle " + poubelle_name }}
+    {%- elif poubelle_sortie == false and poubelle_a_sortir == true%} 
+        {{ "Sortir la poubelle " + poubelle_name }}
+    {%- endif %}
+  {%- else -%}  
+    {{"Tout va bien"}}
+  {%- endif -%}
+{%- endmacro -%}
+
+
+
+

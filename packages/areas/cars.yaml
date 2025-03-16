@@ -31,3 +31,33 @@ automation:
           target:
             entity_id: input_boolean.away_mode
 ################################################################################
+- id: cars_touran_bouton_portails
+  alias: Area - Voiture - Bonton portails Touran
+  description: ""
+  use_blueprint:
+    path: antorfr/BluButtonRC1.yaml
+    input:
+      button_device: 7a8fda1921edaf11f46af20d157dbbe3
+      button_short:
+        - action: cover.toggle
+          metadata: {}
+          data: {}
+          target:
+            entity_id: cover.portail_2
+      button_double:
+        - action: cover.toggle
+          metadata: {}
+          data: {}
+          target:
+            entity_id: cover.garage_1
+      button_triple:
+        - action: cover.toggle
+          metadata: {}
+          data: {}
+          target:
+            entity_id: cover.garage_2
+      button_long:
+        - action: input_boolean.turn_on
+          target:
+            entity_id: input_boolean.away_mode
+################################################################################

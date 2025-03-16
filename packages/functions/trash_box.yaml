@@ -1,0 +1,29 @@
+template:
+  - binary_sensor:
+    - unique_id: poubelle_emballage
+      name: Poubelle Emballages
+      device_class: problem
+      icon:  mdi:trash-can
+      state: >-
+         {% from 'trash_functions.jinja' import trash_status %}
+         {{trash_status('binary_sensor.garage_ble_relay_poubelle_emballages',
+                        'calendar.poubelle', '🟡')}}
+      attributes:
+        message: >-
+         {% from 'trash_functions.jinja' import trash_message %}
+         {{trash_message('binary_sensor.garage_ble_relay_poubelle_emballages',
+                        'calendar.poubelle', '🟡','emballages')}}
+  - binary_sensor:
+    - unique_id: poubelle_menageres
+      name: Poubelle Ménagères
+      device_class: problem
+      icon:  mdi:trash-can
+      state: >-
+         {% from 'trash_functions.jinja' import trash_status %}
+         {{- trash_status('binary_sensor.garage_ble_relay_poubelle_m_nag_res',
+                        'calendar.poubelle', '🟢')}}
+      attributes:
+        message: >-
+         {% from 'trash_functions.jinja' import trash_message %}
+         {{- trash_message('binary_sensor.garage_ble_relay_poubelle_m_nag_res',
+                        'calendar.poubelle', '🟢','ménagères')}}

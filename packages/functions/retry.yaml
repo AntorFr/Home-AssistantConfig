@@ -38,7 +38,8 @@ script:
             - service: lock.unlock
               target:
                 entity_id: "{{lock}}"
-            - delay: 
+            - wait_template: "{{ is_state(lock,'unlocked') }}"
+              timeout:
                 seconds: "{{delay.seconds}}"
                 minutes: "{{delay.minutes}}"
                 hours: "{{delay.hours}}"
@@ -128,7 +129,8 @@ script:
             - service: lock.lock
               target:
                 entity_id: "{{lock}}"
-            - delay: 
+            - wait_template: "{{ is_state(lock,'locked') }}"
+              timeout:
                 seconds: "{{delay.seconds}}"
                 minutes: "{{delay.minutes}}"
                 hours: "{{delay.hours}}"
