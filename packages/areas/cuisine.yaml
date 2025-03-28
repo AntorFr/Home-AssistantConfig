@@ -12,6 +12,7 @@ binary_sensor:
     entities:
       - binary_sensor.kitchen_presence_sensor_occupancy
       - binary_sensor.blumotion_cuisine_motion
+      - binary_sensor.blumotion_cuisine_entree_motion
 
 light:
   - platform: group

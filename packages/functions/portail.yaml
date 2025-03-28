@@ -62,6 +62,10 @@ automation:
       entity_id: person.laurine
       zone: zone.home
       event: enter
+    - platform: state
+      entity_id: binary_sensor.portail_ble_relay_badge_emilie
+      to: "on"
+      for: '00:00:10'
     - alias: "ios action Je rentre"
       platform: event
       event_type: ios.action_fired
@@ -116,6 +120,8 @@ automation:
             #media_content_id: "media-source://media_source/sounds/bb8_sound.mp3" > sonos doesn't find local url anymore (home.intra.sberard.fr)
             #media_content_id: "https://home.berard.me/http-sounds/bb8_sound.mp3"
             media_content_id: "https://home.berard.me/http-sounds/harrypotter_ringbell.mp3"
+        - action: script.office_door_bell_ring
+          data: {}
             
   - service: notify.all_mobile
     data:

@@ -10,5 +10,22 @@ intents:
       - sentences:
           - "(répond|ouvre) [le portail] (au) Livreur"
         response: default
-
+  StandingDeskUp:
+    data:
+      - sentences:
+          - "<leve> (le) bureau"
+          - "bureau (<position>) debout"
+        response: default
+        expansion_rules:
+            leve: "(leve|lever|<monte>)"
+            position: "(position|mode)"
+  StandingDeskDown:
+    data:
+      - sentences:
+          - "<baisse> (le) bureau"
+          - "bureau (<position>) <assis>"
+        response: default
+        expansion_rules:
+            assis: "(assis|assise)"
+            position: "(position|mode)"
 

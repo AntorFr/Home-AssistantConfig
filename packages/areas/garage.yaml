@@ -1,12 +1,19 @@
-
 sensor:
   - name: mouvement_garage-3_10min
     platform: history_stats
-    entity_id: binary_sensor.garage_3_person_occupancy
+    entity_id: binary_sensor.capteurs_mouvement_garage_3
     state: "on"
     type: time
     duration: 00:10:00
     end: "{{ now() }}"
+  - name: mouvement_garage-2_10min
+    platform: history_stats
+    entity_id: binary_sensor.capteurs_mouvement_garage_2
+    state: "on"
+    type: time
+    duration: 00:10:00
+    end: "{{ now() }}"
+  
 
   - platform: min_max
     type: mean
@@ -49,8 +56,38 @@ binary_sensor:
     unique_id: garage2_motion_sensors
     all: false
     entities:
-      - binary_sensor.porte_garage_2_ouverte
+      - binary_sensor.garage2_presence_sensor_occupancy
 
+  - platform: group #Utilisé pour la lumiere du garage 2
+    name: "Capteurs presence garage 2"
+    device_class: occupancy
+    unique_id: garage2_presence_sensors
+    all: false
+    entities:
+      - binary_sensor.porte_garage_2_ouverte
+      - binary_sensor.capteurs_mouvement_garage_2
+
+  - platform: group
+    name: "Capteurs mouvement garage 3"
+    device_class: occupancy
+    unique_id: garage3_motion_sensors
+    all: false
+    entities:
+      - binary_sensor.garage_3_person_occupancy
+      
+  - platform: group
+    name: "Capteurs mouvement garages 2-3"
+    device_class: occupancy
+    unique_id: garage2-3_motion_sensors
+    all: false
+    entities:
+      - binary_sensor.capteurs_mouvement_garage_2
+      - binary_sensor.capteurs_mouvement_garage_3
+
+input_boolean:
+  auto_light_kill_switch_garage2:
+    name: Lumière mode manuel (garage 2)
+    icon: mdi:autorenew-off
 
 automation:
 ################################################################################
@@ -103,10 +140,14 @@ automation:
       light_target:
         entity_id: 
           - light.plafonnier_garage_2
-      motion_sensor: binary_sensor.capteurs_mouvement_garage_2
+      motion_sensor: binary_sensor.capteurs_presence_garage_2
       no_motion_wait: 
         minutes: 2
-      only_during_night: true
+      only_during_night: false
+      light_sensor: sensor.garage2_presence_sensor_light_sensor
+      lux_cutoff: 30
+      lux_sun_cutoff: 100
+      kill_switch: input_boolean.auto_light_kill_switch_garage2    
 ################################################################################
 - id: garage1_bouton_portails
   alias: Area - Garage 1 - Bonton portails

@@ -5,3 +5,69 @@ template:
         unique_id: "idasen_ble_connected"
         state: >
           {{not is_state('cover.desk_6897','unavailable')}}
+  - sensor:
+      - name: "idasen ble desk relative height"
+        device_class: distance
+        unit_of_measurement: 'cm'
+        unique_id: "idasen_ble_relative_height"
+        state: >
+          {{((states('sensor.desk_6897_hauteur')| float) *100 - 62)|int}}
+
+
+script:
+  move_desk_preset:
+    alias: Integration - Desk move to preset
+    description: Permet de monter ou descendre le bureau en fonction des preset choisis par l'utilisateur
+    icon: mdi:desk
+    sequence:
+      - choose:
+          - conditions:
+              - condition: template
+                value_template: "{{position == 'debout'}}"
+            sequence:
+              - action: cover.set_cover_position
+                target:
+                  entity_id: cover.desk_6897
+                metadata: {}
+                data:
+                  position: 62
+          - conditions:
+              - condition: template
+                value_template: "{{position == 'assis'}}"
+            sequence:
+              - action: cover.set_cover_position
+                target:
+                  entity_id: cover.desk_6897
+                metadata: {}
+                data:
+                  position: 17
+    fields:
+      position:
+        selector:
+          select:
+            options: 
+              - assis
+              - debout
+        name: Position
+        required: true
+
+
+intent_script:
+###############################################################################
+  StandingDeskUp:
+    async_action: true
+    speech:
+      text: "Ok, je leve le bureau"
+    action:
+      - action: script.move_desk_preset
+        data:
+          position: debout
+###############################################################################
+  StandingDeskDown:
+    async_action: true
+    speech:
+      text: "Ok, je baisse le bureau"
+    action:
+      - action: script.move_desk_preset
+        data:
+          position: assis

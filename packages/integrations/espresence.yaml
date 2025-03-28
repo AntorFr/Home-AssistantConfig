@@ -20,6 +20,13 @@ sensor:
     state_topic: "espresense/devices/ipad_seb"
     timeout: 10
     away_timeout: 120
+  - platform: mqtt_room
+    name: "Badge Emilie"
+    device_id: "itag:ffff10db8e30"
+    unique_id: "espresence_badge_emilie"
+    state_topic: "espresense/devices/itag:ffff10db8e30"
+    timeout: 10
+    away_timeout: 120
 
 template:
   - trigger:

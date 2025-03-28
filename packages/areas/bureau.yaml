@@ -30,8 +30,10 @@ sensor:
 input_boolean:
   auto_light_kill_switch_bureau:
     name: Lumière mode manuel (bureau)
-    initial: false
     icon: mdi:autorenew-off
+  meeting_mode:
+    name: mode reunion
+    icon: mdi:monitor-account
 
 automation:
 ################################################################################
@@ -374,6 +376,91 @@ automation:
           data: {}
           target:
             entity_id: button.desk_6897_connect
+################################################################################
+- id: office_meeting_mode
+  alias: Area - Bureau - mode réunion
+  description: "Manage le mode réunion"
+  mode: single
+  triggers:
+    - trigger: state
+      entity_id:
+        - input_boolean.meeting_mode
+      to: "on"
+      id: mode_reunion_on
+    - trigger: state
+      entity_id:
+        - input_boolean.meeting_mode
+      to: "off"
+      id: mode_reunion_off
+    - trigger: state
+      entity_id:
+        - binary_sensor.capteurs_mouvement_bureau
+      to: "off"
+      id: presence_bureau_off
+  conditions: []
+  actions:
+    - choose:
+        - alias: mode_reunion_on
+          conditions:
+            - condition: trigger
+              id:
+                - mode_reunion_on
+          sequence:
+            - action: media_player.media_stop
+              metadata: {}
+              data: {}
+              target:
+                area_id: bureau
+        - alias: presence_bureau_off
+          conditions:
+            - condition: trigger
+              id:
+                - presence_bureau_off
+          sequence:
+            - action: input_boolean.turn_off
+              metadata: {}
+              data: {}
+              target:
+                entity_id: input_boolean.meeting_mode
+################################################################################
+
+script:
+################################################################################
+  office_door_bell_ring:
+    alias: Bureau - Sonnette
+    sequence:
+      - if:
+          - alias: "Si en éunion"
+            condition: state
+            entity_id: input_boolean.meeting_mode
+            state: "off"
+        then:
+          - action: script.sound_notify
+            data:
+              media_player_entities:
+                - media_player.bureau
+              #media_content_id: "media-source://media_source/sounds/bb8_sound.mp3" > sonos doesn't find local url anymore (home.intra.sberard.fr)
+              #media_content_id: "https://home.berard.me/http-sounds/bb8_sound.mp3"
+              media_content_id: "https://home.berard.me/http-sounds/harrypotter_ringbell.mp3"
+        else:
+          - action: select.select_option
+            metadata: {}
+            data:
+              option: DoorBell
+            target:
+              entity_id: select.wled_preset
+          - delay:
+              seconds: 30
+          - action: select.select_option
+            metadata: {}
+            data:
+              option: default
+            target:
+              entity_id: select.wled_preset
+
+
+
+
 
 
 
