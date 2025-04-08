@@ -199,5 +199,5 @@ automation:
               metadata: {}
               data: {}
               target:
-                entity_id: cover.garage_3
+                entity_id: cover.garage_door_3_garage_3
 ################################################################################

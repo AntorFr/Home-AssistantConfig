@@ -6,6 +6,7 @@ binary_sensor:
     all: false
     entities:
       - binary_sensor.couloir_etage_capteur_mouvement_occupancy
+      - binary_sensor.blumotion_couloir_etage_motion
       - binary_sensor.blumotion_escalier_haut_motion
       - binary_sensor.blumotion_escalier_bas_motion
       - binary_sensor.couloir_person_occupancy

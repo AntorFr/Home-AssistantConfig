@@ -21,6 +21,7 @@ binary_sensor:
     entities:
       - binary_sensor.blumotion_entree_couloir_motion
       - binary_sensor.blumotion_entree_motion
+      - binary_sensor.blumotion_escalier_bas_motion
 
 sensor:
   - name: mouvement_entree_5min
