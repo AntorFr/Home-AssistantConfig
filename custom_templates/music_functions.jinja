@@ -1,12 +1,34 @@
 {% from 'room_functions.jinja' import areas_entities %}
 
-{%- macro sonos_in_area(areas) -%}
-    {{ expand(integration_entities("sonos")) 
+{%- macro media_from_integration_in_areas(areas,integration) -%}
+    {{ expand(integration_entities(integration)) 
     | selectattr('domain','eq','media_player')
     | selectattr('state', 'ne', 'unavailable')
     | selectattr('entity_id', 'in', (areas_entities(areas)| from_json))
     | map(attribute="entity_id")
     | list | to_json }}
+{%- endmacro -%}
+
+{%- macro sonos_in_areas(areas) -%}
+    {{media_from_integration_in_areas(areas,"sonos")}}
+{%- endmacro -%}
+
+{%- macro mass_in_areas(areas) -%}
+    {{media_from_integration_in_areas(areas,"Music Assistant")}}
+{%- endmacro -%}
+
+{%- macro espmedia_in_areas(areas) -%}
+    {{media_from_integration_in_areas(areas,"esphome")}}
+{%- endmacro -%}
+
+{%- macro media_in_areas(areas) -%}
+  {%- if(sonos_in_areas(areas)|from_json|count) > 0  -%}
+    {{sonos_in_areas(areas)}}
+  {%- elif(espmedia_in_areas(areas)|from_json|count) > 0  -%}  
+    {{espmedia_in_areas(areas)}}
+  {%- else -%}
+    {{[]}}
+  {%- endif -%}
 {%- endmacro -%}
 
 {%- macro sonos_not_playing_tv(entity_id) -%}
@@ -27,7 +49,6 @@
 {%- endmacro -%}
 
 {%- macro media_player_get_masters(entity_ids) -%}
-
     {% set ns = namespace(players = []) %}
     {% for player in expand(entity_ids) 
         | selectattr('attributes.group_members', 'defined')

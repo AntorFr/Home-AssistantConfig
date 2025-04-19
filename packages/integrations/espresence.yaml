@@ -27,6 +27,13 @@ sensor:
     state_topic: "espresense/devices/itag:ffff10db8e30"
     timeout: 10
     away_timeout: 120
+  - platform: mqtt_room
+    name: "Badge Timothée"
+    device_id: "itag:ffff1159488a"
+    unique_id: "espresence_badge_timothee"
+    state_topic: "espresense/devices/itag:ffff1159488a"
+    timeout: 10
+    away_timeout: 120
 
 template:
   - trigger:

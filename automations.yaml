@@ -42,30 +42,4 @@
       entity02: input_boolean.night_mode
       entity02_name: Mode nuit
       entity02_icon: mdi:weather-night
-- id: '1741521163324'
-  alias: Portail NFC/Fingerprint
-  description: ''
-  triggers:
-  - event_type: state_changed
-    event_data:
-      entity_id: event.sonnette_portail_fingerprint
-    trigger: event
-  - trigger: event
-    event_type: state_changed
-    event_data:
-      entity_id: event.sonnette_portail_nfc
-  conditions:
-  - condition: template
-    value_template: "{{\n   not trigger.event.data.old_state.attributes.get('restored',
-      false) and\n   not trigger.event.data.old_state.state == 'unavailable' and\n
-      \  trigger.event.data.new_state is not none and\n   trigger.event.data.new_state.attributes.event_type
-      == 'identified' and\n   (trigger.event.data.new_state.attributes.full_name|default(''))
-      != '' and\n   trigger.event.data.new_state.attributes.full_name in ['Sébastien
-      BERARD', 'Émilie BERARD']\n }}"
-  actions:
-  - action: cover.open_cover
-    metadata: {}
-    data: {}
-    target:
-      entity_id: cover.portail_2
-  mode: single
+

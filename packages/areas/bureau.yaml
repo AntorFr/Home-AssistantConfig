@@ -430,7 +430,7 @@ script:
     alias: Bureau - Sonnette
     sequence:
       - if:
-          - alias: "Si en éunion"
+          - alias: "Si en réunion"
             condition: state
             entity_id: input_boolean.meeting_mode
             state: "off"

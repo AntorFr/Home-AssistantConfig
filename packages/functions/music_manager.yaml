@@ -262,8 +262,8 @@ script:
 
             {{rooms}}
           media_players: > 
-            {%- from 'music_functions.jinja' import sonos_in_area, sonos_not_playing_tv -%}
-            {{sonos_not_playing_tv(sonos_in_area(rooms)|from_json)|from_json }}
+            {%- from 'music_functions.jinja' import sonos_in_areas, sonos_not_playing_tv -%}
+            {{sonos_not_playing_tv(sonos_in_areas(rooms)|from_json)|from_json }}
           media_player_id: "{{ media_players | first }}"
           group_members: "{{ media_players | reject('eq', media_player_id) | list }}"            
           public: >
@@ -464,11 +464,6 @@ automation:
   # Hide warnings when triggered while in delay.
   max_exceeded: silent
   variables:
-    # Map scanner device ID to media player entity ID
-    media_players:
-      fa37e0c36e836c9a3fa47145157df38f: media_player.emilie_5
-      7b6a7b292afbcb0ad93f19416ce95b43: media_player.timothee_3
-
     tags:
       53-EF-D6-D7-60-00-01: "Harry Potter à l'École des Sorciers"
         
@@ -478,10 +473,11 @@ automation:
   condition:
     # Test that we support this device and tag
     - "{{ trigger.event.data.tag_id in tags }}"
-    - "{{ trigger.event.data.device_id in media_players }}"
   action:
     - variables:
-        media_player_entity_id: "{{ media_players[trigger.event.data.device_id] }}"
+        media_player_entity_id: >-
+          {% from 'music_functions.jinja' import sonos_in_areas, mass_in_areas  %}
+          {{mass_in_areas(area_id(trigger.event.data.device_id))|from_json | first}}
         media_content_id: "{{ tags[trigger.event.data.tag_id] }}"
     - service: music_assistant.play_media
       target:

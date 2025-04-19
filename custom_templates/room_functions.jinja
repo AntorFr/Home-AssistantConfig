@@ -24,6 +24,11 @@
     {{ (area_ids + (area_list| map("area_id") | reject('none') |  unique |list)) | to_json}}
 {%- endmacro -%}
 
+{%- macro area_id_tolerent(area) -%}
+    {{area_ids(area)|from_json|first|d(None)}}
+{%- endmacro -%}
+
+
 
 {%- macro area_entity_id(area, label) -%}
     {{area_entities(area)| select('in', label_entities(label)) | first | d(none) }}
@@ -75,6 +80,20 @@
     | reject('contains','color')
     | reject('contains','brightness')
     | first}}
+{%- endmacro -%}
+
+{%- macro is_area_in_quiet_mode(area) -%}
+  {%- set area = area_id_tolerent(area) -%}
+  {%- set quiet_mode_room =
+    expand(label_entities("quiet_mode_flag")) 
+    | selectattr('domain','eq','input_boolean')
+    | selectattr('state', 'eq', "on")
+    | map(attribute="entity_id") 
+    | map('area_id')
+    | list  -%}
+  {{ true if ((None in quiet_mode_room) 
+          or (area in quiet_mode_room)) 
+          else false }}
 {%- endmacro -%}
 
 

@@ -175,8 +175,8 @@ script:
             {%- set area_list = area_list + ["bureau"] -%}
           {%- endif -%}
 
-          {%- from 'music_functions.jinja' import sonos_in_area -%}
-          {{sonos_in_area(area_list)|from_json}}
+          {%- from 'music_functions.jinja' import sonos_in_areas -%}
+          {{sonos_in_areas(area_list)|from_json}}
     - service: chime_tts.say
       data:
         tts_platform: cloud
@@ -210,24 +210,63 @@ script:
     sequence:
     - variables:
         media_player: >
-          {%- from 'music_functions.jinja' import sonos_in_area -%}
-          {% from 'room_functions.jinja' import is_area_entity_room %}
+          {%- from 'music_functions.jinja' import media_in_areas -%}
+          {% from 'room_functions.jinja' import is_area_entity_room, is_area_in_quiet_mode %}
 
           {%- if person == "person.emilie"  -%}
-            {{sonos_in_area('chambre_emilie')|from_json}}
+            {%- if not is_area_in_quiet_mode("chambre_emilie")  -%}
+              {{media_in_areas('chambre_emilie')|from_json}}
+            {%- endif -%}
           {%- elif person == "person.timothee"  -%}
-            {{sonos_in_area('chambre_emilie')|from_json}}
-          {%- else  -%}
-            {%- if is_area_entity_room('bureau','occupancy','on') -%}
-              {{sonos_in_area('bureau')|from_json}}
+            {%- if not is_area_in_quiet_mode("chambre_timothee")  -%}
+              {{media_in_areas('chambre_timothee')|from_json}}
+            {%- endif -%}
+          {%- elif person == "person.sebastien"  -%}
+            {%- if (is_state("person.sebastien", 'home')) and 
+                   (not is_area_in_quiet_mode(states('sensor.room_seb'))) -%}
+              {{media_in_areas(states('sensor.room_seb'))|from_json}}
+            {%- endif -%}           
+          {%- endif -%}
+
+        action: >
+          {%- if media_player != ''  -%}
+            {{"tts.cloud_say"}}
+          {%- else -%}
+            {%- if person == "person.sebastien"  -%}
+              {{"notify.mobile_seb"}}
+            {%- elif person == "person.laurine" -%}
+              {{"notify.mobile_laurine"}}
             {%- endif -%}
           {%- endif -%}
 
-    - service: tts.cloud_say
-      data:
-        entity_id: "{{media_player}}"
-        message: "{{message}}"
-        cache: false
+    - choose:
+      - conditions:
+          - condition: template
+            value_template: >
+              {{action == "tts.cloud_say"}}
+        sequence:
+          - action: tts.cloud_say
+            data:
+              entity_id: "{{media_player}}"
+              message: "{{message}}"
+              cache: false
+      - conditions:
+          - condition: template
+            value_template: >
+              {{action == "notify.mobile_seb"}}
+        sequence:
+          - action: notify.mobile_seb
+            data:
+              message: "{{message}}"
+      - conditions:
+          - condition: template
+            value_template: >
+              {{action == "notify.mobile_laurine"}}
+        sequence:
+          - action: notify.mobile_laurine
+            data:
+              message: "{{message}}"
+
 ###############################################
   bus_time_warning:
     alias: "Notification heure de départ"
