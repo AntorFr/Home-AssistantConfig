@@ -229,7 +229,7 @@ automation:
               data:
                 persons: "{{state_attr(trigger.entity_id, 'friendly_name')}}"
               target:
-                entity_id: camera.camera_bureau_2
+                entity_id: camera.camera_bureau
         - conditions:
             - condition: template
               value_template: "{{trigger.to_state.state == 'not_home' }}"
@@ -238,7 +238,7 @@ automation:
               data:
                 persons: "{{state_attr(trigger.entity_id, 'friendly_name')}}"
               target:
-                entity_id: camera.camera_bureau_2
+                entity_id: camera.camera_bureau
       default: []
   mode: parallel
 ################################################################################

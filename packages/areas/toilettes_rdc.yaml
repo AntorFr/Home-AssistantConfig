@@ -5,7 +5,6 @@ binary_sensor:
     unique_id: toilettes_rdc_motion_sensors
     all: false
     entities:
-      - binary_sensor.toilettes_rdc_capteur_de_mouvement_occupancy
       - binary_sensor.blumotion_toilettes_rdc_motion
 sensor:
   - name: mouvement_wc_rdc_5min

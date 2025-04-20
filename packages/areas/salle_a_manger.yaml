@@ -5,7 +5,6 @@ binary_sensor:
     unique_id: salle_a_manger_motion_sensors
     all: false
     entities:
-      - binary_sensor.salle_a_manger_capteur_mouvement_occupancy
       - binary_sensor.presence_sensor_dining_occupancy
 
 template:
