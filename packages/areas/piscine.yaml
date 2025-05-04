@@ -28,6 +28,9 @@ sensor:
     duration: "24:00:00"
     end: "{{now()}}"
 
+
+
+
 binary_sensor:
   - platform: template
     sensors:
@@ -36,7 +39,7 @@ binary_sensor:
         friendly_name: Piscine Sécurisée
         value_template: >
           {{is_state('input_boolean.alarme_piscine', 'on') 
-          and not(is_state('binary_sensor.piscine_capteur_porte_door','off'))
+          and not(is_state('binary_sensor.bludoor_porte_piscine_window','off'))
           and not(is_state('binary_sensor.indoor_pool_person_occupancy', 'on'))
           }}
   - platform: group
@@ -61,9 +64,9 @@ alert:
   swiming_pool:
     name: "Porte Piscine non sécurisée"
     message: >
-      {% if is_state('binary_sensor.piscine_capteur_porte_door', 'on') %}
+      {% if is_state('binary_sensor.bludoor_porte_piscine_window', 'on') %}
       Attention, la porte de la piscine est restée ouverte sans personne
-      {% elif is_state('binary_sensor.piscine_capteur_porte_door', 'unavailable') %}
+      {% elif is_state('binary_sensor.bludoor_porte_piscine_window', 'unavailable') %}
       Attention, la porte de la piscine est déconnectée.
       {% else %}
       Tout va bien
@@ -169,12 +172,21 @@ automation:
           - light.piscine_lumiere_immergee
           - light.piscine_lumiere_2
       motion_sensor:
-        - binary_sensor.piscine_capteur_porte_door
+        - binary_sensor.bludoor_porte_piscine_window
         - binary_sensor.indoor_pool_person_occupancy
       no_motion_wait:
         minutes: 10
       no_motion_warning: 0
       only_during_night: true
+      toggle_trigger:
+        trigger: event
+        event_type: bthome_ble_event
+        id: toggle
+        event_data:
+          device_id: ecf931882ac3ddf74d38872a8263d187
+          event_class: button
+          event_type: press
+
 ################################################################################
 #- id: 'Swimingpool_auto_filtering_barry'
 #  alias: Area - Piscine - Filtration automatique (barry)

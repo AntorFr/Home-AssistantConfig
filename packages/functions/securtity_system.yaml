@@ -55,9 +55,9 @@ alert:
   swiming_pool:
     name: "Porte Piscine non sécurisée"
     message: >
-      {% if is_state('binary_sensor.piscine_capteur_porte_door', 'on') %}
+      {% if is_state('binary_sensor.bludoor_porte_piscine_window', 'on') %}
       Attention, la porte de la piscine est restée ouverte sans personne
-      {% elif is_state('binary_sensor.piscine_capteur_porte_door', 'unavailable') %}
+      {% elif is_state('binary_sensor.bludoor_porte_piscine_window', 'unavailable') %}
       Attention, la porte de la piscine est déconnectée.
       {% else %}
       Tout va bien

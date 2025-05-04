@@ -7,12 +7,16 @@ automation:
       entity_id:
         - sensor.prusa_mk4s_enclosure_2
         - sensor.prusa_mk4s
+      from: 
+        - idle
+        - finished
+        - ready
       to: printing
 
   action:
     - service: notify.mobile_seb
       data:
-        message: "{{ state_attr(trigger.event.data.entity_id, 'friendly_name') }} - Debut impression"
+        message: "{{ state_attr(trigger.entity_id, 'friendly_name') }} - Debut impression"
 
 ################################################################################
 - id: 3dprint_end
@@ -22,11 +26,14 @@ automation:
       entity_id:
         - sensor.prusa_mk4s_enclosure_2
         - sensor.prusa_mk4s
+      from: 
+        - printing
+        - busy
       to: finished
   action:
     - service: notify.mobile_seb
       data:
-        message: "{{ state_attr(trigger.event.data.entity_id, 'friendly_name') }} - impression terminée"
+        message: "{{ state_attr(trigger.entity_id, 'friendly_name') }} - impression terminée"
 ################################################################################
 - id: 3dprint_error
   alias: 'Function - 3D Printer - Erreur'
@@ -35,10 +42,18 @@ automation:
       entity_id:
         - sensor.prusa_mk4s_enclosure_2
         - sensor.prusa_mk4s
+      from: 
+        - idle
+        - finished
+        - ready
+        - printing
+        - busy
+        - paused
+        - stopped
       to: 
         - error
         - attention
   action:
     - service: notify.mobile_seb
       data:
-        message: "{{ state_attr(trigger.event.data.entity_id, 'friendly_name') }} - Probleme détecté"
+        message: "{{ state_attr(trigger.entity_id, 'friendly_name') }} - Probleme détecté"
