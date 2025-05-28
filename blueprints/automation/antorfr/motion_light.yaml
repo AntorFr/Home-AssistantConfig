@@ -337,7 +337,15 @@ condition:
               - alias: "presence in the room" 
                 condition: template
                 value_template: >
-                  {{ expand(motion_sensor) | selectattr("state", "==", "on") | list | count > 0 }}            
+                  {{ expand(motion_sensor) | selectattr("state", "==", "on") | list | count > 0 }}  
+              - alias: "light just not turned off recently" 
+                condition: template
+                value_template: >
+                  {{ expand(light_entities)
+                    | selectattr('state', 'equalto', 'off')
+                    | selectattr('last_changed', '>', now() - timedelta(seconds=10))
+                    | list| count <= 0  }}
+
           - alias: "Too much light, Sun detected"
             condition: trigger
             id: 'lux_sensor_sun'            
