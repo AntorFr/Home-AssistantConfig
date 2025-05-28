@@ -127,11 +127,17 @@ blueprint:
       selector:
         action: {}
     swipe_left_action:
-      default: []
+      default: 
+        - action: cover.toggle
+          target:
+            area_id: "{{room}}"
       selector:
         action: {}
     swipe_right_action:
-      default: []
+      default: 
+        - action: cover.toggle
+          target:
+            area_id: "{{room}}"
       selector:
         action: {}
 # If motion is detected within the delay,
