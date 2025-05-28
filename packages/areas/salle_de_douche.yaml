@@ -1,11 +1,11 @@
 homeassistant:
   customize:
-   binary_sensor.capteurs_mouvement_salle_de_bain:
+   binary_sensor.capteurs_mouvement_salle_de_douche:
       room_main: occupancy
 
 binary_sensor:
   - platform: group
-    name: "Capteurs mouvement salle de bain"
+    name: "Capteurs mouvement salle de douche"
     device_class: occupancy
     unique_id: salle_de_douche_motion_sensors
     all: false
@@ -40,7 +40,7 @@ automation:
       light_target:
         entity_id: light.salle_de_douche_lumieres
       adaptive_lighting: switch.adaptive_lighting_salle_de_douche
-      motion_sensor: binary_sensor.capteurs_mouvement_salle_de_bain
+      motion_sensor: binary_sensor.capteurs_mouvement_salle_de_douche
       only_turn_off: false   
       no_motion_wait:
         minutes: 10

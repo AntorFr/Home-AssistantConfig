@@ -179,12 +179,15 @@ automation:
         entity_id: event.sonnette_portail_nfc
   conditions:
     - condition: template
-      value_template: "{{\n   not trigger.event.data.old_state.attributes.get('restored',
-        false) and\n   not trigger.event.data.old_state.state == 'unavailable' and\n
-        \  trigger.event.data.new_state is not none and\n   trigger.event.data.new_state.attributes.event_type
-        == 'identified' and\n   (trigger.event.data.new_state.attributes.full_name|default(''))
-        != '' and\n   trigger.event.data.new_state.attributes.full_name in ['Sébastien
-        BERARD', 'Émilie BERARD']\n }}"
+      value_template: >
+        {{  not trigger.event.data.old_state.attributes.get('restored', false) and   
+            not trigger.event.data.old_state.state == 'unavailable' and
+            trigger.event.data.new_state is not none and
+            trigger.event.data.new_state.attributes.event_type in ['identified','scanned'] and
+            (trigger.event.data.new_state.attributes.full_name|default('')) != '' and  
+            trigger.event.data.new_state.attributes.full_name 
+              in ['Sébastien BERARD', 'Émilie BERARD', 'Timothée BERARD', 'Laurine Flavigny'] 
+        }}
   actions:
     - action: cover.open_cover
       metadata: {}
