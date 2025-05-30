@@ -20,6 +20,7 @@ light:
 sensor:
   - platform: history_stats
     name: Durée Tv aujourd'hui
+    unique_id: salon_tv_duration_today
     entity_id: media_player.tv01
     state: "on"
     type: time
@@ -27,6 +28,7 @@ sensor:
     end: "{{ now().replace(hour=21, minute=0, second=0) }}"
   - platform: history_stats
     name: Durée Apple Tv aujourd'hui
+    unique_id: salon_apple_tv_duration_today
     entity_id: media_player.apple_tv_salon
     state: "playing"
     type: time
@@ -35,6 +37,7 @@ sensor:
 
   - name: mouvement_salon_5min
     platform: history_stats
+    unique_id: salon_motion_sensor_duration
     entity_id: binary_sensor.capteurs_mouvement_salon
     state: "on"
     type: time
