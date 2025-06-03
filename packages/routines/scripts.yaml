@@ -403,6 +403,7 @@ script:
         locks:
           - lock.nuki_gateway_kitchen_nuki_lock
           - lock.nuki_gateway_entrance_nuki_lock
+
 ## Thermostat / Chauffage ###
 ################################################################################
   routine_climate_home:
@@ -476,3 +477,21 @@ script:
           - input_boolean.curfew_emilie
           - input_boolean.night_mode_emilie
           - input_boolean.night_mode_timothee
+################################################################################
+  routine_night_settings:
+    alias: Routine - Parametres nuit
+    sequence:
+    - alias: "Disable listen light"
+      service: switch.turn_off
+      target:
+        entity_id: 
+          - switch.esp_assistant_parent_use_listen_light
+################################################################################
+  routine_day_settings:
+    alias: Routine - Parametres Jour
+    sequence:
+    - alias: "Enable listen light"
+      service: switch.turn_on
+      target:
+        entity_id: 
+          - switch.esp_assistant_parent_use_listen_light

@@ -128,14 +128,14 @@ automation:
       message: "Quelqu'un sonne au portail"
       data:
         #ios
-        entity_id: camera.g4_doorbell_high
+        entity_id: camera.g4_doorbell_pro_white_high_resolution_channel
         push:
           sound:
             name: "default"
             critical: 1
             volume: 1.0
         #android
-        image: "/api/camera_proxy/camera.g4_doorbell_high"
+        image: "/api/camera_proxy/camera.g4_doorbell_pro_white_high_resolution_channel"
         ttl: 0
         priority: high
 

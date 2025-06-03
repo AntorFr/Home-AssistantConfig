@@ -680,6 +680,11 @@ script:
         continue_on_error: true
         target:
           entity_id: 
+            - script.routine_night_settings
+      - service: script.turn_on
+        continue_on_error: true
+        target:
+          entity_id: 
             - script.routine_reset_lightning_settings
     - delay:
         seconds: 10
@@ -719,6 +724,12 @@ script:
         target:
           entity_id: 
             - script.routine_all_power_device_on
+      - service: script.turn_on
+        continue_on_error: true
+        target:
+          entity_id: 
+            - script.routine_day_settings
+
     - alias: "If sun is up"
       choose:
       - conditions:

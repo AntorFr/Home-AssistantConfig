@@ -27,7 +27,7 @@ light:
     name: Chambre parents lumieres
     entities:
       - light.chambre
-      - light.veilleuse_lit_parent
+      - light.parent_bed_light
       - light.chambre_parent_coeur_ardent
       - light.smart_bed_parent_lumi_re_gauche
 
@@ -161,18 +161,14 @@ automation:
       sequence:
         - service: light.toggle
           target:
-            entity_id: light.veilleuse_lit_parent
-          data:
-            brightness_pct: 100
-            effect: autoPlay
-            color_name: white
+            entity_id: light.parent_bed_light
     - conditions: 
       - condition: trigger
         id: action_2_double
       sequence:
         - service: light.turn_on
           target:
-            entity_id: light.veilleuse_lit_parent
+            entity_id: light.parent_bed_light
           data:
             color_name: red
             effect: color
@@ -183,7 +179,7 @@ automation:
       sequence:
         - service: light.turn_on
           target:
-            entity_id: light.veilleuse_lit_parent
+            entity_id: light.parent_bed_light
           data:
             color_name: red
             effect: color
@@ -350,7 +346,7 @@ automation:
       sequence:
         - service: light.toggle
           target:
-            entity_id: light.veilleuse_lit_parent
+            entity_id: light.parent_bed_light
           data:
             brightness_pct: 100
             effect: autoPlay
@@ -362,7 +358,7 @@ automation:
         - service: light.turn_on
           target:
             entity_id:
-              - light.veilleuse_lit_parent
+              - light.parent_bed_light
           data:
             color_name: red
             effect: color
@@ -374,7 +370,7 @@ automation:
         - service: light.turn_on
           target:
             entity_id:
-              - light.veilleuse_lit_parent
+              - light.parent_bed_light
           data:
             color_name: red
             effect: color
