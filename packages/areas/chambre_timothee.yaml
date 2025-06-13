@@ -266,8 +266,8 @@ script:
             - chambre_timothee
           title: Sleepy Ghibli
       - delay:
-          hours: 20
-          minutes: 0
+          hours: 0
+          minutes: 20
           seconds: 0
           milliseconds: 0
       - action: script.play_mood_music
