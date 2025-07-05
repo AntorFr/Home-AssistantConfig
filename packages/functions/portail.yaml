@@ -71,6 +71,9 @@ automation:
       event_type: ios.action_fired
       event_data:
         actionName: "Retour Maison"
+    - platform: tag
+      alias: Lapin bureau
+      tag_id: 7A-E5-4D-3D     
   condition: 
     condition: state
     entity_id: cover.portail_2

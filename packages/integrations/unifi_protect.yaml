@@ -1,0 +1,25 @@
+  template:
+    - trigger:
+        - platform: webhook
+          webhook_id: -KpD-WilXJg7cUBMRBLiigPpN
+      binary_sensor:
+        - name: "Visage Sébastien"
+          icon: "mdi:face-recognition"
+          state: "{{ trigger.json.alarm.triggers[0].value == 'Sébastien' }}"
+          auto_off: 10
+          device_class: motion
+        - name: "Visage Laurine"
+          icon: "mdi:face-recognition"
+          state: "{{ trigger.json.alarm.triggers[0].value == 'Laurine' }}"
+          auto_off: 10
+          device_class: motion
+        - name: "Visage Émilie"
+          icon: "mdi:face-recognition"
+          state: "{{ trigger.json.alarm.triggers[0].value == 'Émilie' }}"
+          auto_off: 10
+          device_class: motion
+        - name: "Visage Timothée"
+          icon: "mdi:face-recognition"
+          state: "{{ trigger.json.alarm.triggers[0].value == 'Timothée' }}"
+          auto_off: 10
+          device_class: motion

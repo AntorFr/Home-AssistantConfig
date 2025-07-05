@@ -397,6 +397,9 @@ automation:
         - binary_sensor.capteurs_mouvement_bureau
       to: "off"
       id: presence_bureau_off
+    - platform: tag
+      tag_id: 72-E5-4D-3D
+      id: "mode_reunion_toggle"
   conditions: []
   actions:
     - choose:
@@ -422,7 +425,43 @@ automation:
               data: {}
               target:
                 entity_id: input_boolean.meeting_mode
+        - alias: presence_bureau_toggle
+          conditions:
+            - condition: trigger
+              id:
+                - mode_reunion_toggle
+          sequence:
+            - action: input_boolean.toggle
+              metadata: {}
+              data: {}
+              target:
+                entity_id: input_boolean.meeting_mode
 ################################################################################
+- id: scan_tag_office
+  alias: Area - Bureau - Tag Lapin
+  description: "Delanche les actions des lapins"
+  mode: single
+  triggers:
+    - platform: tag
+      tag_id: 91-E5-4D-3D
+      id: "launch_music"
+  conditions: []
+  actions:
+    - choose:
+        - alias: launch_music
+          conditions:
+            - condition: trigger
+              id:
+                - launch_music
+          sequence:
+            - action: script.play_mood_music
+              metadata: {}
+              data:
+                rooms:
+                  - bureau
+################################################################################
+
+
 
 script:
 ################################################################################

@@ -42,4 +42,16 @@
       entity02: input_boolean.night_mode
       entity02_name: Mode nuit
       entity02_icon: mdi:weather-night
-
+- id: '1750497269445'
+  alias: Face detection from Unifi
+  description: ''
+  triggers:
+  - trigger: webhook
+    allowed_methods:
+    - POST
+    - PUT
+    local_only: true
+    webhook_id: -KpD-WilXJg7cUBMRBLiigPpN
+  conditions: []
+  actions: []
+  mode: single
