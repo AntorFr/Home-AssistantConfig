@@ -450,37 +450,61 @@ automation:
       actionName: "Wake-up"
     id: button
   condition:
-      - condition: and
-        conditions:
-          - condition: state
-            entity_id: input_boolean.away_mode
-            state: 'off'
-          - condition: state
-            entity_id: input_boolean.night_mode
-            state: 'on'
-          - condition: time
-            after: '07:30:00'
-            before: '18:00:00'
-          - condition: or
-            conditions:
-              - condition: trigger
-                id: 
-                  - motion
-                  - button
-              - condition: and
-                conditions:
+    - alias: "General conditions: home not in away mode and still in night mode"
+      condition: and
+      conditions:
+        - alias: "Home is not in away mode"
+          condition: state
+          entity_id: input_boolean.away_mode
+          state: 'off'
+        - alias: "Home is still in night mode"
+          condition: state
+          entity_id: input_boolean.night_mode
+          state: 'on'
+        - alias: "Trigger-specific conditions"
+          condition: or
+          conditions:
+            - alias: "Triggered by motion within the allowed dynamic time window"
+              condition: and
+              conditions:
+                - alias: "Triggered by motion sensor"
+                  condition: trigger
+                  id: motion
+                - alias: "Current time is between wake-up time minus 1h and 18:00"
+                  condition: template
+                  value_template: >-
+                    {% set now = now() %}
+                    {% set is_school_day = is_state('binary_sensor.vacances_scolaires_aujourdhui', 'on') %}
+                    {% set morning_time_str = states('input_datetime.morning_time_we') if is_school_day else states('input_datetime.morning_time') %}
+                    {% if morning_time_str == 'unknown' %}
+                      false
+                    {% else %}
+                      {% set morning_time = strptime(morning_time_str, '%H:%M:%S') %}
+                      {% set start_time = morning_time - timedelta(hours=1) %}
+                      {% set end_time = today_at('18:00:00') %}
+                      {{ now >= today_at(start_time.strftime('%H:%M:%S')) and now <= end_time }}
+                    {% endif %}
+            - alias: "Triggered by morning time on a workday"
+              condition: and
+              conditions:
                 - condition: trigger
                   id: week
-                - condition: state
-                  entity_id: binary_sensor.workday_sensor
-                  state: 'on'
-              - condition: and
-                conditions:
+                - alias: "It is a workday"
+                  condition: state
+                  entity_id: binary_sensor.vacances_scolaires_aujourdhui
+                  state: 'off'
+            - alias: "Triggered by morning time on a weekend"
+              condition: and
+              conditions:
                 - condition: trigger
                   id: weekend
-                - condition: state
-                  entity_id: binary_sensor.workday_sensor
-                  state: 'off' 
+                - alias: "It is not a workday"
+                  condition: state
+                  entity_id: binary_sensor.vacances_scolaires_aujourdhui
+                  state: 'on'
+            - alias: "Triggered by iOS Wake-up button"
+              condition: trigger
+              id: button
   action:
   - service: input_boolean.turn_off
     data: {}
