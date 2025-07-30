@@ -389,14 +389,14 @@ automation:
         hours: 0
         minutes: 10
         seconds: 0
-      above: 20100
+      above: 19500
   condition:
     - condition: state
       entity_id: switch.vanne_piscine
       state: "on"
     - condition: numeric_state
       entity_id: sensor.pool_water_sensor_niveau_d_eau
-      above: 20000
+      above: 18500
   action:
     - action: switch.turn_off
       target:
