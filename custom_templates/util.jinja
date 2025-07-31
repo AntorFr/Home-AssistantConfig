@@ -1,0 +1,15 @@
+{% macro strip_accents(text) %}
+  {{ text
+    | lower
+    | replace('à','a') | replace('á','a') | replace('â','a') | replace('ä','a') | replace('ã','a') | replace('å','a')
+    | replace('æ','ae')
+    | replace('ç','c')
+    | replace('è','e') | replace('é','e') | replace('ê','e') | replace('ë','e')
+    | replace('ì','i') | replace('í','i') | replace('î','i') | replace('ï','i')
+    | replace('ñ','n')
+    | replace('ò','o') | replace('ó','o') | replace('ô','o') | replace('ö','o') | replace('õ','o')
+    | replace('œ','oe')
+    | replace('ù','u') | replace('ú','u') | replace('û','u') | replace('ü','u')
+    | replace('ý','y') | replace('ÿ','y')
+  }}
+{% endmacro %}
