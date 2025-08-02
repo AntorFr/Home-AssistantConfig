@@ -28,4 +28,11 @@ intents:
         expansion_rules:
             assis: "(assis|assise)"
             position: "(position|mode)"
-
+  readyTesla:
+    data:
+      - sentences:
+        - "<prepare> (la) <voiture>"
+        response: default
+        expansion_rules:
+          prepare: "(prépare|prepare|fait[s] chauffer)"
+          voiture: "(voiture|tesla|electromobile)"
