@@ -19,7 +19,7 @@ adaptive_lighting:
     lights:
       - light.cusine_plafonier
       - light.cusine_spot
-    take_over_control: false
+    take_over_control: true
     min_brightness: 35
     min_sunset_time: "19:00:00"
 
