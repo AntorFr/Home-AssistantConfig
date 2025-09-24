@@ -1,8 +1,8 @@
 
 automation:
 ################################################################################
-- id: cars_polo_bouton_portails
-  alias: Area - Voiture - Bonton portails Polo
+- id: cars_tesla_bouton_portails
+  alias: Area - Voiture - Bonton portails Tesla
   description: ""
   use_blueprint:
     path: antorfr/BluButtonRC1.yaml
@@ -60,4 +60,24 @@ automation:
         - action: input_boolean.turn_on
           target:
             entity_id: input_boolean.away_mode
+################################################################################
+- id: cars_invitee_bouton_portails
+  alias: Area - Voiture - Bonton portails Invitée
+  description: ""
+  use_blueprint:
+    path: antorfr/BluButtonRC1.yaml
+    input:
+      button_device: 77ad222977dc69dfb0260d5f561bb43d
+      button_short:
+        - action: cover.toggle
+          metadata: {}
+          data: {}
+          target:
+            entity_id: cover.portail_2
+      button_double:
+        - action: cover.toggle
+          metadata: {}
+          data: {}
+          target:
+            entity_id: cover.garage_1
 ################################################################################

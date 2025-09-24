@@ -6,7 +6,7 @@ automation:
     - trigger: state
       entity_id:
         - sensor.prusa_mk4s_enclosure_2
-        - sensor.prusa_mk4s
+        - sensor.prusa_core_one
       from: 
         - idle
         - finished
@@ -25,7 +25,7 @@ automation:
     - trigger: state
       entity_id:
         - sensor.prusa_mk4s_enclosure_2
-        - sensor.prusa_mk4s
+        - sensor.prusa_core_one
       from: 
         - printing
         - busy
@@ -41,7 +41,7 @@ automation:
     - trigger: state
       entity_id:
         - sensor.prusa_mk4s_enclosure_2
-        - sensor.prusa_mk4s
+        - sensor.prusa_core_one
       from: 
         - idle
         - finished
