@@ -401,8 +401,8 @@ script:
     - action: script.lock_many_retry
       data:
         locks:
-          - lock.nuki_gateway_kitchen_nuki_lock
-          - lock.nuki_gateway_entrance_nuki_lock
+          - lock.entree
+          - lock.cuisine_2
 
 ## Thermostat / Chauffage ###
 ################################################################################
