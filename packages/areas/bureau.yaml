@@ -99,6 +99,8 @@ automation:
           data:
             action: media_stop
             rooms: "{{room}}"
+
+
 ################################################################################
 - id: 'bureau_light_switch_entrance'
   alias: Area - Bureau - Bouton entrée
@@ -125,6 +127,20 @@ automation:
             data:
               action: media_stop
               rooms: "{{room}}"
+
+      swipe_left_action:
+        - action: cover.toggle
+          target:
+            entity_id:
+              - cover.store_bureau_droite
+              - cover.store_bureau_gauche
+
+      swipe_right_action:
+        - action: cover.toggle
+          target:
+            entity_id:
+              - cover.store_bureau_droite
+              - cover.store_bureau_gauche
 ################################################################################
 - id: 'bureau_light_switch_desk'
   alias: Area - Bureau - Bouton applique
@@ -135,9 +151,25 @@ automation:
       swipe_right: binary_sensor.desk_light_switch_swipe_right
       touchfield_1: binary_sensor.desk_light_switch_touchfield_1
       touchfield_2: binary_sensor.desk_light_switch_touchfield_2
+      touchfield_3: binary_sensor.desk_light_switch_touchfield_3
       long_press: binary_sensor.desk_light_switch_long_press
       multi_touch: binary_sensor.desk_light_switch_multi_touch
       swipe_left: binary_sensor.desk_light_switch_swipe_left
+
+      touchfield_1_action:
+        - service: light.toggle
+          target:
+            entity_id: light.office_light_switch_l1
+
+      touchfield_2_action:
+        - service: light.toggle
+          target:
+            entity_id: light.hue_color_lamp_5_3
+
+      touchfield_3_action:
+        - service: light.toggle
+          target:
+            entity_id: light.hue_color_lamp_5_3
 
       multi_touch_action:
         - parallel: 
@@ -150,6 +182,20 @@ automation:
             data:
               action: media_stop
               rooms: "{{room}}"
+
+      swipe_left_action:
+        - action: cover.toggle
+          target:
+            entity_id:
+              - cover.store_bureau_droite
+              - cover.store_bureau_gauche
+
+      swipe_right_action:
+        - action: cover.toggle
+          target:
+            entity_id:
+              - cover.store_bureau_droite
+              - cover.store_bureau_gauche
 ################################################################################
 - id: bureau_turn_off
   alias: Area - Bureau - Tout eteindre
