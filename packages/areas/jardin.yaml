@@ -26,6 +26,7 @@ light:
       - light.garden_parking_light
       - light.garden_light_front_lumi_re_devant_jardin
       - light.jardin
+      - light.breezeway_light
 
 binary_sensor:
   - platform: group

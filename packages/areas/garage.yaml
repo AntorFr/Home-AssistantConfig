@@ -139,7 +139,7 @@ automation:
     input:
       light_target:
         entity_id: 
-          - light.plafonnier_garage_2
+          - light.garage2_ceilling_light
       motion_sensor: binary_sensor.capteurs_presence_garage_2
       no_motion_wait: 
         minutes: 2

@@ -11,6 +11,7 @@ binary_sensor:
     all: false
     entities:
       - binary_sensor.presence_sensor_shower_occupancy
+      - binary_sensor.blumotion_dressing_motion
 
 
 light:
