@@ -99,10 +99,6 @@ automation:
     event_type: routine_event
     event_data:
       type: away
-  condition:
-  - condition: state
-    entity_id: alarm_control_panel.alarme_maison
-    state: disarmed
   action:
   - service: alarm_control_panel.alarm_arm_away
     target:

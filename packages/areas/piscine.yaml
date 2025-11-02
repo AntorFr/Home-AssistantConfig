@@ -2,7 +2,7 @@ light:
   - platform: group
     name: piscine
     entities:
-      - light.piscine_lumiere_immergee
+      - light.underwater_pool_light
       - light.piscine_lumiere_2
 
 sensor:
@@ -53,12 +53,23 @@ binary_sensor:
 
 template:
   - binary_sensor:
-    - unique_id: water_low_level_pool_problem
-      name: Niveau d'eau piscine bas
-      device_class: problem
-      availability: "{{states('sensor.pool_water_sensor_niveau_d_eau') != 'unknown'}}"
-      state: "{{ (states('sensor.pool_water_sensor_niveau_d_eau')|int < 17400 )| d(false)  }}"
+      - unique_id: water_low_level_pool_problem
+        name: "Niveau d'eau piscine bas"
+        device_class: problem
 
+        # Capteur valide uniquement si la mesure est bien un nombre
+        availability: >
+          {{ (states('sensor.pool_water_sensor_niveau_d_eau') | float(none)) is not none }}
+
+        # Etat ON uniquement si la valeur numérique existe et est < seuil
+        state: >
+          {% set v = states('sensor.pool_water_sensor_niveau_d_eau') | float(none) %}
+          {{ v is not none and v < 17400 }}
+
+        # Anti-rebond : n'allume que si c'est resté bas 30 s,
+        # et n'éteint que si c'est redevenu normal 2 min.
+        delay_on: "00:00:30"
+        delay_off: "00:02:00"
 
 alert:
   swiming_pool:
@@ -155,7 +166,7 @@ alert:
     state: "on"   # Optional, 'on' is the default value
     repeat: 1440
     can_acknowledge: true  # Optional, default is true
-    skip_first: false  # Optional, false is the default
+    skip_first: true  # Optional, false is the default
     notifiers:
       - notify
 
@@ -169,7 +180,7 @@ automation:
     input:
       light_target:
         entity_id: 
-          - light.piscine_lumiere_immergee
+          - light.underwater_pool_light
           - light.piscine_lumiere_2
       motion_sensor:
         - binary_sensor.bludoor_porte_piscine_window
