@@ -66,9 +66,9 @@ template:
           {% set v = states('sensor.pool_water_sensor_niveau_d_eau') | float(none) %}
           {{ v is not none and v < 17400 }}
 
-        # Anti-rebond : n'allume que si c'est resté bas 30 s,
+        # Anti-rebond : n'allume que si c'est resté bas 2 min,
         # et n'éteint que si c'est redevenu normal 2 min.
-        delay_on: "00:00:30"
+        delay_on: "00:02:00"
         delay_off: "00:02:00"
 
 alert:
