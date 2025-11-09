@@ -3,7 +3,7 @@ light:
     name: buanderie lumieres
     unique_id: buanderie_lumieres
     entities:
-      - light.laundry_ceiling_light_plafonnier_buanderie
+      - light.laundry_ceiling_light
 
 
 automation:
@@ -32,7 +32,7 @@ automation:
     path: antorfr/motion_light.yaml
     input:
       light_target:
-        entity_id: light.laundry_ceiling_light_plafonnier_buanderie
+        entity_id: light.buanderie_lumieres
       adaptive_lighting: switch.adaptive_lighting_default
       motion_sensor: binary_sensor.blumotion_buanderie_motion
       no_motion_wait:
