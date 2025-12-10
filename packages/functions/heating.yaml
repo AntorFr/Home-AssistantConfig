@@ -9,34 +9,34 @@ script:
         data:
           temperature: 65
         target:
-          entity_id: water_heater.pac_tank
+          entity_id: water_heater.panasonic_heat_pump_main_dhw_target_temp
       - action: switch.turn_on
         metadata: {}
         data: {}
         target:
-          entity_id: switch.pac_force_dhw
+          entity_id: switch.panasonic_heat_pump_main_force_dhw_state
       - action: select.select_option
         metadata: {}
         data:
-          option: on-90m
+          option: "90 min"
         target:
-          entity_id: select.pac_powerful
+          entity_id: select.panasonic_heat_pump_main_powerful_mode_time
       - delay:
           hours: 0
           minutes: 1
           seconds: 0
           milliseconds: 0
-      - wait_template: "{{ state_attr('water_heater.pac_tank','current_temperature')> 50 }}"
+      - wait_template: "{{ state_attr('water_heater.panasonic_heat_pump_main_dhw_target_temp','current_temperature')> 50 }}"
         continue_on_timeout: true
         timeout: "90:00:00"
       - action: switch.turn_off
         metadata: {}
         data: {}
         target:
-          entity_id: switch.pac_force_dhw
+          entity_id: switch.panasonic_heat_pump_main_force_dhw_state
       - action: water_heater.set_temperature
         metadata: {}
         data:
           temperature: 55
         target:
-          entity_id: water_heater.pac_tank
+          entity_id: water_heater.panasonic_heat_pump_main_dhw_target_temp
