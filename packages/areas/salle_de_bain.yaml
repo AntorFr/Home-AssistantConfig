@@ -61,7 +61,7 @@ automation:
     path: antorfr/hot_water_warning.yaml
     input:
       light_target: light.hue_color_lamp_2
-      tank_temperature: water_heater.pac_tank
+      tank_temperature: water_heater.panasonic_heat_pump_main_dhw_target_temp
       temp_treshold: 40
 
 ################################################################################

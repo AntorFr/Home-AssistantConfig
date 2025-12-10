@@ -149,21 +149,21 @@ script:
       - parallel:
         - sequence:
           - repeat:
-              while: "{{ not is_state('climate.pac_maison','heat') and repeat.index < 10}}"
+              while: "{{ not is_state('climate.panasonic_heat_pump_main_z1_temp','heat') and repeat.index < 10}}"
               sequence:
                 - service: climate.turn_on
                   data: {}
                   target:
                     entity_id: 
-                      - climate.pac_maison
+                      - climate.panasonic_heat_pump_main_z1_temp
                 - delay:
                     seconds: 60
           - repeat:
-              while: "{{ not is_state_attr('water_heater.pac_tank','temperature', 65) and repeat.index < 10}}"
+              while: "{{ not is_state_attr('water_heater.panasonic_heat_pump_main_dhw_target_temp','temperature', 65) and repeat.index < 10}}"
               sequence:
                 - service: water_heater.set_temperature
                   target:
-                    entity_id: water_heater.pac_tank
+                    entity_id: water_heater.panasonic_heat_pump_main_dhw_target_temp
                   data:
                     temperature: 65
                 - delay:
@@ -195,21 +195,21 @@ script:
       - parallel:
         - sequence:
           - repeat:
-              while: "{{ not is_state('climate.pac_maison','off') and repeat.index < 10}}"
+              while: "{{ not is_state('climate.panasonic_heat_pump_main_z1_temp','off') and repeat.index < 10}}"
               sequence:
                 - service: climate.turn_off
                   data: {}
                   target:
                     entity_id: 
-                      - climate.pac_maison
+                      - climate.panasonic_heat_pump_main_z1_temp
                 - delay:
                     seconds: 60
           - repeat:
-              while: "{{ not is_state_attr('water_heater.pac_tank','temperature', 40) and repeat.index < 10}}"
+              while: "{{ not is_state_attr('water_heater.panasonic_heat_pump_main_dhw_target_temp','temperature', 40) and repeat.index < 10}}"
               sequence:
                 - service: water_heater.set_temperature
                   target:
-                    entity_id: water_heater.pac_tank
+                    entity_id: water_heater.panasonic_heat_pump_main_dhw_target_temp
                   data:
                     temperature: 40
                 - delay:
@@ -238,21 +238,21 @@ script:
       - parallel:
         - sequence:
           - repeat:
-              while: "{{ not is_state('climate.pac_maison','heat') and repeat.index < 10}}"
+              while: "{{ not is_state('climate.panasonic_heat_pump_main_z1_temp','heat') and repeat.index < 10}}"
               sequence:
                 - service: climate.turn_on
                   data: {}
                   target:
                     entity_id: 
-                      - climate.pac_maison
+                      - climate.panasonic_heat_pump_main_z1_temp
                 - delay:
                     seconds: 60
           - repeat:
-              while: "{{ not is_state_attr('water_heater.pac_tank','temperature', 53) and repeat.index < 10}}"
+              while: "{{ not is_state_attr('water_heater.panasonic_heat_pump_main_dhw_target_temp','temperature', 53) and repeat.index < 10}}"
               sequence:
                 - service: water_heater.set_temperature
                   target:
-                    entity_id: water_heater.pac_tank
+                    entity_id: water_heater.panasonic_heat_pump_main_dhw_target_temp
                   data:
                     temperature: 53
                 - delay:
