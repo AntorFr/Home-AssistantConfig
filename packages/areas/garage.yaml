@@ -58,13 +58,12 @@ binary_sensor:
     entities:
       - binary_sensor.garage2_presence_sensor_occupancy
 
-  - platform: group #Utilisé pour la lumiere du garage 2
+  - platform: group 
     name: "Capteurs presence garage 2"
     device_class: occupancy
     unique_id: garage2_presence_sensors
     all: false
     entities:
-      - binary_sensor.porte_garage_2_ouverte
       - binary_sensor.capteurs_mouvement_garage_2
 
   - platform: group
@@ -132,7 +131,7 @@ automation:
       entity_id: cover.garage_1
 ################################################################################
 - id: garage2_light_auto
-  alias: Area - Garage 2 - Lumière auto
+  alias: Area - Garage 2 & 3 - Lumière auto
   description: ''
   use_blueprint:
     path: antorfr/motion_light.yaml
@@ -140,14 +139,21 @@ automation:
       light_target:
         entity_id: 
           - light.garage2_ceilling_light
-      motion_sensor: binary_sensor.capteurs_presence_garage_2
+          - light.plafonnier_garage_3
+      motion_sensor: binary_sensor.capteurs_mouvement_garages_2_3
       no_motion_wait: 
-        minutes: 2
+        minutes: 5
       only_during_night: false
       light_sensor: sensor.garage2_presence_sensor_light_sensor
       lux_cutoff: 30
       lux_sun_cutoff: 100
-      kill_switch: input_boolean.auto_light_kill_switch_garage2    
+      kill_switch: input_boolean.auto_light_kill_switch_garage2
+      turn_on_trigger:
+        trigger: template
+        id: turn_on
+        value_template: >
+          {{ is_state('cover.garage_2', 'opening')
+            and (states('sensor.garage2_presence_sensor_light_sensor') | int(999)) < 30 }}
 ################################################################################
 - id: garage1_bouton_portails
   alias: Area - Garage 1 - Bonton portails

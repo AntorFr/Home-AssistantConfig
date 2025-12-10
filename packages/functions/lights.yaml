@@ -35,6 +35,7 @@ adaptive_lighting:
     lights:
       - light.toilettes_rdc
       - light.toilette_etage
+      - light.buanderie_lumieres
     take_over_control: true
     min_brightness: 10
     sleep_brightness: 10
