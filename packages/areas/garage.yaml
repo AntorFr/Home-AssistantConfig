@@ -130,6 +130,25 @@ automation:
     target:
       entity_id: cover.garage_1
 ################################################################################
+- id: garage1_light_auto
+  alias: Area - Garage 1 - Lumière auto
+  description: ''
+  use_blueprint:
+    path: antorfr/motion_light.yaml
+    input:
+      light_target:
+        entity_id: 
+          - light.plafonnier_garage_1
+      no_motion_wait: 
+        minutes: 10
+      only_during_night: false
+      kill_switch: input_boolean.auto_light_kill_switch_garage2
+      turn_on_trigger:
+        trigger: template
+        id: turn_on
+        value_template: >
+          {{ is_state('cover.garage_1', 'opening') }}
+################################################################################
 - id: garage2_light_auto
   alias: Area - Garage 2 & 3 - Lumière auto
   description: ''
