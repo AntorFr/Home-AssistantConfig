@@ -53,8 +53,8 @@ automation:
       no_motion_warning: 30
       only_during_night: false
       light_sensor: sensor.capteur_presence_bureau_light_sensor
-      lux_cutoff: 50
-      lux_sun_cutoff: 100
+      lux_cutoff: 80
+      lux_sun_cutoff: 130
       only_turn_off: false
       kill_switch: input_boolean.auto_light_kill_switch_bureau
 ################################################################################

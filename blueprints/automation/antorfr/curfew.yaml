@@ -53,7 +53,10 @@ action:
                 {%- set end_in = updated_at - utcnow() + timedelta(seconds = (media_duration - media_position)) -%}
                 {{end_in }} 
 
-              almost_over: "{{as_timedelta(end_in) <= timedelta(minutes=10)}}"
+              #Check if remaning time is between 5 minutes and 0 minutes
+              almost_over: >-
+                {{ timedelta(minutes=0) < as_timedelta(end_in)
+                and as_timedelta(end_in) <= timedelta(minutes=10) }}
                
           - alias: "if almost over wait time to end curent track"
             if:
