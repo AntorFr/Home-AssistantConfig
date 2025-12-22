@@ -1,16 +1,12 @@
 
-binary_sensor:
-  - platform: template
-    sensors:
-      automower_error:
-        friendly_name: Etat Robot tondeuse
-        device_class: problem
-        value_template: >
-          {{- 
-            is_state('lawn_mower.gardenbot',['error','unavailable']) 
-            and not is_state('input_boolean.mower_in_revision','on')
-          -}}
-
+template:
+  - binary_sensor:
+    - device_class: problem
+      default_entity_id: binary_sensor.automower_error
+      name: Etat Robot tondeuse
+      state: >-
+        {{ is_state('lawn_mower.gardenbot', ['error', 'unavailable']) and
+           not is_state('input_boolean.mower_in_revision', 'on') }}
 
 input_boolean:
   mower_in_revision:
