@@ -1,54 +1,47 @@
 
-binary_sensor:
-  - platform: template
-    sensors:
-      ico_data_freshness:
-        device_class: problem
-        friendly_name: Ico réception données
-        value_template: >
-          {{(now() - as_local(states.sensor.plouf_oxydo_reduction_potential.last_changed)) > timedelta(hours=12)}}
-      ico_ph:
-        device_class: problem
-        friendly_name: Ico Ph problem
-        value_template: >
-          {{- 
-            ((states('sensor.plouf_ph') | float) < 7.0 
+template:
+  - binary_sensor:
+    - device_class: problem
+      default_entity_id: binary_sensor.ico_data_freshness
+      name: Ico réception données
+      state: >-
+        {{ (now() - as_local(states.sensor.plouf_oxydo_reduction_potential.last_changed)) >
+           timedelta(hours=12) }}
+    - device_class: problem
+      default_entity_id: binary_sensor.ico_ph
+      name: Ico Ph problem
+      state: >-
+        {{ ((states('sensor.plouf_ph') | float) < 7.0
             or (states('sensor.plouf_ph') | float) > 7.5)
-            and not is_state('input_boolean.piscine_en_hivernage',['on'])
-          -}}
-      ico_temperature:
-        device_class: problem
-        friendly_name: Ico temperature problem
-        value_template: >
-          {{- 
-            ((states('sensor.plouf_temperature') | float) < 26 
+            and not is_state('input_boolean.piscine_en_hivernage', ['on']) }}
+    - device_class: problem
+      default_entity_id: binary_sensor.ico_temperature
+      name: Ico temperature problem
+      state: >-
+        {{ ((states('sensor.plouf_temperature') | float) < 26
             or (states('sensor.plouf_temperature') | float) > 34)
-            and not is_state('input_boolean.piscine_en_hivernage',['on'])
-          -}}
-      ico_redox:
-        device_class: problem
-        friendly_name: ico redox problem
-        value_template: >
-          {{- 
-            ((states('sensor.plouf_oxydo_reduction_potential') | float) < state_attr('sensor.plouf_oxydo_reduction_potential','treshold_low')
-            or (states('sensor.plouf_oxydo_reduction_potential') | float) > state_attr('sensor.plouf_oxydo_reduction_potential','treshold_high'))
-            and not is_state('input_boolean.piscine_en_hivernage',['on'])
-          -}}
-      ico_salt:
-        device_class: problem
-        friendly_name: ico salt problem
-        value_template: >
-          {{- 
-            ((states('sensor.plouf_salt') | float) < 3000 
+            and not is_state('input_boolean.piscine_en_hivernage', ['on']) }}
+    - device_class: problem
+      default_entity_id: binary_sensor.ico_redox
+      name: ico redox problem
+      state: >-
+        {{ ((states('sensor.plouf_oxydo_reduction_potential') | float) <
+            state_attr('sensor.plouf_oxydo_reduction_potential', 'treshold_low')
+            or (states('sensor.plouf_oxydo_reduction_potential') | float) >
+            state_attr('sensor.plouf_oxydo_reduction_potential', 'treshold_high'))
+            and not is_state('input_boolean.piscine_en_hivernage', ['on']) }}
+    - device_class: problem
+      default_entity_id: binary_sensor.ico_salt
+      name: ico salt problem
+      state: >-
+        {{ ((states('sensor.plouf_salt') | float) < 3000
             or (states('sensor.plouf_salt') | float) > 5000)
-            and not is_state('input_boolean.piscine_en_hivernage',['on'])
-          -}}
-
-      ico_battery:
-        device_class: problem
-        friendly_name: ico battery problem
-        value_template: >
-          {{ (states('sensor.plouf_batterie') | float) < 15 }}
+            and not is_state('input_boolean.piscine_en_hivernage', ['on']) }}
+    - device_class: problem
+      default_entity_id: binary_sensor.ico_battery
+      name: ico battery problem
+      state: >-
+        {{ (states('sensor.plouf_batterie') | float) < 15 }}
 
 alert:
   ico_disconnected_alert:

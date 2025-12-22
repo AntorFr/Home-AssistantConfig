@@ -27,29 +27,25 @@ input_number:
 
 
 ### Sensors ###
-sensor:
-  - platform: template
-    sensors:
-      wakeup_time:
-        friendly_name: Heure reveil
-        # entity_id: input_datetime.wakeup_time
-        value_template: >
-          {{ (states.input_datetime.wakeup_time.attributes.timestamp | 
-              int | timestamp_custom("%H:%M",False)) }}
-      wakeup_alarm_start_time:
-        # entity_id: input_datetime.wakeup_time, input_number.wakeup_duration
-        friendly_name: Début réveil
-        value_template: >
-          {{ (((states.input_datetime.wakeup_time.attributes.timestamp | 
-              int) - (states.input_number.wakeup_duration.state | int * 60)) | 
-              timestamp_custom("%H:%M",False)) }}
-      wakeup_alarm_midpoint:
-        # entity_id: input_datetime.wakeup_time, input_number.wakeup_duration
-        friendly_name: Mileu réveil
-        value_template: >
-          {{ (((states.input_datetime.wakeup_time.attributes.timestamp | 
-              int) - ((states.input_number.wakeup_duration.state | 
-              int * 60)/2 )) | timestamp_custom("%H:%M",False)) }}
+template:
+  - sensor:
+    - default_entity_id: sensor.wakeup_time
+      name: Heure reveil
+      state: >-
+        {{ (states.input_datetime.wakeup_time.attributes.timestamp |
+            int | timestamp_custom("%H:%M", False)) }}
+    - default_entity_id: sensor.wakeup_alarm_start_time
+      name: Début réveil
+      state: >-
+        {{ (((states.input_datetime.wakeup_time.attributes.timestamp |
+            int) - (states.input_number.wakeup_duration.state | int * 60)) |
+            timestamp_custom("%H:%M", False)) }}
+    - default_entity_id: sensor.wakeup_alarm_midpoint
+      name: Mileu réveil
+      state: >-
+        {{ (((states.input_datetime.wakeup_time.attributes.timestamp |
+            int) - ((states.input_number.wakeup_duration.state |
+            int * 60)/2 )) | timestamp_custom("%H:%M", False)) }}
 automation:
 
 ################################################################################
