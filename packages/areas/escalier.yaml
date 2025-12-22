@@ -38,10 +38,11 @@ automation:
       only_during_night: false
       adaptive_lighting: switch.adaptive_lighting_couloir_etage
       toggle_trigger:
-        trigger: event
+        platform: state
+        entity_id: 
+          - binary_sensor.telerupteur_etage_couloir_bouton_1
+          - binary_sensor.telerupteur_etage_couloir_bouton_2
+        from: ["off"]
+        to: ["on"]
         id: toggle
-        event_type: shelly.click
-        event_data:
-          device: shellypro1pm-fce8c0d95370
-          click_type: single_push
 ################################################################################
