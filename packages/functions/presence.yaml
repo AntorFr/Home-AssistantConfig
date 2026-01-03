@@ -152,7 +152,7 @@ automation:
   alias: Papa Mobile - Out
   description: Papa mobile n'est plus a la maison
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: device_tracker.papamobile
     to: not_home
   condition: []
@@ -171,7 +171,7 @@ automation:
   alias: Function Presence - Voiture devant (on/off)
   description: Function Presence - Voiture devant
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.entree_car_occupancy
     to: 'on'
     for:
@@ -184,7 +184,7 @@ automation:
   - action: input_boolean.turn_on
     entity_id: input_boolean.guest_mode
   - wait_for_trigger:
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.entree_car_occupancy
         to: "off"
         for:

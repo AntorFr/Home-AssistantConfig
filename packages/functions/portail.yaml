@@ -15,13 +15,13 @@ automation:
   alias: Function portail - Fermeture auto
   description: Fermeture automatique du portail
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: cover.portail_2
     to: "open"
     for:
       minutes: 3
       seconds: 0
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.portail_detection_voiture
     from: "on"
     to: "off"
@@ -45,13 +45,13 @@ automation:
   alias: Function portail - Ouverture auto
   description: Ouverture automatique du portail
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: binary_sensor.entrance_gate_driveway_car_occupancy
       to: "on"
-    - platform: state
+    - trigger: state
       entity_id: binary_sensor.portail_car_occupancy
       to: "on"
-    - platform: state
+    - trigger: state
       entity_id: binary_sensor.entrance_gate_plate_detected
       to: "on"
     - platform: zone
@@ -62,12 +62,12 @@ automation:
       entity_id: person.laurine
       zone: zone.home
       event: enter
-    - platform: state
+    - trigger: state
       entity_id: binary_sensor.portail_ble_relay_badge_emilie
       to: "on"
       for: '00:00:10'
     - alias: "ios action Je rentre"
-      platform: event
+      trigger: event
       event_type: ios.action_fired
       event_data:
         actionName: "Retour Maison"
@@ -95,11 +95,11 @@ automation:
   max_exceeded: silent
 
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: binary_sensor.sonette_portail_doorbell
       to: 'on'
       id: entree
-    - platform: state
+    - trigger: state
       entity_id: binary_sensor.sonnette_portail_doorbell
       to: 'on'
       id: portail
@@ -159,7 +159,7 @@ automation:
   max_exceeded: silent
 
   trigger:
-    platform: event
+    trigger: event
     event_type: ios.notification_action_fired
     event_data:
       actionName: 'OPEN_FRONTE_GATE'
@@ -238,7 +238,7 @@ script:
         entity_id: media_player.sonette_portail_speaker
         message: "{{message_audio}}"
     - wait_for_trigger:
-        - platform: state
+        - trigger: state
           entity_id:
             - cover.portail_2
           to: closed

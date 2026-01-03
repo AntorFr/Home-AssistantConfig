@@ -19,13 +19,13 @@ automation:
   alias: Routine - Away - Detect Absence
   description: ''
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: binary_sensor.anyone_home
       to: 'off'
       for:
         minutes: 10
     - alias: "ios action Je sors"
-      platform: event
+      trigger: event
       event_type: ios.action_fired
       event_data:
         actionName: "Depart Maison"
@@ -46,11 +46,11 @@ automation:
   alias: Routine - Away - Detect Retour
   description: ''
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: binary_sensor.anyone_home
       to: 'on'
     - alias: "ios action Je rentre"
-      platform: event
+      trigger: event
       event_type: ios.action_fired
       event_data:
         actionName: "Retour Maison"
@@ -68,7 +68,7 @@ automation:
   alias: Routine - Away - Absence
   description: ''
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: input_boolean.away_mode
       to: 'on'
   condition: []
@@ -84,13 +84,13 @@ automation:
   alias: Routine - Away - Absence longue
   description: ''
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: input_boolean.away_mode
       from: "off"
       to: 'on'
       for:
         hours: 24
-    - platform: state
+    - trigger: state
       entity_id: input_boolean.long_absence_mode
       from: "off"
       to: 'on'
@@ -113,10 +113,10 @@ automation:
   alias: Routine - Away - Prepare le retour
   description: ''
   trigger:
-    - platform: time
+    - trigger: time
       at: input_datetime.long_absence_return_date
       id: date
-    - platform: state
+    - trigger: state
       entity_id: input_boolean.long_absence_mode
       from: "on"
       to: 'off'
@@ -148,7 +148,7 @@ automation:
   alias: Routine - Away - Retour
   description: ''
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: input_boolean.away_mode
       from: 'on'
       to: 'off'

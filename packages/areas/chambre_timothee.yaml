@@ -75,7 +75,7 @@ automation:
       no_motion_warning: 30  
       only_turn_off: true      
       toggle_trigger:
-        platform: state
+        trigger: state
         entity_id: 
           - binary_sensor.timothee_bed_switch_touchfield_1
           - binary_sensor.timothee_entrance_switch_touchfield_1
@@ -98,7 +98,7 @@ automation:
       no_motion_warning: 30  
       only_turn_off: true      
       toggle_trigger:
-        platform: state
+        trigger: state
         entity_id: 
           - binary_sensor.timothee_bed_switch_touchfield_2
           - binary_sensor.timothee_entrance_switch_touchfield_2

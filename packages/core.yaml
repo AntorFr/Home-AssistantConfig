@@ -56,7 +56,7 @@ logger:
     #custom_components.deepstack_face: error
 
 sensor:
-  - platform: time_date
+  - trigger: time_date
     display_options:
       - 'date_time_iso'
 

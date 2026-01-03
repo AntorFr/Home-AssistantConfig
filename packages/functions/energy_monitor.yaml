@@ -62,14 +62,14 @@ automation:
   alias: Function - Energie - Changement tarif
   description: Function - Energie - Changement tarif
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - sensor.template_teleinfo_periode_tarifaire
     to: HC
     for:
       seconds: 10
     id: HC
-  - platform: state
+  - trigger: state
     entity_id:
     - sensor.template_teleinfo_periode_tarifaire
     to: HP

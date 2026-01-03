@@ -7,7 +7,7 @@ automation:
   alias: System - Notification - Portail deconnecté
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: cover.portail_2
     to: unavailable
     for: 00:01:00

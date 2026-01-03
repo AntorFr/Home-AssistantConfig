@@ -73,7 +73,7 @@ automation:
   alias: System - Notification - Network device alerte
   description: Notification appareil deconnecté
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: group.required_devices
     to: 'not_home'
   - platform: homeassistant
@@ -104,7 +104,7 @@ automation:
   alias: System - Notification - Network device alerte (end)
   description: Notification appareil deconnecté - Fin
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: group.required_devices
     to: 'home'
   condition: []

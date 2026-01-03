@@ -9,19 +9,19 @@ counter:
  
 template: 
   - trigger: #Camera entrée
-    - platform: event
+    - trigger: event
       event_type: netatmo_event
       event_data:
         type: human
         data:
           device_id: 70:ee:50:63:b8:30
-    - platform: event
+    - trigger: event
       event_type: netatmo_event
       event_data:
         type: vehicle
         data:
           device_id: 70:ee:50:63:b8:30
-    - platform: event
+    - trigger: event
       event_type: netatmo_event
       event_data:
         type: movement
@@ -36,7 +36,7 @@ template:
           event_type: >
             {{ trigger.event.data["type"]}}
   - trigger: #Camera entrée personne
-    - platform: event
+    - trigger: event
       event_type: netatmo_event
       event_data:
         type: human
@@ -50,19 +50,19 @@ template:
         device_class: motion
 
   - trigger: #Camera parking
-    - platform: event
+    - trigger: event
       event_type: netatmo_event
       event_data:
         type: human
         data:
           device_id: 70:ee:50:6d:3a:ee
-    - platform: event
+    - trigger: event
       event_type: netatmo_event
       event_data:
         type: vehicle
         data:
           device_id: 70:ee:50:6d:3a:ee
-    - platform: event
+    - trigger: event
       event_type: netatmo_event
       event_data:
         type: movement
@@ -77,7 +77,7 @@ template:
           event_type: >
             {{ trigger.event.data["type"]}}
   - trigger: #Camera parking person
-      - platform: event
+      - trigger: event
         event_type: netatmo_event
         event_data:
           type: human
@@ -91,13 +91,13 @@ template:
         device_class: motion
         
   - trigger: #Camera Salon
-    - platform: event
+    - trigger: event
       event_type: netatmo_event
       event_data:
         type: movement
         data:
           device_id: 70:ee:50:58:3c:e7
-    - platform: event
+    - trigger: event
       event_type: netatmo_event
       event_data:
         type: person
@@ -113,13 +113,13 @@ template:
           event_type: >
             {{ trigger.event.data["type"]}}
   - trigger: #Camera Couloir
-    - platform: event
+    - trigger: event
       event_type: netatmo_event
       event_data:
         type: person
         data:
           device_id: 70:ee:50:58:5c:a6
-    - platform: event
+    - trigger: event
       event_type: netatmo_event
       event_data:
         type: movement
@@ -134,13 +134,13 @@ template:
           event_type: >
             {{ trigger.event.data["type"]}}
   - trigger: #Capteur Fumée Couloir
-    - platform: event
+    - trigger: event
       event_type: netatmo_event
       event_data:
         type: smoke
         data:
           device_id: 70:ee:50:5a:ea:9a
-    - platform: event
+    - trigger: event
       event_type: netatmo_event
       event_data:
         type: hush
@@ -162,13 +162,13 @@ template:
           event_type: >
             {{ trigger.event.data["type"]}}
   - trigger: #Capteur Fumée Salon
-    - platform: event
+    - trigger: event
       event_type: netatmo_event
       event_data:
         type: smoke
         data:
           device_id: 70:ee:50:7d:9e:2e
-    - platform: event
+    - trigger: event
       event_type: netatmo_event
       event_data:
         type: hush
@@ -202,7 +202,7 @@ automation:
   alias: 'Integration - Netatmo - set home/away'
   description: ''
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: person.laurine
       from:
         - 'home'
@@ -210,7 +210,7 @@ automation:
       to: 
         - 'home'
         - 'not_home'
-    - platform: state
+    - trigger: state
       entity_id: person.sebastien
       from:
         - 'home'
@@ -246,7 +246,7 @@ automation:
   alias: 'Integration - Netatmo - Person update'
   description: "Set person home when seen by the camera"
   trigger:
-    - platform: event
+    - trigger: event
       event_type: netatmo_event
       event_data:
         type: person
@@ -309,7 +309,7 @@ automation:
   alias: 'Integration - Netatmo - Count API push'
   description: "Count all events pushed by the Netatmo API"
   trigger:
-    - platform: event 
+    - trigger: event 
       event_data: {}
       event_type: netatmo_event
       

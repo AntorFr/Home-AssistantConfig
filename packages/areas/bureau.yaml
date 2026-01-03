@@ -207,7 +207,7 @@ automation:
   description: ''
   mode: single
   trigger:
-    - platform: state
+    - trigger: state
       entity_id:
         - binary_sensor.capteurs_mouvement_bureau
       from: "on"
@@ -229,7 +229,7 @@ automation:
   mode: single
   trigger:
     - id: presence
-      platform: state
+      trigger: state
       entity_id:
         - binary_sensor.capteurs_mouvement_bureau
       from: "off"
@@ -237,7 +237,7 @@ automation:
       for:
         minutes: 5 
     - id: absence
-      platform: state
+      trigger: state
       entity_id:
         - binary_sensor.capteurs_mouvement_bureau
       from: "on"
@@ -245,10 +245,10 @@ automation:
       for:
         minutes: 5      
     - id: morning
-      platform: time
+      trigger: time
       at: "08:30:00"
     - id: aurore
-      platform: time
+      trigger: time
       at: "04:30:00"
       
   condition: []
@@ -346,7 +346,7 @@ automation:
   description: ""
   mode: single
   trigger:
-    - platform: state
+    - trigger: state
       entity_id:
         - binary_sensor.capteurs_mouvement_bureau
       from: "on"
@@ -411,7 +411,7 @@ automation:
   description: ""
   mode: single
   trigger:
-    - platform: state
+    - trigger: state
       entity_id:
         - binary_sensor.capteurs_mouvement_bureau
       to: "on"

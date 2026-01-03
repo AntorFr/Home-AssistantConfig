@@ -37,7 +37,7 @@ sensor:
 
 template:
   - trigger:
-      - platform: state
+      - trigger: state
         id: espresence
         entity_id:
           - sensor.iwatch_seb
@@ -47,7 +47,7 @@ template:
           - 'not_home'
           - 'unknown'
           - 'unavailable'
-      - platform: state
+      - trigger: state
         id: person
         entity_id:
           - person.sebastien

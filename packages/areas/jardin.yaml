@@ -6,7 +6,7 @@ template:
       device_class: temperature
       state_class: measurement
   - trigger: #Portail viens de s'ouvrir
-      - platform: state
+      - trigger: state
         entity_id:
           - cover.portail_2
         to: open
@@ -129,22 +129,22 @@ automation:
     - platform: sun
       event: sunrise
       id: 'sunrise'
-    - platform: event
+    - trigger: event
       event_type: routine_event
       event_data:
         type: night
       id: 'sleep'
-    - platform: event
+    - trigger: event
       event_type: routine_event
       event_data:
         type: morning
       id: 'wake-up'
-    - platform: event
+    - trigger: event
       event_type: routine_event
       event_data:
         type: home
       id: 'come-back'
-    - platform: event
+    - trigger: event
       event_type: routine_event
       event_data:
         type: away

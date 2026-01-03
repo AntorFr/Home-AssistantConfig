@@ -38,7 +38,7 @@ automation:
       only_during_night: false
       adaptive_lighting: switch.adaptive_lighting_couloir_etage
       toggle_trigger:
-        platform: state
+        trigger: state
         entity_id: 
           - binary_sensor.telerupteur_etage_couloir_bouton_1
           - binary_sensor.telerupteur_etage_couloir_bouton_2

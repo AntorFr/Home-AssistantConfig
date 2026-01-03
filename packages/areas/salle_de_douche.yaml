@@ -52,7 +52,7 @@ automation:
       lux_sun_cutoff: 280
       kill_switch: input_boolean.auto_light_kill_switch_salle_de_douche
       toggle_trigger:
-        platform: state
+        trigger: state
         entity_id: 
           - binary_sensor.dressing_light_switch_touchfield_1
         from: ["off"]

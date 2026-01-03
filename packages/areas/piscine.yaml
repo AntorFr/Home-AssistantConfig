@@ -200,7 +200,7 @@ automation:
 #  alias: Area - Piscine - Filtration automatique (barry)
 #  description: Filtration de la piscine en fonction du prix de l'electricité
 #  trigger:
-#  - platform: time_pattern
+#  - trigger: time_pattern
 #    minutes: '0'
 #    seconds: '0'
 #  condition: []
@@ -228,9 +228,9 @@ automation:
   alias: Area - Piscine - Filtration automatique (HP-HC)
   description: Filtration de la piscine en fonction du prix de l'electricité
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: sensor.template_teleinfo_periode_tarifaire
-    - platform: state
+    - trigger: state
       entity_id: schedule.filtration_piscine_ete
   condition:
     - condition: state
@@ -289,7 +289,7 @@ automation:
   alias: Area - Piscine - Filtration automatique (hivernage)
   description: Filtration de la piscine (hivernage)
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: schedule.filtration_piscine_hivernage
   condition: 
     - condition: state
@@ -319,7 +319,7 @@ automation:
 #  alias: Area - Piscine - Chauffe eau automatique (barry)
 #  description: Chauffe eau en fonction du prix de l'electricité
 #  trigger:
-#  - platform: time_pattern
+#  - trigger: time_pattern
 #    minutes: '0'
 #    seconds: '0'
 #  condition: []
@@ -347,7 +347,7 @@ automation:
   alias: Area - Piscine - Chauffe eau automatique (HP-HC)
   description: Chauffe eau en fonction du prix de l'electricité
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: sensor.template_teleinfo_periode_tarifaire
   condition: []
   action:
@@ -382,7 +382,7 @@ automation:
   description: ""
   mode: single
   trigger:
-    - platform: state
+    - trigger: state
       entity_id:
         - switch.vanne_piscine
       to: "on"

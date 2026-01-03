@@ -92,7 +92,7 @@ automation:
       adaptive_lighting: switch.adaptive_lighting_salle_a_manger
       kill_switch: input_boolean.auto_light_salle_a_manger
       toggle_trigger:
-        platform: state
+        trigger: state
         entity_id: binary_sensor.garden_light_front_bouton
         from: ["on","off"]
         to: ["on","off"]

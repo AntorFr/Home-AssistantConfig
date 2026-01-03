@@ -20,12 +20,12 @@ automation:
   description: ""
   mode: single
   trigger:
-    - platform: state
+    - trigger: state
       entity_id:
         - media_player.xbox_salon_2
       to: "on"
       id: turned_on
-    - platform: state
+    - trigger: state
       entity_id:
         - media_player.xbox_salon_2
       to: "off"

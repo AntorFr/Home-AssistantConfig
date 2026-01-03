@@ -153,7 +153,7 @@ automation:
       no_motion_warning: 30  
       only_turn_off: true      
       toggle_trigger:
-        platform: state
+        trigger: state
         entity_id: 
           - binary_sensor.emilie_entrance_switch_touchfield_3
           - binary_sensor.emilie_desk_switch_touchfield_2

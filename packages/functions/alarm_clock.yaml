@@ -53,7 +53,7 @@ automation:
   alias: Function - Réveil - Seb Semaine
   description: ''
   trigger:
-  - platform: time
+  - trigger: time
     at: input_datetime.heure_reveil_seb
   condition:
   - condition: state

@@ -7,7 +7,7 @@ automation:
   alias: 'System - Notification - New Device'
   # initial_state: 'on'
   trigger:
-    - platform: event
+    - trigger: event
       event_type: device_tracker_new_device
   action:
     - action: notify.mobile_seb

@@ -8,32 +8,32 @@ automation:
   max_exceeded: silent
 
   trigger:
-    - platform: event
+    - trigger: event
       event_type: routine_event
       event_data:
         type: evening
       id: evening
-    - platform: event
+    - trigger: event
       event_type: routine_event
       event_data:
         type: children evening ritual
       id: children evening ritual
-    - platform: event
+    - trigger: event
       event_type: routine_event
       event_data:
         type: children night
       id: children night
-    - platform: event
+    - trigger: event
       event_type: routine_event
       event_data:
         type: children morning
       id: children morning
-    - platform: event
+    - trigger: event
       event_type: routine_event
       event_data:
         type: night
       id: night
-    - platform: event
+    - trigger: event
       event_type: routine_event
       event_data:
         type: morning
@@ -111,42 +111,42 @@ automation:
   max_exceeded: silent
 
   trigger:
-    - platform: event
+    - trigger: event
       event_type: routine_event
       event_data:
         type: evening
       id: evening
-    - platform: event
+    - trigger: event
       event_type: routine_event
       event_data:
         type: children evening ritual
       id: children evening ritual
-    - platform: event
+    - trigger: event
       event_type: routine_event
       event_data:
         type: children night
       id: children night
-    - platform: event
+    - trigger: event
       event_type: routine_event
       event_data:
         type: children morning
       id: children morning
-    - platform: event
+    - trigger: event
       event_type: routine_event
       event_data:
         type: night
       id: night
-    - platform: event
+    - trigger: event
       event_type: routine_event
       event_data:
         type: morning
       id: morning
-    - platform: event
+    - trigger: event
       event_type: routine_event
       event_data:
         type: home
       id: 'come-back'
-    - platform: event
+    - trigger: event
       event_type: routine_event
       event_data:
         type: away

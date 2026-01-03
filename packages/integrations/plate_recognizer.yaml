@@ -54,7 +54,7 @@ automation:
   alias: Integration Plate recognizer - lecture plaque portail
   description: Lecture des plaques des voitures au portail
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: binary_sensor.sonette_front_car_occupancy
       to: "on"
   condition: 
@@ -90,7 +90,7 @@ automation:
   alias: Integration Plate recognizer - reset
   description: Reset sensor state
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: cover.portail_2
       to: "closed"
   condition:

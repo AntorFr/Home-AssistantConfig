@@ -95,7 +95,7 @@ automation:
 - id: 'function_security_arm_when_away'
   alias: 'Function - Security -  Arme quand absent'
   trigger:
-  - platform: event
+  - trigger: event
     event_type: routine_event
     event_data:
       type: away
@@ -107,7 +107,7 @@ automation:
 - id: 'function_security_arm_when_sleep'
   alias: 'Function - Security - Arme quand mode nuit'
   trigger:
-  - platform: event
+  - trigger: event
     event_type: routine_event
     event_data:
       type: night
@@ -123,10 +123,10 @@ automation:
 - id: 'function_security_desarm_when_home'
   alias: 'Function - Security -  Désarme au retours des parents'
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: group.parent_home
     to: home
-  - platform: state
+  - trigger: state
     entity_id: input_boolean.away_mode
     to: 'on'
   condition:
@@ -141,11 +141,11 @@ automation:
 - id: 'function_security_desarm_when_morning'
   alias: 'Function - Security -  Désarme au reveil'
   trigger:
-  - platform: event
+  - trigger: event
     event_type: routine_event
     event_data:
       type: morning
-  - platform: event
+  - trigger: event
     event_type: routine_event
     event_data:
       type: aurore
@@ -161,13 +161,13 @@ automation:
 - id: 'function_security_triger_while_armed_away'
   alias: 'Function - Security - Alarme (absent)'
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: binary_sensor.maison_rdc_presence
       to: "on"
-    - platform: state
+    - trigger: state
       entity_id: binary_sensor.outside_presence
       to: "on"
-    - platform: state
+    - trigger: state
       entity_id: binary_sensor.maison_floor1_presence
       to: "on"
   condition:
@@ -183,7 +183,7 @@ automation:
 - id: 'function_security_triger_while_armed_night'
   alias: 'Function - Security - Alarme (nuit)'
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: binary_sensor.outside_presence
       to: "on"
   condition:
@@ -199,7 +199,7 @@ automation:
 - id: 'function_security_triger_acton'
   alias: 'Function - Security - Traitement alarme'
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: alarm_control_panel.alarme_maison
       to: "triggered"
   action:

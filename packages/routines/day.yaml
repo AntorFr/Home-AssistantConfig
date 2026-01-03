@@ -108,7 +108,7 @@ automation:
       Nuit: night
 
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: input_select.day_phase
   condition: []
   action:
@@ -123,10 +123,10 @@ automation:
   alias: Routine - Day - Soirée
   description: ''
   trigger:
-  - platform: time
+  - trigger: time
     at: input_datetime.evening_time
     id: week
-  - platform: time
+  - trigger: time
     at: input_datetime.evening_time_we
     id: weekend   
   condition:
@@ -169,7 +169,7 @@ automation:
   alias: Routine - Day - Après-midi
   description: ''
   trigger:
-  - platform: time
+  - trigger: time
     at: input_datetime.afternoon_time
   condition:
   - condition: state
@@ -191,10 +191,10 @@ automation:
   alias: Routine - Day - Children evening ritual
   description: ''
   trigger:
-  - platform: time
+  - trigger: time
     at: input_datetime.children_evening_ritual_time
     id: week
-  - platform: time
+  - trigger: time
     at: input_datetime.children_evening_ritual_time_we
     id: weekend
   condition:
@@ -235,10 +235,10 @@ automation:
   alias: Routine - Day - Enfants nuit
   description: ''
   trigger:
-  - platform: time
+  - trigger: time
     at: input_datetime.children_night_time
     id: week
-  - platform: time
+  - trigger: time
     at: input_datetime.children_night_time_we
     id: weekend
   condition:
@@ -290,10 +290,10 @@ automation:
   alias: Routine - Day - Émilie couvre-feu
   description: ''
   trigger:
-  - platform: time
+  - trigger: time
     at: input_datetime.children_curfew_emilie
     id: week
-  - platform: time
+  - trigger: time
     at: input_datetime.children_curfew_we_emilie
     id: weekend
   condition:
@@ -337,10 +337,10 @@ automation:
   alias: Routine - Day - Timothée couvre-feu
   description: ''
   trigger:
-  - platform: time
+  - trigger: time
     at: input_datetime.children_curfew_timothee
     id: week
-  - platform: time
+  - trigger: time
     at: input_datetime.children_curfew_we_timothee
     id: weekend
   condition:
@@ -384,10 +384,10 @@ automation:
   alias: Routine - Day - Children morning
   description: ''
   trigger:
-  - platform: time
+  - trigger: time
     at: input_datetime.children_morning_time
     id: week
-  - platform: time
+  - trigger: time
     at: input_datetime.children_morning_time
     id: weekend
   condition:
@@ -433,18 +433,18 @@ automation:
   alias: Routine - Day - Detect Matin
   description: 'Routine matin'
   trigger:
-  - platform: time
+  - trigger: time
     at: input_datetime.morning_time
     id: week
-  - platform: time
+  - trigger: time
     at: input_datetime.morning_time_we
     id: weekend
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.maison_rdc_presence
     to: 'on'
     id: motion
   - alias: "ios action Wake-up"
-    platform: event
+    trigger: event
     event_type: ios.action_fired
     event_data:
       actionName: "Wake-up"
@@ -516,15 +516,15 @@ automation:
   alias: Routine - Day - Detect Nuit
   description: ''
   trigger:
-  - platform: time
+  - trigger: time
     at: '03:00:00'
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.maison_rdc_presence
     from: 'on'
     to: 'off'
     for: 02:00:00
   - alias: "ios action Sleep"
-    platform: event
+    trigger: event
     event_type: ios.action_fired
     event_data:
       actionName: "Sleep"
@@ -552,7 +552,7 @@ automation:
   alias: Routine - Day - Detect Aurore
   description: 'De bonne heure'
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.maison_rdc_presence
     from: 'off'
     to: 'on'
@@ -576,7 +576,7 @@ automation:
   alias: Routine - Day - Nuit
   description: ''
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: input_boolean.night_mode
       to: 'on'
   condition: []
@@ -589,7 +589,7 @@ automation:
   alias: Routine - Day - Matin
   description: ''
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: input_boolean.night_mode
       to: 'off'
   condition: []

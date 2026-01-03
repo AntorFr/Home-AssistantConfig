@@ -222,12 +222,12 @@ automation:
   alias: Area - Salon - Lumière mode TV On/Off
   mode: single
   trigger:
-    - platform: state
+    - trigger: state
       entity_id:
         - media_player.tv01
       to: "on"
       id: "on"
-    - platform: state
+    - trigger: state
       entity_id:
         - media_player.tv01
       to: "off"

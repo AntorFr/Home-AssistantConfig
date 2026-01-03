@@ -483,7 +483,7 @@ automation:
       only_turn_off: false
       only_during_night: true      
       toggle_trigger:
-        platform: state
+        trigger: state
         entity_id: binary_sensor.parent_light_switch_touchfield_1
         from: ["off"]
         to: ["on"]

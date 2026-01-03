@@ -13,7 +13,7 @@ automation:
   description: ''
   mode: restart
   trigger:
-    - platform: state
+    - trigger: state
       entity_id:
         - input_select.maison_ambiance
   condition: []

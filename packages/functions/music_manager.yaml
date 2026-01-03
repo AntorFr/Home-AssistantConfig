@@ -422,7 +422,7 @@ automation:
       {%endfor%}
       {{ns.tags|unique|list|to_json(ensure_ascii=True)}} 
   trigger:
-    platform: event
+    trigger: event
     event_type: tag_scanned
   condition:
     # Test that we support this device and tag
@@ -468,7 +468,7 @@ automation:
       53-EF-D6-D7-60-00-01: "Harry Potter à l'École des Sorciers"
         
   trigger:
-    platform: event
+    trigger: event
     event_type: tag_scanned
   condition:
     # Test that we support this device and tag
@@ -493,13 +493,13 @@ automation:
   description: ""
   mode: single
   trigger:
-    - platform: state
+    - trigger: state
       entity_id:
         - media_player.salon
       attribute: source
       to: TV
       id: tv
-    - platform: state
+    - trigger: state
       entity_id:
         - media_player.salon
       attribute: source

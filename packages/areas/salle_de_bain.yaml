@@ -31,7 +31,7 @@ automation:
         minutes: 1
       no_motion_warning: 30
       toggle_trigger:
-        platform: state
+        trigger: state
         entity_id: 
           - binary_sensor.bathroom_light_switch_touchfield_1
         from: ["off"]

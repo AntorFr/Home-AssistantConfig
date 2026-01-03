@@ -5,7 +5,7 @@ automation:
   alias: Function - Couverture chauffante - Turn on Soirée
   description: ''
   trigger:
-  - platform: time
+  - trigger: time
     at: '22:05:00'
   condition:
   - condition: and
@@ -43,7 +43,7 @@ automation:
   alias: Function - Couverture chauffante - Auto off Seb
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: switch.couverture_seb
     to: 'on'
     for: 
@@ -61,7 +61,7 @@ automation:
   alias: Function - Couverture chauffante - Auto off Laurine
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: switch.couverture_laurine
     to: 'on'
     for: 

@@ -70,7 +70,7 @@ automation:
       adaptive_lighting: switch.adaptive_lighting_entree
       only_during_night: false
       toggle_trigger:
-        platform: state
+        trigger: state
         entity_id: 
           - binary_sensor.telerupteur_entree_bouton_1
           - binary_sensor.telerupteur_entree_bouton_2

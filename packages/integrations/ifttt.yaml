@@ -11,7 +11,7 @@ automation:
   - event_data:
       action: call_service
     event_type: ifttt_webhook_received
-    platform: event
+    trigger: event
   condition:
     condition: template
     value_template: "{{ trigger.event.data.service == 'device_tracker.see' }}"
@@ -37,7 +37,7 @@ automation:
   - event_data:
       action: call_service
     event_type: ifttt_webhook_received
-    platform: event
+    trigger: event
   condition: 
     - condition: or
       conditions:
