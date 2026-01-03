@@ -135,6 +135,7 @@ script:
         data:
           message: "Tempo rouge Preparation"
       - service: select.select_option
+        continue_on_error: true
         data:
           option: "Tempo rouge"
         target:
@@ -166,6 +167,11 @@ script:
                     entity_id: water_heater.panasonic_heat_pump_main_dhw_target_temp
                   data:
                     temperature: 65
+                - action: water_heater.set_operation_mode
+                  target:
+                    entity_id: water_heater.panasonic_heat_pump_main_dhw_target_temp
+                  data:
+                    operation_mode: performance
                 - delay:
                     seconds: 60  
 ###############################################  
@@ -188,6 +194,7 @@ script:
           entity_id: 
             - climate.mobile_heater_plug_thermostat
       - service: select.select_option
+        continue_on_error: true
         data:
           option: "Tempo rouge"
         target:
@@ -212,6 +219,11 @@ script:
                     entity_id: water_heater.panasonic_heat_pump_main_dhw_target_temp
                   data:
                     temperature: 40
+                - action: water_heater.set_operation_mode
+                  target:
+                    entity_id: water_heater.panasonic_heat_pump_main_dhw_target_temp
+                  data:
+                    operation_mode: performance
                 - delay:
                     seconds: 60               
 
@@ -231,6 +243,7 @@ script:
           label_id: 
             - red_power_off
       - service: select.select_option
+        continue_on_error: true
         data:
           option: Normal
         target:
@@ -254,7 +267,12 @@ script:
                   target:
                     entity_id: water_heater.panasonic_heat_pump_main_dhw_target_temp
                   data:
-                    temperature: 53
+                    temperature: 55
+                - action: water_heater.set_operation_mode
+                  target:
+                    entity_id: water_heater.panasonic_heat_pump_main_dhw_target_temp
+                  data:
+                    operation_mode: performance
                 - delay:
                     seconds: 60      
      
