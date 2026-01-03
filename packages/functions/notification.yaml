@@ -1,7 +1,7 @@
 notify:
   - platform: tts
     name: bureau
-    tts_action: tts.cloud_say
+    entity_id: tts.cloud_say
     media_player: media_player.fire_tablet
 
 

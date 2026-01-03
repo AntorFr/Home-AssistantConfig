@@ -15,7 +15,7 @@ tts:
 notify:
   - platform: tts
     name: notify_salon
-    tts_action: tts.google_say
+    entity_id: tts.google_say
     media_player: media_player.salon
     language: fr
 
@@ -29,7 +29,7 @@ http:
   - 172.16.0.0/16 
 
 recorder:
-  purge_keep_days: 5
+  purge_keep_days: 10
 #  db_url: !secret k3s_db_url
 #  exclude:
 #    domains:
@@ -56,7 +56,7 @@ logger:
     #custom_components.deepstack_face: error
 
 sensor:
-  - trigger: time_date
+  - platform: time_date
     display_options:
       - 'date_time_iso'
 
