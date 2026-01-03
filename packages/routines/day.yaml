@@ -711,6 +711,7 @@ script:
           entity_id: 
             - script.routine_reset_lightning_settings
       - action: script.turn_on
+        continue_on_error: true
         target:
           entity_id: 
             - script.routine_all_light_mode_night_on
