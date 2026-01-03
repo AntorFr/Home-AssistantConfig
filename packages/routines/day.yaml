@@ -666,56 +666,54 @@ script:
         entity_id: input_select.day_phase
       data:
         option: Nuit
-    - service: notify.mobile_seb
+    - action: notify.mobile_seb
       data:
         message: Bonne nuit
     - parallel:
-      - service: script.turn_on
+      - action: script.turn_on
         continue_on_error: true
         target:
           entity_id: 
             - script.routine_night_all_light_turn_off
-      - service: script.turn_on
+      - action: script.turn_on
         continue_on_error: true
         target:
           entity_id: 
             - script.routine_all_media_player_off
-      - service: script.turn_on
+      - action: script.turn_on
         continue_on_error: true
         target:
           entity_id: 
             - script.routine_night_all_power_device_off
-      - service: script.turn_on
+      - action: script.turn_on
         continue_on_error: true
         target:
           entity_id: 
             - script.routine_night_all_cover_close
-      - service: script.turn_on
+      - action: script.turn_on
         continue_on_error: true
         target:
           entity_id: 
             - script.routine_all_garage_door_close
-      - service: script.turn_on
+      - action: script.turn_on
         continue_on_error: true
         target:
           entity_id: 
             - script.routine_all_lock_lock
-      - service: script.turn_on
+      - action: script.turn_on
         continue_on_error: true
         target:
           entity_id: 
             - script.routine_night_settings
-      - service: script.turn_on
+      - action: script.turn_on
         continue_on_error: true
         target:
           entity_id: 
             - script.routine_reset_lightning_settings
-    - delay:
-        seconds: 10
-    - service: script.turn_on
-      target:
-        entity_id: 
-          - script.routine_all_light_mode_night_on
+      - action: script.turn_on
+        target:
+          entity_id: 
+            - script.routine_all_light_mode_night_on
 ################################################################################
   routine_matin:
     alias: Routine - Matin

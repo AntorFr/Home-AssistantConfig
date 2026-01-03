@@ -107,6 +107,8 @@ script:
   routine_all_light_mode_night_on:
     alias: Routine - Lumières mode nuit
     sequence:
+    - delay:
+        seconds: 10    
     - service: switch.turn_on
       target:
         entity_id:
