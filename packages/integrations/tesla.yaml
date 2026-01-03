@@ -4,7 +4,7 @@ intent_script:
     speech:
       text: "Préparation de la voiture en cours."
     action:
-      - service: script.integration_tesla_ready_to_leave
+      - action: script.integration_tesla_ready_to_leave
 
 script:
 ################################################################################

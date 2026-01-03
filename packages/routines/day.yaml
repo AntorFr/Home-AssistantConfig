@@ -154,13 +154,13 @@ automation:
     event: routine_event
     event_data:
       type: evening
-  - service: input_select.select_option  
+  - action: input_select.select_option  
     target:
       entity_id: input_select.day_phase
     data:
       option: Soirée
   - alias: "desable adaptative light during diner"
-    service: switch.turn_off
+    action: switch.turn_off
     target:
       entity_id: switch.adaptive_lighting_salle_a_manger
   mode: single
@@ -180,7 +180,7 @@ automation:
     event: routine_event
     event_data:
       type: after-noon
-  - service: input_select.select_option  
+  - action: input_select.select_option  
     target:
       entity_id: input_select.day_phase
     data:
@@ -222,12 +222,12 @@ automation:
     event: routine_event
     event_data:
       type: children evening ritual
-  - service: input_select.select_option  
+  - action: input_select.select_option  
     target:
       entity_id: input_select.day_phase
     data:
       option: "Soirée - retour au calme"
-  - service: script.turn_on
+  - action: script.turn_on
     target:
       entity_id: script.routine_children_cover_workday
 ################################################################################
@@ -266,23 +266,23 @@ automation:
     event: routine_event
     event_data:
       type: children night
-  - service: input_select.select_option  
+  - action: input_select.select_option  
     target:
       entity_id: input_select.day_phase
     data:
       option:  "Soirée - enfants couché"
 
-  - service: input_boolean.turn_on
+  - action: input_boolean.turn_on
     data: {}
     target:
       entity_id: 
         - input_boolean.night_mode_emilie
         - input_boolean.night_mode_timothee
   - alias: "enable adaptative light in dinning room"
-    service: switch.turn_on
+    action: switch.turn_on
     target:
       entity_id: switch.adaptive_lighting_salle_a_manger
-  - service: switch.turn_on
+  - action: switch.turn_on
     target:
       entity_id: switch.adaptive_lighting_sleep_mode_couloir_etage
 ################################################################################
@@ -321,13 +321,13 @@ automation:
     event: routine_event
     event_data:
       type: emilie curfew
-  #- service: input_select.select_option  
+  #- action: input_select.select_option  
   #  target:
   #    entity_id: input_select.day_phase
   #  data:
   #    option:  "Soirée - enfants couché"
   - alias: "Activate curfiew mode"
-    service: input_boolean.turn_on
+    action: input_boolean.turn_on
     target:
       entity_id: 
         #- input_boolean.curfew_timothee
@@ -368,13 +368,13 @@ automation:
     event: routine_event
     event_data:
       type: timothee curfew
-  #- service: input_select.select_option  
+  #- action: input_select.select_option  
   #  target:
   #    entity_id: input_select.day_phase
   #  data:
   #    option:  "Soirée - enfants couché"
   - alias: "Activate curfiew mode"
-    service: input_boolean.turn_on
+    action: input_boolean.turn_on
     target:
       entity_id: 
         - input_boolean.curfew_timothee
@@ -412,7 +412,7 @@ automation:
         state: 'on' 
   action:
   - alias: "Disable curfiew mode and night mode "
-    service: input_boolean.turn_off
+    action: input_boolean.turn_off
     target:
       entity_id: 
         - input_boolean.curfew_timothee
@@ -423,7 +423,7 @@ automation:
     event: routine_event
     event_data:
       type: children morning
-  - service: input_select.select_option  
+  - action: input_select.select_option  
     target:
       entity_id: input_select.day_phase
     data:
@@ -506,7 +506,7 @@ automation:
               condition: trigger
               id: button
   action:
-  - service: input_boolean.turn_off
+  - action: input_boolean.turn_off
     data: {}
     target:
       entity_id: input_boolean.night_mode
@@ -542,7 +542,7 @@ automation:
             after: '22:00:00'
             before: '06:00:00'
   action:
-  - service: input_boolean.turn_on
+  - action: input_boolean.turn_on
     data: {}
     target:
       entity_id: input_boolean.night_mode
@@ -569,7 +569,7 @@ automation:
             after: '05:00:00'
             before: '06:29:59'
   action:
-  - service: script.routine_aurore
+  - action: script.routine_aurore
   mode: single
 ################################################################################
 - id: 'routine_night'
@@ -581,7 +581,7 @@ automation:
       to: 'on'
   condition: []
   action:
-    - service: script.turn_on
+    - action: script.turn_on
       target:
         entity_id: script.routine_sleep_mode
 ################################################################################
@@ -594,7 +594,7 @@ automation:
       to: 'off'
   condition: []
   action:
-    - service: script.turn_on
+    - action: script.turn_on
       target:
         entity_id: script.routine_matin
 ################################################################################
@@ -614,7 +614,7 @@ automation:
       below: 20
 
   action:
-    - service: script.turn_on
+    - action: script.turn_on
       target:
         entity_id: script.routine_night_all_cover_close
 ################################################################################
@@ -646,7 +646,7 @@ automation:
 #          and (now()>today_at(states("input_datetime.morning_time")))}}
 
   action:
-    - service: script.turn_on
+    - action: script.turn_on
       target:
         entity_id: script.routine_morning_cover_open
 ################################################################################
@@ -661,7 +661,7 @@ script:
       event: routine_event
       event_data:
         type: night
-    - service: input_select.select_option  
+    - action: input_select.select_option  
       target:
         entity_id: input_select.day_phase
       data:
@@ -722,31 +722,31 @@ script:
       event: routine_event
       event_data:
         type: morning
-    - service: input_select.select_option  
+    - action: input_select.select_option  
       target:
         entity_id: input_select.day_phase
       data:
         option: Matin
-    - service: notify.mobile_seb
+    - action: notify.mobile_seb
       data:
         message: Bonjour
     - parallel:
-      - service: script.turn_on
+      - action: script.turn_on
         continue_on_error: true
         target:
           entity_id: 
             - script.routine_all_light_mode_night_off
-      - service: script.turn_on
+      - action: script.turn_on
         continue_on_error: true
         target:
           entity_id: 
             - script.routine_morning_all_light_turn_on
-      - service: script.turn_on
+      - action: script.turn_on
         continue_on_error: true
         target:
           entity_id: 
             - script.routine_all_power_device_on
-      - service: script.turn_on
+      - action: script.turn_on
         continue_on_error: true
         target:
           entity_id: 
@@ -760,7 +760,7 @@ script:
           after_offset: "-00:30:00"
           before: sunset
         sequence:
-          - service: script.turn_on
+          - action: script.turn_on
             target:
               entity_id: script.routine_morning_cover_open
 ################################################################################
@@ -771,15 +771,15 @@ script:
       event: routine_event
       event_data:
         type: aurore
-    - service: input_select.select_option  
+    - action: input_select.select_option  
       target:
         entity_id: input_select.day_phase
       data:
         option: Aurore
-    - service: notify.mobile_seb
+    - action: notify.mobile_seb
       data:
         message: Bonjour, pas trop dure ?
-    - service: script.turn_on
+    - action: script.turn_on
       target:
         entity_id: 
           - script.routine_all_light_mode_night_off
@@ -792,7 +792,7 @@ intent_script:
     speech:
       text: "très bien, passez une Bonne nuit"
     action:
-    - service: input_boolean.turn_on
+    - action: input_boolean.turn_on
       data: {}
       target:
         entity_id: input_boolean.night_mode
@@ -802,7 +802,7 @@ intent_script:
     speech:
       text: "Bonjour ! c'est partie pour une nouvelle journée"
     action:
-    - service: input_boolean.turn_off
+    - action: input_boolean.turn_off
       data: {}
       target:
         entity_id: 

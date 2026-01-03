@@ -175,9 +175,9 @@ automation:
             entity_id: input_boolean.mode_noel
             state: 'on'
       sequence:
-        - service: switch.turn_on
+        - action: switch.turn_on
           entity_id: switch.guirlandes_noel_switch
-        - service: light.turn_on
+        - action: light.turn_on
           entity_id: light.guirlandes_noel
     - alias: "sunrise or at sleep or away  > turn off"
       conditions:
@@ -187,10 +187,10 @@ automation:
             - 'sleep'
             - 'leaving'
       sequence:
-        - service: switch.turn_off
+        - action: switch.turn_off
           entity_id:
             - switch.guirlandes_noel_switch
-        - service: light.turn_off
+        - action: light.turn_off
           entity_id:
             - light.guirlandes_noel
 

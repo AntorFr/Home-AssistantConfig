@@ -35,7 +35,7 @@ script:
       - repeat:
           while: "{{ not is_state(lock,'unlocked') and repeat.index < max_retry}}"
           sequence:
-            - service: lock.unlock
+            - action: lock.unlock
               target:
                 entity_id: "{{lock}}"
             - wait_template: "{{ is_state(lock,'unlocked') }}"
@@ -126,7 +126,7 @@ script:
       - repeat:
           while: "{{ not is_state(lock,'locked') and repeat.index < max_retry}}"
           sequence:
-            - service: lock.lock
+            - action: lock.lock
               target:
                 entity_id: "{{lock}}"
             - wait_template: "{{ is_state(lock,'locked') }}"

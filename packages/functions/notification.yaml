@@ -1,7 +1,7 @@
 notify:
   - platform: tts
     name: bureau
-    tts_service: tts.cloud_say
+    tts_action: tts.cloud_say
     media_player: media_player.fire_tablet
 
 
@@ -12,14 +12,14 @@ intent_script:
     speech:
       text: "Ok, message envoyé"
     action:
-      - service: script.lunchtime
+      - action: script.lunchtime
 ################################################################################
   SayTo:
     async_action: false
     speech:
       text: "Ok, message envoyé"
     action:
-      - service: script.sayto
+      - action: script.sayto
         data:
           person: "{{name}}"
           message: "{{message}}"
@@ -39,14 +39,14 @@ script:
         description: List of light entities to be used
         required: true
     sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         data:
           color_name: red
           effect: breathe
           brightness_pct: 100
         target:
           entity_id: "{{light_entities}}"
-      - service: number.set_value
+      - action: number.set_value
         data:
           value: 60
         target:
@@ -75,13 +75,13 @@ script:
         name: message
         description: tts message to be used
         required: true
-      tts_service:
+      tts_action:
         name: tts service
         description: tts service used
         required: false
         default: 'tts.cloud_say'
     variables:   
-      tts_service: >
+      tts_action: >
         {%- if (tts_service is not defined ) or  (tts_service is none) or (tts_service == '')-%}
           tts.cloud_say
         {%- else -%}
@@ -99,12 +99,12 @@ script:
             media_player: >
               {% from 'room_functions.jinja' import area_entity_id %}
               {{area_entity_id(room,'area_tts')}}
-        - service: "{{tts_service}}"
+        - action: "{{tts_service}}"
           data:
             message: "{{message}}"
             entity_id: "{{media_player}}"
       else:
-        - service: notify.mobile_seb
+        - action: notify.mobile_seb
           data:
             message: "{{message}}"
  
@@ -114,7 +114,7 @@ script:
     icon: mdi:alarm-light-off-outline
     mode: parallel
     sequence:
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: "{{light_entities}}"
 ###############################################
@@ -131,7 +131,7 @@ script:
         description: content id to be displayed
         required: true
     sequence:
-      - service: media_player.play_media
+      - action: media_player.play_media
         data:
           announce: true
           media_content_type: "music"
@@ -142,23 +142,23 @@ script:
   sonos_say:
     alias: "Sonos TTS script"
     sequence:
-    - service: sonos.snapshot
+    - action: sonos.snapshot
       data_template:
         entity_id: "{{ sonos_entity }}"
-    - service: media_player.unjoin
+    - action: media_player.unjoin
       data_template:
         entity_id: "{{ sonos_entity }}"
-    - service: media_player.volume_set
+    - action: media_player.volume_set
       data_template:
         entity_id: "{{ sonos_entity }}"
         volume_level: "{{ volume }}"
-    - service: tts.google_say
-    #- service: tts.voicerss_say
+    - action: tts.google_say
+    #- action: tts.voicerss_say
       data_template:
         entity_id: "{{ sonos_entity }}"
         message: "{{ message }}"
     - delay: "{{ delay }}"
-    - service: sonos.restore
+    - action: sonos.restore
       data_template:
         entity_id: "{{ sonos_entity }}"
 ###############################################
@@ -177,7 +177,7 @@ script:
 
           {%- from 'music_functions.jinja' import sonos_in_areas -%}
           {{sonos_in_areas(area_list)|from_json}}
-    - service: chime_tts.say
+    - action: chime_tts.say
       data:
         tts_platform: cloud
         message: "A table."
@@ -291,7 +291,7 @@ script:
           {%- else  -%}
           "{{ event.summary }} dans {{(as_timedelta(delta_time).seconds/60)| round}} minutes"
           {%- endif -%}
-    - service: chime_tts.say
+    - action: chime_tts.say
       enabled: true
       data:
         tts_platform: cloud

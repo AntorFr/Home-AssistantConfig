@@ -26,7 +26,7 @@ script:
         input_boolean.aspiration_entree: 19
         input_boolean.aspiration_cuisine: 22
     sequence:
-    - service: vacuum.send_command
+    - action: vacuum.send_command
       data:
         command: app_segment_clean
         params:
@@ -38,7 +38,7 @@ script:
               {{ns.selected_room}}
       target:
         entity_id: vacuum.roborock_s7
-    - service: input_boolean.turn_off
+    - action: input_boolean.turn_off
       target:
         entity_id: "{{ room_nb.keys()|list}}"
     mode: single

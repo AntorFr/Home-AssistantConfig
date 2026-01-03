@@ -10,7 +10,7 @@ automation:
     - platform: event
       event_type: device_tracker_new_device
   action:
-    - service: notify.mobile_seb
+    - action: notify.mobile_seb
       data_template:
         message: >
           Home Assistant a découvert un nouvel appareil:
@@ -24,7 +24,7 @@ automation:
     platform: homeassistant
     event: start
   action:
-    service: notify.mobile_seb
+    action: notify.mobile_seb
     data:
       message: 'Home Assistant a redémarré.'
 ################################################################################

@@ -46,7 +46,7 @@ automation:
       discovery_id: 0x00124b001f6618d8 action_single
   condition: []
   action:
-    - service: cover.toggle
+    - action: cover.toggle
       data: {}
       target:
         entity_id: cover.portail_2

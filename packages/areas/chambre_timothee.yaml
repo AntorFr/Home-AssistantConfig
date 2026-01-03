@@ -141,10 +141,10 @@ automation:
       multi_touch: binary_sensor.timothee_entrance_switch_multi_touch
       swipe_left: binary_sensor.timothee_entrance_switch_swipe_left 
       touchfield_3_action:
-        - service: light.toggle
+        - action: light.toggle
           target:
             entity_id: light.led_matrix
-        - service: select.select_option
+        - action: select.select_option
           target:
             entity_id: select.display_mode
           data:
@@ -184,7 +184,7 @@ automation:
             - condition: trigger
               id: open
           sequence:
-            - service: cover.open_cover
+            - action: cover.open_cover
               data: {}
               target:
                 area_id: chambre_timothee
@@ -192,7 +192,7 @@ automation:
             - condition: trigger
               id: close
           sequence:
-            - service: cover.close_cover
+            - action: cover.close_cover
               data: {}
               target:
                 area_id: chambre_timothee
@@ -206,12 +206,12 @@ automation:
       tag_id: 53-10-D0-D6-60-00-01
   condition: []
   action:
-    - service: tts.cloud_say
+    - action: tts.cloud_say
       data:
         entity_id: media_player.timothee
         message: Super, c'est la fête !
         cache: true
-    - service: light.turn_on
+    - action: light.turn_on
       data:
         effect: Color Wipe
         brightness_pct: 100
@@ -222,7 +222,7 @@ automation:
         minutes: 0
         seconds: 1
         milliseconds: 0
-    - service: script.play_mood_music
+    - action: script.play_mood_music
       data:
         rooms:
           - chambre_timothee

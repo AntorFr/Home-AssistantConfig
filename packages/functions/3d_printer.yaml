@@ -14,7 +14,7 @@ automation:
       to: printing
 
   action:
-    - service: notify.mobile_seb
+    - action: notify.mobile_seb
       data:
         message: "{{ state_attr(trigger.entity_id, 'friendly_name') }} - Debut impression"
 
@@ -31,7 +31,7 @@ automation:
         - busy
       to: finished
   action:
-    - service: notify.mobile_seb
+    - action: notify.mobile_seb
       data:
         message: "{{ state_attr(trigger.entity_id, 'friendly_name') }} - impression terminée"
 ################################################################################
@@ -54,6 +54,6 @@ automation:
         - error
         - attention
   action:
-    - service: notify.mobile_seb
+    - action: notify.mobile_seb
       data:
         message: "{{ state_attr(trigger.entity_id, 'friendly_name') }} - Probleme détecté"

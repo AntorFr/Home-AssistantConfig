@@ -5,7 +5,7 @@ script:
   routine_all_light_turn_off:
     alias: Routine - All light off
     sequence:
-    - service: light.turn_off
+    - action: light.turn_off
       target:
         area_id:
         - bureau
@@ -44,7 +44,7 @@ script:
   routine_night_all_light_turn_off:
     alias: Routine - All light off night
     sequence:
-    - service: light.turn_off
+    - action: light.turn_off
       target:
         area_id:
         - bureau
@@ -78,7 +78,7 @@ script:
           entity_id: input_boolean.guest_mode
           state: 'off'
       then:
-        - service: light.turn_off
+        - action: light.turn_off
           target:
             area_id: chambre_d_amis
     - if:
@@ -87,7 +87,7 @@ script:
           entity_id: input_boolean.mode_noel
           state: 'on'
       then:
-        - service: light.turn_off
+        - action: light.turn_off
           target:
             entity_id: light.sapin
 ################################################################################
@@ -100,7 +100,7 @@ script:
           entity_id: input_boolean.mode_noel
           state: 'on'
       then:
-        - service: light.turn_on
+        - action: light.turn_on
           target:
             entity_id: light.sapin
 ################################################################################
@@ -109,7 +109,7 @@ script:
     sequence:
     - delay:
         seconds: 10    
-    - service: switch.turn_on
+    - action: switch.turn_on
       target:
         entity_id:
         - switch.adaptive_lighting_sleep_mode_cuisine
@@ -124,7 +124,7 @@ script:
   routine_all_light_mode_night_off:
     alias: Routine - Lumières mode jour
     sequence:
-    - service: switch.turn_off
+    - action: switch.turn_off
       target:
         entity_id:
         - switch.adaptive_lighting_sleep_mode_cuisine
@@ -141,7 +141,7 @@ script:
   routine_all_media_player_off:
     alias: Routine - All Media player off
     sequence:
-    - service: media_player.media_stop
+    - action: media_player.media_stop
       target:
         area_id:
         - bureau
@@ -158,7 +158,7 @@ script:
   routine_rdc_media_player_off:
     alias: Routine - All Media player RdC off
     sequence:
-    - service: media_player.media_stop
+    - action: media_player.media_stop
       target:
         area_id:
         - cuisine
@@ -171,7 +171,7 @@ script:
   routine_night_all_power_device_off:
     alias: Routine - All power saving device off (nuit)
     sequence:
-    - service: switch.turn_off
+    - action: switch.turn_off
       target:
         entity_id:
           - switch.couverture_laurine
@@ -180,7 +180,7 @@ script:
         label_id: 
           - night_power_off
 
-    - service: script.turn_on
+    - action: script.turn_on
       target:
         entity_id:
           #Bureau
@@ -190,7 +190,7 @@ script:
   routine_away_all_power_device_off:
     alias: Routine - All power saving device off (absence)
     sequence:
-    - service: switch.turn_off
+    - action: switch.turn_off
       target:
         entity_id:
           #Chambre parent
@@ -206,7 +206,7 @@ script:
           - night_power_off
           - away_power_off
 
-    - service: script.turn_on
+    - action: script.turn_on
       target:
         entity_id:
           #Bureau
@@ -218,7 +218,7 @@ script:
   routine_all_power_device_on:
     alias: Routine - All power saving device on
     sequence:
-    - service: switch.turn_on
+    - action: switch.turn_on
       target:
         entity_id:
 
@@ -230,7 +230,7 @@ script:
           - night_power_off
           - away_power_off
           
-    - service: script.turn_off
+    - action: script.turn_off
       target:
         entity_id:
           #Bureau
@@ -280,7 +280,7 @@ script:
   routine_all_cover_open:
     alias: Routine - Open all cover
     sequence:
-    - service: cover.open_cover
+    - action: cover.open_cover
       target:
         area_id:
         - cuisine
@@ -296,7 +296,7 @@ script:
   routine_morning_cover_open:
     alias: Routine - Ouvre les volets le matin
     sequence:
-    - service: cover.open_cover
+    - action: cover.open_cover
       target:
         area_id:
         - cuisine
@@ -310,14 +310,14 @@ script:
           entity_id: input_boolean.guest_mode
           state: 'off'
         sequence:
-        - service: cover.open_cover
+        - action: cover.open_cover
           target:
             area_id: chambre_d_amis
 ################################################################################
   routine_all_cover_close:
     alias: Routine - Ferme tous les volets
     sequence:
-    - service: cover.close_cover
+    - action: cover.close_cover
       target:
         area_id:
         - cuisine
@@ -339,7 +339,7 @@ script:
           entity_id: binary_sensor.vacances_scolaires_demain
           state: 'off'
         sequence:
-        - service: cover.close_cover
+        - action: cover.close_cover
           target:
             area_id:
             - chambre_timothee
@@ -348,7 +348,7 @@ script:
   routine_night_all_cover_close:
     alias: Routine - Ferme tous les volets (nuit)
     sequence:
-    - service: cover.close_cover
+    - action: cover.close_cover
       target:
         area_id:
         - cuisine
@@ -365,14 +365,14 @@ script:
           entity_id: input_boolean.guest_mode
           state: 'off'
         sequence:
-        - service: cover.close_cover
+        - action: cover.close_cover
           target:
             area_id: chambre_d_amis
 ################################################################################
   routine_all_garage_door_close:
     alias: Routine - Ferme toutes les garages
     sequence:
-    - service: cover.close_cover
+    - action: cover.close_cover
       target:
         area_id: garage
 
@@ -381,7 +381,7 @@ script:
   routine_all_lock_unlock:
     alias: Routine - Déverouille les portes
     sequence:
-    #- service: lock.unlock
+    #- action: lock.unlock
     #  target:
     #    entity_id: 
     #    - lock.nuki_gateway_entrance_nuki_lock
@@ -395,7 +395,7 @@ script:
   routine_all_lock_lock:
     alias: Routine - Verouille les portes
     sequence:
-    #- service: lock.lock
+    #- action: lock.lock
     #  target:
     #    entity_id: 
     #    - lock.nuki_gateway_entrance_nuki_lock
@@ -411,7 +411,7 @@ script:
   routine_climate_home:
     alias: Routine - Thermostat presence
     sequence:
-    - service: climate.set_preset_mode
+    - action: climate.set_preset_mode
       data:
         preset_mode: schedule
       target:
@@ -420,12 +420,12 @@ script:
   routine_climate_away:
     alias: Routine - Thermostat absence
     sequence:
-    - service: climate.set_preset_mode
+    - action: climate.set_preset_mode
       data:
         preset_mode: away
       target:
         entity_id: climate.entree
-    - service: climate.turn_off
+    - action: climate.turn_off
       data: {}
       target:
         entity_id: climate.mobile_heater_plug_thermostat    
@@ -433,7 +433,7 @@ script:
   routine_climate_long_absence:
     alias: Routine - Thermostat longue absence
     sequence:
-    - service: climate.set_preset_mode
+    - action: climate.set_preset_mode
       data:
         preset_mode: Frost Guard
       target:
@@ -445,7 +445,7 @@ script:
     alias: Routine - Reset parametres éclairage
     sequence:
     - alias: "Disable light_kill_switch"
-      service: input_boolean.turn_off
+      action: input_boolean.turn_off
       target:
         entity_id: 
           - input_boolean.salon_lumiere_mode_tv
@@ -454,7 +454,7 @@ script:
           - input_boolean.auto_light_kill_switch_cuisine
           - input_boolean.auto_light_kill_switch_jardin
     - alias: "Enable Adaptive Lighting"
-      service: input_boolean.turn_on
+      action: input_boolean.turn_on
       target:
         entity_id: 
           - switch.adaptive_lighting_chambre_emilie
@@ -472,7 +472,7 @@ script:
     alias: Routine - Absence settings
     sequence:
     - alias: "Disable curfiew mode and night mode "
-      service: input_boolean.turn_off
+      action: input_boolean.turn_off
       target:
         entity_id: 
           - input_boolean.curfew_timothee
@@ -484,7 +484,7 @@ script:
     alias: Routine - Parametres nuit
     sequence:
     - alias: "Disable listen light"
-      service: switch.turn_off
+      action: switch.turn_off
       target:
         entity_id: 
           - switch.esp_assistant_parent_use_listen_light
@@ -493,7 +493,7 @@ script:
     alias: Routine - Parametres Jour
     sequence:
     - alias: "Enable listen light"
-      service: switch.turn_on
+      action: switch.turn_on
       target:
         entity_id: 
           - switch.esp_assistant_parent_use_listen_light

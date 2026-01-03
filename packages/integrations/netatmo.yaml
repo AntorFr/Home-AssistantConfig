@@ -225,7 +225,7 @@ automation:
             - condition: template
               value_template: "{{trigger.to_state.state == 'home'}}"
           sequence:
-            - service: netatmo.set_persons_home
+            - action: netatmo.set_persons_home
               data:
                 persons: "{{state_attr(trigger.entity_id, 'friendly_name')}}"
               target:
@@ -234,7 +234,7 @@ automation:
             - condition: template
               value_template: "{{trigger.to_state.state == 'not_home' }}"
           sequence:
-            - service: netatmo.set_person_away
+            - action: netatmo.set_person_away
               data:
                 persons: "{{state_attr(trigger.entity_id, 'friendly_name')}}"
               target:
@@ -265,7 +265,7 @@ automation:
             value_template: >
               {{(trigger.event.data['data']['persons']|selectattr('id','==','426f58a6-fd7a-4c11-8673-32c64fae246a')| list|count) > 0}}
         sequence:
-          - service: device_tracker.see
+          - action: device_tracker.see
             data:
               dev_id: 'netatmo_sebastien'
               location_name: 'home'
@@ -276,7 +276,7 @@ automation:
             value_template: >
               {{(trigger.event.data['data']['persons']|selectattr('id','==','5be630f5-6a13-435d-baaf-e20876f35e65')| list|count) > 0}}
         sequence:
-          - service: device_tracker.see
+          - action: device_tracker.see
             data:
               dev_id: 'netatmo_laurine'
               location_name: 'home'
@@ -287,7 +287,7 @@ automation:
             value_template: >
               {{(trigger.event.data['data']['persons']|selectattr('id','==','6628af07-4e7f-4447-87ec-63793911782a')| list|count) > 0}}
         sequence:
-          - service: device_tracker.see
+          - action: device_tracker.see
             data:
               dev_id: 'netatmo_emilie'
               location_name: 'home'
@@ -298,7 +298,7 @@ automation:
             value_template: >
               {{(trigger.event.data['data']['persons']|selectattr('id','==','c5ebc2a4-fc6f-4cba-a933-d4b16f69a61e')| list|count) > 0}}
         sequence:
-          - service: device_tracker.see
+          - action: device_tracker.see
             data:
               dev_id: 'netatmo_timothee'
               location_name: 'home'
@@ -314,7 +314,7 @@ automation:
       event_type: netatmo_event
       
   action:
-    - service: counter.increment
+    - action: counter.increment
       entity_id: counter.netatmo_event_counter
       data: {}
 ################################################################################
@@ -335,7 +335,7 @@ script:
             multiple: false
 
     sequence:
-      - service: device_tracker.see
+      - action: device_tracker.see
         data:
           dev_id: "{{device_tracker|replace('device_tracker.','')}}"
           location_name: "{{'home' if is_state(device_tracker,'not_home') else 'not_home'}}"

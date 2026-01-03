@@ -19,7 +19,7 @@ automation:
       to: "on"
   condition: []
   action:
-    - service: notify.mobile_seb
+    - action: notify.mobile_seb
       data:
         message: "la machine à laver a terminé."
   mode: restart

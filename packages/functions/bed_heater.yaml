@@ -23,7 +23,7 @@ automation:
         entity_id: person.sebastien
         state: home
       sequence:
-      - service: homeassistant.turn_on
+      - action: homeassistant.turn_on
         target:
           entity_id: switch.couverture_seb
   - choose:
@@ -32,7 +32,7 @@ automation:
         entity_id: person.laurine
         state: home
       sequence:
-      - service: homeassistant.turn_on
+      - action: homeassistant.turn_on
         target:
           entity_id: switch.couverture_laurine
   mode: single
@@ -50,7 +50,7 @@ automation:
       hours: 2
   condition: []
   action:
-  - service: homeassistant.turn_off
+  - action: homeassistant.turn_off
     target:
       entity_id: switch.couverture_seb
   mode: single
@@ -68,7 +68,7 @@ automation:
       hours: 2
   condition: []
   action:
-  - service: homeassistant.turn_off
+  - action: homeassistant.turn_off
     target:
       entity_id: switch.couverture_laurine
   mode: single

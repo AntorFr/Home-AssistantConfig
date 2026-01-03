@@ -71,36 +71,36 @@ automation:
       multi_touch: binary_sensor.office_hallway_light_switch_multi_touch
       swipe_left: binary_sensor.office_hallway_light_switch_swipe_left
       touchfield_1_action:
-        - service: light.toggle
+        - action: light.toggle
           target:
             entity_id: light.office_light_switch_l2
 
       swipe_left_action:
-        - service: light.turn_on
+        - action: light.turn_on
           data: {}
           target:
             entity_id:
               - light.office_light_switch_l2
         - delay: "00:00:03" 
-        - service: light.turn_on
+        - action: light.turn_on
           data: {}
           target:
             entity_id:
               - light.bureau_lumieres
         - delay: "00:00:03"
-        - service: light.turn_off
+        - action: light.turn_off
           data: {}
           target:
             entity_id:
               - light.office_light_switch_l2
 
       multi_touch_action:
-        - service: light.turn_off
+        - action: light.turn_off
           target:
             area_id: "{{room}}"
-        - service: switch.turn_off
+        - action: switch.turn_off
           entity_id: switch.fire_tablet_screen
-        - service: script.play_mood_music
+        - action: script.play_mood_music
           data:
             action: media_stop
             rooms: "{{room}}"
@@ -123,12 +123,12 @@ automation:
 
       multi_touch_action:
         - parallel: 
-          - service: light.turn_off
+          - action: light.turn_off
             target:
               area_id: "{{room}}"
-          - service: switch.turn_off
+          - action: switch.turn_off
             entity_id: switch.fire_tablet_screen
-          - service: script.play_mood_music
+          - action: script.play_mood_music
             data:
               action: media_stop
               rooms: "{{room}}"
@@ -162,28 +162,28 @@ automation:
       swipe_left: binary_sensor.desk_light_switch_swipe_left
 
       touchfield_1_action:
-        - service: light.toggle
+        - action: light.toggle
           target:
             entity_id: light.office_light_switch_l1
 
       touchfield_2_action:
-        - service: light.toggle
+        - action: light.toggle
           target:
             entity_id: light.hue_color_lamp_5_3
 
       touchfield_3_action:
-        - service: light.toggle
+        - action: light.toggle
           target:
             entity_id: light.hue_color_lamp_5_3
 
       multi_touch_action:
         - parallel: 
-          - service: light.turn_off
+          - action: light.turn_off
             target:
               area_id: "{{room}}"
-          - service: switch.turn_off
+          - action: switch.turn_off
             entity_id: switch.fire_tablet_screen
-          - service: script.play_mood_music
+          - action: script.play_mood_music
             data:
               action: media_stop
               rooms: "{{room}}"
@@ -216,7 +216,7 @@ automation:
         minutes: 5
   condition: []
   action:
-    - service: homeassistant.turn_off
+    - action: homeassistant.turn_off
       data: {}
       target:
         entity_id:
@@ -270,12 +270,12 @@ automation:
                 entity_id: sensor.rte_tempo_prochaine_couleur
                 state: Rouge
           sequence:
-            - service: climate.set_preset_mode
+            - action: climate.set_preset_mode
               data:
                 preset_mode: Travail
               target:
                 entity_id: climate.mobile_heater_plug_thermostat
-            - service: climate.turn_on
+            - action: climate.turn_on
               data: {}
               target:
                 entity_id: climate.mobile_heater_plug_thermostat                
@@ -292,12 +292,12 @@ automation:
               entity_id: sensor.rte_tempo_prochaine_couleur
               state: Rouge
           sequence:
-            - service: climate.set_temperature
+            - action: climate.set_temperature
               target:
                 entity_id: climate.mobile_heater_plug_thermostat
               data:
                 temperature: 23
-            - service: climate.turn_on
+            - action: climate.turn_on
               data: {}
               target:
                 entity_id: climate.mobile_heater_plug_thermostat
@@ -316,18 +316,18 @@ automation:
                   entity_id: binary_sensor.workday_sensor
                   state: "on"
               then:
-                - service: climate.set_preset_mode
+                - action: climate.set_preset_mode
                   data:
                     preset_mode: Travail
                   target:
                     entity_id: climate.mobile_heater_plug_thermostat
               else:
-                - service: climate.set_preset_mode
+                - action: climate.set_preset_mode
                   data:
                     preset_mode: home
                   target:
                     entity_id: climate.mobile_heater_plug_thermostat
-            - service: climate.turn_on
+            - action: climate.turn_on
               data: {}
               target:
                 entity_id: climate.mobile_heater_plug_thermostat
@@ -336,7 +336,7 @@ automation:
               id:
                 - absence
           sequence:
-            - service: climate.turn_off
+            - action: climate.turn_off
               data: {}
               target:
                 entity_id: climate.mobile_heater_plug_thermostat
@@ -378,7 +378,7 @@ automation:
               id:
                 - away
           sequence:
-            - service: switch.turn_off
+            - action: switch.turn_off
               metadata: {}
               data: {}
               target:
@@ -390,7 +390,7 @@ automation:
               id:
                 - iron_in_use
           sequence:
-            - service: switch.turn_on
+            - action: switch.turn_on
               metadata: {}
               data: {}
               target:
@@ -400,7 +400,7 @@ automation:
               id:
                 - iron_not_in_use
           sequence:
-            - service: switch.turn_off
+            - action: switch.turn_off
               metadata: {}
               data: {}
               target:
@@ -422,7 +422,7 @@ automation:
           entity_id: binary_sensor.idasen_ble_desk_connection
           state: "off"
       then:
-        - service: button.press
+        - action: button.press
           metadata: {}
           data: {}
           target:

@@ -22,12 +22,12 @@ script:
         selector:
             entity:
     sequence:
-    - service: homeassistant.turn_on
+    - action: homeassistant.turn_on
       target:
         entity_id: "{{ entity }}"
     - delay: 
         minutes: "{{ minutes }}"
-    - service: homeassistant.turn_off
+    - action: homeassistant.turn_off
       target:
         entity_id: "{{ entity }}"
 ###############################################

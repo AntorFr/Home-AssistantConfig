@@ -69,27 +69,27 @@ automation:
       multi_touch: binary_sensor.emilie_entrance_switch_multi_touch
       swipe_left: binary_sensor.emilie_entrance_switch_swipe_left
       touchfield_1_action:
-        - service: light.toggle
+        - action: light.toggle
           target:
             entity_id: light.emilie_clock_led_matrix
-        - service: select.select_option
+        - action: select.select_option
           target:
             entity_id: select.emilie_clock_display_mode
           data:
             option: Clock
       touchfield_2_action:
-        - service: switch.toggle
+        - action: switch.toggle
           target:
             entity_id: switch.chambre_emilie_prise_bureau
       multi_touch_action:
         - parallel: 
-          - service: light.turn_off
+          - action: light.turn_off
             target:
               area_id: "{{room}}"
-          - service: switch.turn_off
+          - action: switch.turn_off
             entity_id: switch.chambre_emilie_prise_bureau
             data: {}
-          - service: script.play_mood_music
+          - action: script.play_mood_music
             data:
               action: media_stop
               rooms: "{{room}}"
@@ -115,17 +115,17 @@ automation:
       multi_touch: binary_sensor.emilie_desk_switch_multi_touch
       swipe_left: binary_sensor.emilie_desk_switch_swipe_left
       touchfield_1_action:
-        - service: switch.toggle
+        - action: switch.toggle
           target:
             entity_id: switch.chambre_emilie_prise_bureau
       multi_touch_action:
         - parallel: 
-          - service: light.turn_off
+          - action: light.turn_off
             target:
               area_id: "{{room}}"
-          - service: switch.turn_off
+          - action: switch.turn_off
             entity_id: switch.chambre_emilie_prise_bureau 
-          - service: script.play_mood_music
+          - action: script.play_mood_music
             data:
               action: media_stop
               rooms: "{{room}}"

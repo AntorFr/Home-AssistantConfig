@@ -88,7 +88,7 @@ automation:
         entity_id: sensor.rte_tempo_prochaine_couleur
         state: Rouge
       sequence:
-      - service: script.turn_on
+      - action: script.turn_on
         target:
           entity_id: script.energy_tempo_red_before
         data: {}
@@ -101,7 +101,7 @@ automation:
         entity_id: sensor.linky_couleur_actuelle
         state: rouge
       sequence:
-      - service: script.turn_on
+      - action: script.turn_on
         target:
           entity_id: script.energy_tempo_red_hp
         data: {}
@@ -119,7 +119,7 @@ automation:
           entity_id: sensor.rte_tempo_prochaine_couleur
           state: Rouge
       sequence:
-      - service: script.turn_on
+      - action: script.turn_on
         target:
           entity_id: script.energy_tempo_red_end
         data: {}
@@ -131,19 +131,19 @@ script:
   energy_tempo_red_before:
     alias: Energie - Tempo rouge Preparation
     sequence:
-      - service: notify.mobile_seb
+      - action: notify.mobile_seb
         data:
           message: "Tempo rouge Preparation"
-      - service: select.select_option
+      - action: select.select_option
         continue_on_error: true
         data:
           option: "Tempo rouge"
         target:
           entity_id: select.petit_mars
-      - service: script.turn_on
+      - action: script.turn_on
         target:
           entity_id: script.routine_all_power_device_on
-      - service: switch.turn_on
+      - action: switch.turn_on
         target:
           label_id: 
             - red_power_off
@@ -152,7 +152,7 @@ script:
           - repeat:
               while: "{{ not is_state('climate.panasonic_heat_pump_main_z1_temp','heat') and repeat.index < 10}}"
               sequence:
-                - service: climate.turn_on
+                - action: climate.turn_on
                   data: {}
                   target:
                     entity_id: 
@@ -162,7 +162,7 @@ script:
           - repeat:
               while: "{{ not is_state_attr('water_heater.panasonic_heat_pump_main_dhw_target_temp','temperature', 65) and repeat.index < 10}}"
               sequence:
-                - service: water_heater.set_temperature
+                - action: water_heater.set_temperature
                   target:
                     entity_id: water_heater.panasonic_heat_pump_main_dhw_target_temp
                   data:
@@ -178,22 +178,22 @@ script:
   energy_tempo_red_hp:
     alias: Energie - Tempo rouge HP
     sequence:
-      - service: notify.mobile_seb
+      - action: notify.mobile_seb
         data:
           message: "Tempo rouge HP"
-      - service: script.turn_on
+      - action: script.turn_on
         target:
           entity_id: script.routine_away_all_power_device_off
-      - service: switch.turn_off
+      - action: switch.turn_off
         target:
           label_id: 
             - red_power_off
-      - service: climate.turn_off
+      - action: climate.turn_off
         data: {}
         target:
           entity_id: 
             - climate.mobile_heater_plug_thermostat
-      - service: select.select_option
+      - action: select.select_option
         continue_on_error: true
         data:
           option: "Tempo rouge"
@@ -204,7 +204,7 @@ script:
           - repeat:
               while: "{{ not is_state('climate.panasonic_heat_pump_main_z1_temp','off') and repeat.index < 10}}"
               sequence:
-                - service: climate.turn_off
+                - action: climate.turn_off
                   data: {}
                   target:
                     entity_id: 
@@ -214,7 +214,7 @@ script:
           - repeat:
               while: "{{ not is_state_attr('water_heater.panasonic_heat_pump_main_dhw_target_temp','temperature', 40) and repeat.index < 10}}"
               sequence:
-                - service: water_heater.set_temperature
+                - action: water_heater.set_temperature
                   target:
                     entity_id: water_heater.panasonic_heat_pump_main_dhw_target_temp
                   data:
@@ -232,17 +232,17 @@ script:
   energy_tempo_red_end:  
     alias: Energie - Tempo rouge fin
     sequence:
-      - service: notify.mobile_seb
+      - action: notify.mobile_seb
         data:
           message: "Fin Tempo rouge"   
-      - service: script.turn_on
+      - action: script.turn_on
         target:
           entity_id: script.routine_all_power_device_on
-      - service: switch.turn_on
+      - action: switch.turn_on
         target:
           label_id: 
             - red_power_off
-      - service: select.select_option
+      - action: select.select_option
         continue_on_error: true
         data:
           option: Normal
@@ -253,7 +253,7 @@ script:
           - repeat:
               while: "{{ not is_state('climate.panasonic_heat_pump_main_z1_temp','heat') and repeat.index < 10}}"
               sequence:
-                - service: climate.turn_on
+                - action: climate.turn_on
                   data: {}
                   target:
                     entity_id: 
@@ -263,7 +263,7 @@ script:
           - repeat:
               while: "{{ not is_state_attr('water_heater.panasonic_heat_pump_main_dhw_target_temp','temperature', 53) and repeat.index < 10}}"
               sequence:
-                - service: water_heater.set_temperature
+                - action: water_heater.set_temperature
                   target:
                     entity_id: water_heater.panasonic_heat_pump_main_dhw_target_temp
                   data:

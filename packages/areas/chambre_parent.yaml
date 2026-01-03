@@ -128,14 +128,14 @@ automation:
       - condition: trigger
         id: action_1_single
       sequence:
-        - service: light.toggle
+        - action: light.toggle
           target:
             entity_id: light.chambre
     - conditions: 
       - condition: trigger
         id: action_1_double
       sequence:
-        - service: script.routine_night_all_light_turn_off
+        - action: script.routine_night_all_light_turn_off
     - conditions: 
       - condition: trigger
         id: action_1_hold
@@ -146,12 +146,12 @@ automation:
               after: '05:00:00'
               before: '19:00:00'
             sequence:
-            - service: input_boolean.turn_off
+            - action: input_boolean.turn_off
               data: {}
               target:
                 entity_id: input_boolean.night_mode
           default:
-          - service: input_boolean.turn_on
+          - action: input_boolean.turn_on
             data: {}
             target:
               entity_id: input_boolean.night_mode
@@ -159,14 +159,14 @@ automation:
       - condition: trigger
         id: action_2_single
       sequence:
-        - service: light.toggle
+        - action: light.toggle
           target:
             entity_id: light.parent_bed_light
     - conditions: 
       - condition: trigger
         id: action_2_double
       sequence:
-        - service: light.turn_on
+        - action: light.turn_on
           target:
             entity_id: light.parent_bed_light
           data:
@@ -177,7 +177,7 @@ automation:
       - condition: trigger
         id: action_2_hold
       sequence:
-        - service: light.turn_on
+        - action: light.turn_on
           target:
             entity_id: light.parent_bed_light
           data:
@@ -188,17 +188,17 @@ automation:
       - condition: trigger
         id: action_3_single
       sequence:
-        - service: cover.toggle
+        - action: cover.toggle
           target:
             area_id: chambre_parent
     - conditions: 
       - condition: trigger
         id: action_4_single
       sequence:
-        - service: script.turn_off
+        - action: script.turn_off
           target:
             entity_id: script.on_off_tempo
-        - service: script.turn_on
+        - action: script.turn_on
           target:
             entity_id: script.on_off_tempo
           data:
@@ -209,10 +209,10 @@ automation:
       - condition: trigger
         id: action_4_double
       sequence:
-        - service: script.turn_off
+        - action: script.turn_off
           target:
             entity_id: script.on_off_tempo
-        - service: script.turn_on
+        - action: script.turn_on
           target:
             entity_id: script.on_off_tempo
           data:
@@ -223,10 +223,10 @@ automation:
       - condition: trigger
         id: action_4_hold
       sequence:
-        - service: script.turn_off
+        - action: script.turn_off
           target:
             entity_id: script.on_off_tempo
-        - service: switch.toggle
+        - action: switch.toggle
           data: {}
           entity_id: switch.couverture_seb
 
@@ -313,14 +313,14 @@ automation:
       - condition: trigger
         id: action_2_single
       sequence:
-        - service: light.toggle
+        - action: light.toggle
           target:
             entity_id: light.chambre
     - conditions: 
       - condition: trigger
         id: action_2_double
       sequence:
-        - service: script.routine_night_all_light_turn_off
+        - action: script.routine_night_all_light_turn_off
     - conditions: 
       - condition: trigger
         id: action_2_hold
@@ -331,12 +331,12 @@ automation:
               after: '05:00:00'
               before: '19:00:00'
             sequence:
-            - service: input_boolean.turn_off
+            - action: input_boolean.turn_off
               data: {}
               target:
                 entity_id: input_boolean.night_mode
           default:
-          - service: input_boolean.turn_on
+          - action: input_boolean.turn_on
             data: {}
             target:
               entity_id: input_boolean.night_mode
@@ -344,7 +344,7 @@ automation:
       - condition: trigger
         id: action_1_single
       sequence:
-        - service: light.toggle
+        - action: light.toggle
           target:
             entity_id: light.parent_bed_light
           data:
@@ -355,7 +355,7 @@ automation:
       - condition: trigger
         id: action_1_double
       sequence:
-        - service: light.turn_on
+        - action: light.turn_on
           target:
             entity_id:
               - light.parent_bed_light
@@ -367,7 +367,7 @@ automation:
       - condition: trigger
         id: action_1_hold
       sequence:
-        - service: light.turn_on
+        - action: light.turn_on
           target:
             entity_id:
               - light.parent_bed_light
@@ -379,17 +379,17 @@ automation:
       - condition: trigger
         id: action_4_single
       sequence:
-        - service: cover.toggle
+        - action: cover.toggle
           target:
             area_id: chambre_parent
     - conditions: 
       - condition: trigger
         id: action_3_single
       sequence:
-        - service: script.turn_off
+        - action: script.turn_off
           target:
             entity_id: script.on_off_tempo
-        - service: script.turn_on
+        - action: script.turn_on
           target:
             entity_id: script.on_off_tempo
           data:
@@ -400,10 +400,10 @@ automation:
       - condition: trigger
         id: action_3_double
       sequence:
-        - service: script.turn_off
+        - action: script.turn_off
           target:
             entity_id: script.on_off_tempo
-        - service: script.turn_on
+        - action: script.turn_on
           target:
             entity_id: script.on_off_tempo
           data:
@@ -414,10 +414,10 @@ automation:
       - condition: trigger
         id: action_3_hold
       sequence:
-        - service: script.turn_off
+        - action: script.turn_off
           target:
             entity_id: script.on_off_tempo
-        - service: switch.toggle
+        - action: switch.toggle
           data: {}
           entity_id: switch.couverture_laurine
 
@@ -502,7 +502,7 @@ automation:
       multi_touch: binary_sensor.parent_light_switch_multi_touch
       swipe_left: binary_sensor.parent_light_switch_swipe_left
       swipe_right_action:
-        - service: light.turn_on
+        - action: light.turn_on
           data: 
             color_name: red
             brightness_pct: 30
@@ -511,7 +511,7 @@ automation:
               - light.smart_bed_parent_lumi_re_gauche
               - light.smart_bed_parent_lumi_re_droite
         - delay: "00:00:15" 
-        - service: light.turn_off
+        - action: light.turn_off
           data: {}
           target:
             entity_id:

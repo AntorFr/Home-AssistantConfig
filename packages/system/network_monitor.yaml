@@ -83,14 +83,14 @@ automation:
     entity_id: group.required_devices
     state: 'not_home'
   action:
-  - service: persistent_notification.create
+  - action: persistent_notification.create
     data: 
       notification_id: required_devices_alert
       title: >
         {{ expand('group.required_devices') | selectattr('state', 'eq', 'not_home') | list | count }} appareil(s) déconnecté(s)
       message: >
         Appareil(s) déconnecté(s) : {{ expand('group.required_devices') | selectattr('state', 'eq', 'not_home') | map(attribute='name') | join(', ') }}
-  - service: notify.mobile_seb
+  - action: notify.mobile_seb
     data:
       title: >
         {{ expand('group.required_devices') | selectattr('state', 'eq', 'not_home') | list | count }} appareil(s) déconnecté(s)
@@ -109,7 +109,7 @@ automation:
     to: 'home'
   condition: []
   action:
-  - service: persistent_notification.dismiss
+  - action: persistent_notification.dismiss
     data: 
       notification_id: required_devices_alert
   mode: single

@@ -15,7 +15,7 @@ tts:
 notify:
   - platform: tts
     name: notify_salon
-    tts_service: tts.google_say
+    tts_action: tts.google_say
     media_player: media_player.salon
     language: fr
 

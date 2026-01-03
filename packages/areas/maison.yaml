@@ -23,21 +23,21 @@ automation:
           - condition: template
             value_template: "{{trigger.to_state.state == 'Normal'}}"
           sequence:
-            - service: script.change_tx_ultimate_night_effect
+            - action: script.change_tx_ultimate_night_effect
               data:
                 effect: "Default"
         - conditions: 
           - condition: template
             value_template: "{{trigger.to_state.state == 'Noël'}}"
           sequence:
-            - service: script.change_tx_ultimate_night_effect
+            - action: script.change_tx_ultimate_night_effect
               data:
                 effect: Christmas
         - conditions: 
           - condition: template
             value_template: "{{trigger.to_state.state == 'Reveillon'}}"
           sequence:
-            - service: script.change_tx_ultimate_night_effect
+            - action: script.change_tx_ultimate_night_effect
               data:
                 effect: Stars
           
@@ -59,7 +59,7 @@ script:
               - Stars
               - Christmas
     sequence:
-      - service: select.select_option
+      - action: select.select_option
         target:
           entity_id: >
             {{states.select|map(attribute="entity_id")|select('match','.*nightlight_effect$')| list }}

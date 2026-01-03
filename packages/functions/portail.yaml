@@ -35,7 +35,7 @@ automation:
       entity_id: binary_sensor.portail_detection_voiture
       state: "off"
   action:
-    - service: cover.close_cover
+    - action: cover.close_cover
       data: {}
       target:
         entity_id: cover.portail_2
@@ -81,7 +81,7 @@ automation:
     for:
       minutes: 2
   action:
-    - service: cover.open_cover
+    - action: cover.open_cover
       data: {}
       target:
         entity_id: cover.portail_2
@@ -111,7 +111,7 @@ automation:
           entity_id: input_boolean.away_mode
           state: 'off'
       sequence:
-        - service: script.sound_notify
+        - action: script.sound_notify
           data:
             media_player_entities:
               - media_player.cuisine
@@ -126,7 +126,7 @@ automation:
         - action: script.office_door_bell_ring
           data: {}
             
-  - service: notify.all_mobile
+  - action: notify.all_mobile
     data:
       message: "Quelqu'un sonne au portail"
       data:
@@ -164,7 +164,7 @@ automation:
     event_data:
       actionName: 'OPEN_FRONTE_GATE'
   action:
-      - service: cover.open_cover
+      - action: cover.open_cover
         target:
           entity_id: cover.portail_2
 ################################################################################
@@ -221,16 +221,16 @@ script:
           entity_id: cover.portail_2
           state: closed
       then:
-        - service: cover.open_cover
+        - action: cover.open_cover
           data: {}
           target:
             entity_id: cover.portail_2
-    - service: text.set_value
+    - action: text.set_value
       data:
         value: "{{message_display}}"
       target:
         entity_id: text.portail_doorbell
-    - service: tts.cloud_say
+    - action: tts.cloud_say
       data:
         cache: true
         options:
@@ -245,7 +245,7 @@ script:
       continue_on_timeout: true
       timeout:
         hours: 1
-    - service: select.select_option
+    - action: select.select_option
       metadata: {}
       data:
         option: Default Message (WELCOME)
@@ -261,5 +261,5 @@ intent_script:
     speech:
       text: "Ok, je répond au livreur" #{{response.playlist}} 
     action:
-      - service: script.parcel_delivery
+      - action: script.parcel_delivery
 ################################################################################

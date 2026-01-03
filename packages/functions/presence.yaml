@@ -157,11 +157,11 @@ automation:
     to: not_home
   condition: []
   action:
-  - service: device_tracker.see
+  - action: device_tracker.see
     data:
       location_name: not_home
       dev_id: netatmo_emilie
-  - service: device_tracker.see
+  - action: device_tracker.see
     data:
       location_name: not_home
       dev_id: netatmo_timothee
@@ -181,7 +181,7 @@ automation:
       entity_id: input_boolean.guest_mode
       state: 'off'
   action:
-  - service: input_boolean.turn_on
+  - action: input_boolean.turn_on
     entity_id: input_boolean.guest_mode
   - wait_for_trigger:
       - platform: state
@@ -189,7 +189,7 @@ automation:
         to: "off"
         for:
           minutes: 5
-  - service: input_boolean.turn_off
+  - action: input_boolean.turn_off
     entity_id: input_boolean.guest_mode
   mode: single
 ################################################################################

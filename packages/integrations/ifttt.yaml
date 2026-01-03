@@ -16,7 +16,7 @@ automation:
     condition: template
     value_template: "{{ trigger.event.data.service == 'device_tracker.see' }}"
   action:
-  - service: '{{ trigger.event.data.service }}'
+  - action: '{{ trigger.event.data.service }}'
     data:
       dev_id: '{{ trigger.event.data.dev_id }}'
       location_name: >
@@ -46,7 +46,7 @@ automation:
         - condition: template
           value_template: "{{ trigger.event.data.service == 'homeassistant.turn_off' }}"
   action:
-  - service: '{{ trigger.event.data.service }}'
+  - action: '{{ trigger.event.data.service }}'
     target:
       entity_id: '{{ trigger.event.data.entity_id }}'
 ################################################################################

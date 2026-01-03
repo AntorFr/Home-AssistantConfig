@@ -65,7 +65,7 @@ automation:
       entity_id: person.sebastien
       state: home
   action:
-  - service: switch.turn_on
+  - action: switch.turn_on
     data: {}
     entity_id: switch.couverture_seb
   - delay:
@@ -73,7 +73,7 @@ automation:
       minutes: 45
       seconds: 0
       milliseconds: 0
-  - service: switch.turn_off
+  - action: switch.turn_off
     data: {}
     entity_id: switch.couverture_seb
   mode: single

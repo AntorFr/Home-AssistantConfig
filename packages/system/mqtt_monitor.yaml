@@ -13,11 +13,11 @@ automation:
     for: 00:01:00
   condition: []
   action:
-  - service: notify.notify
+  - action: notify.notify
     data:
       message: Portail déconnecté
       title: Alerte Portail
-  - service: notify.mobile_seb
+  - action: notify.mobile_seb
     data:
       message: Portail déconnecté
       title: Alerte Portail

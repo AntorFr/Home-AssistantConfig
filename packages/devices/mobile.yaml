@@ -2,22 +2,22 @@ notify:
   - name: mobile_seb
     platform: group
     services:
-      - service: mobile_app_intra_mob08
-      - service: mobile_app_enx_phone
-      - service: mobile_app_sebastiens_macbook_air
-      - service: mobile_app_ipad_sebastien
+      - action: mobile_app_intra_mob08
+      - action: mobile_app_enx_phone
+      - action: mobile_app_sebastiens_macbook_air
+      - action: mobile_app_ipad_sebastien
   - name: mobile_laurine
     platform: group
     services:
-      - service: mobile_app_iphone_de_laurine
+      - action: mobile_app_iphone_de_laurine
   - name: all_mobile
     platform: group
     services:
-      - service: mobile_app_iphone_de_laurine
-      - service: mobile_app_intra_mob08
-      - service: mobile_app_enx_phone
-      - service: mobile_app_macbook_pro_sebastien
-      - service: mobile_app_tablette_bureau
-      - service: mobile_app_ipad_2
-      - service: mobile_app_ipad_de_sebastien_727092
-      - service: mobile_app_sebastiens_macbook_air
+      - action: mobile_app_iphone_de_laurine
+      - action: mobile_app_intra_mob08
+      - action: mobile_app_enx_phone
+      - action: mobile_app_macbook_pro_sebastien
+      - action: mobile_app_tablette_bureau
+      - action: mobile_app_ipad_2
+      - action: mobile_app_ipad_de_sebastien_727092
+      - action: mobile_app_sebastiens_macbook_air

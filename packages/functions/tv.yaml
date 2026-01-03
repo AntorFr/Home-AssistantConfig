@@ -10,7 +10,7 @@ automation:
     type: turn_on
   condition: []
   action:
-  - service: wake_on_lan.send_magic_packet
+  - action: wake_on_lan.send_magic_packet
     data:
       mac: 70:af:24:0d:b4:b7
   mode: single
@@ -37,12 +37,12 @@ automation:
             - condition: trigger
               id: turned_off
           sequence:
-            - service: media_player.turn_off
+            - action: media_player.turn_off
               data: {}
               target:
                 entity_id: media_player.tv01
       default:
-        - service: script.function_tv_xbox_switch_source
+        - action: script.function_tv_xbox_switch_source
           data: {}
 
 script:
@@ -54,7 +54,7 @@ script:
           entity_id: media_player.tv01
           state: "off"
         then:
-          - service: media_player.turn_on
+          - action: media_player.turn_on
             data: {}
             target:
               entity_id: media_player.tv01
@@ -63,7 +63,7 @@ script:
               minutes: 0
               seconds: 8
               milliseconds: 0
-      - service: remote.send_command
+      - action: remote.send_command
         data:
           delay_secs: 0.5
           command:
@@ -72,7 +72,7 @@ script:
           entity_id: remote.tv01
       - delay:
           seconds: 2
-      - service: remote.send_command
+      - action: remote.send_command
         data:
           delay_secs: 0.5
           command:
@@ -91,5 +91,5 @@ intent_script:
     speech:
       text: "c'est partie, bon jeux"
     action:
-      - service: script.function_tv_xbox_switch_source
+      - action: script.function_tv_xbox_switch_source
         data: {}

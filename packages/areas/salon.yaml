@@ -203,7 +203,7 @@ automation:
       - condition: trigger
         id: left_press
       sequence:
-      - service: light.toggle
+      - action: light.toggle
         data: {}
         target:
           entity_id: light.led_bibliotheque
@@ -211,7 +211,7 @@ automation:
       - condition: trigger
         id: right_press
       sequence:
-      - service: light.toggle
+      - action: light.toggle
         data: {}
         target:
           entity_id: light.salon
@@ -238,12 +238,12 @@ automation:
         - condition: trigger
           id: "on"
       then:
-        - service: input_boolean.turn_on
+        - action: input_boolean.turn_on
           data: {}
           target:
             entity_id: input_boolean.salon_lumiere_mode_tv
       else:
-        - service: input_boolean.turn_off
+        - action: input_boolean.turn_off
           data: {}
           target:
             entity_id: input_boolean.salon_lumiere_mode_tv
@@ -302,7 +302,7 @@ automation:
           - condition: trigger
             id: button_1_single
           sequence:
-          - service: light.toggle
+          - action: light.toggle
             data: {}
             target:
               entity_id: light.led_bibliotheque
@@ -310,7 +310,7 @@ automation:
           - condition: trigger
             id: button_2_single
           sequence:
-          - service: light.toggle
+          - action: light.toggle
             data: {}
             target:
               entity_id: light.salon
@@ -318,7 +318,7 @@ automation:
           - condition: trigger
             id: button_3_single
           sequence:
-          - service: script.play_mood_music
+          - action: script.play_mood_music
             data:
               rooms:
                 - Rdc
@@ -327,7 +327,7 @@ automation:
           - condition: trigger
             id: button_4_single
           sequence:
-          - service: script.play_mood_music
+          - action: script.play_mood_music
             data:
               action: play_pause
               rooms:
@@ -343,11 +343,11 @@ automation:
                   entity_id: vacuum.roborock_s7
                   state: cleaning
               then:
-                - service: vacuum.return_to_base
+                - action: vacuum.return_to_base
                   target:
                     entity_id: vacuum.roborock_s7
               else:
-                - service: vacuum.send_command
+                - action: vacuum.send_command
                   data:
                     command: app_segment_clean
                     params:
@@ -358,7 +358,7 @@ automation:
           - condition: trigger
             id: button_6_single
           sequence:
-            - service: script.lunchtime
+            - action: script.lunchtime
             
 ################################################################################
 - id: 'salon_bouton_volume'
@@ -393,7 +393,7 @@ automation:
       - condition: trigger
         id: move_up
       sequence:
-      - service: media_player.volume_up
+      - action: media_player.volume_up
         data: {}
         target:
           entity_id: media_player.salon
@@ -401,7 +401,7 @@ automation:
       - condition: trigger
         id: move_down
       sequence:
-      - service: media_player.volume_down
+      - action: media_player.volume_down
         data: {}
         target:
           entity_id: media_player.salon
@@ -409,7 +409,7 @@ automation:
       - condition: trigger
         id: toggle
       sequence:
-      - service: media_player.media_play_pause
+      - action: media_player.media_play_pause
         data: {}
         target:
           entity_id: media_player.salon

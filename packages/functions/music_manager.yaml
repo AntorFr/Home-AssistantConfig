@@ -42,7 +42,7 @@ intent_script:
                 {{area}}
               {%-endif -%}
             {%-endif -%}
-      - service: script.play_mood_music
+      - action: script.play_mood_music
         data:
           rooms: "{{zone}}"
           action: play_media
@@ -66,7 +66,7 @@ intent_script:
                 {{area}}
               {%-endif -%}
             {%-endif -%}
-      - service: script.play_mood_music
+      - action: script.play_mood_music
         data:
           rooms: "{{zone}}"
           action: media_stop
@@ -156,7 +156,7 @@ script:
           - condition: template
             value_template: "{{reset_playlist}}"
         then:
-          - service: select.select_option
+          - action: select.select_option
             data:
               option: " "
             target:
@@ -167,7 +167,7 @@ script:
         then:
           - stop: "Aucune playlist trouvée"
             error: true
-      - service: media_player.play_media
+      - action: media_player.play_media
         target:
           entity_id: "{{ media_player }}"
         data:
@@ -188,7 +188,7 @@ script:
                 {% set media_player = media_player | first %}
               {%endif%}
               {{area_id(media_player)}}
-      - service: script.room_tts_notify
+      - action: script.room_tts_notify
         data:
           room: "{{response.room}}"
           message: "{{response.message}}"
@@ -339,7 +339,7 @@ script:
               - condition: template
                 value_template: '{{ media_players | count > 1 }}'
             then:
-              - service: media_player.join
+              - action: media_player.join
                 enabled: true ## Debug > To remove
                 target:
                   entity_id: > 
@@ -347,7 +347,7 @@ script:
                 data:
                   group_members: >
                     {{group_members}}
-          - service: script.play_music
+          - action: script.play_music
             enabled: true ## Debug > To remove
             data:
               media_player: "{{media_player_id}}"
@@ -365,7 +365,7 @@ script:
              {{action == "media_stop" or 
              (action == "play_stop" and any_playing) }}
         then: 
-          - service: media_player.media_stop
+          - action: media_player.media_stop
             enabled: true ## Debug > To remove
             target:
               entity_id: > 
@@ -378,7 +378,7 @@ script:
              {{action == "media_play" or 
              (action == "play_pause" and not any_playing) }}
         then: 
-          - service: media_player.media_play
+          - action: media_player.media_play
             enabled: true ## Debug > To remove
             target:
               entity_id: > 
@@ -391,7 +391,7 @@ script:
              {{action == "media_pause" or 
              (action == "play_pause" and any_playing) }}
         then: 
-          - service: media_player.media_pause
+          - action: media_player.media_pause
             enabled: true ## Debug > To remove
             target:
               entity_id: > 
@@ -443,14 +443,14 @@ automation:
         media_player_entity_id: "{{ media_players[trigger.event.data.device_id] }}"
         media_content_id: "{{ selected_playlist.content_id }}"
         media_content_type: "{{ selected_playlist.content_type }}"
-    - service: media_player.play_media
+    - action: media_player.play_media
       target:
         entity_id: "{{ media_player_entity_id }}"
       data:
         media_content_id: "{{ media_content_id }}"
         media_content_type: "{{ media_content_type }}"
         enqueue: replace
-    - service: media_player.shuffle_set
+    - action: media_player.shuffle_set
       data:
         shuffle: true
       target:
@@ -479,7 +479,7 @@ automation:
           {% from 'music_functions.jinja' import sonos_in_areas, mass_in_areas  %}
           {{mass_in_areas(area_id(trigger.event.data.device_id))|from_json | first}}
         media_content_id: "{{ tags[trigger.event.data.tag_id] }}"
-    - service: music_assistant.play_media
+    - action: music_assistant.play_media
       target:
         entity_id: "{{ media_player_entity_id }}"
       data:
@@ -512,7 +512,7 @@ automation:
             - condition: trigger
               id: tv
           sequence:
-            - service: media_player.volume_set
+            - action: media_player.volume_set
               data:
                 volume_level: 0.16
               target:
@@ -521,7 +521,7 @@ automation:
             - condition: trigger
               id: music
           sequence:
-            - service: media_player.volume_set
+            - action: media_player.volume_set
               data:
                 volume_level: 0.08
               target:

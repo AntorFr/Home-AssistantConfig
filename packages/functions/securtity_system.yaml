@@ -100,7 +100,7 @@ automation:
     event_data:
       type: away
   action:
-  - service: alarm_control_panel.alarm_arm_away
+  - action: alarm_control_panel.alarm_arm_away
     target:
       entity_id: alarm_control_panel.alarme_maison
 ###############################################
@@ -116,7 +116,7 @@ automation:
     entity_id: alarm_control_panel.alarme_maison
     state: disarmed
   action:
-  - service: alarm_control_panel.alarm_arm_night
+  - action: alarm_control_panel.alarm_arm_night
     target:
       entity_id: alarm_control_panel.alarme_maison
 ###############################################
@@ -134,7 +134,7 @@ automation:
     entity_id: alarm_control_panel.alarme_maison
     state: 'armed_away'
   action:
-  - service: alarm_control_panel.alarm_disarm
+  - action: alarm_control_panel.alarm_disarm
     target:
       entity_id: alarm_control_panel.alarme_maison
 ###############################################
@@ -154,7 +154,7 @@ automation:
     entity_id: alarm_control_panel.alarme_maison
     state: 'armed_night'
   action:
-  - service: alarm_control_panel.alarm_disarm
+  - action: alarm_control_panel.alarm_disarm
     target:
       entity_id: alarm_control_panel.alarme_maison
 ###############################################
@@ -175,7 +175,7 @@ automation:
       entity_id: alarm_control_panel.alarme_maison
       state: armed_away
   action:
-  - service: alarm_control_panel.alarm_trigger
+  - action: alarm_control_panel.alarm_trigger
     target:
       entity_id: alarm_control_panel.alarme_maison
 
@@ -191,7 +191,7 @@ automation:
       entity_id: alarm_control_panel.alarme_maison
       state: armed_night
   action:
-  - service: alarm_control_panel.alarm_trigger
+  - action: alarm_control_panel.alarm_trigger
     target:
       entity_id: alarm_control_panel.alarme_maison
 
@@ -203,7 +203,7 @@ automation:
       entity_id: alarm_control_panel.alarme_maison
       to: "triggered"
   action:
-  - service: notify.mobile_seb
+  - action: notify.mobile_seb
     data:
       message: "ALARME! Mouvement detecté: {{ expand('group.home_occupancy') | selectattr('state', 'eq', 'on') | list | map(attribute='name') | join(', ') }}"
 ###############################################

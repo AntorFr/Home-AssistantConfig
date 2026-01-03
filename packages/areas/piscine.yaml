@@ -261,7 +261,7 @@ automation:
                     entity_id: sensor.linky_couleur_actuelle
                     state: rouge
       sequence:
-        - service: switch.turn_on
+        - action: switch.turn_on
           target:
             entity_id:
               - switch.piscine_filtration
@@ -273,12 +273,12 @@ automation:
               {% set target = (th-tl)/2+tl %}
               {{(states('sensor.plouf_oxydo_reduction_potential') | float) < target}}            
           then:
-          - service: switch.turn_on
+          - action: switch.turn_on
             target:
               entity_id:
                 - switch.piscine_electrolyse
     default:
-      - service: switch.turn_off
+      - action: switch.turn_off
         target:
           entity_id:
             - switch.piscine_filtration
@@ -302,13 +302,13 @@ automation:
         entity_id: schedule.filtration_piscine_hivernage
         state: 'on'
       sequence:
-        - service: switch.turn_on
+        - action: switch.turn_on
           target:
             entity_id:
               - switch.piscine_filtration
               - switch.piscine_electrolyse
     default:
-      - service: switch.turn_off
+      - action: switch.turn_off
         target:
           entity_id:
             - switch.piscine_filtration
