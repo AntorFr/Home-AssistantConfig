@@ -358,12 +358,6 @@ mqtt:
         identifiers: "FE1HTMCFM260498"
         manufacturer: "Zendure"
         model: "Ace 1500 Controller"
-
-      device: 
-        name: "Ace 1500"
-        identifiers: "FE1HTMCFM260498"
-        manufacturer: "Zendure"
-        model: "Ace 1500 Controller"
   switch:
     - name: "Master Switch"
       unique_id: "C7WUFfnAmasterSwitch"
@@ -470,12 +464,12 @@ automation:
   triggers:
     - trigger: numeric_state
       entity_id:
-        - sensor.electriclevel
-      below: 20
+        - sensor.ace_1500_garage_electric_level
+      below: 15
       id: bellow20
     - trigger: numeric_state
       entity_id:
-        - sensor.electriclevel
+        - sensor.ace_1500_garage_electric_level
       below: 10
       id: bellow10
   conditions: []
@@ -496,4 +490,19 @@ automation:
           data:
             message: Niveau batterie garage faible ({{states('sensor.electriclevel')}}%)
 
+- id: Zendur_output_off
+  alias: Integration - Zendure - Force output On
+  description: Remet le switch sur ON s'il passe à un état autre que ON (hors unavailable/unknown)
+  mode: single
+  trigger:
+    - trigger: state
+      entity_id: switch.ace_1500_garage_ac_switch
+      not_to:
+        - "on"
+        - "unavailable"
+        - "unknown"
 
+  action:
+    - action: switch.turn_on
+      target:
+        entity_id: switch.ace_1500_garage_ac_switch

@@ -94,7 +94,7 @@ automation:
   alias: Area - Garage 1 - Lumière auto
   description: ''
   use_blueprint:
-    path: antorfr/motion_light.yaml
+    path: antorfr/motion_light_optional.yaml
     input:
       light_target:
         entity_id: 

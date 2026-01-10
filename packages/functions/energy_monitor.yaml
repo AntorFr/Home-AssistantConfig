@@ -147,6 +147,21 @@ script:
         target:
           label_id: 
             - red_power_off
+      - action: number.set_value
+        target:
+          entity_id: number.ace_1500_garage_soc_set
+        data:
+          value: "100"
+      - action: number.set_value
+        target:
+          entity_id: number.ace_1500_garage_min_soc
+        data:
+          value: "10"
+      - action: number.set_value
+        target:
+          entity_id: number.ace_1500_garage_input_limit
+        data:
+          value: "900"   
       - parallel:
         - sequence:
           - repeat:
@@ -188,6 +203,11 @@ script:
         target:
           label_id: 
             - red_power_off
+      - action: number.set_value
+        target:
+          entity_id: number.ace_1500_garage_input_limit
+        data:
+          value: "0"  
       - action: climate.turn_off
         data: {}
         target:
@@ -242,6 +262,21 @@ script:
         target:
           label_id: 
             - red_power_off
+      - action: number.set_value
+        target:
+          entity_id: number.ace_1500_garage_soc_set
+        data:
+          value: "80"
+      - action: number.set_value
+        target:
+          entity_id: number.ace_1500_garage_min_soc
+        data:
+          value: "10"
+      - action: number.set_value
+        target:
+          entity_id: number.ace_1500_garage_input_limit
+        data:
+          value: "900"  
       - action: select.select_option
         continue_on_error: true
         data:
