@@ -1,0 +1,82 @@
+blueprint:
+  name: Musique douce (Music Assistant) + couvre-feu
+  description: >-
+    Lance une musique via Music Assistant dans une pièce donnée, coupe après un délai,
+    et désactive/réactive automatiquement le couvre-feu de la pièce.
+  domain: script
+  input:
+    room:
+      name: Pièce
+      selector:
+        area:
+    media_id:
+      name: Musique (media_id Music Assistant)
+      selector:
+        text:
+    duration:
+      name: Durée avant arrêt
+      default: "00:20:00"
+      selector:
+        duration:
+
+mode: restart
+icon: mdi:playlist-music
+
+variables:
+  input_room: !input room
+  input_media_id: !input media_id
+  room_id: >-
+    {% if input_room is string %}
+      {{ area_id(input_room) or input_room }}
+    {% else %}
+      {{ input_room }}
+    {% endif %}
+  curfew_entity: >-
+    {% set entities = area_entities(room_id) | default([]) %}
+    {% set curfew = entities
+      | select('match','^input_boolean\\.')
+      | select('search','curfew')
+      | list
+      | first %}
+    {{ curfew }}
+  media_player_entity: >-
+    {% from 'music_functions.jinja' import mass_in_areas %}
+    {{ (mass_in_areas([room_id]) | from_json | first) | default('', true) }}
+
+sequence:
+  - variables:
+      curfiew_is_on: "{{false}}"
+  - if:
+      - condition: template
+        value_template: "{{ curfew_entity is string and curfew_entity != '' and is_state(curfew_entity, 'on') }}"
+    then:
+      - variables:
+          curfiew_is_on: "{{true}}"
+      - action: input_boolean.turn_off
+        target:
+          entity_id: "{{ curfew_entity }}"
+  - if:
+      - condition: template
+        value_template: "{{ (media_player_entity | default('', true) | string | length) > 0 }}"
+    then:
+      - action: music_assistant.play_media
+        data:
+          media_id: "{{ input_media_id }}"
+          enqueue: replace
+        target:
+          entity_id: "{{ media_player_entity }}"
+  - delay: !input duration
+  - if:
+      - condition: template
+        value_template: "{{ (media_player_entity | default('', true) | string | length) > 0 }}"
+    then:
+      - action: media_player.media_stop
+        target:
+          entity_id: "{{ media_player_entity }}"
+  - if:
+      - condition: template
+        value_template: "{{ curfiew_is_on == true and curfew_entity is string and curfew_entity != '' }}"
+    then:
+      - action: input_boolean.turn_on
+        target:
+          entity_id: "{{ curfew_entity }}"

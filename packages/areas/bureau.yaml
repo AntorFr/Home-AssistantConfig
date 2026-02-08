@@ -16,7 +16,6 @@ light:
     name: bureau lumieres
     entities:
       - light.hue_color_lamp_5_3
-      - light.wled
       - light.office_light_switch_l1
 
 sensor:
@@ -508,6 +507,37 @@ automation:
               data:
                 rooms:
                   - bureau
+################################################################################
+- id: bureau_wled_pc_auto
+  alias: Area - Bureau - Barres LED écran auto
+  description: 'Allume les barres LED de l''écran quand PC connecté, éteint sur déconnexion ou absence'
+  use_blueprint:
+    path: antorfr/motion_light.yaml
+    input:
+      light_target:
+        entity_id:
+          - light.wled
+      motion_sensor: binary_sensor.capteurs_mouvement_bureau
+      turn_on_trigger:
+        trigger: state
+        entity_id:
+          - binary_sensor.capteur_bureau_pc_connected
+        from: ["off"]
+        to: ["on"]
+        id: turn_on
+      turn_off_trigger:
+        trigger: state
+        entity_id:
+          - binary_sensor.capteur_bureau_pc_connected
+        from: ["on"]
+        to: ["off"]
+        id: turn_off
+      no_motion_wait:
+        minutes: 5
+      no_motion_warning: 30
+      only_during_night: false
+      only_turn_off: true
+      kill_switch: input_boolean.auto_light_kill_switch_bureau
 ################################################################################
 
 
