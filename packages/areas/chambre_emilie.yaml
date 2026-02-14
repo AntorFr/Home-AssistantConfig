@@ -41,11 +41,20 @@ automation:
             entity_id: light.emilie_clock_led_matrix
           data: {}
       button_4_short:
-        - action: media_player.media_play_pause
-          metadata: {}
-          data: {}
-          target:
-            entity_id: media_player.emilie
+        - if:
+            - condition: state
+              entity_id: media_player.emilie
+              state: playing
+          then:
+            - action: media_player.media_play_pause
+              metadata: {}
+              data: {}
+              target:
+                entity_id: media_player.emilie
+          else:
+            - action: script.chambre_emilie_music_douce
+              metadata: {}
+              data: {}
 ################################################################################
 - id: 'chambre_emilie_music_curfew'
   alias: Area - Chambre Émilie - couvre-feu musique
