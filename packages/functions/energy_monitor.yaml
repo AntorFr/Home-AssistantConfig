@@ -161,7 +161,22 @@ script:
         target:
           entity_id: number.ace_1500_garage_input_limit
         data:
-          value: "900"   
+          value: "900"
+      - action: number.set_value
+        target:
+          entity_id: number.solarflow_800_pro_soc_maximum
+        data:
+          value: 100
+      - action: number.set_value
+        target:
+          entity_id: number.solarflow_800_pro_limite_d_entree
+        data:
+          value: 600
+      - action: select.select_option
+        target:
+          entity_id: select.solarflow_800_pro_mode_de_fonctionnement_ac
+        data:
+          option: input   
       - parallel:
         - sequence:
           - repeat:
@@ -207,7 +222,17 @@ script:
         target:
           entity_id: number.ace_1500_garage_input_limit
         data:
-          value: "0"  
+          value: "0"
+      - action: number.set_value
+        target:
+          entity_id: number.solarflow_800_pro_limite_de_sortie
+        data:
+          value: 200
+      - action: select.select_option
+        target:
+          entity_id: select.solarflow_800_pro_mode_de_fonctionnement_ac
+        data:
+          option: output  
       - action: climate.turn_off
         data: {}
         target:
@@ -276,7 +301,22 @@ script:
         target:
           entity_id: number.ace_1500_garage_input_limit
         data:
-          value: "900"  
+          value: "900"
+      - action: number.set_value
+        target:
+          entity_id: number.solarflow_800_pro_soc_maximum
+        data:
+          value: 80
+      - action: number.set_value
+        target:
+          entity_id: number.solarflow_800_pro_limite_de_sortie
+        data:
+          value: 200
+      - action: select.select_option
+        target:
+          entity_id: select.solarflow_800_pro_mode_de_fonctionnement_ac
+        data:
+          option: input  
       - action: select.select_option
         continue_on_error: true
         data:
