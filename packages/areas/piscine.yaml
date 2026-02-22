@@ -15,14 +15,14 @@ sensor:
     end: "{{ now() }}"
   - platform: history_stats
     name: Durée filtration piscine 24h
-    entity_id: switch.piscine_filtration
+    entity_id: switch.filtration_piscine_filtration
     state: "on"
     type: time
     duration: "24:00:00"
     end: "{{now()}}"
   - platform: history_stats
     name: Durée electrolyse piscine 24h
-    entity_id: switch.piscine_electrolyse
+    entity_id: switch.filtration_piscine_electrolyse
     state: "on"
     type: time
     duration: "24:00:00"
@@ -264,7 +264,7 @@ automation:
         - action: switch.turn_on
           target:
             entity_id:
-              - switch.piscine_filtration
+              - switch.filtration_piscine_filtration
         - if:
           - condition: template
             value_template: >
@@ -276,13 +276,13 @@ automation:
           - action: switch.turn_on
             target:
               entity_id:
-                - switch.piscine_electrolyse
+                - switch.filtration_piscine_electrolyse
     default:
       - action: switch.turn_off
         target:
           entity_id:
-            - switch.piscine_filtration
-            - switch.piscine_electrolyse
+            - switch.filtration_piscine_filtration
+            - switch.filtration_piscine_electrolyse
   mode: single
 ################################################################################
 - id: 'Swimingpool_auto_filtering_winter'
@@ -305,14 +305,14 @@ automation:
         - action: switch.turn_on
           target:
             entity_id:
-              - switch.piscine_filtration
-              - switch.piscine_electrolyse
+              - switch.filtration_piscine_filtration
+              - switch.filtration_piscine_electrolyse
     default:
       - action: switch.turn_off
         target:
           entity_id:
-            - switch.piscine_filtration
-            - switch.piscine_electrolyse
+            - switch.filtration_piscine_filtration
+            - switch.filtration_piscine_electrolyse
   mode: single
 ################################################################################
 #- id: 'Swimingpool_auto_boiler_barry'
