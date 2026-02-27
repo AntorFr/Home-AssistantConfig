@@ -52,9 +52,10 @@ automation:
               target:
                 entity_id: media_player.emilie
           else:
-            - action: script.chambre_emilie_music_douce
+            - action: script.chambre_music_douce
               metadata: {}
-              data: {}
+              data:
+                child: Émilie
 ################################################################################
 - id: 'chambre_emilie_music_curfew'
   alias: Area - Chambre Émilie - couvre-feu musique
@@ -169,16 +170,3 @@ automation:
         from: ["off"]
         to: ["on"]
         id: toggle
-
-script:
-################################################################################
-  chambre_emilie_music_douce:
-    alias: Chambre Émilie - Musique douce
-    mode: restart
-    icon: mdi:playlist-music
-    use_blueprint:
-      path: antorfr/music_soft_curfew_ma.yaml
-      input:
-        room: chambre_emilie
-        media_id: spotify:playlist:6DmyWiUQ76YCyKc6eSjmmL
-        duration: "00:20:00"

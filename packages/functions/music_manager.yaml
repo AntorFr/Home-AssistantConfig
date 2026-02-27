@@ -22,12 +22,30 @@ template:
       optimistic: true
       icon: mdi:playlist-music
 
+rest_command:
+  music_library_select:
+    url: >-
+      https://music-library.berard.me/api/v1/media/select?{{ query_string }}
+    method: GET
+    content_type: "application/json"
+    timeout: 20
+
 intent_script:
 ###############################################################################
   MusicTurnOn:
     async_action: false
     speech:
-      text: "Ok, j'ai lancé la musique {{ ' dans ' if area|length > 0}}{{area}}" #{{response.playlist}} 
+      text: >
+        {% set zone_text = (' dans ' ~ area) if (area is defined and area|length > 0) else '' %}
+        {% set picked = response.playlist if (response is defined and response.playlist is defined and response.playlist|string|trim != '') else none %}
+        {% set players = response.player if (response is defined and response.player is defined and response.player is iterable and response.player is not string) else [] %}
+        {% if picked is not none and (players|count > 0) %}
+          Ok, j'ai lancé {{ picked }} sur {{ players | join(', ') }}{{ zone_text }}.
+        {% elif picked is not none %}
+          Ok, j'ai lancé {{ picked }}{{ zone_text }}.
+        {% else %}
+          Ok, j'ai lancé la musique{{ zone_text }}.
+        {% endif %}
     action:
       - alias: "select zone"
         variables:
@@ -71,333 +89,609 @@ intent_script:
           rooms: "{{zone}}"
           action: media_stop
         response_variable: response
-################################################################################
-
-
 script:  
 ################################################################################
-  play_music:
-    alias: "Function - Music manager - Play the right playlist"
+  play_mood_music:
+    alias: "Function - Music manager - Play mood music"
     mode: parallel
 
-    fields:
-      media_player:
-        name: Enceinte
-        required: True
-        selector: 
-          entity:
-            multiple: true
-            filter:
-              - domain: media_player
-      style:
-        name: style
-        required: False
-        selector: 
-          select:
-            options: ['motivation','chill','work','zen','histoire']
-      public:
-        name: public
-        required: False
-        selector: 
-          select:
-            options: ['Famille','Sebastien','Laurine','Timothee','Emilie']
-      title:
-        name: titre
-        required: False
-        selector:
-          text:
-      
-    variables:
-      playlists: "{{state_attr('sensor.music_library', 'inventory')  |to_json(ensure_ascii=True)}}"
-      input_playlist: "{{states('select.playlist')}}"
-      reset_playlist: >
-        {%- if ((title is not defined) or (title is none)  or (title == '')) 
-            and (not is_state('select.playlist', ' ')) -%}
-          True
-        {%- else -%}
-          False
-        {%- endif -%} 
-      selected_playlists: >          
-        {%- set ns = namespace(selected_playlists=[]) %}
-
-        {# set to None if not defined or empty #}
-        {% if (style is not defined) or (style == '') %}
-          {% set style = None %}
-        {% endif %}
-        {% if (public is not defined) or (public == '')%}
-          {% set public = None %}
-        {% endif %}
-        {% if (title is not defined) or (title == '')%}
-          {% set title = None %}
-        {% endif %}
-
-        {% if (reset_playlist)%}
-          {% set title = input_playlist %}
-        {% endif %}
-
-        {%for playlist in playlists%}
-          {% if (title is not none and title==playlist.title)%}
-            {%- set ns.selected_playlists = ns.selected_playlists + [playlist] %}
-          {% elif (style is none or style in playlist.style)
-              and (public is none or public in playlist.public)
-              and (title is none) %}
-            {%- set ns.selected_playlists = ns.selected_playlists + [playlist] %}
-          {% endif %}
-        {% endfor  %}
-
-        {{ns.selected_playlists |to_json(ensure_ascii=True)}}         
-      random_playlist: >
-        {%if selected_playlists|length > 0 %}
-          {{selected_playlists|random |to_json(ensure_ascii=True)}}
-        {% endif %}
-
-    sequence:
-      - if:
-          - condition: template
-            value_template: "{{reset_playlist}}"
-        then:
-          - action: select.select_option
-            data:
-              option: " "
-            target:
-              entity_id: select.playlist 
-      - if:
-          - condition: template
-            value_template: "{{ random_playlist is not mapping  }}"
-        then:
-          - stop: "Aucune playlist trouvée"
-            error: true
-      - action: media_player.play_media
-        target:
-          entity_id: "{{ media_player }}"
-        data:
-          media_content_id: "{{ random_playlist.content_id }}"
-          media_content_type: "{{ random_playlist.content_type }}"
-          enqueue: replace
-      - variables:
-          response:
-            playlist: "{{random_playlist.title}}"
-            player: "{{expand(media_player)|map(attribute='name')| list }}"
-            message: >
-              {% if media_player is string %}
-                {% set media_player = [media_player]%}
-              {%endif%}
-              playlist {{random_playlist.title}} lancée sur {{expand(media_player)|map(attribute="name")|join(', ')}}
-            room: >
-              {% if (media_player is not string) and (media_player is iterable) %}
-                {% set media_player = media_player | first %}
-              {%endif%}
-              {{area_id(media_player)}}
-      - action: script.room_tts_notify
-        data:
-          room: "{{response.room}}"
-          message: "{{response.message}}"
-      - stop: "Playlist launched"
-        response_variable: response
-
-################################################################################
-  play_mood_music:
-    alias: "Function - Music manager - Guess what to play"
-    icon: mdi:speaker-multiple
-    variables:
-      zone_ids:
-        rdc:
-          - 'salon'
-          - 'salle_a_manger'
-          - 'cuisine'
     fields:
       rooms:
         name: zone de lecture
         required: False
-        selector: 
+        selector:
           area:
             multiple: true
             device:
               - integration: sonos
-
-      title:
-        name: titre
-        required: False
-        selector:
-          text:  
-
       action:
         name: action
-        required: True
+        required: False
         default: play_media
         selector:
           select:
             options:
               - play_media
               - media_stop
-              - play_stop #refresh what to play if nothing playing
+              - play_stop
               - media_play
-              - media_pause     
-              - play_pause # media_play rather than play_media
-    
+              - media_pause
+              - play_pause
+      fallback:
+        name: fallback
+        required: False
+        default: soft
+        selector:
+          select:
+            options:
+              - none
+              - soft
+              - aggressive
+      style:
+        name: style
+        required: False
+        selector:
+          select:
+            options: ['motivation','chill','work','zen','histoire']
+      public:
+        name: public
+        required: False
+        selector:
+          select:
+            options: ['famille','Sébastien','Laurine','Timothée','Émilie','enfants']
+      owner:
+        name: owner
+        required: False
+        selector:
+          select:
+            options: ['Sébastien','Laurine','Timothée','Émilie','enfants','famille']
+      mood:
+        name: mood
+        required: False
+        selector:
+          select:
+            options: ['Calme','Concentration','Energie','Someil','chill','focus','happy']
+      context:
+        name: context
+        required: False
+        selector:
+          select:
+            options: ['Bain','Cuisine','Travail','party','sport']
+      genre:
+        name: genre
+        required: False
+        selector:
+          select:
+            options: ['Livre','ambient','classical','electronic','hip-hop','jazz','pop','rock']
+      time_of_day:
+        name: time_of_day
+        required: False
+        selector:
+          select:
+            options: ['Matin','Après-midi','Soirée','Nuit']
+      age_group:
+        name: age_group
+        required: False
+        selector:
+          select:
+            options: ['Adulte','Enfants','Toutes']
+      title:
+        name: titre
+        required: False
+        selector:
+          text:
+
+    variables:
+      zone_ids:
+        rdc:
+          - 'salon'
+          - 'salle_a_manger'
+          - 'cuisine'
+      style: >
+        {% if (style is not defined) or (style is none) or (style|string|trim == '') %}
+          {{ none }}
+        {% else %}
+          {{ style }}
+        {% endif %}
+      public: >
+        {% if (public is not defined) or (public is none) or (public|string|trim == '') %}
+          {{ none }}
+        {% else %}
+          {{ public }}
+        {% endif %}
+      owner: >
+        {% if (owner is not defined) or (owner is none) or (owner|string|trim == '') %}
+          {{ none }}
+        {% else %}
+          {{ owner }}
+        {% endif %}
+      mood: >
+        {% if (mood is not defined) or (mood is none) or (mood|string|trim == '') %}
+          {{ none }}
+        {% else %}
+          {{ mood }}
+        {% endif %}
+      context: >
+        {% if (context is not defined) or (context is none) or (context|string|trim == '') %}
+          {{ none }}
+        {% else %}
+          {{ context }}
+        {% endif %}
+      genre: >
+        {% if (genre is not defined) or (genre is none) or (genre|string|trim == '') %}
+          {{ none }}
+        {% else %}
+          {{ genre }}
+        {% endif %}
+      time_of_day: >
+        {% if (time_of_day is not defined) or (time_of_day is none) or (time_of_day|string|trim == '') %}
+          {{ none }}
+        {% else %}
+          {{ time_of_day }}
+        {% endif %}
+      age_group: >
+        {% if (age_group is not defined) or (age_group is none) or (age_group|string|trim == '') %}
+          {{ none }}
+        {% else %}
+          {{ age_group }}
+        {% endif %}
+      fallback: >
+        {% if (fallback is not defined) or (fallback is none) or (fallback|string|trim == '') %}
+          soft
+        {% else %}
+          {{ fallback }}
+        {% endif %}
+      owner_from_public: >
+        {{ public }}
+      mood_from_style: >
+        {% if style == 'motivation' %}
+          Energie
+        {% elif style == 'chill' %}
+          chill
+        {% elif style == 'work' %}
+          Concentration
+        {% elif style == 'zen' %}
+          Calme
+        {% else %}
+          {{ none }}
+        {% endif %}
+      genre_from_style: >
+        {% if style == 'histoire' %}
+          Livre
+        {% else %}
+          {{ none }}
+        {% endif %}
+      age_group_from_public: >
+        {% if public in ['Timothée','Émilie','enfants'] %}
+          Enfants
+        {% else %}
+          {{ none }}
+        {% endif %}
+      resolved_owner: >
+        {% if owner is not none %}
+          {{ owner }}
+        {% else %}
+          {{ owner_from_public }}
+        {% endif %}
+      resolved_mood: >
+        {% if mood is not none %}
+          {{ mood }}
+        {% else %}
+          {{ mood_from_style }}
+        {% endif %}
+      resolved_genre: >
+        {% if genre is not none %}
+          {{ genre }}
+        {% else %}
+          {{ genre_from_style }}
+        {% endif %}
+      resolved_age_group: >
+        {% if age_group is not none %}
+          {{ age_group }}
+        {% else %}
+          {{ age_group_from_public }}
+        {% endif %}
+      query_data: >
+        {% set ns = namespace(q={'random':'true','limit':'1'}) %}
+        {% if fallback is not none %}
+          {% set ns.q = dict(ns.q, **{'fallback': fallback}) %}
+        {% endif %}
+        {% if resolved_owner is not none %}
+          {% set ns.q = dict(ns.q, **{'owner': resolved_owner}) %}
+        {% endif %}
+        {% if resolved_mood is not none %}
+          {% set ns.q = dict(ns.q, **{'mood': resolved_mood}) %}
+        {% endif %}
+        {% if context is not none %}
+          {% set ns.q = dict(ns.q, **{'context': context}) %}
+        {% endif %}
+        {% if resolved_genre is not none %}
+          {% set ns.q = dict(ns.q, **{'genre': resolved_genre}) %}
+        {% endif %}
+        {% if time_of_day is not none %}
+          {% set ns.q = dict(ns.q, **{'time_of_day': time_of_day}) %}
+        {% endif %}
+        {% if resolved_age_group is not none %}
+          {% set ns.q = dict(ns.q, **{'age_group': resolved_age_group}) %}
+        {% endif %}
+        {{ ns.q }}
+      query_string: "{{ query_data | urlencode }}"
+
     sequence:
-      - variables:
-          rooms: >
-            {% from 'room_functions.jinja' import all_area_identifiers, area_ids %}
-
-            {%- set ns = namespace(zone=[]) %}
-
-            {% if (rooms is none) or (rooms == '')%}
-              {%- set rooms = [] -%}
-            {%- elif rooms is string  -%}
-              {%- set rooms = [rooms] -%}
-            {% endif %}
-
-            {%- for room in rooms -%}
-              {%- if (room |lower) in zone_ids -%}
-                {%- set ns.zone = ns.zone + zone_ids[(room |lower)] -%}
-              {%- endif -%}
-            {%- endfor -%}
-
-            {%- set rooms =  area_ids(
-                              (ns.zone + rooms)
-                              | unique
-                              | select ("in",all_area_identifiers()|from_json) 
-                              |list) -%}
-
-            {{rooms}}
-          media_players: > 
-            {%- from 'music_functions.jinja' import sonos_in_areas, sonos_not_playing_tv -%}
-            {{sonos_not_playing_tv(sonos_in_areas(rooms)|from_json)|from_json }}
-          media_player_id: "{{ media_players | first }}"
-          group_members: "{{ media_players | reject('eq', media_player_id) | list }}"            
-          public: >
-            {%if title is defined%}
-            {%elif rooms == ['bureau'] %}
-              {% if (is_state('person.sebastien','home')) %}
-              Sebastien
-              {% elif (is_state('person.laurine','home')) %}
-              Laurine
-              {%endif%}
-            {%elif rooms == ['chambre_timothee'] %}
-              Timothee
-            {%elif rooms == ['chambre_emilie'] %}
-              Emilie
-            {%else %}
-              {% if (is_state('person.sebastien','home') 
-                and is_state('person.laurine','home')) %}
-              Famille
-              {% elif (is_state('person.sebastien','home')) %}
-              Sebastien
-              {% elif (is_state('person.laurine','home')) %}
-              Laurine
-              {%endif%}             
-            {% endif %}
-          style: >
-            {% if (title is none) or (title == '')%}
-              {% set title = null %}
-            {% endif %}
-
-            {%if title is defined%}
-            {%elif rooms == ['bureau'] %}
-              {% if (now().hour <= 9) %}
-                zen
-              {% elif is_state('binary_sensor.workday_sensor','on') 
-                  and now().hour <= 19  %}
-                work
-              {% elif now().hour <= 10 %}
-                chill
-              {% elif now() <= today_at(states('input_datetime.'+iif(is_state('binary_sensor.workday_tomorrow','on'),'children_night_time','children_night_time_we')))  %}
-                motivation
-              {% else %}
-                zen
-              {%endif %}
-            {%else %}
-              {% if (now().hour <= 9) %}
-                zen
-              {% elif (now().hour <= 10) %}
-                chill
-              {% elif now() <= today_at(states('input_datetime.'+iif(is_state('binary_sensor.workday_tomorrow','on'),'children_night_time','children_night_time_we'))) %}
-                motivation
-              {% else %}
-                zen
-              {%endif %}
-            {% endif %}
-          any_playing: >
-            {{(expand(media_players) | selectattr("state", "==", "playing") | list | count) > 0}}
-          action: >
-            {%- if ((action is not defined) or (action is none)  or (action == '')) -%}
-              play_media
-            {%- else -%}
-              {{action}}
-            {%- endif -%}
-
-      - alias: "play_media"
-        if:
-        - condition: template
-          value_template: >
-             {{action == "play_media"
-                or (action == "play_stop" and not any_playing ) }}
+      - if:
+          - condition: template
+            value_template: >
+              {{ (media_player is not defined)
+                 or (media_player is none)
+                 or (media_player is string and media_player | trim == '')
+                 or (media_player is iterable and (media_player | list | count == 0)) }}
         then:
-          - alias: "more than one player, create a groupe" 
-            if:
-              - condition: template
-                value_template: '{{ media_players | count > 1 }}'
-            then:
-              - action: media_player.join
-                enabled: true ## Debug > To remove
-                target:
-                  entity_id: > 
-                    {{media_player_id}}
-                data:
-                  group_members: >
-                    {{group_members}}
-          - action: script.play_music
-            enabled: true ## Debug > To remove
-            data:
-              media_player: "{{media_player_id}}"
-              style: "{{style}}"
-              public: "{{public}}"
-              title: "{{title}}"
-            response_variable: response
-          - stop: "Playlist launched"
-            enabled: true
-            response_variable: response
-      - alias: "stop" #stop
-        if:
-        - condition: template
-          value_template: >
-             {{action == "media_stop" or 
-             (action == "play_stop" and any_playing) }}
-        then: 
-          - action: media_player.media_stop
-            enabled: true ## Debug > To remove
-            target:
-              entity_id: > 
-                {%- from 'music_functions.jinja' import media_player_get_masters -%}
-                {{media_player_get_masters(media_players)|from_json }}
-      - alias: "media_play" 
-        if:
-        - condition: template
-          value_template: >
-             {{action == "media_play" or 
-             (action == "play_pause" and not any_playing) }}
-        then: 
-          - action: media_player.media_play
-            enabled: true ## Debug > To remove
-            target:
-              entity_id: > 
-                {%- from 'music_functions.jinja' import media_player_get_masters -%}
-                {{media_player_get_masters(media_players)|from_json }}
-      - alias: "pause" 
-        if:
-        - condition: template
-          value_template: >
-             {{action == "media_pause" or 
-             (action == "play_pause" and any_playing) }}
-        then: 
-          - action: media_player.media_pause
-            enabled: true ## Debug > To remove
-            target:
-              entity_id: > 
-                {%- from 'music_functions.jinja' import media_player_get_masters -%}
-                {{media_player_get_masters(media_players)|from_json }}
+          - variables:
+              rooms: >
+                {% from 'room_functions.jinja' import all_area_identifiers, area_ids %}
 
+                {%- set ns = namespace(zone=[]) %}
+
+                {% if (rooms is none) or (rooms == '')%}
+                  {%- set rooms = [] -%}
+                {%- elif rooms is string  -%}
+                  {%- set rooms = [rooms] -%}
+                {% endif %}
+
+                {%- for room in rooms -%}
+                  {%- if (room |lower) in zone_ids -%}
+                    {%- set ns.zone = ns.zone + zone_ids[(room |lower)] -%}
+                  {%- endif -%}
+                {%- endfor -%}
+
+                {%- set rooms =  area_ids(
+                                  (ns.zone + rooms)
+                                  | unique
+                                  | select ("in",all_area_identifiers()|from_json)
+                                  |list) -%}
+
+                {{rooms}}
+              media_players: >
+                {%- from 'music_functions.jinja' import sonos_in_areas, sonos_not_playing_tv, mass_in_areas -%}
+                {% set mass_players = mass_in_areas(rooms)|from_json %}
+                {% if mass_players|count > 0 %}
+                  {{ mass_players }}
+                {% else %}
+                  {{ sonos_not_playing_tv(sonos_in_areas(rooms)|from_json)|from_json }}
+                {% endif %}
+              media_player_id: "{{ media_players | first }}"
+              group_members: "{{ media_players | reject('eq', media_player_id) | list }}"
+              has_manual_title: >
+                {{ (title is defined) and (title is not none) and (title|string|trim != '') }}
+              time_of_day_tag: >
+                {% if now().hour < 6 %}
+                  Nuit
+                {% elif now().hour < 12 %}
+                  Matin
+                {% elif now().hour < 18 %}
+                  Après-midi
+                {% else %}
+                  Soirée
+                {% endif %}
+              case_key: >
+                {% if has_manual_title %}
+                  manual_title
+                {% elif rooms == ['bureau'] and is_state('binary_sensor.workday_sensor','on') and now().hour <= 19 %}
+                  bureau_work
+                {% elif rooms == ['bureau'] and now().hour <= 9 %}
+                  bureau_zen
+                {% elif rooms == ['bureau'] and now().hour <= 10 %}
+                  bureau_chill
+                {% elif rooms == ['bureau'] and now() <= today_at(states('input_datetime.'+iif(is_state('binary_sensor.workday_tomorrow','on'),'children_night_time','children_night_time_we'))) %}
+                  bureau_motivation
+                {% elif rooms == ['bureau'] %}
+                  bureau_zen
+                {% elif rooms == ['chambre_timothee'] %}
+                  chambre_timothee
+                {% elif rooms == ['chambre_emilie'] %}
+                  chambre_emilie
+                {% elif now().hour <= 9 %}
+                  house_zen
+                {% elif now().hour <= 10 %}
+                  house_chill
+                {% elif now() <= today_at(states('input_datetime.'+iif(is_state('binary_sensor.workday_tomorrow','on'),'children_night_time','children_night_time_we'))) %}
+                  house_motivation
+                {% else %}
+                  house_zen
+                {% endif %}
+              selection_tags: >
+                {% set ns = namespace(tags={}) %}
+
+                {% if case_key == 'manual_title' %}
+                  {% set ns.tags = {} %}
+
+                {% elif case_key in ['bureau_work','bureau_zen','bureau_chill','bureau_motivation'] %}
+                  {% set owner = none %}
+                  {% set public = none %}
+                  {% if is_state('person.sebastien','home') %}
+                    {% set owner = 'Sébastien' %}
+                    {% set public = 'Sébastien' %}
+                  {% elif is_state('person.laurine','home') %}
+                    {% set owner = 'Laurine' %}
+                    {% set public = 'Laurine' %}
+                  {% endif %}
+
+                  {% if case_key == 'bureau_work' %}
+                    {% set ns.tags = dict(style='work', mood='Concentration', context='Travail') %}
+                  {% elif case_key == 'bureau_chill' %}
+                    {% set ns.tags = dict(style='chill', mood='chill') %}
+                  {% elif case_key == 'bureau_motivation' %}
+                    {% set ns.tags = dict(style='motivation', mood='Energie') %}
+                  {% else %}
+                    {% set ns.tags = dict(style='zen', mood='Calme') %}
+                  {% endif %}
+
+                  {% if owner is not none %}
+                    {% set ns.tags = dict(ns.tags, **{'owner': owner}) %}
+                  {% endif %}
+                  {% if public is not none %}
+                    {% set ns.tags = dict(ns.tags, **{'public': public}) %}
+                  {% endif %}
+
+                {% elif case_key == 'chambre_timothee' %}
+                  {% set ns.tags = dict(public='Timothée', owner='Timothée', age_group='Enfants') %}
+
+                {% elif case_key == 'chambre_emilie' %}
+                  {% set ns.tags = dict(public='Émilie', owner='Émilie', age_group='Enfants') %}
+
+                {% else %}
+                  {% set owner = none %}
+                  {% set public = none %}
+                  {% if (is_state('person.sebastien','home') and is_state('person.laurine','home')) %}
+                    {% set owner = 'famille' %}
+                    {% set public = 'famille' %}
+                  {% elif is_state('person.sebastien','home') %}
+                    {% set owner = 'Sébastien' %}
+                    {% set public = 'Sébastien' %}
+                  {% elif is_state('person.laurine','home') %}
+                    {% set owner = 'Laurine' %}
+                    {% set public = 'Laurine' %}
+                  {% endif %}
+
+                  {% if case_key == 'house_chill' %}
+                    {% set ns.tags = dict(style='chill', mood='chill') %}
+                  {% elif case_key == 'house_motivation' %}
+                    {% set ns.tags = dict(style='motivation', mood='Energie') %}
+                  {% else %}
+                    {% set ns.tags = dict(style='zen', mood='Calme') %}
+                  {% endif %}
+
+                  {% if owner is not none %}
+                    {% set ns.tags = dict(ns.tags, **{'owner': owner}) %}
+                  {% endif %}
+                  {% if public is not none %}
+                    {% set ns.tags = dict(ns.tags, **{'public': public}) %}
+                  {% endif %}
+                {% endif %}
+
+                {% if case_key != 'manual_title' and time_of_day_tag is string %}
+                  {% set ns.tags = dict(ns.tags, **{'time_of_day': time_of_day_tag}) %}
+                {% endif %}
+
+                {{ ns.tags | to_json | from_json }}
+              public: "{{ selection_tags.public | default(none, true) }}"
+              style: "{{ selection_tags.style | default(none, true) }}"
+              owner: "{{ selection_tags.owner | default(none, true) }}"
+              mood: "{{ selection_tags.mood | default(none, true) }}"
+              context: "{{ selection_tags.context | default(none, true) }}"
+              genre: "{{ selection_tags.genre | default(none, true) }}"
+              time_of_day: "{{ selection_tags.time_of_day | default(none, true) }}"
+              age_group: "{{ selection_tags.age_group | default(none, true) }}"
+              any_playing: >
+                {{(expand(media_players) | selectattr("state", "==", "playing") | list | count) > 0}}
+              action: >
+                {%- if ((action is not defined) or (action is none)  or (action == '')) -%}
+                  play_media
+                {%- else -%}
+                  {{action}}
+                {%- endif -%}
+
+          - alias: "play_media"
+            if:
+            - condition: template
+              value_template: >
+                 {{action == "play_media"
+                    or (action == "play_stop" and not any_playing ) }}
+            then:
+              - alias: "more than one player, create a groupe"
+                if:
+                  - condition: template
+                    value_template: '{{ media_players | count > 1 }}'
+                then:
+                  - action: media_player.join
+                    target:
+                      entity_id: >
+                        {{media_player_id}}
+                    data:
+                      group_members: >
+                        {{group_members}}
+              - action: script.play_mood_music
+                data:
+                  media_player: "{{media_player_id}}"
+                  style: "{{style}}"
+                  public: "{{public}}"
+                  owner: "{{owner}}"
+                  mood: "{{mood}}"
+                  context: "{{context}}"
+                  genre: "{{genre}}"
+                  time_of_day: "{{time_of_day}}"
+                  age_group: "{{age_group}}"
+                  fallback: "{{fallback}}"
+                  title: "{{title}}"
+                response_variable: response
+              - stop: "Media launched"
+                response_variable: response
+
+          - alias: "stop"
+            if:
+            - condition: template
+              value_template: >
+                 {{action == "media_stop" or
+                 (action == "play_stop" and any_playing) }}
+            then:
+              - action: media_player.media_stop
+                target:
+                  entity_id: >
+                    {%- from 'music_functions.jinja' import media_player_get_masters -%}
+                    {{media_player_get_masters(media_players)|from_json }}
+
+          - alias: "media_play"
+            if:
+            - condition: template
+              value_template: >
+                 {{action == "media_play" or
+                 (action == "play_pause" and not any_playing) }}
+            then:
+              - action: media_player.media_play
+                target:
+                  entity_id: >
+                    {%- from 'music_functions.jinja' import media_player_get_masters -%}
+                    {{media_player_get_masters(media_players)|from_json }}
+
+          - alias: "pause"
+            if:
+            - condition: template
+              value_template: >
+                 {{action == "media_pause" or
+                 (action == "play_pause" and any_playing) }}
+            then:
+              - action: media_player.media_pause
+                target:
+                  entity_id: >
+                    {%- from 'music_functions.jinja' import media_player_get_masters -%}
+                    {{media_player_get_masters(media_players)|from_json }}
+
+          - stop: "Action executed"
+
+      - action: rest_command.music_library_select
+        data:
+          query_string: "{{ query_string }}"
+        response_variable: select_response
+
+      - variables:
+          selected_candidates: >
+            {% set content = none %}
+            {% if (select_response is defined)
+                and (select_response.status | int(0) == 200)
+                and (select_response.content is defined) %}
+              {% set content = select_response.content %}
+            {% endif %}
+
+            {% if content is mapping %}
+              {{ [content] }}
+            {% elif content is string %}
+              {% if content | trim == '' %}
+                {{ [] }}
+              {% else %}
+                {{ content | from_json(default=[]) }}
+              {% endif %}
+            {% elif content is iterable %}
+              {{ content }}
+            {% else %}
+              {{ [] }}
+            {% endif %}
+          selected_item: >
+            {% if selected_candidates is iterable and (selected_candidates|count > 0) %}
+              {{ selected_candidates | first }}
+            {% endif %}
+          media_player_list: >
+            {% if media_player is string %}
+              {{ [media_player] }}
+            {% else %}
+              {{ media_player | list }}
+            {% endif %}
+          first_media_player: "{{ media_player_list | first }}"
+          play_media_id: >
+            {% if selected_item is mapping and selected_item.source_uri is string %}
+              {% if selected_item.source_uri.startswith('spotify://') %}
+                {{ selected_item.source_uri | replace('spotify://', 'spotify:') | replace('/', ':') }}
+              {% else %}
+                {{ selected_item.source_uri }}
+              {% endif %}
+            {% endif %}
+          use_mass_service: "{{ first_media_player in integration_entities('Music Assistant') }}"
+
+      - if:
+          - condition: template
+            value_template: "{{ selected_item is not mapping }}"
+        then:
+          - stop: "Aucun média trouvé"
+            error: true
+
+      - choose:
+          - conditions:
+              - condition: template
+                value_template: "{{ use_mass_service }}"
+            sequence:
+              - action: music_assistant.play_media
+                target:
+                  entity_id: "{{ media_player_list }}"
+                data:
+                  media_id: "{{ selected_item.source_uri }}"
+                  enqueue: replace
+        default:
+          - action: media_player.play_media
+            target:
+              entity_id: "{{ media_player_list }}"
+            data:
+              media_content_id: "{{ play_media_id }}"
+              media_content_type: "{{ selected_item.media_type | default('music') }}"
+              enqueue: replace
+
+      - variables:
+          response:
+            playlist: "{{ selected_item.title | default('inconnu') }}"
+            player: "{{ expand(media_player_list)|map(attribute='name')| list }}"
+            message: >
+              média {{ selected_item.title | default('inconnu') }} lancé sur {{expand(media_player_list)|map(attribute="name")|join(', ')}}
+            room: "{{ area_id(first_media_player) }}"
+
+      - action: script.room_tts_notify
+        data:
+          room: "{{response.room}}"
+          message: "{{response.message}}"
+
+      - stop: "Media launched"
+        response_variable: response
+
+################################################################################
+  chambre_music_douce:
+    alias: "Function - Chambres - Musique douce"
+    mode: restart
+    icon: mdi:playlist-music
+    fields:
+      child:
+        name: enfant
+        required: True
+        selector:
+          select:
+            options: ['Timothée','Émilie']
+    variables:
+      owner: >
+        {% if child in ['Timothée','Timothee'] %}
+          Timothée
+        {% elif child in ['Émilie','Emilie'] %}
+          Émilie
+        {% endif %}
+      room: >
+        {% if child in ['Timothée','Timothee'] %}
+          chambre_timothee
+        {% elif child in ['Émilie','Emilie'] %}
+          chambre_emilie
+        {% endif %}
+    sequence:
+      - action: script.play_mood_music
+        data:
+          rooms: "{{ room }}"
+          action: play_media
+          owner: "{{ owner }}"
+          mood: Someil
+          fallback: none
 
 automation:
 ################################################################################
