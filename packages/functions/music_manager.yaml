@@ -37,11 +37,21 @@ intent_script:
     speech:
       text: >
         {% set zone_text = (' dans ' ~ area) if (area is defined and area|length > 0) else '' %}
-        {% set picked = response.playlist if (response is defined and response.playlist is defined and response.playlist|string|trim != '') else none %}
-        {% set players = response.player if (response is defined and response.player is defined and response.player is iterable and response.player is not string) else [] %}
-        {% if picked is not none and (players|count > 0) %}
-          Ok, j'ai lancé {{ picked }} sur {{ players | join(', ') }}{{ zone_text }}.
-        {% elif picked is not none %}
+        {% set picked = none %}
+        {% if action_response is defined and action_response is mapping %}
+          {% if action_response.playlist is defined and action_response.playlist|string|trim != '' %}
+            {% set picked = action_response.playlist %}
+          {% elif action_response.response is defined and action_response.response is mapping and action_response.response.playlist is defined and action_response.response.playlist|string|trim != '' %}
+            {% set picked = action_response.response.playlist %}
+          {% endif %}
+        {% elif response is defined and response is mapping %}
+          {% if response.playlist is defined and response.playlist|string|trim != '' %}
+            {% set picked = response.playlist %}
+          {% elif response.response is defined and response.response is mapping and response.response.playlist is defined and response.response.playlist|string|trim != '' %}
+            {% set picked = response.response.playlist %}
+          {% endif %}
+        {% endif %}
+        {% if picked is not none %}
           Ok, j'ai lancé {{ picked }}{{ zone_text }}.
         {% else %}
           Ok, j'ai lancé la musique{{ zone_text }}.
@@ -64,6 +74,8 @@ intent_script:
         data:
           rooms: "{{zone}}"
           action: play_media
+        response_variable: response
+      - stop: ""
         response_variable: response
 ################################################################################
   MusicTurnOff:
