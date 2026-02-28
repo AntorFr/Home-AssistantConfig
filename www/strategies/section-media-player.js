@@ -98,25 +98,25 @@ class MediaPlayerAreaSectionStrategy {
     cards.push({
       type: "heading",
       heading: config.heading ?? "Musique",
-      ...(config.heading_icon ? { icon: config.heading_icon } : {}),
+      icon: config.heading_icon ?? "mdi:music",
     });
 
-    // Mushroom media player
-    const playerRows = config.player_rows ?? 3;
-    cards.push({
-      type: "custom:mushroom-media-player-card",
-      use_media_info: true,
-      show_volume_level: false,
-      volume_controls: ["volume_set"],
-      media_controls: ["play_pause_stop"],
-      collapsible_controls: true,
-      entity: playerEntityId,
-      layout: "vertical",
-      layout_options: {
-        grid_columns: 4,
-        grid_rows: playerRows,
-      },
-    });
+    // Mushroom media player(s)
+    for (const mp of maPlayers) {
+      cards.push({
+        type: "custom:mushroom-media-player-card",
+        use_media_info: true,
+        show_volume_level: true,
+        volume_controls: ["volume_set"],
+        media_controls: ["play_pause_stop", "next", "shuffle"],
+        collapsible_controls: true,
+        entity: mp.entity_id,
+        layout: "vertical",
+        grid_options: {
+          columns: "full",
+        },
+      });
+    }
 
     // Music browser dropdown
     if (hasMusicBrowser) {
@@ -144,7 +144,7 @@ class MediaPlayerAreaSectionStrategy {
         service: "script.play_mood_music",
         target: {},
         data: {
-          rooms: [areaId],
+          areas: [areaId],
         },
       },
       layout_options: {

@@ -49,13 +49,14 @@
 {%- endmacro -%}
 
 {%- macro media_player_get_masters(entity_ids) -%}
-    {% set ns = namespace(players = []) %}
-    {% for player in expand(entity_ids) 
-        | selectattr('attributes.group_members', 'defined')
-        if player.attributes.group_members[0] == player.entity_id %} 
+  {% set ns = namespace(players = []) %}
+  {% for player in expand(entity_ids)
+    | selectattr('attributes.group_members', 'defined')
+    if player.attributes.group_members == []
+    or player.attributes.group_members[0] == player.entity_id %}
     {% set ns.players = ns.players + [player.entity_id] %}
-    {% endfor %}
-    {{ ns.players | to_json}}
+  {% endfor %}
+  {{ ns.players | to_json }}
 {%- endmacro -%}
 
 {%- macro music_mood_room(room) -%}
