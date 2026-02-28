@@ -26,7 +26,10 @@ themes/
 backups/
 deps/
 tts/
-www/
+!www/
+www/*
+!www/strategies/
+!www/strategies/**
 porcupine/
 
 # Ensure these YAML files are ignored, otherwise your secret data/credentials will leak.
