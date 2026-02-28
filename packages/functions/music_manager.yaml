@@ -658,21 +658,25 @@ automation:
               message: >
                 music_browser_refresh_lists item: select={{ select_entity }}, room={{ room }}, titles={{ titles | count }}
 
+          - variables:
+              current_value: "{{ states(select_entity) | default(' ', true) }}"
+
           - action: input_select.set_options
             target:
               entity_id: "{{ select_entity }}"
             data:
               options: "{{ [' '] + titles }}"
 
-          - if:
-              - condition: template
-                value_template: "{{ titles | count > 0 and filters is mapping and filters | count > 0 }}"
-            then:
-              - action: input_select.select_option
-                target:
-                  entity_id: "{{ select_entity }}"
-                data:
-                  option: "{{ titles | first }}"
+          - action: input_select.select_option
+            target:
+              entity_id: "{{ select_entity }}"
+            data:
+              option: >-
+                {% if current_value in ([' '] + titles) %}
+                  {{ current_value }}
+                {% else %}
+                  {{ ' ' }}
+                {% endif %}
 
 ################################################################################
 - id: handle_tag_scan
