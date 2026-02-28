@@ -17,7 +17,14 @@ light:
     entities:
       - light.salon
       - light.led_bibliotheque
-  
+
+input_select:
+  music_browser_salon:
+    name: Music Browser Salon
+    options:
+      - ' '
+    icon: mdi:playlist-music
+
 sensor:
   - platform: history_stats
     name: Durée Tv aujourd'hui
@@ -320,7 +327,7 @@ automation:
           sequence:
           - action: script.play_mood_music
             data:
-              rooms:
+              areas:
                 - Rdc
             target: {}
         - conditions:
@@ -330,7 +337,7 @@ automation:
           - action: script.play_mood_music
             data:
               action: play_pause
-              rooms:
+              areas:
                 - Rdc
               
             target: {}

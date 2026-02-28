@@ -31,6 +31,12 @@ input_boolean:
     initial: false
     icon: mdi:autorenew-off
 
+input_select:
+  music_browser_salle_a_manger:
+    name: Music Browser Salle à manger
+    options:
+      - ' '
+    icon: mdi:playlist-music
 
 script:
   light_scene_salle_a_manger:

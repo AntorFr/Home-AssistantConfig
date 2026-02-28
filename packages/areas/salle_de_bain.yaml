@@ -11,6 +11,13 @@ input_boolean:
     initial: false
     icon: mdi:autorenew-off
 
+input_select:
+  music_browser_salle_de_bain:
+    name: Music Browser Salle de bain
+    options:
+      - ' '
+    icon: mdi:playlist-music
+
 automation:
 ################################################################################
 - id: 'salle_de_bain_light'

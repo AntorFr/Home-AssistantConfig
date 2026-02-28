@@ -57,3 +57,67 @@
     {% endfor %}
     {{ ns.players | to_json}}
 {%- endmacro -%}
+
+{%- macro music_mood_room(room) -%}
+        {# ── 1. Contexte global ─────────────────────────────────────── #}
+        {% set owner = none %}
+        {% if is_state('person.sebastien','home') and is_state('person.laurine','home') %}
+            {% set owner = 'famille' %}
+        {% elif is_state('person.sebastien','home') %}
+            {% set owner = 'Sébastien' %}
+        {% elif is_state('person.laurine','home') %}
+            {% set owner = 'Laurine' %}
+        {% endif %}
+
+        {% set night_deadline = today_at(states('input_datetime.' + iif(is_state('binary_sensor.workday_tomorrow','on'),'children_night_time','children_night_time_we'))) %}
+
+        {# ── 2. Tags selon room + moment ────────────────────────────── #}
+        {% set ns = namespace(tags={'fallback': 'soft'}) %}
+
+        {% if room == 'bureau' %}
+            {% set bureau_owner = 'Sébastien' if is_state('person.sebastien','home') else owner %}
+            {% if is_state('binary_sensor.workday_sensor','on') and now().hour <= 19 %}
+                {% set ns.tags = dict(ns.tags, **{'mood': 'Concentration', 'context': 'Travail', 'owner': bureau_owner}) %}
+            {% elif now().hour <= 9 %}
+                {% set ns.tags = dict(ns.tags, **{'mood': 'Calme', 'owner': bureau_owner}) %}
+            {% elif now().hour <= 10 %}
+                {% set ns.tags = dict(ns.tags, **{'mood': 'chill', 'owner': bureau_owner}) %}
+            {% elif now() <= night_deadline %}
+                {% set ns.tags = dict(ns.tags, **{'mood': 'Energie', 'owner': bureau_owner}) %}
+            {% else %}
+                {% set ns.tags = dict(ns.tags, **{'mood': 'Calme', 'owner': bureau_owner}) %}
+            {% endif %}
+
+        {% elif room == 'chambre_timothee' %}
+            {% set ns.tags = dict(ns.tags, **{'owner': 'Timothée', 'age_group': 'Enfants'}) %}
+
+        {% elif room == 'chambre_emilie' %}
+            {% set ns.tags = dict(ns.tags, **{'owner': 'Émilie', 'age_group': 'Enfants'}) %}
+
+        {% else %}
+            {% if now().hour <= 9 %}
+                {% set ns.tags = dict(ns.tags, **{'mood': 'Calme', 'owner': owner}) %}
+            {% elif now().hour <= 10 %}
+                {% set ns.tags = dict(ns.tags, **{'mood': 'chill', 'owner': owner}) %}
+            {% elif now() <= night_deadline %}
+                {% set ns.tags = dict(ns.tags, **{'mood': 'Energie', 'owner': owner}) %}
+            {% else %}
+                {% set ns.tags = dict(ns.tags, **{'mood': 'Calme', 'owner': owner}) %}
+            {% endif %}
+
+        {% endif %}
+
+        {{ ns.tags | to_json }}
+{%- endmacro -%}
+
+{%- macro music_mood_rooms() -%}
+    {% from 'room_functions.jinja' import all_area_identifiers %}
+    {% set rooms = all_area_identifiers() | from_json | map('area_id') | reject('none') | unique | list %}
+        {% set ns = namespace(data={}) %}
+        {% for room in rooms %}
+            {% if (mass_in_areas(room) | from_json | count) > 0 %}
+            {% set ns.data = dict(ns.data, **{room: (music_mood_room(room) | from_json)}) %}
+            {% endif %}
+        {% endfor %}
+        {{ ns.data | to_json }}
+{%- endmacro -%}

@@ -11,6 +11,13 @@ input_boolean:
     name: Couvre feu Émilie
     icon: bha:night-light
 
+input_select:
+  music_browser_chambre_emilie:
+    name: Music Browser Chambre Émilie
+    options:
+      - ' '
+    icon: mdi:playlist-music
+
 automation:
 ################################################################################
 - id: 'chambre_emilie_button_lit'
@@ -102,7 +109,7 @@ automation:
           - action: script.play_mood_music
             data:
               action: media_stop
-              rooms: "{{room}}"
+              areas: "{{room}}"
       swipe_right_action:
         - action: cover.toggle
           target:
@@ -138,7 +145,7 @@ automation:
           - action: script.play_mood_music
             data:
               action: media_stop
-              rooms: "{{room}}"
+              areas: "{{room}}"
       swipe_right_action:
         - action: cover.toggle
           target:

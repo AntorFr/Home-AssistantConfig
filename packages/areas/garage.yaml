@@ -88,6 +88,13 @@ input_boolean:
     name: Lumière mode manuel (garage 2)
     icon: mdi:autorenew-off
 
+input_select:
+  music_browser_garage_2:
+    name: Music Browser Garage 2
+    options:
+      - ' '
+    icon: mdi:playlist-music
+
 automation:
 ################################################################################
 - id: garage1_light_auto

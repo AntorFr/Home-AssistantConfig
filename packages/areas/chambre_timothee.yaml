@@ -14,6 +14,12 @@ input_boolean:
     name: Couvre feu Timothée
     icon: bha:night-light
 
+input_select:
+  music_browser_chambre_timothee:
+    name: Music Browser Chambre Timothée
+    options:
+      - ' '
+    icon: mdi:playlist-music
 
 automation:
 ################################################################################
@@ -185,7 +191,7 @@ automation:
         milliseconds: 0
     - action: script.play_mood_music
       data:
-        rooms:
+        areas:
           - chambre_timothee
         title: Lolirock
   mode: single

@@ -43,7 +43,7 @@ template:
 sensor:
   - name: mouvement_cuisine_5min
     platform: history_stats
-    entity_id: binary_sensor.cuisine_capteur_mouvement_occupancy
+    entity_id: binary_sensor.capteurs_mouvement_cuisine
     state: "on"
     type: time
     duration: 00:5:00
@@ -54,6 +54,13 @@ input_boolean:
     name: Lumière mode manuel (cuisine)
     initial: false
     icon: mdi:autorenew-off
+
+input_select:
+  music_browser_cuisine:
+    name: Music Browser Cuisine
+    options:
+      - ' '
+    icon: mdi:playlist-music
 
 automation:
 ################################################################################

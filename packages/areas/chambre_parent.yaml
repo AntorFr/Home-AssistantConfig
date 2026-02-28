@@ -44,6 +44,13 @@ input_boolean:
     initial: false
     icon: mdi:autorenew-off
 
+input_select:
+  music_browser_chambre_parent:
+    name: Music Browser Chambre Parent
+    options:
+      - ' '
+    icon: mdi:playlist-music
+
 automation:
 ################################################################################
 - id: 'chambre_parent_button_seb'

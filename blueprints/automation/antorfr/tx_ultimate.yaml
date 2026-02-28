@@ -110,7 +110,7 @@ blueprint:
         - service: script.play_mood_music
           data:
             action: play_stop
-            rooms: '{{room}}'
+            areas: '{{room}}'
       selector:
         action: {}
     multi_touch_action:
@@ -123,7 +123,7 @@ blueprint:
           - service: script.play_mood_music
             data:
               action: media_stop
-              rooms: "{{room}}"
+              areas: "{{room}}"
       selector:
         action: {}
     swipe_left_action:

@@ -35,6 +35,13 @@ input_boolean:
     name: mode reunion
     icon: mdi:monitor-account
 
+input_select:
+  music_browser_bureau:
+    name: Music Browser Bureau
+    options:
+      - ' '
+    icon: mdi:playlist-music
+
 automation:
 ################################################################################
 - id: bureau_light_auto
@@ -102,7 +109,7 @@ automation:
         - action: script.play_mood_music
           data:
             action: media_stop
-            rooms: "{{room}}"
+            areas: "{{room}}"
 ################################################################################
 - id: 'bureau_light_switch_entrance'
   alias: Area - Bureau - Bouton entrée
@@ -128,7 +135,7 @@ automation:
           - action: script.play_mood_music
             data:
               action: media_stop
-              rooms: "{{room}}"
+              areas: "{{room}}"
 
       swipe_left_action:
         - action: cover.toggle
@@ -183,7 +190,7 @@ automation:
           - action: script.play_mood_music
             data:
               action: media_stop
-              rooms: "{{room}}"
+              areas: "{{room}}"
 
       swipe_left_action:
         - action: cover.toggle
@@ -505,7 +512,7 @@ automation:
             - action: script.play_mood_music
               metadata: {}
               data:
-                rooms:
+                areas:
                   - bureau
 ################################################################################
 - id: bureau_wled_pc_auto
@@ -589,4 +596,5 @@ homeassistant:
       room_main: occupancy
     media_player.fire_tablet:
       room_main: tts
+
 
