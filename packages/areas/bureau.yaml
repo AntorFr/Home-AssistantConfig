@@ -363,7 +363,11 @@ automation:
     - platform: numeric_state
       entity_id:
         - sensor.office_solder_iron_switch_power
-      above: 10
+      above: 100
+      for:
+        hours: 0
+        minutes: 0
+        seconds: 2
       id: iron_in_use
     - platform: numeric_state
       entity_id:
@@ -371,8 +375,13 @@ automation:
       for:
         hours: 0
         minutes: 0
-        seconds: 10
-      below: 5
+        seconds: 5
+      below: 90
+      id: iron_not_in_use
+    - trigger: state
+      entity_id:
+        - switch.office_solder_iron_switch_fer_souder
+      to: "off"
       id: iron_not_in_use
   condition: []
   action:
