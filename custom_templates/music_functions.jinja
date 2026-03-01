@@ -73,7 +73,7 @@
         {% set night_deadline = today_at(states('input_datetime.' + iif(is_state('binary_sensor.workday_tomorrow','on'),'children_night_time','children_night_time_we'))) %}
 
         {# ── 2. Tags selon room + moment ────────────────────────────── #}
-        {% set ns = namespace(tags={'fallback': 'soft'}) %}
+        {% set ns = namespace(tags={}) %}
 
         {% if room == 'bureau' %}
             {% set bureau_owner = 'Sébastien' if is_state('person.sebastien','home') else owner %}

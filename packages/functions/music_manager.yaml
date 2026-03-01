@@ -152,6 +152,7 @@ script:
               - none
               - soft
               - aggressive
+              - force
       owner:
         name: owner
         required: False
@@ -602,7 +603,7 @@ automation:
                   {{ {} }}
                 {% endif %}
               query_data: >
-                {% set ns = namespace(q={'random':'false','limit':'10','fallback':'soft'}) %}
+                {% set ns = namespace(q={'random':'false','limit':'10','fallback':'force'}) %}
                 {% if filters is mapping %}
                   {% for k in ['owner','mood','context','genre','time_of_day','age_group'] %}
                     {% if filters[k] is defined and filters[k] is not none and filters[k]|string|trim != '' %}
@@ -671,12 +672,8 @@ automation:
             target:
               entity_id: "{{ select_entity }}"
             data:
-              option: >-
-                {% if current_value in ([' '] + titles) %}
-                  {{ current_value }}
-                {% else %}
-                  {{ ' ' }}
-                {% endif %}
+              option: " "
+                
 
 ################################################################################
 - id: handle_tag_scan
