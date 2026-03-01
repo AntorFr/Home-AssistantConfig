@@ -379,6 +379,11 @@ script:
                       {% set ns.q = dict(ns.q, **{k: selection_tags[k] | string}) %}
                     {% endif %}
                   {% endfor %}
+                  {% for k in ['not_owner','not_mood','not_context','not_genre','not_time_of_day','not_age_group'] %}
+                    {% if selection_tags[k] is defined and selection_tags[k] is not none and selection_tags[k] | string | trim != '' %}
+                      {% set ns.q = dict(ns.q, **{k: selection_tags[k] | string}) %}
+                    {% endif %}
+                  {% endfor %}
                   {{ ns.q }}
                 {% endif %}
               query_string: "{{ query_data | urlencode }}"
@@ -606,6 +611,11 @@ automation:
                 {% set ns = namespace(q={'random':'false','limit':'10','fallback':'force'}) %}
                 {% if filters is mapping %}
                   {% for k in ['owner','mood','context','genre','time_of_day','age_group'] %}
+                    {% if filters[k] is defined and filters[k] is not none and filters[k]|string|trim != '' %}
+                      {% set ns.q = dict(ns.q, **{k: (filters[k]|string)}) %}
+                    {% endif %}
+                  {% endfor %}
+                  {% for k in ['not_owner','not_mood','not_context','not_genre','not_time_of_day','not_age_group'] %}
                     {% if filters[k] is defined and filters[k] is not none and filters[k]|string|trim != '' %}
                       {% set ns.q = dict(ns.q, **{k: (filters[k]|string)}) %}
                     {% endif %}
