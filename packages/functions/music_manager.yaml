@@ -165,7 +165,7 @@ script:
         selector:
           select:
             options: ['Calme','Concentration','Energie','Someil','chill','focus']
-      context:
+      music_context:
         name: context
         required: False
         selector:
@@ -214,11 +214,11 @@ script:
         {% else %}
           {{ mood|string|trim }}
         {% endif %}
-      context: >
-        {% if (context is not defined) or (context is none) or (context|string|trim == '') %}
+      music_context: >
+        {% if (music_context is not defined) or (music_context is none) or (music_context|string|trim == '') %}
           {{ none }}
         {% else %}
-          {{ context|string|trim }}
+          {{ music_context|string|trim }}
         {% endif %}
       genre: >
         {% if (genre is not defined) or (genre is none) or (genre|string|trim == '') %}
@@ -338,7 +338,7 @@ script:
                   {{ browser_selected_title }}
                 {% endif %}
               has_explicit_tags: >-
-                {{ (owner is not none) or (mood is not none) or (context is not none)
+                {{ (owner is not none) or (mood is not none) or (music_context is not none)
                    or (genre is not none) or (time_of_day is not none) or (age_group is not none) }}
               play_mode: >-
                 {% if effective_title | default('') | trim != '' %}
@@ -358,35 +358,35 @@ script:
                 {% else %}
                   {{ {} }}
                 {% endif %}
-              query_data: >
-                {% if play_mode == 'by_title' %}
-                  {{ {'search': effective_title, 'random': 'false', 'limit': '1', 'fallback': fallback} }}
-                {% elif play_mode == 'by_tags' %}
-                  {% set ns = namespace(q={'random': 'true', 'limit': '1', 'fallback': fallback}) %}
-                  {% if owner is not none %}{% set ns.q = dict(ns.q, **{'owner': owner}) %}{% endif %}
-                  {% if mood is not none %}{% set ns.q = dict(ns.q, **{'mood': mood}) %}{% endif %}
-                  {% if context is not none %}{% set ns.q = dict(ns.q, **{'context': context}) %}{% endif %}
-                  {% if genre is not none %}{% set ns.q = dict(ns.q, **{'genre': genre}) %}{% endif %}
-                  {% if time_of_day is not none %}{% set ns.q = dict(ns.q, **{'time_of_day': time_of_day}) %}{% endif %}
-                  {% if age_group is not none %}{% set ns.q = dict(ns.q, **{'age_group': age_group}) %}{% endif %}
-                  {{ ns.q }}
-                {% else %}
-                  {% set ns = namespace(q={'random': 'true', 'limit': '1'}) %}
-                  {% set fb = selection_tags.fallback | default(fallback, true) %}
-                  {% if fb is not none %}{% set ns.q = dict(ns.q, **{'fallback': fb}) %}{% endif %}
-                  {% for k in ['owner','mood','context','genre','time_of_day','age_group'] %}
-                    {% if selection_tags[k] is defined and selection_tags[k] is not none and selection_tags[k] | string | trim != '' %}
-                      {% set ns.q = dict(ns.q, **{k: selection_tags[k] | string}) %}
-                    {% endif %}
-                  {% endfor %}
-                  {% for k in ['not_owner','not_mood','not_context','not_genre','not_time_of_day','not_age_group'] %}
-                    {% if selection_tags[k] is defined and selection_tags[k] is not none and selection_tags[k] | string | trim != '' %}
-                      {% set ns.q = dict(ns.q, **{k: selection_tags[k] | string}) %}
-                    {% endif %}
-                  {% endfor %}
-                  {{ ns.q }}
-                {% endif %}
-              query_string: "{{ query_data | urlencode }}"
+              query_string: >
+                {%- if play_mode == 'by_title' -%}
+                  {%- set qd = {'search': effective_title, 'random': 'false', 'limit': '1', 'fallback': fallback} -%}
+                {%- elif play_mode == 'by_tags' -%}
+                  {%- set ns = namespace(q={'random': 'true', 'limit': '1', 'fallback': fallback}) -%}
+                  {%- if owner is not none %}{% set ns.q = dict(ns.q, **{'owner': owner}) %}{% endif -%}
+                  {%- if mood is not none %}{% set ns.q = dict(ns.q, **{'mood': mood}) %}{% endif -%}
+                  {%- if music_context is not none %}{% set ns.q = dict(ns.q, **{'context': music_context}) %}{% endif -%}
+                  {%- if genre is not none %}{% set ns.q = dict(ns.q, **{'genre': genre}) %}{% endif -%}
+                  {%- if time_of_day is not none %}{% set ns.q = dict(ns.q, **{'time_of_day': time_of_day}) %}{% endif -%}
+                  {%- if age_group is not none %}{% set ns.q = dict(ns.q, **{'age_group': age_group}) %}{% endif -%}
+                  {%- set qd = ns.q -%}
+                {%- else -%}
+                  {%- set ns = namespace(q={'random': 'true', 'limit': '1'}) -%}
+                  {%- set fb = selection_tags.fallback | default(fallback, true) -%}
+                  {%- if fb is not none %}{% set ns.q = dict(ns.q, **{'fallback': fb}) %}{% endif -%}
+                  {%- for k in ['owner','mood','context','genre','time_of_day','age_group'] -%}
+                    {%- if selection_tags[k] is defined and selection_tags[k] is not none and selection_tags[k] | string | trim != '' -%}
+                      {%- set ns.q = dict(ns.q, **{k: selection_tags[k] | string}) -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {%- for k in ['not_owner','not_mood','not_context','not_genre','not_time_of_day','not_age_group'] -%}
+                    {%- if selection_tags[k] is defined and selection_tags[k] is not none and selection_tags[k] | string | trim != '' -%}
+                      {%- set ns.q = dict(ns.q, **{k: selection_tags[k] | string}) -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {%- set qd = ns.q -%}
+                {%- endif -%}
+                {{ qd | urlencode }}
 
           # ── A.3 : Appel API ──
           - action: rest_command.music_library_select
@@ -607,25 +607,24 @@ automation:
                 {% else %}
                   {{ {} }}
                 {% endif %}
-              query_data: >
-                {% set ns = namespace(q={'random':'false','limit':'10','fallback':'force'}) %}
-                {% if filters is mapping %}
-                  {% for k in ['owner','mood','context','genre','time_of_day','age_group'] %}
-                    {% if filters[k] is defined and filters[k] is not none and filters[k]|string|trim != '' %}
-                      {% set ns.q = dict(ns.q, **{k: (filters[k]|string)}) %}
-                    {% endif %}
-                  {% endfor %}
-                  {% for k in ['not_owner','not_mood','not_context','not_genre','not_time_of_day','not_age_group'] %}
-                    {% if filters[k] is defined and filters[k] is not none and filters[k]|string|trim != '' %}
-                      {% set ns.q = dict(ns.q, **{k: (filters[k]|string)}) %}
-                    {% endif %}
-                  {% endfor %}
-                  {% if filters.fallback is defined and filters.fallback is not none and filters.fallback|string|trim != '' %}
-                    {% set ns.q = dict(ns.q, **{'fallback': (filters.fallback|string)}) %}
-                  {% endif %}
-                {% endif %}
-                {{ ns.q }}
-              query_string: "{{ query_data | urlencode }}"
+              query_string: >
+                {%- set ns = namespace(q={'random':'false','limit':'10','fallback':'force'}) -%}
+                {%- if filters is mapping -%}
+                  {%- for k in ['owner','mood','context','genre','time_of_day','age_group'] -%}
+                    {%- if filters[k] is defined and filters[k] is not none and filters[k]|string|trim != '' -%}
+                      {%- set ns.q = dict(ns.q, **{k: (filters[k]|string)}) -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {%- for k in ['not_owner','not_mood','not_context','not_genre','not_time_of_day','not_age_group'] -%}
+                    {%- if filters[k] is defined and filters[k] is not none and filters[k]|string|trim != '' -%}
+                      {%- set ns.q = dict(ns.q, **{k: (filters[k]|string)}) -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {%- if filters.fallback is defined and filters.fallback is not none and filters.fallback|string|trim != '' -%}
+                    {%- set ns.q = dict(ns.q, **{'fallback': (filters.fallback|string)}) -%}
+                  {%- endif -%}
+                {%- endif -%}
+                {{ ns.q | urlencode }}
 
           - action: rest_command.music_library_select
             data:

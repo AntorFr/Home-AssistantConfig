@@ -116,8 +116,9 @@
     {% set rooms = all_area_identifiers() | from_json | map('area_id') | reject('none') | unique | list %}
         {% set ns = namespace(data={}) %}
         {% for room in rooms %}
-            {% if (mass_in_areas(room) | from_json | count) > 0 %}
-            {% set ns.data = dict(ns.data, **{room: (music_mood_room(room) | from_json)}) %}
+            {% set room_tags = music_mood_room(room) | from_json %}
+            {% if room_tags | count > 0 %}
+            {% set ns.data = dict(ns.data, **{room: room_tags}) %}
             {% endif %}
         {% endfor %}
         {{ ns.data | to_json }}

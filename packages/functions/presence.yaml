@@ -27,6 +27,29 @@ template:
         {{ (states.person | selectattr('state','eq','home') | list | count > 0) or
            (is_state('input_boolean.guest_mode','on')) }}
 
+    - device_class: occupancy
+      unique_id: maison_activite_globale
+      name: "Activité globale maison"
+      state: >-
+        {{ is_state('binary_sensor.maison_rdc_presence', 'on') or
+           is_state('binary_sensor.maison_floor1_presence', 'on') }}
+
+    - device_class: occupancy
+      unique_id: activite_pieces_de_vie_rdc
+      name: "Activité pièces de vie RDC"
+      state: >-
+        {{ states('sensor.mouvement_salon_5min') | float(0) > 0 or
+           states('sensor.mouvement_entree_5min') | float(0) > 0 or
+           states('sensor.mouvement_salle_a_manger_5min') | float(0) > 0 or
+           states('sensor.mouvement_cuisine_5min') | float(0) > 0 or
+           is_state('media_player.tv01', 'on') }}
+
+    - device_class: occupancy
+      unique_id: activite_pieces_de_vie_etage
+      name: "Activité pièces de vie étage"
+      state: >-
+        {{ states('sensor.mouvement_bureau_5min') | float(0) > 0 }}
+
 binary_sensor:
   - name: "maison_rdc_presence"
     device_class: occupancy
@@ -143,6 +166,42 @@ binary_sensor:
       prob_given_true: 0.50
       prob_given_false: 0.50
       to_state: docked
+
+  - name: "sleep_detected"
+    device_class: occupancy
+    platform: "bayesian"
+    prior: 0.25
+    probability_threshold: 0.90
+    observations:
+    # Plus d'activité dans les pièces de vie RDC (hors WC) → signal fort
+    - entity_id: binary_sensor.activite_pieces_de_vie_rdc
+      platform: "state"
+      prob_given_true: 0.95
+      prob_given_false: 0.20
+      to_state: "off"
+    # Plus d'activité dans les pièces de vie étage (bureau, hors couloir/WC/escalier) → signal fort
+    - entity_id: binary_sensor.activite_pieces_de_vie_etage
+      platform: "state"
+      prob_given_true: 0.90
+      prob_given_false: 0.50
+      to_state: "off"
+    # TV éteinte → signal de support
+    - entity_id: media_player.tv01
+      platform: "state"
+      prob_given_true: 0.99
+      prob_given_false: 0.50
+      to_state: "off"
+    # Après le coucher du soleil → contexte
+    - entity_id: binary_sensor.nuit
+      platform: "state"
+      prob_given_true: 0.85
+      prob_given_false: 0.40
+      to_state: "on"
+    # Heure tardive (22h-6h) → contexte fort
+    - platform: "template"
+      value_template: "{{ now().hour >= 22 or now().hour < 6 }}"
+      prob_given_true: 0.95
+      prob_given_false: 0.15
 
 
 ### Todo set children there by default if parent are there when HA start

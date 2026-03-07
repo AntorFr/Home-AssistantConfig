@@ -439,8 +439,9 @@ automation:
   - trigger: time
     at: input_datetime.morning_time_we
     id: weekend
-  - trigger: state
-    entity_id: binary_sensor.maison_rdc_presence
+  - alias: "Activité détectée dans la maison"
+    trigger: state
+    entity_id: binary_sensor.maison_activite_globale
     to: 'on'
     id: motion
   - alias: "ios action Wake-up"
@@ -514,15 +515,18 @@ automation:
 ################################################################################
 - id: 'routine_detect_night'
   alias: Routine - Day - Detect Nuit
-  description: ''
+  description: 'Détection bayésienne du coucher basée sur activité des pièces de vie'
   trigger:
-  - trigger: time
+  - alias: "Détection bayésienne coucher (30min de confirmation)"
+    trigger: state
+    entity_id: binary_sensor.sleep_detected
+    to: 'on'
+    for: 00:30:00
+    id: bayesian
+  - alias: "Filet de sécurité 03h00"
+    trigger: time
     at: '03:00:00'
-  - trigger: state
-    entity_id: binary_sensor.maison_rdc_presence
-    from: 'on'
-    to: 'off'
-    for: 02:00:00
+    id: safety
   - alias: "ios action Sleep"
     trigger: event
     event_type: ios.action_fired
@@ -538,9 +542,15 @@ automation:
           - condition: state
             entity_id: input_boolean.night_mode
             state: 'off'
-          - condition: time
-            after: '22:00:00'
-            before: '06:00:00'
+          - condition: or
+            conditions:
+              - alias: "Bouton iOS - pas de contrainte horaire"
+                condition: trigger
+                id: button
+              - alias: "Détection auto - entre 22h et 6h"
+                condition: time
+                after: '22:00:00'
+                before: '06:00:00'
   action:
   - action: input_boolean.turn_on
     data: {}
@@ -553,7 +563,7 @@ automation:
   description: 'De bonne heure'
   trigger:
   - trigger: state
-    entity_id: binary_sensor.maison_rdc_presence
+    entity_id: binary_sensor.maison_activite_globale
     from: 'off'
     to: 'on'
   condition:

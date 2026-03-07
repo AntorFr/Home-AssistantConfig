@@ -39,16 +39,24 @@ const resolveArea = (areas, key) => {
  *   - entity.area_id === areaId   (explicit override), OR
  *   - entity.area_id is null AND entity.device.area_id === areaId
  */
-function findMAPlayersInArea(entities, devices, areaId) {
+function findPlayersInArea(entities, devices, areaId, platform) {
   const deviceAreaMap = new Map(devices.map((d) => [d.id, d.area_id]));
   return entities.filter((e) => {
     if (!e.entity_id.startsWith("media_player.")) return false;
-    if (e.platform !== "music_assistant") return false;
+    if (e.platform !== platform) return false;
     if (e.disabled_by) return false;
     const effectiveArea =
       e.area_id || (e.device_id ? deviceAreaMap.get(e.device_id) : null);
     return effectiveArea === areaId;
   });
+}
+
+function findMAPlayersInArea(entities, devices, areaId) {
+  return findPlayersInArea(entities, devices, areaId, "music_assistant");
+}
+
+function findSonosPlayersInArea(entities, devices, areaId) {
+  return findPlayersInArea(entities, devices, areaId, "sonos");
 }
 
 /* ── strategy ────────────────────────────────────────────────── */
@@ -63,20 +71,35 @@ class MediaPlayerAreaSectionStrategy {
     if (!area) throw new Error(`Area introuvable : ${config.area}`);
     const areaId = area.area_id;
 
-    // ── 1. Trouver le media_player Music Assistant ──────────
+    // ── 1. Trouver le media_player (MA prioritaire, Sonos en fallback) ──
     const maPlayers = findMAPlayersInArea(entities, devices, areaId);
-    if (maPlayers.length === 0) {
-      // Pas de lecteur MA → section vide (ou message)
+    const sonosPlayers = findSonosPlayersInArea(entities, devices, areaId);
+
+    // Ne garder que les players dont l'état n'est pas "unavailable"
+    const isAvailable = (e) =>
+      hass.states[e.entity_id]?.state !== "unavailable";
+
+    const availableMA = maPlayers.filter(isAvailable);
+    const availableSonos = sonosPlayers.filter(isAvailable);
+
+    // MA disponibles en priorité ; pour chaque MA indispo, compléter
+    // avec le Sonos correspondant s'il existe (fallback individuel)
+    const activePlayers =
+      availableMA.length > 0
+        ? availableMA   // au moins un MA dispo → on affiche les MA dispos
+        : availableSonos; // aucun MA dispo → fallback total sur Sonos
+
+    if (activePlayers.length === 0) {
       return {
         cards: [
           {
             type: "markdown",
-            content: `Aucun lecteur Music Assistant dans **${area.name}**.`,
+            content: `Aucun lecteur disponible dans **${area.name}**.`,
           },
         ],
       };
     }
-    const playerEntityId = maPlayers[0].entity_id;
+    const playerEntityId = activePlayers[0].entity_id;
 
     // ── 2. Trouver dynamiquement le music browser ───────────
     let musicBrowserId = null;
@@ -102,18 +125,19 @@ class MediaPlayerAreaSectionStrategy {
     });
 
     // Mushroom media player(s)
-    for (const mp of maPlayers) {
+    for (const mp of activePlayers) {
       cards.push({
         type: "custom:mushroom-media-player-card",
+        icon: "",
         use_media_info: true,
         show_volume_level: true,
         volume_controls: ["volume_set"],
         media_controls: ["play_pause_stop", "next", "shuffle"],
         collapsible_controls: true,
         entity: mp.entity_id,
-        layout: "vertical",
-        grid_options: {
-          columns: "full",
+        layout_options: {
+          grid_columns: 4,
+          grid_rows: 2,
         },
       });
     }
@@ -121,11 +145,14 @@ class MediaPlayerAreaSectionStrategy {
     // Music browser dropdown
     if (hasMusicBrowser) {
       cards.push({
-        type: "entities",
-        entities: [{ entity: musicBrowserId }],
+        type: "custom:mushroom-select-card",
+        entity: musicBrowserId,
+        layout: "horizontal",
+        primary_info: "none",
+        secondary_info: "none",
         layout_options: {
           grid_columns: 3,
-          grid_rows: 2,
+          grid_rows: 1,
         },
       });
     }
@@ -133,12 +160,11 @@ class MediaPlayerAreaSectionStrategy {
     // Bouton "Lancer"
     cards.push({
       type: "custom:mushroom-template-card",
-      primary: "Lancer",
+      primary: "",
       secondary: "",
-      icon: "mdi:speaker-play",
+      icon: "mdi:play",
       fill_container: true,
       icon_color: "indigo",
-      layout: "vertical",
       tap_action: {
         action: "call-service",
         service: "script.play_mood_music",
@@ -149,7 +175,7 @@ class MediaPlayerAreaSectionStrategy {
       },
       layout_options: {
         grid_columns: 1,
-        grid_rows: 2,
+        grid_rows: 1,
       },
     });
 
