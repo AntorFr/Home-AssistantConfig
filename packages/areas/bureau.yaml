@@ -398,6 +398,8 @@ automation:
                 entity_id:
                   - switch.office_solder_iron_switch_fer_souder
                   - switch.office_solder_fume_filtre_fum_e_soudure
+                  - switch.prise_sonic_saber
+                  - switch.hotglue_gun_plug_pistolet_colle
         - conditions:
             - condition: trigger
               id:
