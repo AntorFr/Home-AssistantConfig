@@ -65,7 +65,7 @@ automation:
             - action: script.chambre_music_douce
               metadata: {}
               data:
-                child: Timothée
+                room: chambre_timothee
 ################################################################################
 - id: 'chambre_timothee_lumiere_auto'
   alias: Area - Chambre Timothée - Lumière Auto

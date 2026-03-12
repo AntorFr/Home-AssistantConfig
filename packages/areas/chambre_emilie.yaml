@@ -62,7 +62,7 @@ automation:
             - action: script.chambre_music_douce
               metadata: {}
               data:
-                child: Émilie
+                room: chambre_emilie
 ################################################################################
 - id: 'chambre_emilie_music_curfew'
   alias: Area - Chambre Émilie - couvre-feu musique
