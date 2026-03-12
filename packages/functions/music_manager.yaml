@@ -542,25 +542,19 @@ script:
     mode: restart
     icon: mdi:playlist-music
     fields:
-      child:
-        name: enfant
-        required: True
+      room:
+        name: Pièce
+        description: "area_id de la chambre (ex: chambre_emilie)"
+        required: true
         selector:
-          select:
-            options: ['Timothée','Émilie']
+          area:
     variables:
       owner: >
-        {% if child in ['Timothée','Timothee'] %}
-          Timothée
-        {% elif child in ['Émilie','Emilie'] %}
-          Émilie
-        {% endif %}
-      room: >
-        {% if child in ['Timothée','Timothee'] %}
-          chambre_timothee
-        {% elif child in ['Émilie','Emilie'] %}
-          chambre_emilie
-        {% endif %}
+        {% set owners = {
+          'chambre_timothee': 'Timothée',
+          'chambre_emilie':   'Émilie',
+        } %}
+        {{ owners.get(room, '') }}
     sequence:
       - action: script.play_mood_music
         data:

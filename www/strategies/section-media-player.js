@@ -179,6 +179,42 @@ class MediaPlayerAreaSectionStrategy {
       },
     });
 
+    // Bouton "Musique douce" pour les chambres d'enfants
+    const childRooms = ["chambre_emilie", "chambre_timothee"];
+    if (childRooms.includes(areaId)) {
+      cards.push({
+        type: "tile",
+        entity: "script.chambre_music_douce",
+        name: "Musique douce",
+        vertical: false,
+        features: [
+          {
+            type: "button",
+            action_name: "Lancer",
+            tap_action: {
+              action: "perform-action",
+              perform_action: "script.chambre_music_douce",
+              data: {
+                room: areaId,
+              },
+            },
+          },
+        ],
+        features_position: "inline",
+        tap_action: {
+          action: "perform-action",
+          perform_action: "script.chambre_music_douce",
+          data: {
+            room: areaId,
+          },
+        },
+        layout_options: {
+          grid_columns: 4,
+          grid_rows: 1,
+        },
+      });
+    }
+
     return { cards };
   }
 }
