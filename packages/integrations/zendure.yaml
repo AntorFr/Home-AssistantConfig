@@ -8,12 +8,12 @@ automation:
   triggers:
     - trigger: numeric_state
       entity_id:
-        - sensor.ace_1500_garage_electric_level
+        - sensor.ace_1500_niveau_de_batterie
       below: 15
-      id: bellow20
+      id: bellow15
     - trigger: numeric_state
       entity_id:
-        - sensor.ace_1500_garage_electric_level
+        - sensor.ace_1500_niveau_de_batterie
       below: 10
       id: bellow10
   conditions: []
