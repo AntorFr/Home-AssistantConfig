@@ -192,16 +192,6 @@ script:
     sequence:
     - action: switch.turn_off
       target:
-        entity_id:
-          #Chambre parent
-          - switch.couverture_laurine
-          - switch.couverture_seb
-
-          #Piscine
-          - switch.piscine_chauffe_eau
-
-
-
         label_id: 
           - night_power_off
           - away_power_off
@@ -220,15 +210,8 @@ script:
     sequence:
     - action: switch.turn_on
       target:
-        entity_id:
-
-          #Buanderie
-          - switch.washing_machine_plug_prise_machine_laver
-          - switch.dryer_plug_prise_s_che_linge
-
         label_id: 
-          - night_power_off
-          - away_power_off
+          - default_on
           
     - action: script.turn_off
       target:

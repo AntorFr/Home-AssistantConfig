@@ -146,20 +146,20 @@ script:
       - action: switch.turn_on
         target:
           label_id: 
-            - red_power_off
+            - default_on
       - action: number.set_value
         target:
-          entity_id: number.ace_1500_garage_soc_set
+          entity_id: number.ace_1500_soc_maximum
         data:
           value: "100"
       - action: number.set_value
         target:
-          entity_id: number.ace_1500_garage_min_soc
+          entity_id: number.ace_1500_soc_minimum
         data:
           value: "10"
       - action: number.set_value
         target:
-          entity_id: number.ace_1500_garage_input_limit
+          entity_id: number.ace_1500_limite_d_entree
         data:
           value: "900"
       - action: number.set_value
@@ -220,7 +220,7 @@ script:
             - red_power_off
       - action: number.set_value
         target:
-          entity_id: number.ace_1500_garage_input_limit
+          entity_id: number.ace_1500_limite_d_entree
         data:
           value: "0"
       - action: number.set_value
@@ -286,20 +286,20 @@ script:
       - action: switch.turn_on
         target:
           label_id: 
-            - red_power_off
+            - default_on
       - action: number.set_value
         target:
-          entity_id: number.ace_1500_garage_soc_set
+          entity_id: number.ace_1500_soc_maximum
         data:
           value: "80"
       - action: number.set_value
         target:
-          entity_id: number.ace_1500_garage_min_soc
+          entity_id: number.ace_1500_soc_minimum
         data:
           value: "10"
       - action: number.set_value
         target:
-          entity_id: number.ace_1500_garage_input_limit
+          entity_id: number.ace_1500_limite_d_entree
         data:
           value: "900"
       - action: number.set_value
