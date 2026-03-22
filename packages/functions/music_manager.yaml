@@ -548,6 +548,13 @@ script:
         required: true
         selector:
           area:
+      duration:
+        name: Durée avant arrêt
+        required: false
+        default:
+          minutes: 20
+        selector:
+          duration:
     variables:
       owner: >
         {% set owners = {
@@ -555,7 +562,27 @@ script:
           'chambre_emilie':   'Émilie',
         } %}
         {{ owners.get(room, '') }}
+      curfew_entity: >-
+        {% set entities = area_entities(room) | default([]) %}
+        {% set curfew = entities
+          | select('match','^input_boolean\\.')
+          | select('search','curfew')
+          | list
+          | first | default('') %}
+        {{ curfew }}
     sequence:
+      # ── Désactiver le couvre-feu si actif ──
+      - variables:
+          curfew_was_on: "{{ curfew_entity != '' and is_state(curfew_entity, 'on') }}"
+      - if:
+          - condition: template
+            value_template: "{{ curfew_was_on }}"
+        then:
+          - action: input_boolean.turn_off
+            target:
+              entity_id: "{{ curfew_entity }}"
+
+      # ── Lancer la musique douce ──
       - action: script.play_mood_music
         data:
           areas: "{{ room }}"
@@ -563,6 +590,23 @@ script:
           owner: "{{ owner }}"
           mood: Someil
           fallback: none
+
+      # ── Attendre puis arrêter ──
+      - delay: "{{ duration | default({'minutes': 20}) }}"
+
+      - action: script.play_mood_music
+        data:
+          areas: "{{ room }}"
+          action: media_stop
+
+      # ── Réactiver le couvre-feu s'il était actif ──
+      - if:
+          - condition: template
+            value_template: "{{ curfew_was_on }}"
+        then:
+          - action: input_boolean.turn_on
+            target:
+              entity_id: "{{ curfew_entity }}"
 
 automation:
 ################################################################################

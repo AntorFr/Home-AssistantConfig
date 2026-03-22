@@ -191,12 +191,8 @@ class MediaPlayerAreaSectionStrategy {
           {
             type: "button",
             action_name: "Lancer",
-            tap_action: {
-              action: "perform-action",
-              perform_action: "script.chambre_music_douce",
-              data: {
-                room: areaId,
-              },
+            data: {
+              room: areaId,
             },
           },
         ],
