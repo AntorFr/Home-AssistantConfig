@@ -208,11 +208,29 @@ script:
   routine_all_power_device_on:
     alias: Routine - All power saving device on
     sequence:
-    - action: switch.turn_on
-      target:
-        label_id: 
-          - default_on
-          
+    - choose:
+      - alias: "Tempo Red HP - turn on default_on without red_power_off"
+        conditions:
+        - condition: state
+          entity_id: sensor.linky_couleur_actuelle
+          state: 'rouge'
+        - condition: state
+          entity_id: sensor.template_teleinfo_periode_tarifaire
+          state: 'HP'
+        sequence:
+        - action: switch.turn_on
+          target:
+            entity_id: >
+              {{ label_entities('default_on')
+                 | reject('in', label_entities('red_power_off'))
+                 | select('match', 'switch.')
+                 | list }}
+      default:
+      - action: switch.turn_on
+        target:
+          label_id: 
+            - default_on
+
     - action: script.turn_off
       target:
         entity_id:
