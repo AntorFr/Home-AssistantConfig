@@ -134,12 +134,6 @@ script:
       - action: notify.mobile_seb
         data:
           message: "Tempo rouge Preparation"
-      - action: select.select_option
-        continue_on_error: true
-        data:
-          option: "Tempo rouge"
-        target:
-          entity_id: select.petit_mars
       - action: script.turn_on
         target:
           entity_id: script.routine_all_power_device_on
@@ -176,8 +170,14 @@ script:
         target:
           entity_id: select.solarflow_800_pro_mode_de_fonctionnement_ac
         data:
-          option: input   
+          option: input 
       - parallel:
+        - action: select.select_option
+          continue_on_error: true
+          data:
+            option: "Tempo rouge"
+          target:
+            entity_id: select.petit_mars  
         - sequence:
           - repeat:
               while: "{{ not is_state('climate.panasonic_heat_pump_main_z1_temp','heat') and repeat.index < 10}}"
@@ -238,13 +238,13 @@ script:
         target:
           entity_id: 
             - climate.mobile_heater_plug_thermostat
-      - action: select.select_option
-        continue_on_error: true
-        data:
-          option: "Tempo rouge"
-        target:
-          entity_id: select.petit_mars
       - parallel:
+        - action: select.select_option
+          continue_on_error: true
+          data:
+            option: "Tempo rouge"
+          target:
+            entity_id: select.petit_mars
         - sequence:
           - repeat:
               while: "{{ not is_state('climate.panasonic_heat_pump_main_z1_temp','off') and repeat.index < 10}}"
@@ -317,13 +317,13 @@ script:
           entity_id: select.solarflow_800_pro_mode_de_fonctionnement_ac
         data:
           option: input  
-      - action: select.select_option
-        continue_on_error: true
-        data:
-          option: Normal
-        target:
-          entity_id: select.petit_mars
       - parallel:
+        - action: select.select_option
+          continue_on_error: true
+          data:
+            option: Normal
+          target:
+            entity_id: select.petit_mars
         - sequence:
           - repeat:
               while: "{{ not is_state('climate.panasonic_heat_pump_main_z1_temp','heat') and repeat.index < 10}}"
