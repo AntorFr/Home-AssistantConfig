@@ -375,7 +375,10 @@ script:
     sequence:
     - action: cover.close_cover
       target:
-        area_id: garage
+        area_id:
+          - garage_1
+          - garage
+          - garage_3
 
 ## Serrures / Verrou ###
 ################################################################################
