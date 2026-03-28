@@ -70,7 +70,10 @@
             {% set owner = 'Laurine' %}
         {% endif %}
 
-        {% set night_deadline = today_at(states('input_datetime.' + iif(is_state('binary_sensor.workday_tomorrow','on'),'children_night_time','children_night_time_we'))) %}
+        {% set evening_deadline = today_at(states('input_datetime.' + iif(is_state('binary_sensor.workday_tomorrow','on'),'evening_time','evening_time_we'))) %}
+        {% set night_deadline_emilie = today_at(states('input_datetime.' + iif(is_state('binary_sensor.workday_tomorrow','on'),'children_curfew_emilie','children_curfew_we_emilie'))) %}
+        {% set night_deadline_timothee = today_at(states('input_datetime.' + iif(is_state('binary_sensor.workday_tomorrow','on'),'children_curfew_timothee','children_curfew_we_timothee'))) %}
+        {% set night_mode = is_state('input_boolean.night_mode','on') %}
 
         {# ── 2. Tags selon room + moment ────────────────────────────── #}
         {% set ns = namespace(tags={}) %}
@@ -83,28 +86,38 @@
                 {% set ns.tags = dict(ns.tags, **{'mood': 'Calme', 'owner': bureau_owner, 'not_genre': 'Récit'}) %}
             {% elif now().hour <= 10 %}
                 {% set ns.tags = dict(ns.tags, **{'mood': 'chill', 'owner': bureau_owner, 'not_genre': 'Récit'}) %}
-            {% elif now() <= night_deadline %}
+            {% elif now() <= evening_deadline %}
                 {% set ns.tags = dict(ns.tags, **{'mood': 'Energie', 'owner': bureau_owner, 'not_genre': 'Récit'}) %}
             {% else %}
                 {% set ns.tags = dict(ns.tags, **{'mood': 'Calme', 'owner': bureau_owner, 'not_genre': 'Récit'}) %}
             {% endif %}
 
         {% elif room == 'chambre_timothee' %}
-            {% set ns.tags = dict(ns.tags, **{'owner': 'Timothée', 'age_group': 'Enfants'}) %}
+            {% if now() >= night_deadline_timothee %}
+                {% set ns.tags = dict(ns.tags, **{'owner': 'Timothée', 'age_group': 'Enfants', 'mood': 'Someil'}) %}
+            {% else %}
+                {% set ns.tags = dict(ns.tags, **{'owner': 'Timothée', 'age_group': 'Enfants'}) %}
+            {% endif %}
 
         {% elif room == 'chambre_emilie' %}
-            {% set ns.tags = dict(ns.tags, **{'owner': 'Émilie', 'age_group': 'Enfants'}) %}
+            {% if now() >= night_deadline_emilie %}
+                {% set ns.tags = dict(ns.tags, **{'owner': 'Émilie', 'age_group': 'Enfants', 'mood': 'Someil'}) %}
+            {% else %}
+                {% set ns.tags = dict(ns.tags, **{'owner': 'Émilie', 'age_group': 'Enfants'}) %}
+            {% endif %}
 
         {% else %}
-            {% if now().hour <= 9 %}
+            {% if night_mode %}
+                {% set ns.tags = dict(ns.tags, **{'mood': 'Someil', 'owner': owner, 'not_genre': 'Récit'}) %}
+            {% elif now().hour <= 9 %}
                 {% set ns.tags = dict(ns.tags, **{'mood': 'Calme', 'owner': owner, 'not_genre': 'Récit'}) %}
             {% elif now().hour <= 10 %}
                 {% set ns.tags = dict(ns.tags, **{'mood': 'chill', 'owner': owner, 'not_genre': 'Récit'}) %}
-            {% elif now() <= night_deadline %}
+            {% elif now() <= evening_deadline %}
                 {% set ns.tags = dict(ns.tags, **{'mood': 'Energie', 'owner': owner, 'not_genre': 'Récit'}) %}
             {% else %}
+                {% set ns.tags = dict(ns.tags, **{'mood': 'Calme', 'owner': owner, 'not_genre': 'Récit'}) %}
             {% endif %}
-        
 
         {% endif %}
 
