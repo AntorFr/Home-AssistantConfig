@@ -128,11 +128,13 @@ automation:
     to: home
   - trigger: state
     entity_id: input_boolean.away_mode
-    to: 'on'
+    to: 'off'
   condition:
-  - condition: state
-    entity_id: alarm_control_panel.alarme_maison
-    state: 'armed_away'
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: alarm_control_panel.alarme_maison
+      state: 'disarmed'
   action:
   - action: alarm_control_panel.alarm_disarm
     target:
