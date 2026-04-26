@@ -93,6 +93,11 @@ class MediaPlayerAreaSectionStrategy {
       return {
         cards: [
           {
+            type: "heading",
+            heading: config.heading ?? "Musique",
+            icon: config.heading_icon ?? "mdi:music",
+          },  
+          {
             type: "markdown",
             content: `Aucun lecteur disponible dans **${area.name}**.`,
           },

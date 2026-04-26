@@ -32,7 +32,7 @@ automation:
         - action: notify.all_mobile
           metadata: {}
           data:
-            message: Niveau batterie garage faible ({{states('sensor.electriclevel')}}%)
+            message: Niveau batterie garage faible ({{states('sensor.ace_1500_niveau_de_batterie')}}%)
 
 - id: Zendur_output_off
   alias: Integration - Zendure - Force output On

@@ -68,6 +68,23 @@ template:
         delay_on: "00:02:00"
         delay_off: "00:02:00"
 
+      - unique_id: pool_filter_clogged_problem
+        name: "Filtre piscine encrassé"
+        device_class: problem
+
+        # Valide uniquement si la filtration tourne et que la mesure est un nombre
+        availability: >
+          {{ is_state('switch.filtration_piscine_filtration', 'on')
+             and (states('sensor.filtration_piscine_power_filtration') | float(none)) is not none }}
+
+        # ON si la puissance est en dessous de 120W alors que la pompe tourne
+        state: >
+          {{ (states('sensor.filtration_piscine_power_filtration') | float(0)) < 120 }}
+
+        # Anti-rebond : n'alerte que si c'est resté bas 10 min
+        delay_on: "00:10:00"
+        delay_off: "00:02:00"
+
 alert:
   swiming_pool:
     name: "Porte Piscine non sécurisée"
@@ -166,6 +183,21 @@ alert:
     skip_first: true  # Optional, false is the default
     notifiers:
       - notify
+
+  pool_filter_clogged:
+    name: "Alerte filtre piscine encrassé"
+    message: >
+      Attention, le filtre de la piscine semble encrassé.
+      Puissance pompe : {{ states('sensor.filtration_piscine_power_filtration') }} W (seuil : 120 W).
+    done_message: >
+      Filtre piscine OK. Puissance pompe : {{ states('sensor.filtration_piscine_power_filtration') }} W.
+    entity_id: binary_sensor.filtre_piscine_encrasse
+    state: "on"
+    repeat: 30
+    can_acknowledge: true
+    skip_first: false
+    notifiers:
+      - all_mobile
 
 automation:
 ################################################################################
@@ -422,3 +454,5 @@ homeassistant:
       icon: mdi:air-filter
     binary_sensor.piscine_capteurs_presence:
       room_main: occupancy
+    binary_sensor.filtre_piscine_encrasse:
+      icon: mdi:filter-remove

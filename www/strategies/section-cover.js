@@ -91,6 +91,12 @@ class CoverAreaSectionStrategy {
       return {
         cards: [
           {
+            type: "heading",
+            heading: config.heading ?? "Volets",
+            heading_style: config.heading_style ?? "title",
+            icon: config.heading_icon ?? "mdi:roller-shade",
+          },
+          {
             type: "markdown",
             content: `Aucun volet disponible dans **${area.name}**.`,
           },

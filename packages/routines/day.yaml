@@ -441,7 +441,7 @@ automation:
     id: weekend
   - alias: "Activité détectée dans la maison"
     trigger: state
-    entity_id: binary_sensor.maison_activite_globale
+    entity_id: binary_sensor.activite_globale_maison
     to: 'on'
     id: motion
   - alias: "ios action Wake-up"
@@ -563,7 +563,7 @@ automation:
   description: 'De bonne heure'
   trigger:
   - trigger: state
-    entity_id: binary_sensor.maison_activite_globale
+    entity_id: binary_sensor.activite_globale_maison
     from: 'off'
     to: 'on'
   condition:

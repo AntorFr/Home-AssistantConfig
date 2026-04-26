@@ -7,7 +7,6 @@ binary_sensor:
     all: false
     entities:
       - binary_sensor.bureau_capteur_presence_presence
-      - binary_sensor.bureau_capteur_mouvement_occupancy
       - binary_sensor.bureau_person_occupancy
       - binary_sensor.capteur_presence_bureau_occupancy
 
@@ -104,8 +103,6 @@ automation:
         - action: light.turn_off
           target:
             area_id: "{{room}}"
-        - action: switch.turn_off
-          entity_id: switch.fire_tablet_screen
         - action: script.play_mood_music
           data:
             action: media_stop
@@ -130,8 +127,6 @@ automation:
           - action: light.turn_off
             target:
               area_id: "{{room}}"
-          - action: switch.turn_off
-            entity_id: switch.fire_tablet_screen
           - action: script.play_mood_music
             data:
               action: media_stop
@@ -185,8 +180,6 @@ automation:
           - action: light.turn_off
             target:
               area_id: "{{room}}"
-          - action: switch.turn_off
-            entity_id: switch.fire_tablet_screen
           - action: script.play_mood_music
             data:
               action: media_stop
@@ -225,7 +218,6 @@ automation:
       target:
         entity_id:
           - media_player.bureau
-          - switch.fire_tablet_screen
 ################################################################################
 - id: bureau_heater-auto
   alias: Area - Bureau - Chauffage auto
