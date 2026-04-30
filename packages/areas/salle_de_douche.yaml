@@ -61,7 +61,7 @@ automation:
       toggle_trigger:
         trigger: state
         entity_id: 
-          - binary_sensor.dressing_light_switch_touchfield_1
+          - binary_sensor.bouton_buanderie_bouton
         from: ["off"]
         to: ["on"]
         id: toggle
@@ -74,11 +74,11 @@ automation:
     path: antorfr/tx_ultimate.yaml
     input:
       swipe_right: binary_sensor.dressing_light_switch_swipe_right
-      touchfield_1: binary_sensor.dressing_light_switch_touchfield_1
-      touchfield_2: binary_sensor.dressing_light_switch_touchfield_2
+      swipe_left: binary_sensor.dressing_light_switch_swipe_left
       long_press: binary_sensor.dressing_light_switch_long_press
       multi_touch: binary_sensor.dressing_light_switch_multi_touch
-      swipe_left: binary_sensor.dressing_light_switch_swipe_left
+      touchfield_1: binary_sensor.bouton_buanderie_bouton
+
 
 ################################################################################
 - id: 'salle_de_douche_light_switch_shower'

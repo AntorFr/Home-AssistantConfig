@@ -46,7 +46,7 @@ automation:
       toggle_trigger:
         trigger: state
         entity_id: 
-          - binary_sensor.laundry_switch_touchfield_1
+          - binary_sensor.bouton_buanderie_bouton
         from: ["off"]
         to: ["on"]
         id: toggle

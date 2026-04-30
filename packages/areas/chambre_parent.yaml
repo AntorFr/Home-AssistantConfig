@@ -491,7 +491,7 @@ automation:
       only_during_night: true      
       toggle_trigger:
         trigger: state
-        entity_id: binary_sensor.parent_light_switch_touchfield_1
+        entity_id: binary_sensor.bouton_lumiere_chambre_parent_bouton
         from: ["off"]
         to: ["on"]
         id: toggle

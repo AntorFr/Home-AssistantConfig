@@ -152,23 +152,23 @@ automation:
   use_blueprint:
     path: antorfr/tx_ultimate.yaml
     input:
-      swipe_right: binary_sensor.desk_light_switch_swipe_right
-      touchfield_1: binary_sensor.desk_light_switch_touchfield_1
-      touchfield_2: binary_sensor.desk_light_switch_touchfield_2
-      touchfield_3: binary_sensor.desk_light_switch_touchfield_3
-      long_press: binary_sensor.desk_light_switch_long_press
-      multi_touch: binary_sensor.desk_light_switch_multi_touch
-      swipe_left: binary_sensor.desk_light_switch_swipe_left
+      swipe_right: binary_sensor.bouton_applique_bureau_swipe_right
+      touchfield_1: binary_sensor.bouton_applique_bureau_bouton_gauche
+      touchfield_2: binary_sensor.bouton_applique_bureau_bouton_centre
+      touchfield_3: binary_sensor.bouton_applique_bureau_bouton_droite
+      long_press: binary_sensor.bouton_applique_bureau_long_press
+      multi_touch: binary_sensor.bouton_applique_bureau_multi_touch
+      swipe_left: binary_sensor.bouton_applique_bureau_swipe_left
 
       touchfield_1_action:
         - action: light.toggle
           target:
-            entity_id: light.office_light_switch_l1
+            entity_id: light.hue_color_lamp_5_3
 
       touchfield_2_action:
         - action: light.toggle
           target:
-            entity_id: light.hue_color_lamp_5_3
+            entity_id: light.office_light_switch_l1
 
       touchfield_3_action:
         - action: light.toggle
