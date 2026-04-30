@@ -27,6 +27,30 @@ sensor:
     type: time
     duration: "24:00:00"
     end: "{{now()}}"
+  - platform: history_stats
+    name: Présence piscine depuis 22h
+    entity_id: binary_sensor.indoor_pool_person_occupancy
+    state: "on"
+    type: time
+    start: >
+      {% if now().hour >= 22 %}
+        {{ today_at('22:00') }}
+      {% else %}
+        {{ today_at('22:00') - timedelta(days=1) }}
+      {% endif %}
+    end: "{{ now() }}"
+  - platform: history_stats
+    name: Filtration piscine depuis 22h
+    entity_id: switch.filtration_piscine_filtration
+    state: "on"
+    type: time
+    start: >
+      {% if now().hour >= 22 %}
+        {{ today_at('22:00') }}
+      {% else %}
+        {{ today_at('22:00') - timedelta(days=1) }}
+      {% endif %}
+    end: "{{ now() }}"
 
 
 
@@ -84,6 +108,35 @@ template:
         # Anti-rebond : n'alerte que si c'est resté bas 10 min
         delay_on: "00:10:00"
         delay_off: "00:02:00"
+
+  - sensor:
+      - unique_id: piscine_filtration_need
+        name: "Piscine filtration need"
+        unit_of_measurement: "h"
+        icon: mdi:timer-sand
+        # B = T/2 + min(2, 0.5*P)  ;  R = max(0, B - F)
+        # T = temp eau, P = présence depuis 22h, F = filtration depuis 22h
+        state: >
+          {% set T = states('sensor.plouf_temperature') | float(0) %}
+          {% set P = states('sensor.presence_piscine_depuis_22h') | float(0) %}
+          {% set F = states('sensor.filtration_piscine_depuis_22h') | float(0) %}
+          {% set bonus = [2, 0.5 * P] | min %}
+          {% set B = T / 2 + bonus %}
+          {{ [0, B - F] | max | round(2) }}
+
+      - unique_id: piscine_hp_debut
+        name: "Piscine HP début"
+        unit_of_measurement: "h"
+        icon: mdi:clock-start
+        # Si need <= 6h : ancrage 12h (on finit plus tôt)
+        # Si need > 6h  : ancrage 18h (on commence plus tôt)
+        state: >
+          {% set need = states('sensor.piscine_filtration_need') | float(0) %}
+          {% if need <= 6 %}
+            12
+          {% else %}
+            {{ [9, 18 - need] | max }}
+          {% endif %}
 
 alert:
   swiming_pool:
@@ -258,57 +311,69 @@ automation:
 ################################################################################
 - id: 'Swimingpool_auto_filtering_hchp'
   alias: Area - Piscine - Filtration automatique (HP-HC)
-  description: Filtration de la piscine en fonction du prix de l'electricité
+  description: >-
+    Filtration basée sur T_eau + présence depuis 22h, auto-corrective si nuit ratée.
+    HC: toujours ON. HP: ON si need>0 et heure >= hp_debut. Tempo rouge: OFF.
   trigger:
+    - trigger: time_pattern
+      minutes: "/30"
     - trigger: state
       entity_id: sensor.template_teleinfo_periode_tarifaire
     - trigger: state
-      entity_id: schedule.filtration_piscine_ete
+      entity_id: sensor.plouf_temperature
+    - trigger: state
+      entity_id: binary_sensor.indoor_pool_person_occupancy
+    - trigger: state
+      entity_id: sensor.blu_temperature_piscine_temperature
   condition:
     - condition: state
-      entity_id: input_boolean.piscine_en_hivernage 
+      entity_id: input_boolean.piscine_en_hivernage
       state: 'off'
   action:
+  - variables:
+      need: "{{ states('sensor.piscine_filtration_need') | float(0) }}"
+      hp_debut: "{{ states('sensor.piscine_hp_debut') | float(12) }}"
+      now_h: "{{ now().hour + now().minute / 60 }}"
+      is_hc: "{{ is_state('sensor.template_teleinfo_periode_tarifaire', 'HC') }}"
+      is_rouge: "{{ is_state('sensor.linky_couleur_actuelle', 'rouge') }}"
+      t_air: "{{ states('sensor.blu_temperature_piscine_temperature') | float(0) }}"
+      t_eau: "{{ states('sensor.plouf_temperature') | float(0) }}"
+      brassage: >-
+        {{ t_air > 30 and (t_air > t_eau + 5 or t_eau > 32) }}
+      dans_fenetre_hp: >-
+        {{ need > 0 and now_h >= hp_debut }}
   - choose:
     - conditions:
-      - alias: "Heure creuse ou Filtration ete"
-        condition: or
-        conditions:
-          - condition: state
-            entity_id: sensor.template_teleinfo_periode_tarifaire
-            state: HC
-          - alias: "Temperature trop chaude et Tempo non rouge"
-            condition: and
-            conditions:
-              - condition: state
-                entity_id: schedule.filtration_piscine_ete
-                state: 'on'
-              - condition: numeric_state
-                entity_id:
-                  - sensor.piscine_capteur_porte_temperature
-                above: 30
-              - condition: not
-                conditions:
-                  - condition: state
-                    entity_id: sensor.linky_couleur_actuelle
-                    state: rouge
+      - alias: "Tempo rouge - arrêt total"
+        condition: template
+        value_template: "{{ is_rouge }}"
       sequence:
+      - action: switch.turn_off
+        target:
+          entity_id:
+            - switch.filtration_piscine_filtration
+            - switch.filtration_piscine_electrolyse
+    - conditions:
+      - alias: "HC, brassage urgence ou fenêtre HP active"
+        condition: template
+        value_template: "{{ is_hc or brassage or dans_fenetre_hp }}"
+      sequence:
+      - action: switch.turn_on
+        target:
+          entity_id:
+            - switch.filtration_piscine_filtration
+      - if:
+        - condition: template
+          value_template: >
+            {% set th = state_attr('sensor.plouf_oxydo_reduction_potential','treshold_high') %}
+            {% set tl = state_attr('sensor.plouf_oxydo_reduction_potential','treshold_low') %}
+            {% set target = (th-tl)/2+tl %}
+            {{(states('sensor.plouf_oxydo_reduction_potential') | float) < target}}
+        then:
         - action: switch.turn_on
           target:
             entity_id:
-              - switch.filtration_piscine_filtration
-        - if:
-          - condition: template
-            value_template: >
-              {% set th = state_attr('sensor.plouf_oxydo_reduction_potential','treshold_high') %}
-              {% set tl = state_attr('sensor.plouf_oxydo_reduction_potential','treshold_low') %}
-              {% set target = (th-tl)/2+tl %}
-              {{(states('sensor.plouf_oxydo_reduction_potential') | float) < target}}            
-          then:
-          - action: switch.turn_on
-            target:
-              entity_id:
-                - switch.filtration_piscine_electrolyse
+              - switch.filtration_piscine_electrolyse
     default:
       - action: switch.turn_off
         target:
