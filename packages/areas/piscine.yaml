@@ -315,14 +315,14 @@ automation:
     Filtration basée sur T_eau + présence depuis 22h, auto-corrective si nuit ratée.
     HC: toujours ON. HP: ON si need>0 et heure >= hp_debut. Tempo rouge: OFF.
   trigger:
+    - trigger: homeassistant
+      event: start
     - trigger: time_pattern
       minutes: "/30"
     - trigger: state
       entity_id: sensor.template_teleinfo_periode_tarifaire
     - trigger: state
       entity_id: sensor.plouf_temperature
-    - trigger: state
-      entity_id: binary_sensor.indoor_pool_person_occupancy
     - trigger: state
       entity_id: sensor.blu_temperature_piscine_temperature
   condition:
