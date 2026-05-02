@@ -61,7 +61,7 @@ automation:
       toggle_trigger:
         trigger: state
         entity_id: 
-          - binary_sensor.bouton_buanderie_bouton
+          - binary_sensor.bouton_lumiere_dressing_bouton
         from: ["off"]
         to: ["on"]
         id: toggle
@@ -77,7 +77,7 @@ automation:
       swipe_left: binary_sensor.dressing_light_switch_swipe_left
       long_press: binary_sensor.dressing_light_switch_long_press
       multi_touch: binary_sensor.dressing_light_switch_multi_touch
-      touchfield_1: binary_sensor.bouton_buanderie_bouton
+      touchfield_1: binary_sensor.bouton_lumiere_dressing_bouton
 
 
 ################################################################################
