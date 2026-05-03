@@ -104,6 +104,15 @@ automation:
       to: 'on'
       id: portail
   action:
+  - variables:
+      is_entree: "{{ trigger.id == 'entree' }}"
+      camera_entity: >-
+        {% if trigger.id == 'entree' %}
+          camera.sonette_entree_high_resolution_channel
+        {% else %}
+          camera.g4_doorbell_pro_white_high_resolution_channel
+        {% endif %}
+
   - choose:
     - alias: "Si a la maison"
       conditions:
@@ -126,30 +135,62 @@ automation:
         - action: script.office_door_bell_ring
           data: {}
             
-  - action: notify.all_mobile
-    data:
-      message: "Quelqu'un sonne au portail"
-      data:
-        #ios
-        entity_id: camera.g4_doorbell_pro_white_high_resolution_channel
-        push:
-          sound:
-            name: "default"
-            critical: 1
-            volume: 1.0
-        #android
-        image: "/api/camera_proxy/camera.g4_doorbell_pro_white_high_resolution_channel"
-        ttl: 0
-        priority: high
+  - choose:
+    - alias: "Notif entrée"
+      conditions:
+        - condition: template
+          value_template: "{{ is_entree }}"
+      sequence:
+        - action: notify.all_mobile
+          data:
+            message: "Quelqu'un sonne à la porte d'entrée"
+            data:
+              #ios
+              entity_id: "{{ camera_entity }}"
+              push:
+                sound:
+                  name: "default"
+                  critical: 1
+                  volume: 1.0
+              #android
+              image: "/api/camera_proxy/{{ camera_entity }}"
+              ttl: 0
+              priority: high
 
-        actions:
-          - action: "URI" # The key you are sending for the event
-            title: "camera" # The button title
-            uri: "/lovelace-maison/portails"
-            icone: "sfsymbols:video.doorbell"
-          - action: "OPEN_FRONTE_GATE" # Must be set to URI if you plan to use a URI
-            title: "Ouvrir le portail"
-            icone: "sfsymbols:pedestrian.gate.open"
+              actions:
+                - action: "URI"
+                  title: "Caméra"
+                  uri: "/lovelace-maison/securite"
+                  icone: "sfsymbols:video.doorbell"
+    - alias: "Notif portail"
+      conditions:
+        - condition: template
+          value_template: "{{ not is_entree }}"
+      sequence:
+        - action: notify.all_mobile
+          data:
+            message: "Quelqu'un sonne au portail"
+            data:
+              #ios
+              entity_id: "{{ camera_entity }}"
+              push:
+                sound:
+                  name: "default"
+                  critical: 1
+                  volume: 1.0
+              #android
+              image: "/api/camera_proxy/{{ camera_entity }}"
+              ttl: 0
+              priority: high
+
+              actions:
+                - action: "URI"
+                  title: "Caméra"
+                  uri: "/lovelace-maison/portails"
+                  icone: "sfsymbols:video.doorbell"
+                - action: "OPEN_FRONTE_GATE"
+                  title: "Ouvrir le portail"
+                  icone: "sfsymbols:pedestrian.gate.open"
    
 ################################################################################
 - id: 'function_portail_sonette_action_notif'
