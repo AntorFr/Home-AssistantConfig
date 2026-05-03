@@ -60,10 +60,9 @@ automation:
       kill_switch: input_boolean.auto_light_kill_switch_salle_de_douche
       toggle_trigger:
         trigger: state
-        entity_id: 
-          - binary_sensor.bouton_lumiere_dressing_bouton
-        from: ["off"]
-        to: ["on"]
+        entity_id: event.bouton_lumiere_dressing
+        attribute: event_type
+        to: "button_center_press"
         id: toggle
 
 ################################################################################
@@ -73,12 +72,7 @@ automation:
   use_blueprint:
     path: antorfr/tx_ultimate.yaml
     input:
-      swipe_right: binary_sensor.dressing_light_switch_swipe_right
-      swipe_left: binary_sensor.dressing_light_switch_swipe_left
-      long_press: binary_sensor.dressing_light_switch_long_press
-      multi_touch: binary_sensor.dressing_light_switch_multi_touch
-      touchfield_1: binary_sensor.bouton_lumiere_dressing_bouton
-
+      action_event: event.bouton_lumiere_dressing
 
 ################################################################################
 - id: 'salle_de_douche_light_switch_shower'

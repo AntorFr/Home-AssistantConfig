@@ -45,9 +45,16 @@ automation:
       only_turn_off: false    
       toggle_trigger:
         trigger: state
-        entity_id: 
-          - binary_sensor.bouton_buanderie_bouton
-        from: ["off"]
-        to: ["on"]
+        entity_id: event.bouton_buanderie
+        attribute: event_type
+        to: "button_center_press"
         id: toggle
 
+################################################################################
+- id: 'buanderie_light_switch'
+  alias: Area - Buanderie - Bouton lumière
+  description: ''
+  use_blueprint:
+    path: antorfr/tx_ultimate_v2.yaml
+    input:
+      action_event: event.bouton_buanderie

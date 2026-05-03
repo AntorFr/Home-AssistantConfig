@@ -1,0 +1,275 @@
+blueprint:
+  name: TX Ultimate
+  description: >
+    Manage interactions with TX Ultimate.
+    Version finale : requiert le firmware avec entité event (event: entity).
+
+    Mapping des boutons :
+      - button_left   → button_left_press   — bouton gauche (ou 1er sur switch 2 boutons)
+      - button_center → button_center_press — seul bouton sur switch 1 bouton, centre sur 3 boutons
+      - button_right  → button_right_press  — bouton droit
+      Switch 2 boutons : configurer button_left + button_right, laisser button_center vide.
+  domain: automation
+  source_url: https://github.com/AntorFr/Home-AssistantConfig/blob/master/blueprints/automation/antorfr/tx_ultimate.yaml
+  input:
+
+    action_event:
+      name: Action event
+      description: Entité event TX Ultimate (créée automatiquement par le composant).
+      selector:
+        entity:
+          filter:
+            - integration: esphome
+              domain: event
+
+    button_left_controlled_entities:
+      name: Button Left — controlled entities
+      description: >
+        Entités contrôlées par le bouton gauche (button_left_press).
+        Sur switch 1 bouton : laisser vide, configurer Button Center.
+        Sur switch 2 boutons : bouton gauche.
+      default: []
+      selector:
+        entity:
+          multiple: true
+
+    button_center_controlled_entities:
+      name: Button Center — controlled entities
+      description: >
+        Entités contrôlées par le bouton centre (button_center_press).
+        Sur switch 1 bouton : configurer ici (toujours button_center_press).
+        Sur switch 3 boutons : bouton centre.
+      default: []
+      selector:
+        entity:
+          multiple: true
+
+    button_right_controlled_entities:
+      name: Button Right — controlled entities
+      description: >
+        Entités contrôlées par le bouton droit (button_right_press).
+        Sur switch 2 boutons : bouton droit. Sur switch 3 boutons : bouton droit.
+      default: []
+      selector:
+        entity:
+          multiple: true
+
+    button_left_action:
+      name: Button Left — action (si pas d'entités configurées)
+      default: []
+      selector:
+        action: {}
+
+    button_center_action:
+      name: Button Center — action (si pas d'entités configurées)
+      default: []
+      selector:
+        action: {}
+
+    button_right_action:
+      name: Button Right — action (si pas d'entités configurées)
+      default: []
+      selector:
+        action: {}
+
+    long_press_action:
+      name: Long press action
+      default:
+        - action: script.play_mood_music
+          data:
+            action: play_stop
+            areas: "{{room}}"
+      selector:
+        action: {}
+
+    multi_touch_action:
+      name: Multi touch action
+      default:
+        - parallel:
+          - action: light.turn_off
+            target:
+              area_id: "{{room}}"
+            data: {}
+          - action: script.play_mood_music
+            data:
+              action: media_stop
+              areas: "{{room}}"
+      selector:
+        action: {}
+
+    swipe_left_action:
+      name: Swipe left action
+      default:
+        - action: cover.toggle
+          target:
+            area_id: "{{room}}"
+      selector:
+        action: {}
+
+    swipe_right_action:
+      name: Swipe right action
+      default:
+        - action: cover.toggle
+          target:
+            area_id: "{{room}}"
+      selector:
+        action: {}
+
+mode: parallel
+
+variables:
+  action_event_entity: !input action_event
+  button_left_controlled_entities: !input button_left_controlled_entities
+  button_center_controlled_entities: !input button_center_controlled_entities
+  button_right_controlled_entities: !input button_right_controlled_entities
+  # room: dérivé de l'entité event (même device, même zone que les anciens sensors)
+  room: "{{ area_id(action_event_entity) }}"
+  adaptive_lighting: >
+    {% from 'room_functions.jinja' import area_adaptive_lighting %}
+    {{area_adaptive_lighting(room)}}
+
+trigger:
+  - id: action_event
+    trigger: state
+    entity_id: !input action_event
+    not_from: unavailable
+    not_to:
+      - unavailable
+      - unknown
+      - idle
+
+condition: []
+
+action:
+  - choose:
+
+    - alias: button_left
+      conditions:
+        - condition: template
+          value_template: "{{ trigger.to_state.attributes.event_type == 'button_left_press' }}"
+      sequence:
+        - alias: "entities configurees pour button left"
+          if:
+            - condition: template
+              value_template: "{{ button_left_controlled_entities | count > 0 }}"
+          then:
+            - if:
+                - alias: "any light still on"
+                  condition: template
+                  value_template: '{{ expand(button_left_controlled_entities) | selectattr("state", "eq", "on") | list | count > 0 }}'
+              then:
+                - action: light.turn_off
+                  target:
+                    entity_id: !input button_left_controlled_entities
+              else:
+                - if:
+                    - alias: "adaptive_lighting active"
+                      condition: template
+                      value_template: '{{ is_state(adaptive_lighting, "on") }}'
+                  then:
+                    - action: adaptive_lighting.apply
+                      data:
+                        entity_id: "{{ adaptive_lighting }}"
+                        lights: "{{ button_left_controlled_entities }}"
+                        turn_on_lights: true
+                  else:
+                    - action: light.turn_on
+                      target:
+                        entity_id: !input button_left_controlled_entities
+          else: !input button_left_action
+
+    - alias: button_center
+      conditions:
+        - condition: template
+          value_template: "{{ trigger.to_state.attributes.event_type == 'button_center_press' }}"
+      sequence:
+        - alias: "entities configurees pour button center"
+          if:
+            - condition: template
+              value_template: "{{ button_center_controlled_entities | count > 0 }}"
+          then:
+            - if:
+                - alias: "any light still on"
+                  condition: template
+                  value_template: '{{ expand(button_center_controlled_entities) | selectattr("state", "eq", "on") | list | count > 0 }}'
+              then:
+                - action: light.turn_off
+                  target:
+                    entity_id: !input button_center_controlled_entities
+              else:
+                - if:
+                    - alias: "adaptive_lighting active"
+                      condition: template
+                      value_template: '{{ is_state(adaptive_lighting, "on") }}'
+                  then:
+                    - action: adaptive_lighting.apply
+                      data:
+                        entity_id: "{{ adaptive_lighting }}"
+                        lights: "{{ button_center_controlled_entities }}"
+                        turn_on_lights: true
+                  else:
+                    - action: light.turn_on
+                      target:
+                        entity_id: !input button_center_controlled_entities
+          else: !input button_center_action
+
+    - alias: button_right
+      conditions:
+        - condition: template
+          value_template: "{{ trigger.to_state.attributes.event_type == 'button_right_press' }}"
+      sequence:
+        - alias: "entities configurees pour button right"
+          if:
+            - condition: template
+              value_template: "{{ button_right_controlled_entities | count > 0 }}"
+          then:
+            - if:
+                - alias: "any light still on"
+                  condition: template
+                  value_template: '{{ expand(button_right_controlled_entities) | selectattr("state", "eq", "on") | list | count > 0 }}'
+              then:
+                - action: light.turn_off
+                  target:
+                    entity_id: !input button_right_controlled_entities
+              else:
+                - if:
+                    - alias: "adaptive_lighting active"
+                      condition: template
+                      value_template: '{{ is_state(adaptive_lighting, "on") }}'
+                  then:
+                    - action: adaptive_lighting.apply
+                      data:
+                        entity_id: "{{ adaptive_lighting }}"
+                        lights: "{{ button_right_controlled_entities }}"
+                        turn_on_lights: true
+                  else:
+                    - action: light.turn_on
+                      target:
+                        entity_id: !input button_right_controlled_entities
+          else: !input button_right_action
+
+    - alias: long_press
+      conditions:
+        - condition: template
+          value_template: "{{ trigger.to_state.attributes.event_type == 'long_press' }}"
+      sequence: !input long_press_action
+
+    - alias: multi_touch
+      conditions:
+        - condition: template
+          value_template: "{{ trigger.to_state.attributes.event_type == 'multi_touch' }}"
+      sequence: !input multi_touch_action
+
+    - alias: swipe_left
+      conditions:
+        - condition: template
+          value_template: "{{ trigger.to_state.attributes.event_type == 'swipe_left' }}"
+      sequence: !input swipe_left_action
+
+    - alias: swipe_right
+      conditions:
+        - condition: template
+          value_template: "{{ trigger.to_state.attributes.event_type == 'swipe_right' }}"
+      sequence: !input swipe_right_action
+
+    default: []
