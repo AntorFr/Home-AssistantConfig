@@ -15,7 +15,7 @@ image_processing:
     source:
       - entity_id: camera.sonette
       - entity_id: camera.platerecognizer_test
-      - entity_id: camera.g4_doorbell_high
+      - entity_id: camera.sonette_entree_high_resolution_channel
 
 
 template:

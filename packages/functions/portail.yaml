@@ -96,7 +96,7 @@ automation:
 
   trigger:
     - trigger: state
-      entity_id: binary_sensor.sonette_portail_doorbell
+      entity_id: binary_sensor.sonette_entree_sonnette
       to: 'on'
       id: entree
     - trigger: state
@@ -229,13 +229,13 @@ script:
       data:
         value: "{{message_display}}"
       target:
-        entity_id: text.portail_doorbell
+        entity_id: text.sonette_entree_sonnette
     - action: tts.cloud_say
       data:
         cache: true
         options:
           voice: MauriceNeural
-        entity_id: media_player.sonette_portail_speaker
+        entity_id: media_player.sonette_entree_speaker
         message: "{{message_audio}}"
     - wait_for_trigger:
         - trigger: state
@@ -250,7 +250,7 @@ script:
       data:
         option: Default Message (WELCOME)
       target:
-        entity_id: select.sonette_portail_doorbell_text
+        entity_id: select.sonette_entree_texte_de_la_sonnette
       
 ################################################################################
 
