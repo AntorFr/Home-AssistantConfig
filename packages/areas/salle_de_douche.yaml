@@ -13,7 +13,6 @@ binary_sensor:
       - binary_sensor.presence_sensor_shower_occupancy
       - binary_sensor.blumotion_dressing_motion
 
-
 light:
   - platform: group
     name: Salle de douche lumieres
@@ -22,7 +21,7 @@ light:
       - light.dressing_plafonnier
       - light.salle_de_douche_plafonnier
       - light.shower_light_lumi_re_douche
-      - light.shower_light_switch_l2
+      - light.bouton_lumiere_douche_miroir
 
 input_boolean:
   auto_light_kill_switch_salle_de_douche:
@@ -60,7 +59,9 @@ automation:
       kill_switch: input_boolean.auto_light_kill_switch_salle_de_douche
       toggle_trigger:
         trigger: state
-        entity_id: event.bouton_lumiere_dressing
+        entity_id: 
+          - event.bouton_lumiere_douche
+          - event.bouton_lumiere_dressing
         attribute: event_type
         to: "button_center_press"
         id: toggle
@@ -81,12 +82,8 @@ automation:
   use_blueprint:
     path: antorfr/tx_ultimate.yaml
     input:
-      swipe_right: binary_sensor.shower_light_switch_swipe_right
-      touchfield_1: binary_sensor.shower_light_switch_touchfield_1
-      touchfield_2: binary_sensor.shower_light_switch_touchfield_2
-      long_press: binary_sensor.shower_light_switch_long_press
-      multi_touch: binary_sensor.shower_light_switch_multi_touch
-      swipe_left: binary_sensor.shower_light_switch_swipe_left
+
+      action_event: event.bouton_lumiere_douche
       touchfield_1_controlled_entites:
         - light.shower_light_lumi_re_douche
       touchfield_2_controlled_entites:
