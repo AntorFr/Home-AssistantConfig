@@ -71,7 +71,7 @@ automation:
     input:
       action_event: event.bouton_couloir_bureau
 
-      touchfield_1_action:
+      touchfield_2_action:
         - action: light.toggle
           target:
             entity_id: light.bouton_lumiere_bureau_couloir

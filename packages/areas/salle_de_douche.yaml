@@ -60,7 +60,6 @@ automation:
       toggle_trigger:
         trigger: state
         entity_id: 
-          - event.bouton_lumiere_douche
           - event.bouton_lumiere_dressing
         attribute: event_type
         to: "button_center_press"
