@@ -194,6 +194,15 @@ script:
         required: False
         selector:
           text:
+      volume:
+        name: volume
+        required: False
+        selector:
+          number:
+            min: 0
+            max: 1
+            step: 0.01
+            mode: slider
 
     variables:
       zone_ids:
@@ -249,6 +258,12 @@ script:
           {{ none }}
         {% else %}
           {{ title|string|trim }}
+        {% endif %}
+      volume: >
+        {% if (volume is not defined) or (volume is none) or (volume|string|trim == '') %}
+          {{ none }}
+        {% else %}
+          {{ volume | float }}
         {% endif %}
 
     sequence:
@@ -470,6 +485,18 @@ script:
                   media_content_type: "{{ selected_item.media_type | default('music') }}"
                   enqueue: replace
 
+          # ── A.4b : Régler le volume si fourni ──
+          - alias: "Régler le volume si fourni"
+            if:
+              - condition: template
+                value_template: "{{ volume is not none }}"
+            then:
+              - action: media_player.volume_set
+                target:
+                  entity_id: "{{ media_players }}"
+                data:
+                  volume_level: "{{ volume }}"
+
           # ── A.5 : Cleanup + notification ──
           - if:
               - condition: template
@@ -555,6 +582,16 @@ script:
           minutes: 20
         selector:
           duration:
+      volume:
+        name: Volume
+        required: false
+        default: 0.2
+        selector:
+          number:
+            min: 0
+            max: 1
+            step: 0.01
+            mode: slider
     variables:
       owner: >
         {% set owners = {
@@ -590,6 +627,7 @@ script:
           owner: "{{ owner }}"
           mood: Someil
           fallback: none
+          volume: "{{ volume | default(0.3) }}"
 
       # ── Attendre puis arrêter ──
       - delay: "{{ duration | default({'minutes': 20}) }}"
