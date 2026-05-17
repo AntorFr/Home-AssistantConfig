@@ -158,17 +158,17 @@ script:
           value: "900"
       - action: number.set_value
         target:
-          entity_id: number.solarflow_800_pro_soc_maximum
+          entity_id: number.solarflow_800_pro_soc_set
         data:
           value: 100
       - action: number.set_value
         target:
-          entity_id: number.solarflow_800_pro_limite_d_entree
+          entity_id: number.solarflow_800_pro_input_limit
         data:
           value: 600
       - action: select.select_option
         target:
-          entity_id: select.solarflow_800_pro_mode_de_fonctionnement_ac
+          entity_id: select.solarflow_800_pro_ac_mode
         data:
           option: input 
       - parallel:
@@ -225,12 +225,12 @@ script:
           value: "0"
       - action: number.set_value
         target:
-          entity_id: number.solarflow_800_pro_limite_de_sortie
+          entity_id: number.solarflow_800_pro_output_limit
         data:
           value: 200
       - action: select.select_option
         target:
-          entity_id: select.solarflow_800_pro_mode_de_fonctionnement_ac
+          entity_id: select.solarflow_800_pro_ac_mode
         data:
           option: output  
       - action: climate.turn_off
@@ -304,17 +304,17 @@ script:
           value: "900"
       - action: number.set_value
         target:
-          entity_id: number.solarflow_800_pro_soc_maximum
+          entity_id: number.solarflow_800_pro_soc_set
         data:
           value: 80
       - action: number.set_value
         target:
-          entity_id: number.solarflow_800_pro_limite_de_sortie
+          entity_id: number.solarflow_800_pro_output_limit
         data:
           value: 200
       - action: select.select_option
         target:
-          entity_id: select.solarflow_800_pro_mode_de_fonctionnement_ac
+          entity_id: select.solarflow_800_pro_ac_mode
         data:
           option: input  
       - parallel:
