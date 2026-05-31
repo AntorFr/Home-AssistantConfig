@@ -129,9 +129,7 @@ automation:
               - media_player.cuisine_move
               - media_player.bureau
               - media_player.garage
-            #media_content_id: "media-source://media_source/sounds/bb8_sound.mp3" > sonos doesn't find local url anymore (home.intra.sberard.fr)
-            #media_content_id: "https://home.berard.me/http-sounds/bb8_sound.mp3"
-            media_content_id: "https://home.berard.me/http-sounds/harrypotter_ringbell.mp3"
+            media_content_id: "media-source://media_source/sounds/harrypotter_ringbell.mp3"
         - action: script.office_door_bell_ring
           data: {}
             
@@ -149,9 +147,9 @@ automation:
               entity_id: "{{ camera_entity }}"
               push:
                 sound:
-                  name: "default"
+                  name: "bb8_sound_ios_notification.wav"
                   critical: 1
-                  volume: 1.0
+                  volume: 0.7
               #android
               image: "/api/camera_proxy/{{ camera_entity }}"
               ttl: 0
@@ -175,9 +173,9 @@ automation:
               entity_id: "{{ camera_entity }}"
               push:
                 sound:
-                  name: "default"
+                  name: "harrypotter_ringbell_ios_notification.wav"
                   critical: 1
-                  volume: 1.0
+                  volume: 0.7
               #android
               image: "/api/camera_proxy/{{ camera_entity }}"
               ttl: 0

@@ -163,6 +163,12 @@ Le volume de l'enceinte du salon s'adapte à la **source** en cours :
 
 Le basculement est automatique à chaque changement de source.
 
+### Réglage du volume
+
+<!-- source: script:play_mood_music -->
+
+Un paramètre optionnel `volume` (valeur entre `0` et `1`) permet de fixer le volume de toutes les enceintes de la zone immédiatement **après le lancement de la lecture**. Si le paramètre est absent, le volume n'est pas modifié.
+
 ### Modes d'action
 
 <!-- source: script:play_mood_music -->
@@ -188,8 +194,9 @@ Une commande dédiée déclenche, dans la chambre d'Émilie ou de Timothée :
 
 1. la **désactivation** du commutateur de couvre-feu de la chambre **s'il était actif**,
 2. le lancement d'un titre étiqueté **owner = enfant correspondant** + **mood = Sommeil**, avec **repli `none`** (rien ne joue si aucun titre adapté n'existe),
-3. l'**arrêt** de la lecture après une **durée paramétrable** (par défaut **20 minutes**),
-4. la **réactivation** du commutateur de couvre-feu **s'il avait été désactivé** par cette commande.
+3. le **volume** fixé à la valeur fournie (paramètre optionnel, par défaut **0,3**),
+4. l'**arrêt** de la lecture après une **durée paramétrable** (par défaut **20 minutes**),
+5. la **réactivation** du commutateur de couvre-feu **s'il avait été désactivé** par cette commande.
 
 ### Lecture par scan d'étiquette
 
