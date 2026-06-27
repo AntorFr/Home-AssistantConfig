@@ -73,11 +73,20 @@ Quand quelqu'un sonne (à la sonnette du portail ou de l'entrée) :
 
 **Dans tous les cas** (occupé ou en absence) :
 
-- envoi d'une **notification** sur **tous les téléphones** de la maison, comportant :
-    - le message « Quelqu'un sonne au portail »,
+- envoi d'une **notification** sur le téléphone de **Sébastien** et sur celui de **Laurine**, comportant :
+    - le message « Quelqu'un sonne à la porte d'entrée » ou « Quelqu'un sonne au portail » selon la sonnette,
     - l'**image en direct** de la caméra de la sonnette,
     - une **action rapide** pour ouvrir la sonnette en vidéo dans l'application,
-    - une **action rapide « Ouvrir le portail »**.
+    - une **action rapide « Ouvrir le portail »** (sonnette du portail uniquement).
+
+La notification est envoyée **indépendamment à chaque personne**, avec un niveau d'urgence qui dépend de **sa propre présence** :
+
+| Situation de la personne | Notification reçue |
+|---|---|
+| **À la maison** | notification **critique** : sonne fort même si le téléphone est en silencieux |
+| **Absente** | notification **normale** : respecte le mode silencieux du téléphone |
+
+Ainsi, si Sébastien est absent et Laurine à la maison, seul le téléphone de Laurine sonne de façon critique ; celui de Sébastien reçoit une notification discrète.
 
 #### Ouverture du portail depuis la notification
 

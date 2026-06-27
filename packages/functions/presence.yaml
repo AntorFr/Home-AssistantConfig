@@ -204,17 +204,27 @@ binary_sensor:
       prob_given_false: 0.15
 
 
-### Todo set children there by default if parent are there when HA start
 automation:
 ################################################################################
 - id: 'function_presence_papamobile_left_home'
-  alias: Papa Mobile - Out
-  description: Papa mobile n'est plus a la maison
+  alias: Parents absents - enfants hors maison
+  description: Force les enfants hors maison quand aucun parent n'est présent
   trigger:
   - trigger: state
-    entity_id: device_tracker.papamobile
-    to: not_home
-  condition: []
+    entity_id:
+      - person.sebastien
+      - person.laurine
+      - input_boolean.guest_mode
+  condition:
+    - condition: state
+      entity_id: person.sebastien
+      state: not_home
+    - condition: state
+      entity_id: person.laurine
+      state: not_home
+    - condition: state
+      entity_id: input_boolean.guest_mode
+      state: 'off'
   action:
   - action: device_tracker.see
     data:

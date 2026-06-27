@@ -161,6 +161,11 @@ Voir aussi la [routine du départ](../routines/depart.md) et la [gestion de la p
 
 ## 8. Mise à jour
 
+### Consignes pour les assistants IA
+
+- Avant toute évolution de la configuration, lire le dossier `docs/` (au minimum `index.md`, la ou les pages métier concernées, et `CONVENTIONS.md`) pour récupérer le contexte fonctionnel existant.
+- Lorsqu'une évolution de configuration modifie un comportement de la maison, mettre à jour `docs/` dans le même changement en respectant strictement les conventions de ce document (style, structure, liens croisés, balises `<!-- source: ... -->`, rigueur factuelle).
+
 À chaque modification fonctionnelle de la maison (nouvelle automatisation, changement de seuil, ajout d'un appareil avec impact perceptible) :
 
 1. Identifier les pages concernées (pièce, routine, fonction transverse).

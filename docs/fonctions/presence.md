@@ -155,11 +155,11 @@ La position d'un occupant peut aussi être mise à jour depuis l'extérieur :
 - via un **webhook IFTTT** (utilisé pour le traceur Invoxia, qui transmet sa position GPS),
 - via les **caméras Netatmo de surveillance** (entrée, parking, salon, couloir) : chaque détection de personne, mouvement, véhicule, fumée ou silence (« hush ») produit un événement qui peut alimenter d'autres comportements.
 
-### Téléphone professionnel et enfants
+### Absence des parents et enfants
 
 <!-- source: automation:function_presence_papamobile_left_home -->
 
-Lorsque le **téléphone professionnel** quitte la zone « maison », la maison force la position des **enfants suivis via Netatmo** (Émilie et Timothée) à « hors maison ». Cette synchronisation ne se produit qu'au moment où le téléphone professionnel passe en « hors zone ».
+Lorsque **plus aucun parent n'est présent** et que le **mode invité** est inactif, la maison force la position des **enfants suivis via Netatmo** (Émilie et Timothée) à « hors maison ». La mise à jour intervient dès que cette situation devient vraie : au départ du dernier parent, ou à la désactivation du mode invité alors que les deux parents sont déjà absents.
 
 ## Utilisée par
 

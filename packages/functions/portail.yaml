@@ -133,62 +133,55 @@ automation:
         - action: script.office_door_bell_ring
           data: {}
             
-  - choose:
-    - alias: "Notif entrée"
-      conditions:
-        - condition: template
-          value_template: "{{ is_entree }}"
-      sequence:
-        - action: notify.all_mobile
-          data:
-            message: "Quelqu'un sonne à la porte d'entrée"
-            data:
-              #ios
-              entity_id: "{{ camera_entity }}"
-              push:
-                sound:
-                  name: "bb8_sound_ios_notification.wav"
-                  critical: 1
-                  volume: 0.7
-              #android
-              image: "/api/camera_proxy/{{ camera_entity }}"
-              ttl: 0
-              priority: high
+  - variables:
+      notif_message: >-
+        {% if is_entree %}Quelqu'un sonne à la porte d'entrée{% else %}Quelqu'un sonne au portail{% endif %}
+      notif_sound: >-
+        {% if is_entree %}bb8_sound_ios_notification.wav{% else %}harrypotter_ringbell_ios_notification.wav{% endif %}
+      notif_uri: >-
+        {% if is_entree %}/lovelace-maison/securite{% else %}/lovelace-maison/portails{% endif %}
+      notif_actions: >-
+        {{ [{'action': 'URI', 'title': 'Caméra', 'uri': notif_uri, 'icone': 'sfsymbols:video.doorbell'}]
+           + ([] if is_entree else [{'action': 'OPEN_FRONTE_GATE', 'title': 'Ouvrir le portail', 'icone': 'sfsymbols:pedestrian.gate.open'}]) }}
 
-              actions:
-                - action: "URI"
-                  title: "Caméra"
-                  uri: "/lovelace-maison/securite"
-                  icone: "sfsymbols:video.doorbell"
-    - alias: "Notif portail"
-      conditions:
-        - condition: template
-          value_template: "{{ not is_entree }}"
-      sequence:
-        - action: notify.all_mobile
-          data:
-            message: "Quelqu'un sonne au portail"
-            data:
-              #ios
-              entity_id: "{{ camera_entity }}"
-              push:
-                sound:
-                  name: "harrypotter_ringbell_ios_notification.wav"
-                  critical: 1
-                  volume: 0.7
-              #android
-              image: "/api/camera_proxy/{{ camera_entity }}"
-              ttl: 0
-              priority: high
+  # Notification ciblée par personne : critique si la personne est à la maison, normale si elle est absente.
+  # Les deux envois partent en parallèle pour accélérer la distribution.
+  - parallel:
+    - alias: "Notif Sébastien"
+      action: notify.mobile_seb
+      data:
+        message: "{{ notif_message }}"
+        data:
+          #ios
+          entity_id: "{{ camera_entity }}"
+          push:
+            sound:
+              name: "{{ notif_sound }}"
+              critical: "{{ 1 if is_state('person.sebastien', 'home') else 0 }}"
+              volume: 0.7
+          #android
+          image: "/api/camera_proxy/{{ camera_entity }}"
+          ttl: 0
+          priority: high
+          actions: "{{ notif_actions }}"
 
-              actions:
-                - action: "URI"
-                  title: "Caméra"
-                  uri: "/lovelace-maison/portails"
-                  icone: "sfsymbols:video.doorbell"
-                - action: "OPEN_FRONTE_GATE"
-                  title: "Ouvrir le portail"
-                  icone: "sfsymbols:pedestrian.gate.open"
+    - alias: "Notif Laurine"
+      action: notify.mobile_laurine
+      data:
+        message: "{{ notif_message }}"
+        data:
+          #ios
+          entity_id: "{{ camera_entity }}"
+          push:
+            sound:
+              name: "{{ notif_sound }}"
+              critical: "{{ 1 if is_state('person.laurine', 'home') else 0 }}"
+              volume: 0.7
+          #android
+          image: "/api/camera_proxy/{{ camera_entity }}"
+          ttl: 0
+          priority: high
+          actions: "{{ notif_actions }}"
    
 ################################################################################
 - id: 'function_portail_sonette_action_notif'
