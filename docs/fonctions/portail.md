@@ -16,11 +16,14 @@ La fonction couvre uniquement le portail de la propriété (`cover.portail_2`). 
 
 <!-- source: binary_sensor:entrance_car_occupancy -->
 
-La maison considère qu'un **véhicule est devant le portail** dès qu'au moins un des trois capteurs suivants détecte une présence :
+La maison considère qu'un **véhicule est aux abords du portail** dès qu'au moins une de ces détections est active :
 
-- capteur de stationnement de l'allée,
-- capteur de la sonnette principale,
-- capteur du portail.
+- caméra de l'allée (côté intérieur),
+- caméra du portail (côté intérieur),
+- caméra de la sonnette, côté rue (extérieur),
+- sonnette vidéo du portail, côté rue (extérieur), en **secours**.
+
+Cette détection groupée commande la **fermeture automatique** : le portail ne se referme que lorsqu'aucun véhicule n'est détecté. La détection de secours côté rue garantit que, même si l'analyse d'image principale devient indisponible, le portail **continue de se refermer automatiquement**.
 
 ### Ouverture automatique
 
@@ -32,7 +35,6 @@ Le portail s'ouvre automatiquement, **uniquement s'il est fermé depuis au moins
 |---|---|
 | Véhicule détecté dans l'allée | un véhicule est garé dans l'allée |
 | Véhicule détecté au portail | un véhicule est devant le portail |
-| **Plaque d'immatriculation** reconnue | la **boucle de lecture** active devant le portail fermé identifie une plaque autorisée — voir [reconnaissance de plaque](reconnaissance-plaque.md) |
 | **Sébastien** rentre dans la zone domicile | détection par téléphone |
 | **Laurine** rentre dans la zone domicile | détection par téléphone |
 | **Badge BLE d'Émilie** détecté | présent depuis 10 secondes |

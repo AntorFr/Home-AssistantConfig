@@ -5,9 +5,14 @@ binary_sensor:
     unique_id: entrance_car_occupancy
     #icon: mdi:car-off
     entities:
-      - binary_sensor.entrance_gate_driveway_car_occupancy
-      - binary_sensor.sonette_front_car_occupancy
-      - binary_sensor.portail_car_occupancy
+      # Détection Frigate (analyse d'image par zone)
+      - binary_sensor.entrance_gate_driveway_car_occupancy   # intérieur (allée)
+      - binary_sensor.sonette_front_car_occupancy            # extérieur (rue)
+      - binary_sensor.portail_car_occupancy                  # intérieur (portail)
+      # Secours UniFi Protect — détection véhicule du doorbell (extérieur/rue).
+      # Garde le groupe disponible quand Frigate est indisponible (panne GPU),
+      # ce qui permet au portail de continuer à se refermer automatiquement.
+      - binary_sensor.sonnette_portail_vehicle_detected
 
 automation:
 ################################################################################
@@ -50,9 +55,6 @@ automation:
       to: "on"
     - trigger: state
       entity_id: binary_sensor.portail_car_occupancy
-      to: "on"
-    - trigger: state
-      entity_id: binary_sensor.entrance_gate_plate_detected
       to: "on"
     - platform: zone
       entity_id: person.sebastien
