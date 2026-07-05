@@ -20,6 +20,7 @@ La maison considère qu'un **véhicule est aux abords du portail** dès qu'au mo
 
 - caméra de l'allée (côté intérieur),
 - caméra du portail (côté intérieur),
+- détecteur de véhicule du portail (côté intérieur),
 - caméra de la sonnette, côté rue (extérieur),
 - sonnette vidéo du portail, côté rue (extérieur), en **secours**.
 
@@ -34,7 +35,8 @@ Le portail s'ouvre automatiquement, **uniquement s'il est fermé depuis au moins
 | Déclencheur | Détail |
 |---|---|
 | Véhicule détecté dans l'allée | un véhicule est garé dans l'allée |
-| Véhicule détecté au portail | un véhicule est devant le portail |
+| Véhicule détecté au portail (caméra) | un véhicule est devant le portail |
+| Véhicule détecté au portail (détecteur) | un véhicule est devant le portail |
 | **Sébastien** rentre dans la zone domicile | détection par téléphone |
 | **Laurine** rentre dans la zone domicile | détection par téléphone |
 | **Badge BLE d'Émilie** détecté | présent depuis 10 secondes |

@@ -9,6 +9,7 @@ binary_sensor:
       - binary_sensor.entrance_gate_driveway_car_occupancy   # intérieur (allée)
       - binary_sensor.sonette_front_car_occupancy            # extérieur (rue)
       - binary_sensor.portail_car_occupancy                  # intérieur (portail)
+      - binary_sensor.portail_vehicule_detecte               # intérieur (portail)
       # Secours UniFi Protect — détection véhicule du doorbell (extérieur/rue).
       # Garde le groupe disponible quand Frigate est indisponible (panne GPU),
       # ce qui permet au portail de continuer à se refermer automatiquement.
@@ -55,6 +56,9 @@ automation:
       to: "on"
     - trigger: state
       entity_id: binary_sensor.portail_car_occupancy
+      to: "on"
+    - trigger: state
+      entity_id: binary_sensor.portail_vehicule_detecte
       to: "on"
     - platform: zone
       entity_id: person.sebastien
