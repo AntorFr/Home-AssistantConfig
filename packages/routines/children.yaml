@@ -141,7 +141,12 @@ automation:
     - platform: calendar
       event: start
       entity_id: calendar.morning_notifications
-  condition: []
+  condition:
+    - alias: "Pas de rappel école pendant les vacances scolaires"
+      condition: template
+      value_template: >-
+        {{ 'ecole' not in (trigger.calendar_event.summary | lower | replace('é', 'e'))
+           or is_state('binary_sensor.vacances_scolaires_aujourdhui', 'off') }}
   action:
     - action: "script.bus_time_warning"
       data:

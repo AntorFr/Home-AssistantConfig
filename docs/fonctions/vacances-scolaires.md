@@ -47,5 +47,6 @@ Un indicateur **« vacances scolaires demain »** est vrai si **demain** est dan
 
 ## Utilisée par
 
+- les routines des [enfants](../routines/enfants.md) — l'horloge d'Émilie ne s'allume pas le matin et les rappels vocaux du départ pour l'école sont coupés pendant les vacances et les jours non travaillés,
 - la fonction [musique](musique.md) — les heures de coucher des enfants et la fin de soirée varient selon que demain est ou non travaillé,
 - la routine de [départ](../routines/depart.md) (indirectement, via la routine des enfants pour les volets en semaine).

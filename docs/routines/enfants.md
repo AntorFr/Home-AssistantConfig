@@ -62,6 +62,8 @@ Les annonces sont émises à **5 instants** précis avant chaque événement du 
 
 Le contenu et le formatage des annonces (« événement dans X minutes » ou « c'est l'heure de l'événement ») sont gérés par la fonction [notifications](../fonctions/notifications.md#annonce-de-départ-pour-un-événement). Les enceintes utilisées sont celles de la **chambre d'Émilie**, de la **chambre de Timothée** et de la **salle à manger**.
 
+Les événements dont le nom contient « école » ne sont **pas annoncés** pendant les [vacances scolaires](../fonctions/vacances-scolaires.md) ni les jours non travaillés. Les autres événements du calendrier (départ au centre de loisirs par exemple) restent annoncés toute l'année.
+
 ## Pièces et fonctions impliquées
 
 - [Routine de la journée](journee.md) — c'est elle qui fait évoluer les phases auxquelles ces routines réagissent.
