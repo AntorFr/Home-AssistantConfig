@@ -43,6 +43,10 @@ rest_command:
       https://music-library.berard.me/api/v1/media/select?{{ query_string }}
     method: GET
     content_type: "application/json"
+    # music-library v0.19+ : l'API exige une auth. Secret attendu dans
+    # secrets.yaml : music_library_token: "Bearer <ML_API_TOKEN du chart>"
+    headers:
+      Authorization: !secret music_library_token
     timeout: 20
 
 intent_script:
