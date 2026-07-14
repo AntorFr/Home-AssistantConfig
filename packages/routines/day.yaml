@@ -88,6 +88,16 @@ input_datetime:
     name: Soirée (we) - Timothée couvre-feu
     has_time: true
     icon: bha:night-light
+  guest_bedtime:
+    name: Couché invités
+    has_time: true
+    initial: "22:30:00"
+    icon: mdi:bed
+  guest_bedtime_we:
+    name: Couché invités - weekend
+    has_time: true
+    initial: "23:30:00"
+    icon: mdi:bed
 ################################################################################
 
 ################################################################################
@@ -285,6 +295,46 @@ automation:
   - action: switch.turn_on
     target:
       entity_id: switch.adaptive_lighting_sleep_mode_couloir_etage
+################################################################################
+- id: 'routine_guest_night'
+  alias: Routine - Day - Couché invités
+  description: "Heure de couché des invités (déclenchée uniquement en mode invité)"
+  trigger:
+  - trigger: time
+    at: input_datetime.guest_bedtime
+    id: week
+  - trigger: time
+    at: input_datetime.guest_bedtime_we
+    id: weekend
+  condition:
+  - condition: state
+    entity_id: input_boolean.away_mode
+    state: 'off'
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'on'
+  - condition: or
+    conditions:
+    - condition: and
+      conditions:
+      - condition: trigger
+        id: week
+      - condition: state
+        entity_id: binary_sensor.vacances_scolaires_demain
+        state: 'off'
+    - condition: and
+      conditions:
+      - condition: trigger
+        id: weekend
+      - condition: state
+        entity_id: binary_sensor.vacances_scolaires_demain
+        state: 'on'
+  action:
+  - alias: "Fire guest night routine event"
+    event: routine_event
+    event_data:
+      type: guest night
+  mode: single
 ################################################################################
 - id: 'routine_emilie_curfew'
   alias: Routine - Day - Émilie couvre-feu

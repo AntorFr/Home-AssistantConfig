@@ -99,7 +99,7 @@ L'enceinte du salon adapte automatiquement son volume selon que la source en cou
 | 2 | bascule le **plafonnier** |
 | 3 | lance la **musique d'ambiance** sur le rez-de-chaussée (voir [musique](../fonctions/musique.md)) |
 | 4 | bascule lecture/pause de la musique sur le rez-de-chaussée |
-| 5 | si l'**aspirateur robot** est en train de nettoyer, le renvoie à sa base ; sinon, lance le nettoyage de la **salle à manger** et de la **cuisine** (segments 17 et 22 de l'aspirateur) |
+| 5 | si l'**aspirateur robot** est en train de nettoyer, le renvoie à sa base ; sinon, lance le nettoyage de la **salle à manger** et de la **cuisine** (voir [aspirateur robot](../fonctions/aspirateur-robot.md)) |
 | 6 | déclenche l'annonce **« À table »** (voir [notifications](../fonctions/notifications.md)) |
 
 ### Bouton rotatif

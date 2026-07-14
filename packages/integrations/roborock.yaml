@@ -1,47 +1,84 @@
+# Aspirateurs robots Roborock
+#
+# Le pilotage par pièces s'appuie sur le mapping natif « segments → areas »
+# de Home Assistant (fait dans la fiche de l'aspirateur, stocké dans le registre)
+# et sur l'action native `vacuum.clean_area`. Aucun numéro de segment n'est
+# manipulé ici : on ne raisonne qu'en areas.
+#
+# Sélection multi-pièces avant lancement :
+#   - un helper `input_boolean.vacuum_select_<area_id>` par pièce nettoyable ;
+#   - le script `vacuum_clean_selection` lit les helpers cochés (limités au
+#     périmètre d'un robot), lance `vacuum.clean_area`, puis remet les helpers à 0.
+# La carte du dashboard (stratégie `custom:vacuum-section`) découvre le robot et
+# ses pièces à la volée et injecte robot + périmètre dans l'appel du script.
+
 input_boolean:
-  aspiration_salle_a_manger:
-    name: Aspiration Salle à manger
+  vacuum_select_cuisine:
+    name: Sélection – Cuisine
+    icon: hue:room-kitchen
+    initial: false
+  vacuum_select_salle_de_douche:
+    name: Sélection – Salle de douche
+    icon: mdi:shower
+    initial: false
+  vacuum_select_chambre_parent:
+    name: Sélection – Chambre Parents
+    icon: hue:room-bedroom
+    initial: false
+  vacuum_select_buanderie:
+    name: Sélection – Buanderie
+    icon: hue:room-laundry
+    initial: false
+  vacuum_select_salle_a_manger:
+    name: Sélection – Salle à manger
     icon: hue:room-dining
     initial: false
-  aspiration_salon:
-    name: Aspiration Salon
+  vacuum_select_salon:
+    name: Sélection – Salon
     icon: hue:room-living
     initial: false
-  aspiration_entree:
-    name: Aspiration Entrée
+  vacuum_select_entree:
+    name: Sélection – Entrée
     icon: hue:room-hallway
-    initial: false
-  aspiration_cuisine:
-    name: Aspiration Cuisine
-    icon: hue:room-kitchen
     initial: false
 
 script:
 ################################################################################
-  aspiration_rooms_rdc:
-    variables:
-      room_nb:
-        input_boolean.aspiration_salle_a_manger: 17
-        input_boolean.aspiration_salon: 16
-        input_boolean.aspiration_entree: 19
-        input_boolean.aspiration_cuisine: 22
-    sequence:
-    - action: vacuum.send_command
-      data:
-        command: app_segment_clean
-        params:
-          - segments: >
-              {%- set ns = namespace(selected_room=[]) %}
-              {% for room in expand(room_nb.keys()) | selectattr('state', 'eq', 'on') | map(attribute="entity_id")| list  %}
-              {% set ns.selected_room = ns.selected_room + [room_nb[room]]%}
-              {% endfor %}
-              {{ns.selected_room}}
-      target:
-        entity_id: vacuum.roborock_s7
-    - action: input_boolean.turn_off
-      target:
-        entity_id: "{{ room_nb.keys()|list}}"
+  vacuum_clean_selection:
+    alias: Aspirateur - Lancer la sélection
+    icon: mdi:robot-vacuum
     mode: single
-    alias: Aspiration Salle à manger
-    icon: bha:roborock
+    fields:
+      vacuum:
+        description: Entité de l'aspirateur à lancer
+        required: true
+        example: vacuum.saros_20_set
+      areas:
+        description: Périmètre — areas que ce robot sait nettoyer
+        required: true
+        example: "['salon', 'cuisine']"
+    sequence:
+    - variables:
+        # Pièces cochées, limitées au périmètre du robot appelant.
+        selected: >-
+          {%- set ns = namespace(sel=[]) -%}
+          {%- for a in areas -%}
+            {%- if is_state('input_boolean.vacuum_select_' ~ a, 'on') -%}
+              {%- set ns.sel = ns.sel + [a] -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {{ ns.sel }}
+    - if:
+      - condition: template
+        value_template: "{{ selected | count > 0 }}"
+      then:
+      - action: vacuum.clean_area
+        target:
+          entity_id: "{{ vacuum }}"
+        data:
+          cleaning_area_id: "{{ selected }}"
+      - action: input_boolean.turn_off
+        target:
+          entity_id: >-
+            {{ selected | map('regex_replace', '^', 'input_boolean.vacuum_select_') | list }}
 ################################################################################

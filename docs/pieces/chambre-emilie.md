@@ -14,6 +14,12 @@ La chambre d'Émilie est équipée d'un **plafonnier**, d'une **horloge LED** pr
 
 La maison expose un indicateur de **température courante** de la chambre, recopié depuis le thermostat associé.
 
+### Climatisation
+
+<!-- source: automation:chambre_emilie_clim_auto, blueprint:antorfr/clim_scheduler.yaml -->
+
+La chambre est climatisée automatiquement : maintenue sous **28 °C**, pré-refroidie à **25 °C** pour l'heure du coucher de l'enfant (le rafraîchissement démarre d'autant plus tôt qu'il fait chaud), puis laissée remonter jusqu'à **28 °C** au plus pendant la nuit. Le détail des règles est décrit dans la fonction [climatisation des chambres](../fonctions/climatisation.md).
+
 ### Couvre-feu de l'enfant
 
 <!-- source: input_boolean:curfew_emilie, automation:chambre_emilie_music_curfew, blueprint:antorfr/curfew.yaml -->

@@ -1,0 +1,264 @@
+blueprint:
+  name: Climatisation - Régulation & pré-refroidissement nocturne
+  description: >
+    Maintient une pièce sous une consigne haute toute la journée et la nuit,
+    et la pré-refroidit avant l'heure du couché pour atteindre une consigne
+    basse au moment du coucher, puis laisse la température remonter jusqu'à la
+    consigne haute pendant la nuit.
+
+    Conçu pour des climatiseurs "froid seul" pilotés en mode `auto` : l'unité
+    ne fait que refroidir vers la consigne, jamais chauffer.
+
+    Générique : aucune pièce n'est codée en dur, tout passe par les entrées.
+    L'override se fait en désactivant simplement cette automatisation.
+  domain: automation
+  input:
+    climate_target:
+      name: Climatiseur
+      description: L'entité climate à piloter.
+      selector:
+        entity:
+          filter:
+            - domain: climate
+    bedtime_entity:
+      name: (Optionnel) Heure de couché - référence
+      description: >
+        input_datetime donnant l'heure du couché (jour d'école / semaine).
+        Laisser vide pour utiliser l'heure fixe ci-dessous.
+      default: ""
+      selector:
+        entity:
+          filter:
+            - domain: input_datetime
+    bedtime_entity_we:
+      name: (Optionnel) Heure de couché - variante vacances/WE
+      description: >
+        input_datetime utilisé quand le sélecteur ci-dessous est actif
+        (veille de vacances ou de week-end). Laisser vide pour ignorer.
+      default: ""
+      selector:
+        entity:
+          filter:
+            - domain: input_datetime
+    bedtime_selector:
+      name: (Optionnel) Sélecteur vacances/WE
+      description: >
+        binary_sensor qui, à l'état "on", fait basculer sur la variante
+        vacances/WE de l'heure de couché.
+      default: binary_sensor.vacances_scolaires_demain
+      selector:
+        entity:
+          filter:
+            - domain: binary_sensor
+    bedtime_fixed:
+      name: (Optionnel) Heure de couché fixe
+      description: >
+        Heure de couché fixe "HH:MM:SS" utilisée quand aucune référence
+        input_datetime n'est fournie. Ex. "22:30:00".
+      default: ""
+      selector:
+        text:
+    temp_sensor:
+      name: (Optionnel) Capteur de température de la pièce
+      description: >
+        Capteur utilisé pour estimer l'avance nécessaire au pré-refroidissement.
+        Laisser vide pour utiliser la température mesurée par le climatiseur.
+      default: ""
+      selector:
+        entity:
+          filter:
+            - domain: sensor
+              device_class: temperature
+    precool_min_minutes:
+      name: Pré-refroidissement - avance minimale (minutes)
+      description: Avance minimale avant le couché, même quand la pièce est déjà fraîche.
+      default: 15
+      selector:
+        number:
+          min: 0
+          max: 120
+          step: 5
+          unit_of_measurement: minutes
+    precool_max_minutes:
+      name: Pré-refroidissement - avance maximale (minutes)
+      description: Avance maximale ; le pré-refroidissement ne démarre jamais plus tôt.
+      default: 180
+      selector:
+        number:
+          min: 30
+          max: 360
+          step: 5
+          unit_of_measurement: minutes
+    precool_minutes_per_degree:
+      name: Pré-refroidissement - minutes par degré à retirer
+      description: >
+        Temps estimé pour retirer 1 °C. L'avance visée = (température actuelle −
+        consigne basse) × cette valeur, bornée par les avances min/max.
+      default: 20
+      selector:
+        number:
+          min: 1
+          max: 60
+          step: 1
+          unit_of_measurement: min/°C
+    normal_setpoint:
+      name: Consigne haute (jour et nuit)
+      description: Température maximale visée hors pré-refroidissement.
+      default: 28
+      selector:
+        number:
+          min: 16
+          max: 30
+          step: 0.5
+          unit_of_measurement: "°C"
+    bedtime_setpoint:
+      name: Consigne basse (au couché)
+      description: Température visée pendant la fenêtre de pré-refroidissement.
+      default: 25
+      selector:
+        number:
+          min: 16
+          max: 30
+          step: 0.5
+          unit_of_measurement: "°C"
+    enable_template:
+      name: (Optionnel) Condition d'activation
+      description: >
+        Modèle renvoyant vrai/faux. Quand il est faux, le climatiseur est
+        coupé. Défaut : toujours actif.
+      default: "{{ true }}"
+      selector:
+        template:
+    enable_watch:
+      name: (Optionnel) Entités à surveiller pour la condition
+      description: >
+        Entités dont le changement d'état doit réévaluer la condition
+        d'activation (ex. mode invité, mode absence).
+      default:
+        - binary_sensor.vacances_scolaires_demain
+      selector:
+        entity:
+          multiple: true
+
+mode: single
+
+trigger_variables:
+  climate_target: !input climate_target
+  temp_sensor: !input temp_sensor
+  bedtime_entity: !input bedtime_entity
+  bedtime_entity_we: !input bedtime_entity_we
+  bedtime_selector: !input bedtime_selector
+  bedtime_fixed: !input bedtime_fixed
+  bedtime_setpoint: !input bedtime_setpoint
+  precool_min_minutes: !input precool_min_minutes
+  precool_max_minutes: !input precool_max_minutes
+  precool_minutes_per_degree: !input precool_minutes_per_degree
+
+trigger:
+  - alias: "Entrée dans la fenêtre de pré-refroidissement (avance adaptative)"
+    trigger: template
+    id: precool
+    value_template: >
+      {% set ent = bedtime_entity_we if (is_state(bedtime_selector,'on') and bedtime_entity_we) else bedtime_entity %}
+      {% set bt = states(ent) if ent else bedtime_fixed %}
+      {% if bt in ['unknown','unavailable','', none] %}false
+      {% else %}
+      {% set target = bedtime_setpoint | float %}
+      {% set cur = states(temp_sensor) | float(none) if temp_sensor else state_attr(climate_target,'current_temperature') | float(none) %}
+      {% set gap = (cur - target) if cur is not none else none %}
+      {% set lead = precool_max_minutes | int if gap is none else [[gap * (precool_minutes_per_degree | int), precool_min_minutes | int] | max, precool_max_minutes | int] | min %}
+      {% set start = today_at(bt) - timedelta(minutes = lead | int) %}
+      {% set window_start = today_at(bt) - timedelta(minutes = precool_max_minutes | int) %}
+      {% set latched = (state_attr(climate_target,'temperature') | float(-99)) == target %}
+      {{ now() < today_at(bt) and now() >= window_start and (now() >= start or latched) }}
+      {% endif %}
+  - alias: "Heure du couché atteinte (retour consigne haute)"
+    trigger: template
+    id: night
+    value_template: >
+      {% set ent = bedtime_entity_we if (is_state(bedtime_selector,'on') and bedtime_entity_we) else bedtime_entity %}
+      {% set bt = states(ent) if ent else bedtime_fixed %}
+      {% if bt in ['unknown','unavailable','', none] %}false
+      {% else %}{{ today_at(bt) <= now() }}{% endif %}
+  - alias: "Démarrage Home Assistant"
+    trigger: homeassistant
+    event: start
+    id: init
+  - alias: "Ré-assertion périodique de sécurité"
+    trigger: time_pattern
+    minutes: "/15"
+    id: tick
+  - alias: "Changement d'une entité de la condition d'activation"
+    trigger: state
+    entity_id: !input enable_watch
+    id: watch
+
+variables:
+  climate_target: !input climate_target
+  temp_sensor: !input temp_sensor
+  bedtime_entity: !input bedtime_entity
+  bedtime_entity_we: !input bedtime_entity_we
+  bedtime_selector: !input bedtime_selector
+  bedtime_fixed: !input bedtime_fixed
+  precool_min_minutes: !input precool_min_minutes
+  precool_max_minutes: !input precool_max_minutes
+  precool_minutes_per_degree: !input precool_minutes_per_degree
+  normal_setpoint: !input normal_setpoint
+  bedtime_setpoint: !input bedtime_setpoint
+  enabled: !input enable_template
+  bedtime: >
+    {% set ent = bedtime_entity_we if (is_state(bedtime_selector,'on') and bedtime_entity_we) else bedtime_entity %}
+    {{ states(ent) if ent else bedtime_fixed }}
+  in_precool: >
+    {% set bt = bedtime | trim %}
+    {% if bt in ['unknown','unavailable','', none] %}false
+    {% else %}
+    {% set target = bedtime_setpoint | float %}
+    {% set cur = states(temp_sensor) | float(none) if temp_sensor else state_attr(climate_target,'current_temperature') | float(none) %}
+    {% set gap = (cur - target) if cur is not none else none %}
+    {% set lead = precool_max_minutes | int if gap is none else [[gap * (precool_minutes_per_degree | int), precool_min_minutes | int] | max, precool_max_minutes | int] | min %}
+    {% set start = today_at(bt) - timedelta(minutes = lead | int) %}
+    {% set window_start = today_at(bt) - timedelta(minutes = precool_max_minutes | int) %}
+    {% set latched = (state_attr(climate_target,'temperature') | float(-99)) == target %}
+    {{ now() < today_at(bt) and now() >= window_start and (now() >= start or latched) }}
+    {% endif %}
+  desired: "{{ (bedtime_setpoint if (in_precool | trim | lower == 'true') else normal_setpoint) | float }}"
+
+condition: []
+
+action:
+  - choose:
+      - alias: "Condition d'activation fausse → climatiseur coupé"
+        conditions:
+          - condition: template
+            value_template: "{{ (enabled | string | lower) not in ['true','1','on','yes'] }}"
+        sequence:
+          - alias: "Couper uniquement si pas déjà éteint"
+            if:
+              - condition: template
+                value_template: "{{ not is_state(climate_target,'off') }}"
+            then:
+              - action: climate.turn_off
+                target:
+                  entity_id: !input climate_target
+    default:
+      - alias: "Mode auto (froid seul) si pas déjà actif"
+        if:
+          - condition: template
+            value_template: "{{ states(climate_target) != 'auto' }}"
+        then:
+          - action: climate.set_hvac_mode
+            data:
+              hvac_mode: auto
+            target:
+              entity_id: !input climate_target
+      - alias: "Appliquer la consigne de la phase courante si différente"
+        if:
+          - condition: template
+            value_template: "{{ (state_attr(climate_target,'temperature') | float(-1)) != desired }}"
+        then:
+          - action: climate.set_temperature
+            data:
+              temperature: "{{ desired }}"
+            target:
+              entity_id: !input climate_target

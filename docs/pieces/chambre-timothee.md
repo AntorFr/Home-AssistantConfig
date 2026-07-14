@@ -8,6 +8,12 @@ La chambre de Timothée regroupe un **plafonnier**, une **veilleuse** (cadre lum
 
 ## Comportements automatiques
 
+### Climatisation
+
+<!-- source: automation:chambre_timothee_clim_auto, blueprint:antorfr/clim_scheduler.yaml -->
+
+La chambre est climatisée automatiquement : maintenue sous **28 °C**, pré-refroidie à **25 °C** pour l'heure du coucher de l'enfant (le rafraîchissement démarre d'autant plus tôt qu'il fait chaud), puis laissée remonter jusqu'à **28 °C** au plus pendant la nuit. Le détail des règles est décrit dans la fonction [climatisation des chambres](../fonctions/climatisation.md).
+
 ### Couvre-feu de l'enfant
 
 <!-- source: input_boolean:curfew_timothee, automation:chambre_timothee_music_curfew, blueprint:antorfr/curfew.yaml -->

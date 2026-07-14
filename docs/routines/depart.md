@@ -103,7 +103,7 @@ La maison :
 
 <!-- source: automation:1618666809324 -->
 
-À **midi**, si la maison est en mode absence, la maison déclenche le passage de l'**aspirateur robot** Roborock S7. Une notification est envoyée sur le téléphone de Sébastien :
+À **midi**, si la maison est en mode absence, la maison déclenche le passage de l'**aspirateur robot** (voir [aspirateur robot](../fonctions/aspirateur-robot.md)). Une notification est envoyée sur le téléphone de Sébastien :
 
 > Roomba - Lancement auto
 

@@ -6,3 +6,22 @@ template:
       unit_of_measurement: "°C"
       availability: "{{states('climate.netatmo_chambre_d_amis') != 'unknown'}}"
       state: "{{ state_attr('climate.netatmo_chambre_d_amis', 'current_temperature')|float | d(none) }}"
+
+automation:
+################################################################################
+- id: 'chambre_d_amis_clim_auto'
+  alias: Area - Chambre Amis - Climatisation auto
+  description: "Climatisation active uniquement en mode invité ; coupée sinon"
+  use_blueprint:
+    path: antorfr/clim_scheduler.yaml
+    input:
+      climate_target: climate.baillconnect_chambre_invitee
+      bedtime_entity: input_datetime.guest_bedtime
+      bedtime_entity_we: input_datetime.guest_bedtime_we
+      bedtime_selector: binary_sensor.vacances_scolaires_demain
+      enable_template: >-
+        {{ is_state('input_boolean.guest_mode','on')
+           and is_state('input_boolean.away_mode','off') }}
+      enable_watch:
+        - input_boolean.guest_mode
+        - input_boolean.away_mode

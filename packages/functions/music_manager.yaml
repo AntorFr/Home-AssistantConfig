@@ -1,26 +1,4 @@
-sql:
-  - name: Music Library
-    unique_id: music_library
-    db_url: !secret budibase_db 
-    query: >
-      SELECT
-        count(*) as count,
-        json_agg(music_inventory) as inventory,
-        json_agg(title) as list
-      FROM
-        music_inventory;
-    column: "count"
-
 template:
- - select:
-    - name: "Playlist"
-      unique_id: playlist
-      state: " "
-      select_option: []
-      options: >
-        {{ [" "] + state_attr('sensor.music_library', 'list') }}
-      optimistic: true
-      icon: mdi:playlist-music
  - sensor:
     - name: "Music mood rooms"
       unique_id: music_mood_rooms
@@ -43,6 +21,8 @@ rest_command:
       https://music-library.berard.me/api/v1/media/select?{{ query_string }}
     method: GET
     content_type: "application/json"
+    headers:
+      Authorization: !secret music_library_api_token
     timeout: 20
 
 intent_script:
@@ -446,13 +426,25 @@ script:
           - variables:
               play_media_id: >
                 {% if selected_item is mapping and selected_item.source_uri is string %}
-                  {% if selected_item.source_uri.startswith('spotify://') %}
-                    {{ selected_item.source_uri | replace('spotify://', 'spotify:') | replace('/', ':') }}
+                  {% set uri = selected_item.source_uri | regex_replace('^([a-z0-9]+)--[A-Za-z0-9]+://', '\\1://') %}
+                  {% if uri.startswith('spotify://') %}
+                    {{ uri | replace('spotify://', 'spotify:') | replace('/', ':') }}
                   {% else %}
-                    {{ selected_item.source_uri }}
+                    {{ uri }}
                   {% endif %}
                 {% endif %}
               use_mass_service: "{{ media_player_id in integration_entities('Music Assistant') }}"
+              # Normalise l'URI Music Assistant : on retire le suffixe d'instance
+              # du provider (ex: spotify--yPK3Sfsf://…) pour ne garder que le
+              # domaine (spotify://…). MA résout alors via n'importe quelle
+              # instance active du provider, ce qui immunise contre les URIs
+              # importées avec une ancienne instance (sinon « No playable items found »).
+              mass_media_id: >-
+                {%- if selected_item is mapping and selected_item.source_uri is string -%}
+                  {{ selected_item.source_uri | regex_replace('^([a-z0-9]+)--[A-Za-z0-9]+://', '\\1://') }}
+                {%- else -%}
+                  {{ selected_item.source_uri }}
+                {%- endif -%}
 
           - alias: "Grouper si > 1 player"
             if:
@@ -474,7 +466,7 @@ script:
                     target:
                       entity_id: "{{ media_player_id }}"
                     data:
-                      media_id: "{{ selected_item.source_uri }}"
+                      media_id: "{{ mass_media_id }}"
                       enqueue: replace
             default:
               - action: media_player.play_media

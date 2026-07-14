@@ -12,7 +12,7 @@
   - service: vacuum.start
     data: {}
     target:
-      entity_id: vacuum.roborock_s7
+      entity_id: vacuum.saros_20_set
   - service: notify.mobile_seb
     data:
       message: Roomba - Lancement auto

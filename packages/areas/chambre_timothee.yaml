@@ -67,6 +67,20 @@ automation:
               data:
                 room: chambre_timothee
 ################################################################################
+- id: 'chambre_timothee_clim_auto'
+  alias: Area - Chambre Timothée - Climatisation auto
+  description: "Maintien sous consigne haute + pré-refroidissement avant le couché"
+  use_blueprint:
+    path: antorfr/clim_scheduler.yaml
+    input:
+      climate_target: climate.baillconnect_chambre_timothee
+      bedtime_entity: input_datetime.children_night_time
+      bedtime_entity_we: input_datetime.children_night_time_we
+      bedtime_selector: binary_sensor.vacances_scolaires_demain
+      enable_template: "{{ is_state('input_boolean.away_mode','off') }}"
+      enable_watch:
+        - input_boolean.away_mode
+################################################################################
 - id: 'chambre_timothee_lumiere_auto'
   alias: Area - Chambre Timothée - Lumière Auto
   description: ''
