@@ -21,6 +21,7 @@ rest_command:
       https://music-library.berard.me/api/v1/media/select?{{ query_string }}
     method: GET
     content_type: "application/json"
+    # music-library v0.19+ : l'API exige une auth (token Bearer).
     headers:
       Authorization: !secret music_library_api_token
     timeout: 20
