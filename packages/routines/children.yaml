@@ -31,7 +31,7 @@ automation:
     - trigger: event
       event_type: routine_event
       event_data:
-        type: night
+        type: sleep
       id: night
     - trigger: event
       event_type: routine_event

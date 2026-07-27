@@ -18,7 +18,7 @@ La maison expose un indicateur de **température courante de la chambre d'amis**
 
 <!-- source: automation:chambre_d_amis_clim_auto, blueprint:antorfr/clim_scheduler.yaml -->
 
-La chambre est climatisée automatiquement **uniquement lorsque le mode invité est actif** ; sinon le climatiseur est coupé. Quand elle est active, la climatisation maintient la chambre sous **28 °C**, la pré-refroidit à **25 °C** pour l'heure de coucher des invités (réglable, **22 h 30** par défaut), puis la laisse remonter jusqu'à **28 °C** au plus pendant la nuit. Le détail des règles est décrit dans la fonction [climatisation des chambres](../fonctions/climatisation.md).
+La chambre est climatisée automatiquement **uniquement lorsque le mode invité est actif** ; sinon le climatiseur est coupé. Quand elle est active, la climatisation maintient la chambre sous **28 °C**, la pré-refroidit à **25 °C** pour l'heure de nuit de la maison (réglable, **22 h 30** par défaut), puis la laisse remonter jusqu'à **28 °C** au plus pendant la nuit. Le détail des règles est décrit dans la fonction [climatisation des chambres](../fonctions/climatisation.md).
 
 ## Rôle dans les scénarios maison
 

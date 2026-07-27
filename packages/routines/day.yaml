@@ -88,16 +88,16 @@ input_datetime:
     name: Soirée (we) - Timothée couvre-feu
     has_time: true
     icon: bha:night-light
-  guest_bedtime:
-    name: Couché invités
+  night_time:
+    name: Nuit
     has_time: true
     initial: "22:30:00"
-    icon: mdi:bed
-  guest_bedtime_we:
-    name: Couché invités - weekend
+    icon: mdi:bed-clock
+  night_time_we:
+    name: Nuit - weekend
     has_time: true
     initial: "23:30:00"
-    icon: mdi:bed
+    icon: mdi:bed-clock
 ################################################################################
 
 ################################################################################
@@ -115,7 +115,7 @@ automation:
       Soirée: evening
       "Soirée - retour au calme": children evening ritual
       "Soirée - enfants couché": children night
-      Nuit: night
+      Nuit: sleep
 
   trigger:
   - trigger: state
@@ -296,23 +296,20 @@ automation:
     target:
       entity_id: switch.adaptive_lighting_sleep_mode_couloir_etage
 ################################################################################
-- id: 'routine_guest_night'
-  alias: Routine - Day - Couché invités
-  description: "Heure de couché des invités (déclenchée uniquement en mode invité)"
+- id: 'routine_night_time'
+  alias: Routine - Day - Heure de nuit
+  description: "Heure de nuit (couché parents) : émet l'événement night selon semaine/WE"
   trigger:
   - trigger: time
-    at: input_datetime.guest_bedtime
+    at: input_datetime.night_time
     id: week
   - trigger: time
-    at: input_datetime.guest_bedtime_we
+    at: input_datetime.night_time_we
     id: weekend
   condition:
   - condition: state
     entity_id: input_boolean.away_mode
     state: 'off'
-  - condition: state
-    entity_id: input_boolean.guest_mode
-    state: 'on'
   - condition: or
     conditions:
     - condition: and
@@ -330,10 +327,10 @@ automation:
         entity_id: binary_sensor.vacances_scolaires_demain
         state: 'on'
   action:
-  - alias: "Fire guest night routine event"
+  - alias: "Fire night routine event"
     event: routine_event
     event_data:
-      type: guest night
+      type: night
   mode: single
 ################################################################################
 - id: 'routine_emilie_curfew'
@@ -717,11 +714,11 @@ script:
     mode: restart
     icon: mdi:weather-night
     sequence:   
-    - alias: "Fire night routine event"
+    - alias: "Fire sleep routine event"
       event: routine_event
       event_data:
-        type: night
-    - action: input_select.select_option  
+        type: sleep
+    - action: input_select.select_option
       target:
         entity_id: input_select.day_phase
       data:

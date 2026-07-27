@@ -47,9 +47,9 @@ Pour les chambres d'Émilie et de Timothée, l'heure du coucher utilisée pour l
 
 La maison choisit automatiquement l'heure applicable selon que **le lendemain est un jour d'école ou non**.
 
-<!-- source: package:packages/areas/chambre_amis.yaml, input_datetime:guest_bedtime, input_datetime:guest_bedtime_we -->
+<!-- source: package:packages/areas/chambre_amis.yaml, input_datetime:night_time, input_datetime:night_time_we -->
 
-Pour la chambre d'amis, l'heure du coucher est réglable via un couple d'heures **« Couché invités »** (une pour les veilles de jour d'école, une pour les veilles de vacances ou de week-end), avec le même choix automatique selon que le lendemain est travaillé ou non. Valeurs par défaut : **22 h 30** en semaine, **23 h 30** les veilles de repos.
+Pour la chambre d'amis, l'heure du coucher retenue est l'**heure de nuit de la maison** définie dans la routine de la [journée](../routines/journee.md) : un couple d'heures (une pour les veilles de jour d'école, une pour les veilles de vacances ou de week-end), avec le même choix automatique selon que le lendemain est travaillé ou non. Valeurs par défaut : **22 h 30** en semaine, **23 h 30** les veilles de repos.
 
 ## Cas particuliers
 

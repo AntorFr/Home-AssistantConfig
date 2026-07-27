@@ -1,0 +1,72 @@
+language: "fr"
+# Phrases vocales pour l'aspirateur, greffées sur les intents NATIFS de HA
+# (HassVacuumStart / HassVacuumReturnToBase / HassVacuumCleanArea).
+# Aucun intent_script, aucun nom d'entité en dur.
+#
+# Résolution de la cible (assurée par HA / Assist) :
+#   - « nettoyer une pièce » cible le robot capable de nettoyer cette area
+#     (via le mapping segments→areas). La pièce peut être nommée, ou déduite de
+#     la localisation du device qui écoute (« ici », « fais le ménage »).
+#   - « démarrer / renvoyer le robot » cible par nom, area ou étage. Chaque
+#     robot est rattaché à une area (donc à un étage) : dire « au rez-de-chaussée »
+#     ou « à l'étage » suffit à viser le bon robot.
+#
+# ⚠️ Les custom_sentences ne sont lues qu'au DÉMARRAGE de Home Assistant.
+intents:
+  # ── Nettoyer une pièce ──────────────────────────────────────
+  HassVacuumCleanArea:
+    data:
+      # Pièce nommée.
+      - sentences:
+          - "<nettoie> [<dans>] [<le>]{area}"
+          - "<nettoie> [<le>]{area} avec [<le>]{name}"
+          - "<envoie> [<le>]{name} <dans> [<le>]{area}"
+        expansion_rules:
+          nettoie: "(nettoie|nettoyer|aspire|aspirer|passe l'aspirateur dans|fais le ménage|fait le ménage)"
+          envoie: "(envoie|envoyer|dépêche)"
+          dans: "(dans|de|de la|de l'|à|au)"
+          le: "(le|la|l'|mon|ma)"
+      # Pièce courante, déduite de la localisation du device qui écoute.
+      - sentences:
+          - "<nettoie> <ici>"
+          - "fais le ménage [<ici>]"
+        requires_context:
+          area:
+            slot: true
+        expansion_rules:
+          nettoie: "(nettoie|nettoyer|aspire|aspirer|passe l'aspirateur|fais le ménage|fait le ménage)"
+          ici: "(ici|cette pièce|dans cette pièce|dans la pièce)"
+
+  # ── Démarrer le robot (par nom, area ou étage) ──────────────
+  HassVacuumStart:
+    data:
+      - sentences:
+          - "<demarre> [<le>]{name}"
+          - "<demarre> [<l>]aspirateur[s] [<de>] [<le>]{area}"
+          - "<demarre> [<l>]aspirateur[s] [<de>] {floor}"
+        expansion_rules:
+          demarre: "(démarre|demarre|démarrer|lance|lancer|active|activer|met[s] en route)"
+          l: "(l'|le|les)"
+          de: "(de|du|de la|de l'|à|au)"
+          le: "(le|la|l'|mon|ma)"
+
+  # ── Retour à la base ────────────────────────────────────────
+  HassVacuumReturnToBase:
+    data:
+      - sentences:
+          - "<renvoie> [<le>]{name} [(à|sur) (sa|la) base]"
+          - "<renvoie> [<l>]aspirateur[s] [<de>] [<le>]{area} [(à|sur) (sa|leur|la) base]"
+        expansion_rules:
+          renvoie: "(renvoie|renvoyer|retourne|ramène|ramene|remet[s]|range|arrête|arrete|arrêter|stoppe|stopper)"
+          l: "(l'|le|les)"
+          de: "(de|du|de la|de l'|à|au)"
+          le: "(le|la|l'|mon|ma)"
+      # Robot courant, déduit de la localisation du device qui écoute.
+      - sentences:
+          - "<renvoie> [<l>]aspirateur [(à|sur) (sa|la) base]"
+        requires_context:
+          area:
+            slot: true
+        expansion_rules:
+          renvoie: "(renvoie|renvoyer|retourne|ramène|ramene|remet[s]|range|arrête|arrete|arrêter|stoppe|stopper)"
+          l: "(l'|le)"

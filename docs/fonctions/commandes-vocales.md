@@ -71,3 +71,13 @@ Récapituler les **phrases en français** que la maison reconnaît et l'**effet*
 | Phrases reconnues | Effet | Voir |
 |---|---|---|
 | « réponds au livreur », « ouvre le portail au livreur » | déclenche la séquence de **livraison de colis** (ouverture du portail si fermé, message vocal au livreur, attente de fermeture) | [portail](portail.md#livraison-de-colis) |
+
+### Aspirateur
+
+<!-- source: intent:HassVacuumStart, intent:HassVacuumReturnToBase, intent:HassVacuumCleanArea -->
+
+| Phrases reconnues | Effet | Voir |
+|---|---|---|
+| « démarre l'aspirateur du rez-de-chaussée / de l'étage », « lance le Saros 20 Set » | **démarre** le robot de l'étage ou du robot nommé | [aspirateur robot](aspirateur-robot.md) |
+| « renvoie l'aspirateur à sa base », « range l'aspirateur » | **renvoie** le robot à sa base | [aspirateur robot](aspirateur-robot.md) |
+| « aspire la cuisine », « nettoie le salon », « fais le ménage ici » | lance le nettoyage d'une **pièce** (nommée ou celle où l'on se trouve) | [aspirateur robot](aspirateur-robot.md) |

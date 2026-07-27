@@ -25,7 +25,7 @@ La phase peut être changée **manuellement**. Tout changement de phase, automat
 
 ## Paramètres horaires
 
-<!-- source: input_datetime:morning_time, input_datetime:morning_time_we, input_datetime:afternoon_time, input_datetime:evening_time, input_datetime:evening_time_we, input_datetime:children_morning_time, input_datetime:children_morning_time_we, input_datetime:children_evening_ritual_time, input_datetime:children_evening_ritual_time_we, input_datetime:children_night_time, input_datetime:children_night_time_we, input_datetime:children_curfew_emilie, input_datetime:children_curfew_we_emilie, input_datetime:children_curfew_timothee, input_datetime:children_curfew_we_timothee -->
+<!-- source: input_datetime:morning_time, input_datetime:morning_time_we, input_datetime:afternoon_time, input_datetime:evening_time, input_datetime:evening_time_we, input_datetime:children_morning_time, input_datetime:children_morning_time_we, input_datetime:children_evening_ritual_time, input_datetime:children_evening_ritual_time_we, input_datetime:children_night_time, input_datetime:children_night_time_we, input_datetime:children_curfew_emilie, input_datetime:children_curfew_we_emilie, input_datetime:children_curfew_timothee, input_datetime:children_curfew_we_timothee, input_datetime:night_time, input_datetime:night_time_we -->
 
 Plusieurs horaires sont configurables, avec une **version semaine** et une **version week-end** distinctes :
 
@@ -36,7 +36,8 @@ Plusieurs horaires sont configurables, avec une **version semaine** et une **ver
 - heure du **retour au calme** (rituel du coucher des enfants),
 - heure du **coucher des enfants**,
 - heure du **couvre-feu d'Émilie**,
-- heure du **couvre-feu de Timothée**.
+- heure du **couvre-feu de Timothée**,
+- heure de **nuit** (couché des parents).
 
 La maison choisit la version **semaine** ou **week-end** selon le **statut du lendemain** : version semaine si demain est un jour travaillé non vacances, version week-end sinon.
 
@@ -94,6 +95,17 @@ Ce commutateur peut être levé temporairement par la fonction de [musique douce
 - les **couvre-feux** d'Émilie et de Timothée sont **désactivés**,
 - les **modes nuit** des deux enfants sont **désactivés**,
 - la phase passe à **« Matin - reveil enfants »**.
+
+### Heure de nuit (couché des parents)
+
+<!-- source: automation:routine_night_time -->
+
+À l'heure de nuit correspondant au statut du lendemain (semaine si demain est travaillé, week-end sinon), si la maison n'est pas en mode absence, la maison **prépare le couchage** :
+
+- **préchauffage des couvertures chauffantes** (voir [chauffe-lit](../fonctions/chauffe-lit.md)),
+- **pré-refroidissement de la chambre d'amis** si un invité est présent (voir [climatisation des chambres](../fonctions/climatisation.md)).
+
+Cette heure de nuit est **distincte du mode nuit** décrit ci-dessous : elle marque l'heure prévue du coucher des parents, tandis que le mode nuit correspond au sommeil réellement détecté ou déclenché.
 
 ## Mode nuit
 

@@ -16,8 +16,8 @@ automation:
     path: antorfr/clim_scheduler.yaml
     input:
       climate_target: climate.baillconnect_chambre_invitee
-      bedtime_entity: input_datetime.guest_bedtime
-      bedtime_entity_we: input_datetime.guest_bedtime_we
+      bedtime_entity: input_datetime.night_time
+      bedtime_entity_we: input_datetime.night_time_we
       bedtime_selector: binary_sensor.vacances_scolaires_demain
       enable_template: >-
         {{ is_state('input_boolean.guest_mode','on')

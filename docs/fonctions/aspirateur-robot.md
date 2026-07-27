@@ -24,28 +24,36 @@ Le pilotage complet (démarrage, pause, retour à la base, réglages) reste assu
 
 ## Règles de fonctionnement
 
-### Lancer une pièce
-
-Sur la page d'une pièce équipée, un bouton **« Nettoyer \<la pièce\> »** envoie le robot nettoyer immédiatement cette seule pièce.
-
-### Sélectionner plusieurs pièces puis lancer
+### Sélectionner des pièces puis lancer
 
 <!-- source: script:vacuum_clean_selection -->
 
-Chaque pièce nettoyable est proposée comme **case à cocher**. On coche les pièces voulues, puis on appuie sur **« Lancer la sélection »** : le robot nettoie l'ensemble des pièces cochées, dans un ordre qu'il choisit lui-même. Les cases se **remettent à zéro** une fois le nettoyage lancé.
+Sur la page d'une pièce équipée, à côté de la carte du robot, une **rangée de pièces** est proposée. On coche les pièces voulues, puis on appuie sur le **bouton de lancement** : le robot nettoie l'ensemble des pièces cochées, dans un ordre qu'il choisit lui-même. Les cases se **remettent à zéro** une fois le nettoyage lancé.
+
+Un **appui long** sur le bouton de lancement renvoie le robot à sa base.
 
 La sélection est propre à chaque robot : un robot ne prend en compte que les pièces qu'il sait nettoyer.
 
-Un bouton **« Retour à la base »** renvoie le robot à sa station.
+### Vue d'ensemble et entretien
 
-### Suivi de l'entretien
+La page dédiée aux aspirateurs présente **tous** les robots, y compris ceux hors ligne (utile pour repérer un robot indisponible). Chaque robot en ligne est décomposé en sections séparées, disposées côte à côte :
 
-La page dédiée aux aspirateurs affiche, pour chaque robot, les informations utiles à l'entretien :
+- **Pilotage** : la carte du robot et ses commandes (marche/arrêt, pause, localiser, retour à la base…).
+- **Carte** : le plan du logement.
+- **Dock** : réservoir d'eau sale à vider, réservoir d'eau propre à remplir, manque d'eau, niveau de liquide de nettoyage, séchage de la serpillière.
+- **Consommables** : durée de vie restante de la brosse principale, de la brosse latérale, du filtre, des capteurs, de la crépine et de la brosse de nettoyage du dock.
 
-- **À vider / remplir** : réservoir d'eau sale à vider, réservoir d'eau propre à remplir, manque d'eau, niveau de liquide de nettoyage, séchage de la serpillière en cours.
-- **Consommables** : durée de vie restante de la brosse principale, de la brosse latérale, du filtre, des capteurs, de la crépine et de la brosse de nettoyage du dock, avec les boutons de réinitialisation.
-- **Réglages** : volume des annonces, mode « ne pas déranger », intensité de frottement, parcours de lavage du sol, recharge en heures creuses.
-- **État en direct** : état courant, pièce en cours, progression, surface et durée du nettoyage.
+### Commandes vocales
+
+<!-- source: intent:HassVacuumStart, intent:HassVacuumReturnToBase, intent:HassVacuumCleanArea -->
+
+L'aspirateur répond à la voix (assistant local, sans IA générative) :
+
+- **Démarrer** : « Démarre l'aspirateur du rez-de-chaussée », « Démarre l'aspirateur de l'étage », « Lance le Saros 20 Set ».
+- **Retour à la base** : « Renvoie l'aspirateur à sa base », « Range l'aspirateur ».
+- **Nettoyer une pièce** : « Aspire la cuisine », « Nettoie le salon », « Fais le ménage ici » (la pièce où l'on se trouve).
+
+Le robot visé est déterminé par la **pièce** ou l'**étage** nommés, ou par l'**endroit d'où l'on parle** (le robot rattaché à cette pièce ou cet étage). Le nettoyage vocal ne vise qu'**une seule pièce** à la fois.
 
 ## Cas particuliers
 
@@ -55,4 +63,5 @@ La page dédiée aux aspirateurs affiche, pour chaque robot, les informations ut
 ## Utilisée par
 
 - la routine de [départ](../routines/depart.md) — déclenche le passage automatique de midi en mode absence,
-- la pièce [salon](../pieces/salon.md) — bouton physique et vue synthétique de lancement par pièce.
+- la pièce [salon](../pieces/salon.md) — bouton physique et vue synthétique de lancement par pièce,
+- les [commandes vocales](commandes-vocales.md) — démarrage, retour à la base et nettoyage d'une pièce à la voix.

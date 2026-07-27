@@ -16,7 +16,7 @@ Deux couvertures chauffantes : celle de **Sébastien** et celle de **Laurine**.
 
 <!-- source: automation:function_bedheater_evening_turnon -->
 
-Tous les soirs à **22h05**, la maison vérifie deux conditions :
+À l'**heure de nuit de la maison** (définie dans la routine de la [journée](../routines/journee.md), variable selon semaine ou veille de repos), la maison vérifie deux conditions :
 
 - le mode absence est **inactif**,
 - la **température extérieure** est **inférieure à 17 °C**.

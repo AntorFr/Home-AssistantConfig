@@ -3,10 +3,12 @@ automation:
 ################################################################################
 - id: function_bedheater_evening_turnon
   alias: Function - Couverture chauffante - Turn on Soirée
-  description: ''
+  description: 'Préchauffage à l''heure de nuit (event routine_event type night)'
   trigger:
-  - trigger: time
-    at: '22:05:00'
+  - trigger: event
+    event_type: routine_event
+    event_data:
+      type: night
   condition:
   - condition: and
     conditions:
@@ -15,7 +17,7 @@ automation:
       state: 'off'
     - condition: numeric_state
       entity_id: sensor.temperature_exterieur
-      below: '17'
+      below: 17
   action:
   - choose:
     - conditions:
