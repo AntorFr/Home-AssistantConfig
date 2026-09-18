@@ -96,6 +96,6 @@ automation:
     path: antorfr/hot_water_warning.yaml
     input:
       light_target: light.shower_light_lumi_re_douche
-      tank_temperature: water_heater.panasonic_heat_pump_main_dhw_target_temp
+      tank_temperature: water_heater.garage_1_pompe_a_chaleur_garage_eau_chaude_sanitaire
       temp_treshold: 35
 

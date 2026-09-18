@@ -43,9 +43,10 @@ template:
       state: >-
         {{ (states('sensor.plouf_batterie') | float) < 15 }}
 
-alert:
+alert_plus:
   ico_disconnected_alert:
     name: "Alerte Ico déconnecté"
+    icon: mdi:lan-disconnect
     message: >
       "Ico déconnecté depuis {{ relative_time(states.sensor.plouf_oxydo_reduction_potential.last_changed)}}"
     done_message: >
@@ -59,6 +60,7 @@ alert:
       - notify
   ico_battery_alert:
     name: "Alerte Ico pile faible"
+    icon: mdi:battery-alert
     message: >
       "niveau de pile Ico faible {{ states('sensor.plouf_batterie') }}"
     done_message: >

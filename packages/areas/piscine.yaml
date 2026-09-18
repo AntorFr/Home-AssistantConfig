@@ -15,14 +15,14 @@ sensor:
     end: "{{ now() }}"
   - platform: history_stats
     name: Durée filtration piscine 24h
-    entity_id: switch.filtration_piscine_filtration
+    entity_id: switch.piscine_filtration_filtration
     state: "on"
     type: time
     duration: "24:00:00"
     end: "{{now()}}"
   - platform: history_stats
     name: Durée electrolyse piscine 24h
-    entity_id: switch.filtration_piscine_electrolyse
+    entity_id: switch.piscine_filtration_electrolyse
     state: "on"
     type: time
     duration: "24:00:00"
@@ -41,7 +41,7 @@ sensor:
     end: "{{ now() }}"
   - platform: history_stats
     name: Filtration piscine depuis 22h
-    entity_id: switch.filtration_piscine_filtration
+    entity_id: switch.piscine_filtration_filtration
     state: "on"
     type: time
     start: >
@@ -121,9 +121,10 @@ template:
             {{ [9, 18 - need] | max }}
           {% endif %}
 
-alert:
+alert_plus:
   swiming_pool:
     name: "Porte Piscine non sécurisée"
+    icon: mdi:door-sliding-lock
     message: >
       {% if is_state('binary_sensor.bludoor_porte_piscine_window', 'on') %}
       Attention, la porte de la piscine est restée ouverte sans personne
@@ -162,6 +163,7 @@ alert:
 
   pool_flitering_alert:
     name: "Alerte Piscine filtration"
+    icon: mdi:water-pump-off
     message: >
       "Alerte pas de filtration depuis 24h"
     done_message: >
@@ -176,6 +178,7 @@ alert:
 
   pool_ph_alert:
     name: "Alerte PH Piscine"
+    icon: mdi:ph
     message: >
       "PH piscine anormal ({{ states('sensor.plouf_ph') }})"
     done_message: >
@@ -190,6 +193,7 @@ alert:
 
   pool_clore_alert:
     name: "Alerte clore Piscine"
+    icon: mdi:test-tube
     message: >
       {% if (states('sensor.plouf_oxydo_reduction_potential') | float) < state_attr('sensor.plouf_oxydo_reduction_potential','treshold_low') %}
       "Clore piscine trop bas: {{ states('sensor.plouf_oxydo_reduction_potential') | round(2)}}"
@@ -209,7 +213,8 @@ alert:
       - notify
 
   pool_low_level:
-    name: "Alerte niveau d'eau piscine"    
+    name: "Alerte niveau d'eau piscine"
+    icon: mdi:water-alert
     message: "Niveau piscine trop bas."
     done_message: "Niveau d'eau piscine de nouveau correcte."
     entity_id: binary_sensor.niveau_d_eau_piscine_bas
@@ -222,12 +227,13 @@ alert:
 
   pool_filter_clogged:
     name: "Alerte filtre piscine encrassé"
+    icon: mdi:air-filter
     message: >
       Attention, le filtre de la piscine semble encrassé.
-      Puissance pompe : {{ states('sensor.filtration_piscine_power_filtration') }} W (seuil : 120 W).
+      Puissance pompe : {{ states('sensor.piscine_filtration_power_filtration') }} W (seuil : 120 W).
     done_message: >
-      Filtre piscine OK. Puissance pompe : {{ states('sensor.filtration_piscine_power_filtration') }} W.
-    entity_id: binary_sensor.filtration_piscine_filtre_encrasse
+      Filtre piscine OK. Puissance pompe : {{ states('sensor.piscine_filtration_power_filtration') }} W.
+    entity_id: binary_sensor.piscine_filtration_filtre_encrasse
     state: "on"
     repeat: 30
     can_acknowledge: true
@@ -334,8 +340,8 @@ automation:
       - action: switch.turn_off
         target:
           entity_id:
-            - switch.filtration_piscine_filtration
-            - switch.filtration_piscine_electrolyse
+            - switch.piscine_filtration_filtration
+            - switch.piscine_filtration_electrolyse
     - conditions:
       - alias: "HC, brassage urgence ou fenêtre HP active"
         condition: template
@@ -344,7 +350,7 @@ automation:
       - action: switch.turn_on
         target:
           entity_id:
-            - switch.filtration_piscine_filtration
+            - switch.piscine_filtration_filtration
       - if:
         - condition: template
           value_template: >
@@ -356,13 +362,13 @@ automation:
         - action: switch.turn_on
           target:
             entity_id:
-              - switch.filtration_piscine_electrolyse
+              - switch.piscine_filtration_electrolyse
     default:
       - action: switch.turn_off
         target:
           entity_id:
-            - switch.filtration_piscine_filtration
-            - switch.filtration_piscine_electrolyse
+            - switch.piscine_filtration_filtration
+            - switch.piscine_filtration_electrolyse
   mode: single
 ################################################################################
 - id: 'Swimingpool_auto_filtering_winter'
@@ -385,14 +391,14 @@ automation:
         - action: switch.turn_on
           target:
             entity_id:
-              - switch.filtration_piscine_filtration
-              - switch.filtration_piscine_electrolyse
+              - switch.piscine_filtration_filtration
+              - switch.piscine_filtration_electrolyse
     default:
       - action: switch.turn_off
         target:
           entity_id:
-            - switch.filtration_piscine_filtration
-            - switch.filtration_piscine_electrolyse
+            - switch.piscine_filtration_filtration
+            - switch.piscine_filtration_electrolyse
   mode: single
 ################################################################################
 #- id: 'Swimingpool_auto_boiler_barry'

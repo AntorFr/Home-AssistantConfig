@@ -108,9 +108,10 @@ template:
             {% endfor %}
             {{ u | tojson }}
 
-alert:
+alert_plus:
   low_battery_alert:
     name: "Alerte batterie(s) faible(s)"
+    icon: mdi:battery-low
     message: >
       {%- set nb_alert_battery = states('sensor.nombre_batteries_faibles') | int %}
       {{nb_alert_battery}} batterie{{'s' if nb_alert_battery>1 }} faible{{'s' if nb_alert_battery>1 }} :

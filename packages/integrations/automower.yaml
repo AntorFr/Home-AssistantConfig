@@ -13,9 +13,10 @@ input_boolean:
     name: Robot tondeuse en revision
     icon: mdi:car-wrench
 
-alert:
+alert_plus:
   automower:
     name: "Robot tondeuse en erreur"
+    icon: mdi:robot-mower
     message: >
       {%- set mower_id = 'lawn_mower.gardenbot' -%}
       {%- if is_state(mower_id,'error') -%}

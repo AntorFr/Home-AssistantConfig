@@ -180,26 +180,26 @@ script:
             entity_id: select.petit_mars  
         - sequence:
           - repeat:
-              while: "{{ not is_state('climate.panasonic_heat_pump_main_z1_temp','heat') and repeat.index < 10}}"
+              while: "{{ not is_state('climate.garage_1_pompe_a_chaleur_garage_chauffage_zone_1','heat') and repeat.index < 10}}"
               sequence:
                 - action: climate.turn_on
                   data: {}
                   target:
                     entity_id: 
-                      - climate.panasonic_heat_pump_main_z1_temp
+                      - climate.garage_1_pompe_a_chaleur_garage_chauffage_zone_1
                 - delay:
                     seconds: 60
           - repeat:
-              while: "{{ not is_state_attr('water_heater.panasonic_heat_pump_main_dhw_target_temp','temperature', 65) and repeat.index < 10}}"
+              while: "{{ not is_state_attr('water_heater.garage_1_pompe_a_chaleur_garage_eau_chaude_sanitaire','temperature', 65) and repeat.index < 10}}"
               sequence:
                 - action: water_heater.set_temperature
                   target:
-                    entity_id: water_heater.panasonic_heat_pump_main_dhw_target_temp
+                    entity_id: water_heater.garage_1_pompe_a_chaleur_garage_eau_chaude_sanitaire
                   data:
                     temperature: 65
                 - action: water_heater.set_operation_mode
                   target:
-                    entity_id: water_heater.panasonic_heat_pump_main_dhw_target_temp
+                    entity_id: water_heater.garage_1_pompe_a_chaleur_garage_eau_chaude_sanitaire
                   data:
                     operation_mode: performance
                 - delay:
@@ -247,26 +247,26 @@ script:
             entity_id: select.petit_mars
         - sequence:
           - repeat:
-              while: "{{ not is_state('climate.panasonic_heat_pump_main_z1_temp','off') and repeat.index < 10}}"
+              while: "{{ not is_state('climate.garage_1_pompe_a_chaleur_garage_chauffage_zone_1','off') and repeat.index < 10}}"
               sequence:
                 - action: climate.turn_off
                   data: {}
                   target:
                     entity_id: 
-                      - climate.panasonic_heat_pump_main_z1_temp
+                      - climate.garage_1_pompe_a_chaleur_garage_chauffage_zone_1
                 - delay:
                     seconds: 60
           - repeat:
-              while: "{{ not is_state_attr('water_heater.panasonic_heat_pump_main_dhw_target_temp','temperature', 40) and repeat.index < 10}}"
+              while: "{{ not is_state_attr('water_heater.garage_1_pompe_a_chaleur_garage_eau_chaude_sanitaire','temperature', 40) and repeat.index < 10}}"
               sequence:
                 - action: water_heater.set_temperature
                   target:
-                    entity_id: water_heater.panasonic_heat_pump_main_dhw_target_temp
+                    entity_id: water_heater.garage_1_pompe_a_chaleur_garage_eau_chaude_sanitaire
                   data:
                     temperature: 40
                 - action: water_heater.set_operation_mode
                   target:
-                    entity_id: water_heater.panasonic_heat_pump_main_dhw_target_temp
+                    entity_id: water_heater.garage_1_pompe_a_chaleur_garage_eau_chaude_sanitaire
                   data:
                     operation_mode: performance
                 - delay:
@@ -326,26 +326,26 @@ script:
             entity_id: select.petit_mars
         - sequence:
           - repeat:
-              while: "{{ not is_state('climate.panasonic_heat_pump_main_z1_temp','heat') and repeat.index < 10}}"
+              while: "{{ not is_state('climate.garage_1_pompe_a_chaleur_garage_chauffage_zone_1','heat') and repeat.index < 10}}"
               sequence:
                 - action: climate.turn_on
                   data: {}
                   target:
                     entity_id: 
-                      - climate.panasonic_heat_pump_main_z1_temp
+                      - climate.garage_1_pompe_a_chaleur_garage_chauffage_zone_1
                 - delay:
                     seconds: 60
           - repeat:
-              while: "{{ not is_state_attr('water_heater.panasonic_heat_pump_main_dhw_target_temp','temperature', 53) and repeat.index < 10}}"
+              while: "{{ not is_state_attr('water_heater.garage_1_pompe_a_chaleur_garage_eau_chaude_sanitaire','temperature', 53) and repeat.index < 10}}"
               sequence:
                 - action: water_heater.set_temperature
                   target:
-                    entity_id: water_heater.panasonic_heat_pump_main_dhw_target_temp
+                    entity_id: water_heater.garage_1_pompe_a_chaleur_garage_eau_chaude_sanitaire
                   data:
                     temperature: 55
                 - action: water_heater.set_operation_mode
                   target:
-                    entity_id: water_heater.panasonic_heat_pump_main_dhw_target_temp
+                    entity_id: water_heater.garage_1_pompe_a_chaleur_garage_eau_chaude_sanitaire
                   data:
                     operation_mode: performance
                 - delay:

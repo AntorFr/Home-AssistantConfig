@@ -25,9 +25,10 @@ alarm_control_panel:
       arming_time: 0
       delay_time: 0
 
-alert:
+alert_plus:
   fire_alert:
     name: "Alarm Incendie"
+    icon: mdi:fire
     entity_id: binary_sensor.detecteurs_fumees
     message: >
       "Incendie ! fumée detecté: {{ expand('binary_sensor.detecteurs_fumees') | selectattr('state', 'eq', 'on') | list | map(attribute='name') | join(', ') }}
@@ -50,44 +51,6 @@ alert:
     skip_first: false  # Optional, false is the default
     notifiers:
       - notify
-      - all_mobile
-
-  swiming_pool:
-    name: "Porte Piscine non sécurisée"
-    message: >
-      {% if is_state('binary_sensor.bludoor_porte_piscine_window', 'on') %}
-      Attention, la porte de la piscine est restée ouverte sans personne
-      {% elif is_state('binary_sensor.bludoor_porte_piscine_window', 'unavailable') %}
-      Attention, la porte de la piscine est déconnectée.
-      {% else %}
-      Tout va bien
-      {% endif %}
-    done_message: >
-      {% if is_state('input_boolean.alarme_piscine', 'off') %}
-      Alarme désactivée
-      {% else %}
-      "Porte Piscine sécurisée"
-      {% endif %}
-    data:
-      entity_id: camera.piscine_high
-      push:
-        sound:
-          name: "default"
-          critical: 1
-          volume: 1.0
-        #android
-      image: "/api/camera_proxy/camera.piscine_high"
-      ttl: 0
-      priority: high
-    entity_id: binary_sensor.swiming_pool_door_problem
-    state: "on"   # Optional, 'on' is the default value
-    repeat:
-      - 15
-      - 30
-      - 60
-    can_acknowledge: false  # Optional, default is true
-    skip_first: true  # Optional, false is the default
-    notifiers:
       - all_mobile
 
 automation:
