@@ -25,7 +25,7 @@ automation:
           metadata: {}
           data: {}
           target:
-            entity_id: cover.garage_2
+            entity_id: cover.garage_2_garage_2_porte
       button_long:
         - action: input_boolean.turn_on
           target:
@@ -55,7 +55,7 @@ automation:
           metadata: {}
           data: {}
           target:
-            entity_id: cover.garage_2
+            entity_id: cover.garage_2_garage_2_porte
       button_long:
         - action: input_boolean.turn_on
           target:

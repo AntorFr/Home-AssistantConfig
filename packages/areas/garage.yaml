@@ -46,7 +46,7 @@ template:
         device_class: garage_door
         unique_id: "garage2_door_virtual_sensor"
         state: >
-          {{not is_state('cover.garage_2',['closed','unavailable'])}}
+          {{not is_state('cover.garage_2_garage_2_porte',['closed','unavailable'])}}
 
 
 binary_sensor:
@@ -138,7 +138,7 @@ automation:
         trigger: template
         id: turn_on
         value_template: >
-          {{ is_state('cover.garage_2', 'opening')
+          {{ is_state('cover.garage_2_garage_2_porte', 'opening')
             and (states('sensor.garage2_presence_sensor_light_sensor') | int(999)) < 30 }}
 ################################################################################
 - id: garage1_bouton_portails
@@ -180,7 +180,7 @@ automation:
               metadata: {}
               data: {}
               target:
-                entity_id: cover.garage_2
+                entity_id: cover.garage_2_garage_2_porte
       button_4_short:
         - if:
             - condition: state
@@ -191,5 +191,5 @@ automation:
               metadata: {}
               data: {}
               target:
-                entity_id: cover.garage_door_3_garage_3
+                entity_id: cover.garage_3_porte_garage_porte
 ################################################################################
