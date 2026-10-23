@@ -40,7 +40,7 @@ Chaque pièce automatisée s'appuie sur un mécanisme commun, paramétré par le
 
 **Avertissement avant extinction** : si la pièce est configurée pour, l'intensité est **réduite de 50 %** un certain temps avant l'extinction. L'avertissement n'a lieu que si aucune nouvelle présence n'est détectée pendant la temporisation. Un mouvement annule l'avertissement.
 
-**Sécurité « capteur indisponible »** : si tous les capteurs de mouvement de la pièce passent en indisponible alors que la lumière reste allumée trop longtemps, la lumière est éteinte automatiquement.
+> **Limite connue** : aucune extinction de secours n'est prévue si tous les capteurs de mouvement d'une pièce deviennent indisponibles. Une lumière restée allumée dans ce cas ne s'éteint pas automatiquement.
 
 ### Neutralisation par interrupteur logique
 

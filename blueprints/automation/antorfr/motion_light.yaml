@@ -99,14 +99,15 @@ blueprint:
     turn_on_trigger:
       name: (OPTIONAL) turn on trigger
       description: Provid one trigger to turn on lights (id should be turn_on).
+      # Placeholder never fired: keeps the trigger id defined without a never-true template.
       default:
-        platform: template
-        value_template: "{{ false }}"
+        platform: event
+        event_type: motion_light_unused_turn_on
         id: turn_on
     turn_off_trigger:
       default:
-        platform: template
-        value_template: "{{ false }}"
+        platform: event
+        event_type: motion_light_unused_turn_off
         id: turn_off
       name: (OPTIONAL) turn off trigger
       description: Provid one trigger to turn off lights (id should be turn_off).
@@ -114,8 +115,8 @@ blueprint:
       name: (OPTIONAL) toggle trigger
       description: Provid one trigger to toggle lights (id should be toggle).
       default:
-        platform: template
-        value_template: "{{ false }}"
+        platform: event
+        event_type: motion_light_unused_toggle
         id: toggle
 
 # If motion is detected within the delay,
@@ -240,11 +241,6 @@ trigger:
     to: "off"
     for: !input 'no_motion_wait'
     id: "no_motion"
-  - platform: state
-    entity_id: !input motion_sensor
-    to: "off"
-    for: !input 'no_motion_wait'
-    id: "no_motion"
   - platform: numeric_state
     entity_id: !input light_sensor
     below: !input 'lux_cutoff'
@@ -348,15 +344,7 @@ condition:
 
           - alias: "Too much light, Sun detected"
             condition: trigger
-            id: 'lux_sensor_sun'            
-          - alias: "light on for long time and all motion sensor(s) unavailable"
-            condition: and
-            conditions:  
-            - condition: trigger
-              id: 'too_long_on'
-            - condition: template
-              value_template: >
-                {{ expand(motion_sensor) | selectattr("state", "!=", "unavailable") | list | count == 0  }}
+            id: 'lux_sensor_sun'
 
 action:
 - choose:
@@ -481,20 +469,5 @@ action:
       #      seconds: "{{no_motion_wait}}"
       - service: light.turn_off
         target: !input 'light_target'
-  - alias: "Light on for 'no_motion_wait' and all sensor unavailable"
-    conditions:
-    - condition: trigger
-      id: 'too_long_on'
-    sequence:
-      - wait_template: '{{ expand(light_entities) | selectattr("state", "eq", "on") | list | count == 0 }}'
-        timeout: 
-          seconds: "{{ 2 * no_motion_wait_sec}}"
-      - alias: "if any light still on and motion sensor still unavailable"
-        if:
-        - "{{ not wait.completed }}"
-        - '{{ expand(motion_sensor) | selectattr("state", "!=", "unavailable") | list | count == 0  }}'
-        then:
-          - service: light.turn_off
-            target: !input 'light_target'  
 
 

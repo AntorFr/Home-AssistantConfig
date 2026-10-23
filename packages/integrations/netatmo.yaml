@@ -236,7 +236,7 @@ automation:
           sequence:
             - action: netatmo.set_person_away
               data:
-                persons: "{{state_attr(trigger.entity_id, 'friendly_name')}}"
+                person: "{{state_attr(trigger.entity_id, 'friendly_name')}}"
               target:
                 entity_id: camera.camera_bureau
       default: []
