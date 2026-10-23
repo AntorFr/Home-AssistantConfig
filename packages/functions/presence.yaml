@@ -161,7 +161,7 @@ binary_sensor:
       prob_given_true: 0.05
       prob_given_false: 0.005
       above: 0
-    - entity_id: "vacuum.automower_r_450x_gardenbot"
+    - entity_id: "lawn_mower.gardenbot"
       platform: "state"
       prob_given_true: 0.50
       prob_given_false: 0.50

@@ -13,8 +13,8 @@ template:
       name: Salle à manger temperature 
       device_class: temperature
       unit_of_measurement: "°C"
-      availability: "{{states('climate.netatmo_salle_a_manger') != 'unknown'}}"
-      state: "{{ state_attr('climate.netatmo_salle_a_manger', 'current_temperature')|float | d(none) }}"
+      availability: "{{states('climate.salle_a_manger') != 'unknown'}}"
+      state: "{{ state_attr('climate.salle_a_manger', 'current_temperature')|float | d(none) }}"
 
 sensor:
   - name: mouvement_salle_a_manger_5min
