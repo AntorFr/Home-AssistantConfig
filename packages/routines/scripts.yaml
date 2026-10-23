@@ -454,11 +454,12 @@ script:
         entity_id: 
           - input_boolean.salon_lumiere_mode_tv
           - input_boolean.auto_light_kill_switch_salle_a_manger
+          - input_boolean.auto_light_kill_switch_salle_de_bain
           - input_boolean.auto_light_kill_switch_bureau
           - input_boolean.auto_light_kill_switch_cuisine
           - input_boolean.auto_light_kill_switch_jardin
     - alias: "Enable Adaptive Lighting"
-      action: input_boolean.turn_on
+      action: switch.turn_on
       target:
         entity_id: 
           - switch.adaptive_lighting_chambre_emilie

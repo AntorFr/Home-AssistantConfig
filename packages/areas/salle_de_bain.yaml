@@ -31,7 +31,7 @@ automation:
       adaptive_lighting: switch.adaptive_lighting_default   
       motion_sensor: binary_sensor.bathroom_presence_sensor_occupancy
       light_sensor: sensor.bathroom_presence_sensor_light_sensor
-      kill_switch: input_boolean.auto_light_salle_de_bain
+      kill_switch: input_boolean.auto_light_kill_switch_salle_de_bain
       lux_cutoff: 30
       lux_sun_cutoff: 200 
       no_motion_wait:

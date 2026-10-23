@@ -96,7 +96,7 @@ Quatre commutateurs liés à la routine des enfants sont remis à zéro :
 
 La maison :
 
-- **désactive** les commutateurs de neutralisation d'éclairage automatique du salon (mode TV), de la salle à manger, du bureau, de la cuisine et du jardin,
+- **désactive** les commutateurs de neutralisation d'éclairage automatique du salon (mode TV), de la salle à manger, de la salle de bain, du bureau, de la cuisine et du jardin,
 - **réactive** l'adaptation automatique de la lumière dans toutes les zones configurées (chambre Émilie, chambre des parents, chambre de Timothée, couloir de l'étage, cuisine, ensemble par défaut, entrée, salle à manger, salle de douche, salon).
 
 ### Passage de l'aspirateur robot

@@ -59,7 +59,7 @@ automation:
         - action: light.turn_on
           data:
             brightness_pct: 100
-            color: orange
+            color_name: orange
           target:
             entity_id: light.emilie_clock_led_matrix
     - alias: "Evening - Almost sleep time"
@@ -114,7 +114,7 @@ automation:
         - action: light.turn_on
           data:
             brightness_pct: 100
-            color: white
+            color_name: white
           target:
             entity_id: light.emilie_clock_led_matrix
 ###############################################
