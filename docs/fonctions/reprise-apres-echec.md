@@ -42,4 +42,4 @@ Deux variantes prennent une **liste de serrures** plutôt qu'une seule. Chaque s
 
 ## Utilisée par
 
-- la routine de [départ](../routines/depart.md) — verrouillage en partant, déverrouillage au retour.
+- la routine de [départ](../routines/depart.md) — verrouillage en partant.

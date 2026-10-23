@@ -14,12 +14,6 @@ La maison comporte **trois espaces de garage** distincts : **garage 1**, **garag
 
 Le garage 2 et le garage 3 ont chacun leur capteur de présence. Un capteur regroupé combine les deux pour la détection commune. Deux compteurs exposent la **durée de mouvement détectée sur les 10 dernières minutes** dans chaque garage. Ces compteurs sont utilisés en signaux pondérés du capteur probabiliste de présence à l'[extérieur](../fonctions/presence.md).
 
-### Conditions du garage 2 et 3
-
-<!-- source: sensor:garage_temperature, sensor:garage_humidity, sensor:garage_pressure -->
-
-La maison expose la **moyenne** des températures, humidités et pressions atmosphériques des capteurs présents sur les portes des garages 2 et 3.
-
 ### État de la porte du garage 2
 
 <!-- source: template:binary_sensor:garage2_door_virtual_sensor -->

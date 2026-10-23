@@ -161,11 +161,11 @@ Voir [tarif Tempo](../fonctions/tarif-tempo.md).
 
 Trois scripts d'attente (imprimante 3D, machine à laver, sèche-linge) sont arrêtés (au cas où une procédure d'extinction différée serait encore en cours).
 
-### Déverrouillage des serrures
+### Serrures
 
-<!-- source: script:routine_all_lock_unlock -->
+<!-- source: script:routine_back_home -->
 
-Les serrures connectées de l'**entrée** et de la **cuisine** sont déverrouillées, avec procédure de **réessai** en cas d'échec.
+Les serrures **ne sont pas déverrouillées** automatiquement au retour.
 
 ### Adaptation du chauffage
 

@@ -9,7 +9,6 @@ group:
     icon: mdi:router-network
     entities:
       - device_tracker.dream_machine
-      - device_tracker.netatmo_thermostat
 
   required_security_devices:
     name: Security devices
@@ -18,18 +17,8 @@ group:
     entities:
       - device_tracker.netatmo_presence_entree
       - device_tracker.netatmo_presence_parking
-      - device_tracker.netatmo_welcome
       - device_tracker.netatmo_welcome_2  
 
-  required_door_devices:
-    name: Door devices
-    all: true
-    icon: mdi:garage-variant
-    entities:
-      - device_tracker.garagedoor_1
-      - device_tracker.garagedoor_2
-      - device_tracker.garagedoor_3
-      - device_tracker.entrance_gate #Portail
 
   required_cluster_devices:
     name: cluster devices
@@ -54,7 +43,6 @@ group:
     entities:
       - device_tracker.bed_heater
       - device_tracker.teddy_light
-      - device_tracker.flipr_wifi_relay
 
   required_devices:
     name: monitored devices
@@ -63,7 +51,6 @@ group:
     entities:
       - group.required_hub_devices
       - group.required_security_devices
-      - group.required_door_devices
       - group.required_cluster_devices
       - group.required_other_devices
 

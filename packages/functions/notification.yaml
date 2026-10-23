@@ -1,8 +1,3 @@
-notify:
-  - platform: tts
-    name: bureau
-    entity_id: tts.cloud_say
-    media_player: media_player.fire_tablet
 
 
 intent_script:

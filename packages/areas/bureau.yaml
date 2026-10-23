@@ -588,7 +588,5 @@ homeassistant:
   customize:
     binary_sensor.capteurs_mouvement_bureau:
       room_main: occupancy
-    media_player.fire_tablet:
-      room_main: tts
 
 

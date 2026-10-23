@@ -238,11 +238,6 @@ script:
         continue_on_error: true
         target:
           entity_id: 
-            - script.routine_all_lock_unlock
-      - action: script.turn_on
-        continue_on_error: true
-        target:
-          entity_id: 
             - script.routine_climate_home
     - alias: "If sun is up"
       choose:

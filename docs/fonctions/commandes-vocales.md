@@ -39,14 +39,6 @@ Récapituler les **phrases en français** que la maison reconnaît et l'**effet*
 | « À table », « c'est l'heure d'aller à table » | déclenche l'**annonce « À table »** sur les enceintes des chambres d'enfants et du bureau si occupé | [notifications](notifications.md#annonce-à-table) |
 | « dis à \<personne> \<message> » | adresse un **message à une personne** précise (annonce vocale dans sa pièce ou notification sur son téléphone selon le cas) | [notifications](notifications.md#message-à-une-personne) |
 
-### Téléviseur et console
-
-<!-- source: intent:tvXBoxOn -->
-
-| Phrases reconnues | Effet | Voir |
-|---|---|---|
-| « allume / mets / lance la Xbox » | bascule la **télévision sur la source Xbox** (allumage et navigation auto) | [téléviseur](television.md#bascule-automatique-sur-la-xbox) |
-
 ### Bureau motorisé
 
 <!-- source: intent:StandingDeskUp, intent:StandingDeskDown -->

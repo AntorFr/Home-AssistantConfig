@@ -17,17 +17,16 @@ Surveiller la **disponibilité des appareils essentiels** de la maison (réseau,
 
 ### Appareils requis
 
-<!-- source: group:required_hub_devices, group:required_security_devices, group:required_door_devices, group:required_cluster_devices, group:required_other_devices, group:required_devices -->
+<!-- source: group:required_hub_devices, group:required_security_devices, group:required_cluster_devices, group:required_other_devices, group:required_devices -->
 
-La maison considère comme **« requis »** un ensemble d'appareils répartis en cinq catégories :
+La maison considère comme **« requis »** un ensemble d'appareils répartis en quatre catégories :
 
 | Catégorie | Appareils |
 |---|---|
-| **Hub** | la box réseau, le thermostat central |
-| **Sécurité** | les caméras Netatmo de l'entrée, du parking et les caméras de présence de la maison |
-| **Portes** | les capteurs des trois portes de garage et le capteur du portail |
+| **Hub** | la box réseau |
+| **Sécurité** | les caméras Netatmo de l'entrée et du parking, et une caméra intérieure Netatmo |
 | **Cluster informatique** | les neuf machines du cluster maison |
-| **Autres** | la couverture chauffante, la veilleuse Teddy, le relais Wi-Fi Flipr |
+| **Autres** | la couverture chauffante, la veilleuse Teddy |
 
 Le groupe global **« appareils requis »** est considéré comme dégradé dès qu'au moins un appareil d'une de ces catégories est **déconnecté**.
 
