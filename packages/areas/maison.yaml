@@ -5,6 +5,7 @@ input_select:
       - Normal
       - Noël
       - Reveillon
+      - Halloween
     icon: mdi:party-popper
 
 automation:
@@ -39,7 +40,16 @@ automation:
           sequence:
             - action: script.change_tx_ultimate_night_effect
               data:
-                effect: Stars
+                effect: Explore the Stars
+        # Halloween: the switches take their Halloween theme; the dashboard tablets read
+        # this selector themselves (Halloween decor on their idle clock).
+        - conditions: 
+          - condition: template
+            value_template: "{{trigger.to_state.state == 'Halloween'}}"
+          sequence:
+            - action: script.change_tx_ultimate_night_effect
+              data:
+                effect: Halloween
           
 script:  
 ################################################################################
@@ -56,12 +66,15 @@ script:
           select:
             options:
               - Default
-              - Stars
+              - Explore the Stars
               - Christmas
+              - Halloween
     sequence:
+      # Theme select of every TX Ultimate switch (select.bouton_*_theme). The firmware
+      # before 2026-10 exposed select.*_nightlight_effect instead.
       - action: select.select_option
         target:
           entity_id: >
-            {{states.select|map(attribute="entity_id")|select('match','.*nightlight_effect$')| list }}
+            {{states.select|map(attribute="entity_id")|select('match','^select\\.bouton_.*_theme$')| list }}
         data:
           option: "{{effect}}"
