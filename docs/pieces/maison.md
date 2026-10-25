@@ -21,7 +21,7 @@ Un sélecteur **« Ambiance maison »** permet de choisir l'ambiance globale, pa
 | **Réveillon** | Thème des interrupteurs tactiles : **Explore the Stars** |
 | **Halloween** | Thème des interrupteurs tactiles : **Halloween** ; décor Halloween sur l'écran de veille des tablettes |
 
-Ce réglage agit sur le **thème de tous les interrupteurs tactiles** de la maison (couleurs, effets, sons). Les tablettes murales lisent elles-mêmes l'ambiance : en Halloween, leur horloge de veille se décore (citrouille, chauves-souris, fantôme).
+Ce réglage agit sur le **thème de tous les interrupteurs tactiles** de la maison (couleurs, effets, sons) et sur le sélecteur **« Ambiance »** de chaque tablette murale : en Halloween, leur horloge de veille se décore (citrouille, chauves-souris, fantôme) et leurs écrans passent en violet nuit, heure et onglet actif en orange.
 
 ### Panneau de contrôle NSPanel
 

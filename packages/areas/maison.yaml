@@ -50,6 +50,15 @@ automation:
             - action: script.change_tx_ultimate_night_effect
               data:
                 effect: Halloween
+    # Dashboard tablets: each one has its own "Ambiance" select (remembered on the
+    # device), set to the house ambiance. Same option names as this input_select.
+    - action: select.select_option
+      continue_on_error: true
+      target:
+        entity_id: >
+          {{states.select|map(attribute="entity_id")|select('match','^select\\.dashboard_.*_ambiance$')| list }}
+      data:
+        option: "{{ trigger.to_state.state }}"
           
 script:  
 ################################################################################
