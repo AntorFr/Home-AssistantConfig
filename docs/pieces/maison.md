@@ -19,9 +19,19 @@ Un sélecteur **« Ambiance maison »** permet de choisir l'ambiance globale, pa
 | **Normal** | Thème des interrupteurs tactiles : **Default** |
 | **Noël** | Thème des interrupteurs tactiles : **Christmas** |
 | **Réveillon** | Thème des interrupteurs tactiles : **Explore the Stars** |
-| **Halloween** | Thème des interrupteurs tactiles : **Halloween** ; décor Halloween sur l'écran de veille des tablettes |
+| **Halloween** | Thème des interrupteurs tactiles : **Halloween** ; décor Halloween sur l'écran de veille des tablettes et sur les horloges à LED |
 
-Ce réglage agit sur le **thème de tous les interrupteurs tactiles** de la maison (couleurs, effets, sons) et sur le sélecteur **« Ambiance »** de chaque tablette murale : en Halloween, leur horloge de veille se décore (citrouille, chauves-souris, fantôme) et leurs écrans passent en violet nuit, heure et onglet actif en orange.
+Ce réglage agit sur le **thème de tous les interrupteurs tactiles** de la maison (couleurs, effets, sons) et sur le sélecteur **« Ambiance »** de chaque tablette murale et de chaque horloge à LED (chambre d'Émilie, bibliothèque de Timothée) :
+
+- **tablettes** : en Halloween, leur horloge de veille se décore (citrouille, chauves-souris, fantôme) et leurs écrans passent en violet nuit, heure et onglet actif en orange ;
+- **horloges à LED** : en Halloween, en mode « Heure », une citrouille éclairée à la bougie remplace l'icône d'horloge. Toutes les une à deux minutes, un personnage passe sur l'heure :
+    - un fantôme,
+    - une chauve-souris,
+    - une araignée au bout de son fil,
+    - une sorcière sur son balai,
+    - deux yeux verts à la place des deux-points.
+
+  L'heure garde la couleur donnée par la [routine des enfants](../routines/enfants.md). Quand l'horloge est baissée (heure du coucher), elle reste sobre.
 
 ### Panneau de contrôle NSPanel
 
