@@ -9,20 +9,28 @@ light:
 automation:
 ################################################################################
 - id: 'buanderie_mashingmachine_end'
-  alias: Area - Buanderie - Fin machine à laver
+  alias: Area - Buanderie - Fin machine à laver ou sèche-linge
   description: ''
   trigger:
     - trigger: state
+      id: machine_a_laver
       entity_id:
         - binary_sensor.washing_machine_plug_end
+      from: "off"
+      to: "on"
+    - trigger: state
+      id: seche_linge
+      entity_id:
+        - binary_sensor.dryer_plug_end
       from: "off"
       to: "on"
   condition: []
   action:
     - action: notify.mobile_seb
       data:
-        message: "la machine à laver a terminé."
-  mode: restart
+        message: >-
+          {% if trigger.id == 'seche_linge' %}le sèche-linge a terminé.{% else %}la machine à laver a terminé.{% endif %}
+  mode: queued
 
 ################################################################################
 - id: 'buanderie_lumiere_auto'

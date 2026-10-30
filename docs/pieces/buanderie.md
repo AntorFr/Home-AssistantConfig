@@ -25,13 +25,18 @@ L'éclairage de la buanderie (plafonnier de la pièce) suit le mécanisme commun
 
 L'éclairage est aussi pilotable par un **interrupteur filaire** : chaque changement d'état bascule l'éclairage automatique.
 
-### Notification de fin de la machine à laver
+### Notification de fin de lavage et de séchage
 
 <!-- source: automation:buanderie_mashingmachine_end -->
 
-Quand la prise pilotée de la machine à laver passe en état « cycle terminé », une notification est envoyée sur le téléphone de Sébastien :
+Quand la prise pilotée de la machine à laver ou celle du sèche-linge passe en état « cycle terminé », une notification est envoyée sur le téléphone de Sébastien :
 
-> la machine à laver a terminé.
+| Appareil | Message |
+|---|---|
+| Machine à laver | « la machine à laver a terminé. » |
+| Sèche-linge | « le sèche-linge a terminé. » |
+
+Si les deux appareils terminent en même temps, les deux notifications sont envoyées l'une après l'autre.
 
 ### Mode sommeil — lumière rouge nocturne
 
